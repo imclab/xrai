@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XRAI HUD</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            background: rgba(0,0,0,0.1); 
+            font-family: 'Monaco', monospace;
+            overflow: hidden;
+        }
+        .hud-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 400px;
+            height: 300px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 10px;
+            color: #00ff00;
+        }
+        .status { font-size: 14px; margin-bottom: 10px; }
+        .chart { height: 120px; margin: 10px 0; }
+        .sparkline { height: 40px; }
+        .stats { font-size: 10px; color: #666; }
+        
+        /* Birdseye View Styles */
+        .view-controls {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .view-controls button {
+            font-size: 10px;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid #333;
+        }
+        
+        .hierarchy-view {
+            height: 150px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .project-node:hover {
+            transform: scale(1.5);
+            z-index: 10;
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+            transform-origin: left;
+        }
+        
+        .time-scale {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: rgba(0,0,0,0.7);
+            border-top: 1px solid #333;
+        }
+        
+        .zoom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,255,0.1);
+            border: 2px solid #00ff00;
+            display: none;
+        }
+        
+        /* Semi-transparent dock behavior */
+        .hud-container {
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        
+        .hud-container:hover {
+            opacity: 1;
+        }
+        
+        body:not(:hover) .hud-container {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="hud-container" id="hud-main">
+        <div class="status">🎯 XRAI BIRDSEYE VIEW</div>
+        <div class="view-controls">
+            <button onclick="toggleTimeScale()">📅 Time</button>
+            <button onclick="toggleProjectHierarchy()">📂 Hierarchy</button>
+            <button onclick="toggleOrientation()">🔄 Rotate</button>
+            <button onclick="toggleZoom()">🔍 Zoom</button>
+        </div>
+        <div id="hierarchy-view" class="hierarchy-view">
+            <div id="cy-minimap" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div id="timeline" class="chart"></div>
+        <div id="sparkline" class="sparkline"></div>
+        <div class="stats" id="stats">Loading...</div>
+    </div>
+
+    <script>
+        // Timeline chart
+        const timelineChart = echarts.init(document.getElementById('timeline'));
+        
+        // Sparkline chart  
+        const sparklineChart = echarts.init(document.getElementById('sparkline'));
+        
+        // Simple Cytoscape minimap using established library
+        let cy;
+        
+        function initMinimap() {
+            cy = cytoscape({
+                container: document.getElementById('cy-minimap'),
+                
+                elements: [
+                    // Nodes (project structure)
+                    { data: { id: 'curio', label: 'Curio' } },
+                    { data: { id: 'voice', label: 'Voice' } },
+                    { data: { id: 'hud', label: 'HUD' } },
+                    { data: { id: 'tools', label: 'Tools' } },
+                    { data: { id: 'ai', label: 'AI' } },
+                    
+                    // Edges (relationships/flow)
+                    { data: { id: 'e1', source: 'curio', target: 'voice' } },
+                    { data: { id: 'e2', source: 'voice', target: 'hud' } },
+                    { data: { id: 'e3', source: 'curio', target: 'tools' } },
+                    { data: { id: 'e4', source: 'tools', target: 'ai' } }
+                ],
+                
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': '#00ff00',
+                            'label': 'data(label)',
+                            'color': '#fff',
+                            'font-size': '8px',
+                            'width': 12,
+                            'height': 12
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 1,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle'
+                        }
+                    }
+                ],
+                
+                layout: {
+                    name: 'breadthfirst',
+                    directed: true,
+                    spacingFactor: 0.8
+                },
+                
+                userZoomingEnabled: false,
+                userPanningEnabled: false,
+                boxSelectionEnabled: false
+            });
+        }
+        
+        function toggleTimeScale() {
+            const scales = ['1h', '1d', '1w', '1m'];
+            const current = scales.indexOf(timeScale);
+            timeScale = scales[(current + 1) % scales.length];
+            updateView();
+        }
+        
+        function toggleProjectHierarchy() {
+            const layouts = ['breadthfirst', 'circle', 'grid', 'cose'];
+            const current = cy.layout().options.name;
+            const currentIndex = layouts.indexOf(current);
+            const newLayout = layouts[(currentIndex + 1) % layouts.length];
+            
+            cy.layout({ name: newLayout, directed: true }).run();
+        }
+        
+        function toggleOrientation() {
+            cy.layout({ 
+                name: 'breadthfirst', 
+                directed: true,
+                spacingFactor: 1.2
+            }).run();
+        }
+        
+        function toggleZoom() {
+            cy.fit();
+            cy.center();
+        }
+        
+        function updateData() {
+            fetch('file:///Users/jamestunick/xrai/conversations.jsonl')
+                .then(() => {
+                    // Mock data for now - replace with actual log parsing
+                    const now = new Date();
+                    const data = [];
+                    
+                    // Generate sample timeline data
+                    for(let i = 0; i < 20; i++) {
+                        data.push([
+                            new Date(now.getTime() - (20-i) * 60000),
+                            Math.random() * 100
+                        ]);
+                    }
+                    
+                    // Timeline configuration
+                    timelineChart.setOption({
+                        backgroundColor: 'transparent',
+                        textStyle: { color: '#00ff00' },
+                        xAxis: {
+                            type: 'time',
+                            axisLine: { lineStyle: { color: '#00ff00' } },
+                            axisLabel: { color: '#666', fontSize: 8 }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLine: { lineStyle: { color: '#00ff00' } },
+                            axisLabel: { color: '#666', fontSize: 8 }
+                        },
+                        series: [{
+                            data: data,
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: { color: '#00ffff', width: 2 },
+                            symbol: 'circle',
+                            symbolSize: 4,
+                            itemStyle: { color: '#00ffff' }
+                        }],
+                        grid: { 
+                            left: 40, right: 20, top: 20, bottom: 30,
+                            borderColor: '#333'
+                        }
+                    });
+                    
+                    // Sparkline (last 60 seconds)
+                    const sparkData = [];
+                    for(let i = 0; i < 60; i++) {
+                        sparkData.push(Math.random() * 10);
+                    }
+                    
+                    sparklineChart.setOption({
+                        backgroundColor: 'transparent',
+                        xAxis: { show: false },
+                        yAxis: { show: false },
+                        series: [{
+                            data: sparkData,
+                            type: 'line',
+                            smooth: true,
+                            lineStyle: { color: '#ff6600', width: 1 },
+                            symbol: 'none',
+                            areaStyle: { 
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: 'rgba(255,102,0,0.3)' },
+                                    { offset: 1, color: 'rgba(255,102,0,0.0)' }
+                                ])
+                            }
+                        }],
+                        grid: { left: 0, right: 0, top: 0, bottom: 0 }
+                    });
+                    
+                    // Update stats
+                    document.getElementById('stats').innerHTML = 
+                        `${data.length} interactions | ${now.toLocaleTimeString()} | CPU: 1.2%`;
+                })
+                .catch(() => {
+                    // Fallback display
+                    document.getElementById('stats').innerHTML = 
+                        `No data | ${new Date().toLocaleTimeString()} | Standby`;
+                });
+        }
+        
+        // Initialize views
+        initMinimap();
+        updateData();
+        setInterval(updateData, 2000);
+        
+        // Resize charts when window resizes
+        window.addEventListener('resize', () => {
+            timelineChart.resize();
+            sparklineChart.resize();
+        });
+    </script>
+</body>
+</html>
