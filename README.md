@@ -124,6 +124,257 @@ cat KnowledgeBase/_MASTER_KNOWLEDGEBASE_INDEX.md
 
 ---
 
+## 🌐 Access Methods
+
+### Local Machine Access
+
+**1. Direct Filesystem Access**
+
+After cloning, the knowledgebase is immediately available:
+
+```bash
+# Navigate to repository
+cd ~/path/to/xrai
+
+# Read any file directly
+cat KnowledgeBase/LEARNING_LOG.md
+cat KnowledgeBase/_AI_AGENT_PHILOSOPHY.md
+
+# Search across all knowledge
+rg "performance optimization" KnowledgeBase/
+
+# List all markdown files
+find KnowledgeBase -name "*.md" -type f
+```
+
+**2. Symlinked Access (Recommended for AI Tools)**
+
+Create symlinks for seamless integration with AI development tools:
+
+```bash
+# Claude Code
+ln -sf ~/path/to/xrai/KnowledgeBase ~/.claude/knowledgebase
+
+# Windsurf
+ln -sf ~/path/to/xrai/KnowledgeBase ~/.windsurf/knowledgebase
+
+# Cursor
+ln -sf ~/path/to/xrai/KnowledgeBase ~/.cursor/knowledgebase
+
+# Verify symlinks
+ls -lh ~/.claude/knowledgebase
+ls -lh ~/.windsurf/knowledgebase
+ls -lh ~/.cursor/knowledgebase
+```
+
+**3. IDE/Editor Integration**
+
+**VS Code** (with Claude Code extension):
+```bash
+# Open in VS Code
+code ~/path/to/xrai
+
+# The knowledgebase is automatically available via MCP
+# Files appear in: ~/.claude/knowledgebase/
+```
+
+**Command Line** (with ripgrep):
+```bash
+# Search for Unity patterns
+rg -i "AR Foundation|ARKit" ~/.claude/knowledgebase/
+
+# Search for performance tips
+rg "Quest.*90 fps|optimization" ~/.claude/knowledgebase/
+
+# Find specific topics
+rg "VFX Graph|particle system" ~/.claude/knowledgebase/
+```
+
+**4. Monitoring Tools (if installed)**
+
+```bash
+# Health check
+ai-system-monitor.sh --quick
+
+# Security audit
+kb-security-audit.sh
+
+# Token usage analysis
+ai-system-monitor.sh --full | grep "token usage"
+```
+
+---
+
+### Cloud Access
+
+**1. GitHub Web Interface**
+
+Browse directly in your browser:
+- **Main repo**: https://github.com/imclab/xrai
+- **Knowledgebase**: https://github.com/imclab/xrai/tree/main/KnowledgeBase
+- **Specific file**: https://github.com/imclab/xrai/blob/main/KnowledgeBase/LEARNING_LOG.md
+
+**2. GitHub API (RESTful Access)**
+
+Access files programmatically:
+
+```bash
+# List knowledgebase contents
+curl https://api.github.com/repos/imclab/xrai/contents/KnowledgeBase
+
+# Get specific file (base64 encoded)
+curl https://api.github.com/repos/imclab/xrai/contents/KnowledgeBase/LEARNING_LOG.md
+
+# Search within repository
+curl -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/search/code?q=performance+repo:imclab/xrai
+```
+
+**3. Raw File Access (Direct Download)**
+
+Access raw markdown files:
+
+```bash
+# Direct raw file URL
+curl https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/LEARNING_LOG.md
+
+# Download specific file
+wget https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/_AI_AGENT_PHILOSOPHY.md
+
+# View in browser
+open "https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/_MASTER_KNOWLEDGEBASE_INDEX.md"
+```
+
+**4. Clone on Any Device**
+
+Access from any machine with git:
+
+```bash
+# Clone to new device
+git clone https://github.com/imclab/xrai.git ~/xrai-remote
+cd ~/xrai-remote
+
+# Pull latest updates
+git pull origin main
+
+# Read-only access (no git needed)
+curl -L https://github.com/imclab/xrai/archive/refs/heads/main.zip -o xrai.zip
+unzip xrai.zip
+cd xrai-main/KnowledgeBase
+```
+
+**5. GitHub Mobile App**
+
+On iOS/Android:
+1. Install GitHub mobile app
+2. Navigate to `imclab/xrai`
+3. Browse `KnowledgeBase/` folder
+4. Read any `.md` file (rendered)
+
+---
+
+### Multi-Device Sync Strategy
+
+**Scenario 1: Work from multiple machines**
+
+```bash
+# Machine 1: Set up and push changes
+cd ~/xrai
+echo "New discovery..." >> KnowledgeBase/LEARNING_LOG.md
+git add . && git commit -m "Add discovery"
+git push origin main
+
+# Machine 2: Pull changes
+cd ~/xrai
+git pull origin main
+# Your changes are now synced
+```
+
+**Scenario 2: Mobile-to-Desktop workflow**
+
+1. **On mobile**: View files via GitHub web or app
+2. **Take notes**: Use GitHub Issues or local notes app
+3. **On desktop**: Pull repo and add notes to `LEARNING_LOG.md`
+4. **Push changes**: Available everywhere
+
+**Scenario 3: Cloud-first (no local clone)**
+
+```bash
+# Edit via GitHub web interface
+# 1. Navigate to file on GitHub
+# 2. Click "Edit" (pencil icon)
+# 3. Make changes
+# 4. Commit directly to main
+
+# Or use GitHub CLI
+gh repo clone imclab/xrai
+cd xrai
+gh browse  # Opens in browser
+```
+
+---
+
+### AI Tool Integration
+
+**Claude Code** (automatic):
+```bash
+# Configuration auto-loads KB via symlink
+# Location: ~/.claude/knowledgebase/
+# See: ~/.claude/CLAUDE.md for load order
+
+# Query in Claude Code:
+# "Check knowledgebase for AR Foundation patterns"
+# "Search KB for Quest optimization techniques"
+```
+
+**Windsurf**:
+```bash
+# Set up symlink (one-time)
+ln -sf ~/xrai/KnowledgeBase ~/.windsurf/knowledgebase
+
+# Access in Windsurf:
+# Files appear in sidebar under "Knowledgebase"
+```
+
+**Cursor**:
+```bash
+# Set up symlink (one-time)
+ln -sf ~/xrai/KnowledgeBase ~/.cursor/knowledgebase
+
+# Access in Cursor:
+# Reference files via @knowledgebase/filename.md
+```
+
+**MCP Server** (if available):
+```python
+# Via Model Context Protocol
+# Tools have access to:
+# - mcp__filesystem__read_file(path="~/.claude/knowledgebase/LEARNING_LOG.md")
+# - mcp__filesystem__search_files(pattern="*.md")
+# - mcp__filesystem__list_directory(path="~/.claude/knowledgebase/")
+```
+
+---
+
+### Access Patterns Comparison
+
+| Method | Speed | Offline | Multi-device | Versioned | AI-Ready |
+|--------|-------|---------|--------------|-----------|----------|
+| **Local filesystem** | Instant | ✅ | ❌ | ✅ (git) | ✅ |
+| **Symlinks** | Instant | ✅ | ❌ | ✅ (git) | ✅✅ |
+| **GitHub web** | 1-2s | ❌ | ✅ | ✅ | ❌ |
+| **GitHub API** | 1-2s | ❌ | ✅ | ✅ | ✅ (programmatic) |
+| **Git clone** | 5-10s | ✅ (after) | ✅ | ✅ | ✅ |
+| **Raw files** | 1-2s | ❌ | ✅ | ❌ | ⚠️ (limited) |
+
+**Recommended**:
+- **Development**: Local clone + symlinks (instant, AI-integrated)
+- **Reference**: GitHub web (convenient, no setup)
+- **Automation**: GitHub API (programmatic access)
+- **Multi-device**: Git clone on each machine + sync via push/pull
+
+---
+
 ## 🏗️ Architecture
 
 ### Directory Structure
