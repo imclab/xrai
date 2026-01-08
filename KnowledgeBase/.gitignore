@@ -1,0 +1,42 @@
+# Security & Privacy
+*.key
+*.pem
+*.p12
+**/secret*
+**/password*
+**/credential*
+**/.env
+**/.env.*
+.env
+.env.*
+.env.local
+.env.production
+
+# Personal Information
+potential_jobs.md
+**/personal/**
+**/*_PERSONAL.*
+
+# Sensitive Configs
+.zshrc
+.bashrc
+.ssh/
+
+# IDE & OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Build & Temp
+node_modules/
+dist/
+build/
+*.log
+.cache/
+
+# Backup directories
+code-backups/
+config-backups*/
+manual-backup*/
