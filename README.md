@@ -1,0 +1,465 @@
+# Unity XR AI Knowledgebase
+
+> **Permanent intelligence amplification infrastructure for Unity XR/AR/VR development**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Token Optimized](https://img.shields.io/badge/tokens-9.3K-green.svg)](https://github.com/imclab/xrai)
+[![Security Audited](https://img.shields.io/badge/security-audited-brightgreen.svg)](KnowledgeBase/FINAL_AUDIT_REPORT_2026-01-08.md)
+
+A comprehensive, token-optimized knowledgebase with an AI Agent Intelligence Amplification System designed for 10x faster learning and execution in Unity XR development.
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [AI Agent System](#ai-agent-system)
+- [Knowledgebase Structure](#knowledgebase-structure)
+- [Monitoring & Maintenance](#monitoring--maintenance)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+
+---
+
+## 🎯 Overview
+
+This repository contains a self-improving knowledgebase and AI agent system optimized for Unity XR (AR/VR/MR) development. It implements state-of-the-art best practices from 2026, including:
+
+- **AI Agent Intelligence Amplification** - 7 meta-frameworks unified into a single execution system
+- **Token-optimized architecture** - 9.3K tokens (26% reduction from initial 12.7K)
+- **Security audited** - No private information, clean codebase
+- **Cross-tool compatible** - Works with Claude Code, Windsurf, Cursor, and other AI tools
+- **Comprehensive documentation** - AR Foundation, VFX, WebGL, performance patterns, and more
+
+**Primary use cases**:
+- Unity AR/VR/XR development with AR Foundation 6.x
+- VFX and particle systems optimization
+- WebGL/Three.js integration
+- Cross-platform performance optimization (Quest, iOS, Android)
+- AI-assisted development workflows
+
+---
+
+## ⚡ Key Features
+
+### 1. **AI Agent Intelligence Amplification System**
+
+Ultra-compact directive (875 tokens) that transforms every interaction into compound learning:
+
+- **Leverage Hierarchy**: `Existing(0h) > Adapt(0.1x) > AI(0.3x) > Scratch(1x)`
+- **Emergency Override**: Protocol for >15min stalls (Simplify → Leverage → Reframe → Ship)
+- **Auto-logging**: Pattern extraction → `LEARNING_LOG.md`
+- **Success Metrics**: Session/month/quarter tracking
+
+**Philosophy**: Based on mental models from Elon Musk (first principles), Naval Ravikant (leverage), and Jeff Bezos (long-term thinking).
+
+### 2. **Comprehensive Unity XR Knowledge**
+
+- **AR Foundation 6.2+** - Plane detection, image tracking, human segmentation, meshing
+- **VFX Optimization** - Quest 2/3 performance patterns, GPU-instanced particles
+- **WebGL Integration** - Three.js interop, Unity-to-Web bridges
+- **Cross-platform** - iOS, Android, Quest, WebGL compatibility matrices
+- **GitHub Repos** - Curated collection of high-quality XR projects
+
+### 3. **Monitoring & Automation**
+
+Built-in tools for health checking and optimization:
+
+- `ai-system-monitor.sh` - Token usage, symlink verification, health dashboard (<3s)
+- `kb-security-audit.sh` - Privacy scanning, permission checks, integrity validation
+- `validate-ai-config.sh` - Configuration validation and auto-healing
+
+### 4. **Token-Optimized Architecture**
+
+```
+Load Order:
+1. GLOBAL_RULES.md        (~7.6K tokens)
+2. AI_AGENT_V3.md         (~0.9K tokens)
+3. Claude config          (~0.8K tokens)
+4. Project overrides      (~2K tokens)
+────────────────────────────────────────
+Total overhead:           ~9.3K tokens ✅
+```
+
+**26% reduction** from initial 12.7K tokens while maintaining full functionality.
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/imclab/xrai.git
+cd xrai
+
+# Set up symlinks for AI tools (optional)
+ln -sf $(pwd)/KnowledgeBase ~/.claude/knowledgebase
+ln -sf $(pwd)/KnowledgeBase ~/.windsurf/knowledgebase
+ln -sf $(pwd)/KnowledgeBase ~/.cursor/knowledgebase
+```
+
+### Basic Usage
+
+**With Claude Code**:
+```bash
+# The knowledgebase is automatically loaded via configuration hierarchy
+# See ~/.claude/CLAUDE.md for load order
+```
+
+**Access the AI Agent directive**:
+```bash
+cat ~/.claude/AI_AGENT_CORE_DIRECTIVE_V3.md
+```
+
+**Browse the knowledgebase**:
+```bash
+ls KnowledgeBase/
+cat KnowledgeBase/_MASTER_KNOWLEDGEBASE_INDEX.md
+```
+
+---
+
+## 🏗️ Architecture
+
+### Directory Structure
+
+```
+xrai/
+├── KnowledgeBase/                 # Core knowledge repository (1.1MB)
+│   ├── .claude/                   # Claude-specific documentation
+│   ├── AgentSystems/              # Agent architecture patterns
+│   ├── scripts/                   # Automation scripts
+│   ├── LEARNING_LOG.md            # Continuous discovery log
+│   ├── _AI_AGENT_PHILOSOPHY.md    # Mental models & philosophy
+│   ├── _ARFOUNDATION_VFX_KNOWLEDGE_BASE.md
+│   ├── _WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md
+│   ├── _PERFORMANCE_PATTERNS_REFERENCE.md
+│   └── [45+ knowledge files]
+├── specs/                         # Project specifications (GitHub spec-kit)
+├── Examples/                      # Template files
+├── CLAUDE.md                      # Configuration pointer
+└── README.md                      # This file
+```
+
+### Integration Points
+
+**Local Tools** (via symlinks):
+```
+~/.claude/knowledgebase/    → xrai/KnowledgeBase/
+~/.windsurf/knowledgebase/  → xrai/KnowledgeBase/
+~/.cursor/knowledgebase/    → xrai/KnowledgeBase/
+```
+
+**Cloud Access** (via GitHub):
+```
+GitHub API: https://api.github.com/repos/imclab/xrai/contents/
+Web: https://github.com/imclab/xrai
+```
+
+---
+
+## 🤖 AI Agent System
+
+### Core Principles
+
+**1. Leverage-First Execution**
+```
+Always prefer higher leverage:
+├─ 0h:   Use existing solution (search KB, past projects)
+├─ 0.1x: Adapt from KB (modify existing pattern)
+├─ 0.3x: AI-assisted generation with review
+└─ 1x:   Write from scratch (avoid unless necessary)
+```
+
+**2. Compound Learning**
+Every task should:
+- Extract 2-3 reusable patterns
+- Document novel insights → `LEARNING_LOG.md`
+- Identify automation opportunities
+- Connect to past projects (cross-domain learning)
+
+**3. Emergency Override**
+If stuck >15 minutes:
+1. **Simplify**: What's the dumbest working solution?
+2. **Leverage**: Who solved this already?
+3. **Reframe**: Is this the right problem?
+4. **Ship**: Can we ship 20% now and iterate?
+
+### Philosophy
+
+See [`KnowledgeBase/_AI_AGENT_PHILOSOPHY.md`](KnowledgeBase/_AI_AGENT_PHILOSOPHY.md) for deep-dive on:
+- Billionaire-level thinking (systems over symptoms)
+- 10x learning velocity (spaced extraction, Feynman technique)
+- Time compression strategies (10 years → 1 year)
+- Identity reprogramming (limiting beliefs → growth beliefs)
+
+### Quick Reference
+
+Daily activation checklist:
+
+**Pre-Task** (5 seconds):
+- [ ] Can I reuse existing solution?
+- [ ] What's the 20% that gives 80%?
+- [ ] What pattern will I extract?
+
+**Post-Task** (10 seconds):
+- [ ] Novel pattern → `LEARNING_LOG.md`
+- [ ] Automation opportunity?
+- [ ] Meta-reflection: How can I think better?
+
+---
+
+## 📚 Knowledgebase Structure
+
+### Core Files
+
+| File | Purpose | Size |
+|------|---------|------|
+| `LEARNING_LOG.md` | Continuous discoveries & patterns | Growing |
+| `_AI_AGENT_PHILOSOPHY.md` | Mental models & why | ~3.5K tokens |
+| `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | AR Foundation + VFX patterns | ~15K tokens |
+| `_WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md` | WebGL/Three.js integration | ~12K tokens |
+| `_PERFORMANCE_PATTERNS_REFERENCE.md` | Unity & WebGL optimization | ~8K tokens |
+| `_MASTER_KNOWLEDGEBASE_INDEX.md` | Navigation & organization | ~2K tokens |
+
+### Topics Covered
+
+**Unity XR**:
+- AR Foundation 6.x (plane detection, image tracking, meshing)
+- ARKit & ARCore platform-specific features
+- Human segmentation, body tracking, face tracking
+- XR Interaction Toolkit patterns
+
+**VFX & Performance**:
+- GPU-instanced particles (Quest 2/3 optimized)
+- Visual Effect Graph best practices
+- Shader optimization patterns
+- Cross-platform performance targets
+
+**WebGL Integration**:
+- Unity → Three.js bridges
+- WebXR compatibility
+- Performance considerations
+- Asset pipeline
+
+**GitHub Resources**:
+- Curated high-quality XR repositories
+- Example projects & demos
+- Community tools & libraries
+
+### Searching the Knowledgebase
+
+```bash
+# Find performance-related content
+rg -i "performance|optimization|fps" KnowledgeBase/
+
+# Find Unity-specific patterns
+rg -i "unity|arfoundation|xr" KnowledgeBase/
+
+# Search by project
+rg "Portals_6|Paint-AR" KnowledgeBase/
+
+# View recent discoveries
+tail -n 100 KnowledgeBase/LEARNING_LOG.md
+```
+
+---
+
+## 🔧 Monitoring & Maintenance
+
+### Health Dashboard
+
+**Quick check** (<3 seconds):
+```bash
+ai-system-monitor.sh --quick
+```
+
+**Full audit** (~10 seconds):
+```bash
+ai-system-monitor.sh --full
+```
+
+**Auto-heal issues**:
+```bash
+ai-system-monitor.sh --fix
+```
+
+### Security Audit
+
+```bash
+kb-security-audit.sh
+```
+
+Checks for:
+- Sensitive data patterns (API keys, passwords)
+- File permissions (world-writable files)
+- Symlink integrity
+- Git status & remote configuration
+
+---
+
+## 💡 Usage Examples
+
+### Example 1: Starting a New Unity XR Project
+
+```bash
+# 1. Access AR Foundation knowledge
+cat KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md
+
+# 2. Check platform compatibility
+rg "Quest 2|Quest 3" KnowledgeBase/_PERFORMANCE_PATTERNS_REFERENCE.md
+
+# 3. Find example projects
+cat KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md
+```
+
+### Example 2: Optimizing VFX Performance
+
+```bash
+# 1. Search for performance patterns
+rg -i "gpu instancing|particle" KnowledgeBase/
+
+# 2. Check Quest-specific optimizations
+rg "Quest.*fps|90 fps" KnowledgeBase/
+
+# 3. Log discoveries
+echo "## $(date +%Y-%m-%d) - VFX Optimization Discovery
+**Context**: Optimizing particles for Quest 2
+**Discovery**: GPU instancing reduced draw calls by 80%
+**Pattern**: Use Graphics.DrawMeshInstanced for >100 particles
+**ROI**: 15ms → 3ms frame time
+" >> KnowledgeBase/LEARNING_LOG.md
+```
+
+### Example 3: AI-Assisted Development
+
+**Activate AI Agent directive**:
+```
+> "Apply AI Agent Core Directive: Check knowledgebase for AR Foundation
+  patterns, focus on highest-leverage approach, explain trade-offs."
+```
+
+**When stuck**:
+```
+> "Emergency override: simplest solution for hand tracking on Quest 3?
+  Who solved this already?"
+```
+
+**End of session**:
+```
+> "Extract 2-3 patterns for LEARNING_LOG.md. What automation
+  opportunities exist?"
+```
+
+---
+
+## 🤝 Contributing
+
+### Adding to Knowledgebase
+
+**When to add**:
+- ✅ Novel patterns discovered
+- ✅ Performance optimizations found
+- ✅ Platform-specific workarounds
+- ✅ GitHub repos that solve real problems
+- ✅ Reusable code patterns
+
+**When NOT to add**:
+- ❌ Routine tasks with no new learning
+- ❌ Temporary/session-specific info
+- ❌ Already documented elsewhere
+- ❌ Personal notes
+
+### Format for LEARNING_LOG.md
+
+```markdown
+## YYYY-MM-DD - [Tool Name] - [Brief Title]
+
+**Discovery**: [What was learned/discovered]
+
+**Context**: [What prompted this, what problem was solved]
+
+**Pattern**: [Reusable approach]
+
+**Future Application**: [Where else can this apply?]
+
+**ROI**: [Time saved / leverage gained]
+
+---
+```
+
+---
+
+## 📈 Success Metrics
+
+### Per Session
+- **Leverage ratio**: Hours saved / invested (target: >3:1)
+- **Insights extracted**: (target: ≥2)
+- **Automations identified**: (target: ≥1)
+
+### Per Month
+- **Speed**: 2x faster than last month?
+- **Patterns reused**: ≥5?
+- **Complexity**: Decreasing?
+
+### Per Quarter
+- **Capability multiplier**: ≥3 new capabilities unlocked
+- **Time freedom**: ≥20 hours gained through automation
+- **Mastery progression**: ≥1 skill level increase
+
+---
+
+## 📄 License
+
+MIT License - See [LICENSE](LICENSE) for details
+
+---
+
+## 🔗 Links
+
+- **Repository**: https://github.com/imclab/xrai
+- **Issues**: https://github.com/imclab/xrai/issues
+- **Discussions**: https://github.com/imclab/xrai/discussions
+
+---
+
+## 📝 Recent Updates
+
+### 2026-01-08 - Initial Release
+- ✅ AI Agent Intelligence Amplification System (V3 ultra-compact)
+- ✅ Token optimization: 9.3K overhead (26% reduction)
+- ✅ Security audit passed
+- ✅ 48 knowledgebase files
+- ✅ Monitoring tools (health dashboard, security scanner)
+- ✅ Full spec-kit compliance
+- ✅ Clean git history (single initial commit)
+
+---
+
+## 🙏 Acknowledgments
+
+**AI Agent philosophy** based on:
+- Naval Ravikant (leverage thinking)
+- Elon Musk (first principles reasoning)
+- Jeff Bezos (long-term compounding)
+
+**Knowledge contributions** from:
+- Unity XR AI community
+- AR Foundation developers
+- Open source XR projects
+
+**Built with**:
+- Claude Sonnet 4.5 (AI pair programming)
+- GitHub spec-kit (specification format)
+- State-of-the-art 2026 best practices
+
+---
+
+**Made with ❤️ for the Unity XR community**
+
+*Permanent intelligence amplification infrastructure for faster learning and execution.*
