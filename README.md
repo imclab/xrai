@@ -19,6 +19,7 @@ A comprehensive, token-optimized knowledgebase with an AI Agent Intelligence Amp
 - [AI Agent System](#ai-agent-system)
 - [Knowledgebase Structure](#knowledgebase-structure)
 - [Monitoring & Maintenance](#monitoring--maintenance)
+- [KB Management Tools](#kb-management-tools)
 - [Usage Examples](#usage-examples)
 - [Contributing](#contributing)
 
@@ -71,6 +72,10 @@ Built-in tools for health checking and optimization:
 - `ai-system-monitor.sh` - Token usage, symlink verification, health dashboard (<3s)
 - `kb-security-audit.sh` - Privacy scanning, permission checks, integrity validation
 - `validate-ai-config.sh` - Configuration validation and auto-healing
+
+**New KB Management Tools**:
+- `kb-add` - Easy manual/automatic KB additions (patterns, insights, auto-git extraction)
+- `kb-audit` - Health check with metrics, recommendations, and security scan
 
 ### 4. **Token-Optimized Architecture**
 
@@ -554,6 +559,117 @@ Checks for:
 
 ---
 
+## 🛠️ KB Management Tools
+
+Easy manual and automatic additions to the knowledgebase with built-in auditing.
+
+### kb-add - Easy Additions
+
+Add patterns, insights, and discoveries to your knowledgebase in seconds:
+
+```bash
+# Add patterns (reusable solutions)
+kb-add --pattern "Use symlinks for cross-tool KB access"
+
+# Add insights (mental models)
+kb-add --insight "Token optimization: separate philosophy from protocols"
+
+# Quick daily notes
+kb-add --quick "Quest 2 needs 90 FPS for smooth hand tracking"
+
+# Auto-extract from git commits
+kb-add --auto-git
+
+# Interactive mode (guided)
+kb-add -i
+
+# Create new KB file with template
+kb-add --file unity-xr-tips.md -i
+```
+
+**Quick aliases** (load with `source ~/.local/bin/kb-aliases.sh`):
+```bash
+kb-p "pattern"       # Add pattern
+kb-i "insight"       # Add insight
+kb-a "antipattern"   # Add anti-pattern
+kb-quick "note"      # Quick note
+kb-auto              # Auto-extract from git
+```
+
+### kb-audit - Health Check
+
+Comprehensive knowledgebase audit with metrics, recommendations, and security:
+
+```bash
+# Quick audit (5 seconds)
+kb-audit --quick
+
+# Full audit with recommendations (15 seconds)
+kb-audit --full
+
+# Security scan only
+kb-audit --security
+
+# Metrics only
+kb-audit --metrics
+
+# Health score only
+kb-audit --health
+```
+
+**Example output**:
+```
+━━━ KB Quick Audit ━━━
+
+Metrics:
+  Files: 37 total, 37 this week
+  Size: 1.05MB
+  Learning entries: 9
+  Git commits: 3
+
+Health Score: 100/100 (Excellent)
+```
+
+**Health score ranges**:
+- **90-100**: Excellent ⭐
+- **70-89**: Good ✓
+- **50-69**: Needs improvement ⚠️
+- **<50**: Critical issues ❌
+
+**Full audit includes**:
+1. Metrics (file counts, size, growth rate)
+2. Security (sensitive data scan, permissions)
+3. Health score (overall rating)
+4. Recommendations (prioritized improvements)
+5. File analysis (recent additions, largest files)
+
+### Quick Workflows
+
+**Daily pattern extraction** (30 seconds):
+```bash
+kb-check              # Quick health check
+kb-auto               # Extract from git
+kb-i "Your insight"   # Add manual insights
+```
+
+**Weekly full audit** (5 minutes):
+```bash
+kb-full --report ~/Desktop/kb-audit-$(date +%Y%m%d).md
+# Review recommendations
+kb-commit             # Commit changes
+```
+
+**Post-session reflection** (2 minutes):
+```bash
+kb-p "Pattern discovered"
+kb-i "Insight about system"
+kb-check
+```
+
+See [KB_TOOLS_REFERENCE.md](KnowledgeBase/KB_TOOLS_REFERENCE.md) for complete documentation.
+
+---
+
 ## 💡 Usage Examples
 
 ### Example 1: Starting a New Unity XR Project
@@ -680,6 +796,20 @@ MIT License - See [LICENSE](LICENSE) for details
 ---
 
 ## 📝 Recent Updates
+
+### 2026-01-08 - KB Management Tools Added
+- ✅ **kb-add**: Easy manual/automatic KB additions
+  - Pattern, insight, anti-pattern extraction
+  - Auto-extract from git commits
+  - Interactive mode with templates
+  - Daily notes support
+- ✅ **kb-audit**: Comprehensive health check
+  - Metrics (file counts, growth rate, size)
+  - Security scan (sensitive data, permissions)
+  - Health score (0-100) with recommendations
+  - Quick (<5s) and full (15s) audit modes
+- ✅ Shell aliases for rapid access (kb-p, kb-i, kb-check, etc.)
+- ✅ Complete documentation in KB_TOOLS_REFERENCE.md
 
 ### 2026-01-08 - Initial Release
 - ✅ AI Agent Intelligence Amplification System (V3 ultra-compact)
