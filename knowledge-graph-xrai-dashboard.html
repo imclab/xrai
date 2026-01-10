@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XRAI Knowledge Graph Explorer</title>
+    <!-- Cytoscape for 2D -->
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+    <!-- Three.js for 3D -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- 3D Force Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/3d-force-graph@1.73.0/dist/3d-force-graph.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'SF Pro Display', -apple-system, Monaco, monospace;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #cy, #graph3d {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #cy {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+        }
+
+        #graph3d {
+            display: none;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #00d4ff;
+            margin-right: 20px;
+        }
+
+        .header .xrai-badge {
+            font-size: 10px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-right: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        #search {
+            width: 250px;
+            padding: 8px 12px 8px 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #search:focus {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 3px;
+            margin-right: 20px;
+        }
+
+        .view-toggle button {
+            padding: 6px 14px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .view-toggle button:hover:not(.active) {
+            color: #fff;
+        }
+
+        .header .stats {
+            font-size: 12px;
+            color: #666;
+            margin-left: auto;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .controls button {
+            padding: 10px 16px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 20px;
+            color: #00d4ff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .controls button:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+
+        .controls button.active {
+            background: rgba(0, 212, 255, 0.5);
+        }
+
+        .controls button.xrai-export {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(254, 202, 87, 0.2) 100%);
+            border-color: #feca57;
+            color: #feca57;
+        }
+
+        .controls button.xrai-export:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.4) 0%, rgba(254, 202, 87, 0.4) 100%);
+        }
+
+        .controls button.ingest-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .controls button.ingest-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4) 0%, rgba(0, 212, 255, 0.4) 100%);
+        }
+
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 100;
+        }
+
+        .legend h3 {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 11px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .details-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            max-height: calc(100vh - 100px);
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 100;
+            display: none;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .details-panel.visible {
+            display: block;
+        }
+
+        .details-panel .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .details-panel h2 {
+            font-size: 18px;
+            color: #00d4ff;
+            margin-bottom: 5px;
+            padding-right: 30px;
+        }
+
+        .details-panel .type-badge {
+            display: inline-block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .details-panel h3 {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 8px;
+        }
+
+        .details-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .details-panel li {
+            font-size: 12px;
+            color: #aaa;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .details-panel .relation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 12px;
+        }
+
+        .details-panel .relation-type {
+            color: #00d4ff;
+            font-size: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        .details-panel .relation-target {
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .details-panel .relation-target:hover {
+            color: #00d4ff;
+            text-decoration: underline;
+        }
+
+        .ingest-panel {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            width: 400px;
+            max-height: calc(100vh - 100px);
+            background: rgba(10, 10, 15, 0.98);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 100;
+            display: none;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .ingest-panel.visible {
+            display: block;
+        }
+
+        .ingest-panel .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ingest-panel h2 {
+            font-size: 18px;
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .ingest-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .ingest-tabs button {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ingest-tabs button.active {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+        }
+
+        .ingest-content {
+            display: none;
+        }
+
+        .ingest-content.active {
+            display: block;
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(0, 255, 136, 0.3);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .drop-zone.dragover {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .drop-zone-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-text {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .drop-zone-text strong {
+            color: #00ff88;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .input-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: Monaco, monospace;
+        }
+
+        .input-with-btn {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-with-btn input {
+            flex: 1;
+        }
+
+        .input-with-btn button {
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 8px;
+            color: #00ff88;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .input-with-btn button:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+
+        .parse-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .parse-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .parse-option.active {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.4);
+            color: #00d4ff;
+        }
+
+        .parse-option input {
+            accent-color: #00d4ff;
+        }
+
+        .ingest-stats {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .ingest-stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ingest-stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .ingest-stats-label {
+            color: #666;
+        }
+
+        .ingest-stats-value {
+            color: #00ff88;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            border-radius: 2px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .ingest-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .ingest-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-clear {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+        }
+
+        .btn-clear:hover {
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .btn-ingest {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            border: none;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-ingest:hover {
+            opacity: 0.9;
+        }
+
+        .btn-ingest:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .cluster-info {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 11px;
+            z-index: 100;
+        }
+
+        .cluster-info .count {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        /* Docs Panel */
+        .docs-panel {
+            position: fixed;
+            top: 60px;
+            left: -320px;
+            width: 320px;
+            max-height: calc(100vh - 80px);
+            background: rgba(10, 10, 15, 0.98);
+            border: 1px solid rgba(162, 155, 254, 0.3);
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            padding: 15px;
+            z-index: 100;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+        }
+
+        .docs-panel.visible {
+            left: 0;
+        }
+
+        .docs-toggle {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 30px;
+            height: 80px;
+            background: rgba(162, 155, 254, 0.2);
+            border: 1px solid rgba(162, 155, 254, 0.4);
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 11px;
+            color: #a29bfe;
+        }
+
+        .docs-toggle:hover {
+            background: rgba(162, 155, 254, 0.3);
+        }
+
+        .docs-toggle.active {
+            left: 320px;
+        }
+
+        .docs-panel h2 {
+            font-size: 16px;
+            color: #a29bfe;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .docs-panel h2::before {
+            content: "📚";
+        }
+
+        .docs-category {
+            margin-bottom: 15px;
+        }
+
+        .docs-category-title {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+        }
+
+        .doc-item:hover {
+            background: rgba(162, 155, 254, 0.1);
+            border-color: rgba(162, 155, 254, 0.3);
+        }
+
+        .doc-item.selected {
+            background: rgba(162, 155, 254, 0.15);
+            border-color: #a29bfe;
+        }
+
+        .doc-item-icon {
+            font-size: 14px;
+        }
+
+        .doc-item-name {
+            flex: 1;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doc-item-size {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .doc-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .doc-item-btn {
+            padding: 4px 8px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+            color: #00d4ff;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .doc-item-btn:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+
+        .doc-item-btn.ingest-btn {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        .doc-item-btn.ingest-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+        }
+
+        .docs-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .docs-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-ingest-selected {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            border: none;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-ingest-selected:hover {
+            opacity: 0.9;
+        }
+
+        .btn-ingest-selected:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .docs-search {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .docs-search:focus {
+            border-color: #a29bfe;
+        }
+
+        .docs-stats {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .xrai-export-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            background: rgba(10, 10, 15, 0.98);
+            border: 1px solid rgba(254, 202, 87, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+            z-index: 200;
+            display: none;
+            backdrop-filter: blur(20px);
+        }
+
+        .xrai-export-panel.visible {
+            display: block;
+        }
+
+        .xrai-export-panel h2 {
+            font-size: 20px;
+            color: #feca57;
+            margin-bottom: 20px;
+        }
+
+        .xrai-export-panel .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .export-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-option:hover {
+            background: rgba(254, 202, 87, 0.1);
+            border-color: rgba(254, 202, 87, 0.3);
+        }
+
+        .export-option.selected {
+            background: rgba(254, 202, 87, 0.15);
+            border-color: #feca57;
+        }
+
+        .export-option input[type="radio"] {
+            accent-color: #feca57;
+        }
+
+        .export-option .option-title {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .export-option .option-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .export-actions button {
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-actions .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #888;
+        }
+
+        .export-actions .btn-export {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            border: none;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .keyboard-hints {
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            font-size: 10px;
+            color: #444;
+            z-index: 100;
+        }
+
+        .keyboard-hints kbd {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 3px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 13px;
+            z-index: 300;
+            display: none;
+        }
+
+        .toast.visible {
+            display: block;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        .toast.error {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 150;
+            display: none;
+        }
+
+        .overlay.visible {
+            display: block;
+        }
+
+        .perf-mode {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            font-size: 10px;
+            color: #444;
+            background: rgba(10, 10, 15, 0.9);
+            padding: 5px 10px;
+            border-radius: 10px;
+            z-index: 99;
+        }
+
+        .perf-mode.active {
+            color: #feca57;
+            border: 1px solid rgba(254, 202, 87, 0.3);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 500;
+        }
+
+        .loading-overlay.visible {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 212, 255, 0.2);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .loading-progress {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #00d4ff;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>XRAI Knowledge Graph</h1>
+        <span class="xrai-badge">XRAI v3.0</span>
+        <div class="search-container">
+            <span class="search-icon">/</span>
+            <input type="text" id="search" placeholder="Search entities...">
+        </div>
+        <div class="view-toggle">
+            <button onclick="setViewMode('2d')" class="active" id="btn2d">2D</button>
+            <button onclick="setViewMode('3d')" id="btn3d">3D</button>
+        </div>
+        <div class="stats" id="stats">Loading...</div>
+    </div>
+
+    <div id="cy"></div>
+    <div id="graph3d"></div>
+
+    <div class="perf-mode" id="perfMode">Standard Mode</div>
+
+    <!-- Docs Panel Toggle -->
+    <div class="docs-toggle" id="docsToggle" onclick="toggleDocsPanel()">DOCS</div>
+
+    <!-- Docs Panel -->
+    <div class="docs-panel" id="docsPanel">
+        <h2>Knowledge Base</h2>
+        <input type="text" class="docs-search" id="docsSearch" placeholder="Search docs...">
+        <div class="docs-stats" id="docsStats">29 documents</div>
+        <div id="docsList"></div>
+        <div class="docs-actions">
+            <button class="btn-ingest-selected" id="btnIngestDocs" onclick="ingestSelectedDocs()" disabled>Ingest Selected (0)</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="setLayout('cose')" class="active" id="layoutCose">Force</button>
+        <button onclick="setLayout('circle')" id="layoutCircle">Circle</button>
+        <button onclick="setLayout('breadthfirst')" id="layoutTree">Tree</button>
+        <button onclick="fitGraph()">Fit All</button>
+        <button onclick="toggleLabels()">Labels</button>
+        <button onclick="showIngestPanel()" class="ingest-btn">+ Ingest Data</button>
+        <button onclick="showExportPanel()" class="xrai-export">Export XRAI</button>
+    </div>
+
+    <div class="legend">
+        <h3>Entity Types</h3>
+        <div class="legend-item"><div class="legend-dot" style="background: #ff6b6b"></div> Project</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #00ff88"></div> Repository</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #4ecdc4"></div> System</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #ffe66d"></div> Pattern</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #a29bfe"></div> Framework</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #fd79a8"></div> Person</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #74b9ff"></div> Goal</div>
+    </div>
+
+    <div class="cluster-info" id="clusterInfo" style="display: none;">
+        Showing <span class="count" id="visibleCount">0</span> of <span id="totalCount">0</span> nodes
+    </div>
+
+    <div class="details-panel" id="details">
+        <button class="close" onclick="hideDetails()">&times;</button>
+        <h2 id="detail-name"></h2>
+        <span class="type-badge" id="detail-type"></span>
+        <h3>Observations</h3>
+        <ul id="detail-observations"></ul>
+        <h3>Relations</h3>
+        <div id="detail-relations"></div>
+        <h3>XRAI Metadata</h3>
+        <div id="detail-xrai" style="font-size: 11px; color: #666; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; font-family: monospace;">
+            <div>nodeId: <span id="xrai-node-id"></span></div>
+            <div>spatialHash: <span id="xrai-spatial-hash"></span></div>
+            <div>clusterRegion: <span id="xrai-cluster"></span></div>
+        </div>
+    </div>
+
+    <div class="ingest-panel" id="ingestPanel">
+        <button class="close" onclick="hideIngestPanel()">&times;</button>
+        <h2>Ingest Data</h2>
+
+        <div class="ingest-tabs">
+            <button class="active" onclick="switchIngestTab('file')">Drop File</button>
+            <button onclick="switchIngestTab('url')">URL</button>
+            <button onclick="switchIngestTab('path')">File Path</button>
+            <button onclick="switchIngestTab('paste')">Paste Text</button>
+        </div>
+
+        <div class="ingest-content active" id="tab-file">
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-zone-icon">📁</div>
+                <div class="drop-zone-text">
+                    Drop files here or <strong>click to browse</strong><br>
+                    <small>Supports: .md, .json, .txt, .csv, .yaml</small>
+                </div>
+                <input type="file" id="fileInput" style="display: none;" multiple accept=".md,.json,.txt,.csv,.yaml,.yml">
+            </div>
+        </div>
+
+        <div class="ingest-content" id="tab-url">
+            <div class="input-group">
+                <label>URL to fetch</label>
+                <div class="input-with-btn">
+                    <input type="text" id="urlInput" placeholder="https://raw.githubusercontent.com/...">
+                    <button onclick="fetchURL()">Fetch</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Recent URLs</label>
+                <div id="recentUrls" style="font-size: 11px; color: #666;">No recent URLs</div>
+            </div>
+        </div>
+
+        <div class="ingest-content" id="tab-path">
+            <div class="input-group">
+                <label>Local File Path</label>
+                <div class="input-with-btn">
+                    <input type="text" id="pathInput" placeholder="/Users/.../_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md">
+                    <button onclick="indexFilePath()">Index</button>
+                </div>
+            </div>
+            <p style="font-size: 11px; color: #666; margin-top: 10px;">
+                Note: Due to browser security, local files must be served or selected via file picker.
+                For local indexing, use the file drop zone above.
+            </p>
+        </div>
+
+        <div class="ingest-content" id="tab-paste">
+            <div class="input-group">
+                <label>Paste content (Markdown, JSON, or plain text)</label>
+                <textarea id="pasteInput" placeholder="Paste your content here..."></textarea>
+            </div>
+        </div>
+
+        <div class="parse-options">
+            <label class="parse-option active">
+                <input type="checkbox" id="optEntities" checked> Extract Entities
+            </label>
+            <label class="parse-option active">
+                <input type="checkbox" id="optRelations" checked> Extract Relations
+            </label>
+            <label class="parse-option">
+                <input type="checkbox" id="optCodeBlocks"> Parse Code Blocks
+            </label>
+            <label class="parse-option">
+                <input type="checkbox" id="optHeaders"> Use Headers as Entities
+            </label>
+        </div>
+
+        <div class="ingest-stats">
+            <div class="ingest-stats-row">
+                <span class="ingest-stats-label">Pending entities</span>
+                <span class="ingest-stats-value" id="pendingEntities">0</span>
+            </div>
+            <div class="ingest-stats-row">
+                <span class="ingest-stats-label">Pending relations</span>
+                <span class="ingest-stats-value" id="pendingRelations">0</span>
+            </div>
+            <div class="ingest-stats-row">
+                <span class="ingest-stats-label">Total in graph</span>
+                <span class="ingest-stats-value" id="totalInGraph">0</span>
+            </div>
+        </div>
+
+        <div class="progress-bar" id="progressBar" style="display: none;">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+
+        <div class="ingest-actions">
+            <button class="btn-clear" onclick="clearPending()">Clear Pending</button>
+            <button class="btn-ingest" id="btnIngest" onclick="ingestPending()" disabled>Ingest to Graph</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="hideExportPanel()"></div>
+
+    <div class="xrai-export-panel" id="exportPanel">
+        <button class="close" onclick="hideExportPanel()">&times;</button>
+        <h2>Export to XRAI Format</h2>
+        <div class="export-options">
+            <div class="export-option selected" onclick="selectExportOption(this, 'full')">
+                <input type="radio" name="exportType" value="full" checked>
+                <label>
+                    <div class="option-title">Full XRAI World</div>
+                    <div class="option-desc">Generate complete 3D environment with rooms, portals, and AI components</div>
+                </label>
+            </div>
+            <div class="export-option" onclick="selectExportOption(this, 'graph')">
+                <input type="radio" name="exportType" value="graph">
+                <label>
+                    <div class="option-title">Graph Visualization</div>
+                    <div class="option-desc">Export 3D force-directed graph as XRAI scene</div>
+                </label>
+            </div>
+            <div class="export-option" onclick="selectExportOption(this, 'json')">
+                <input type="radio" name="exportType" value="json">
+                <label>
+                    <div class="option-title">JSON Manifest</div>
+                    <div class="option-desc">Export knowledge graph as XRAI-compatible JSON manifest</div>
+                </label>
+            </div>
+        </div>
+        <div class="export-actions">
+            <button class="btn-cancel" onclick="hideExportPanel()">Cancel</button>
+            <button class="btn-export" onclick="performExport()">Export</button>
+        </div>
+    </div>
+
+    <div class="keyboard-hints">
+        <kbd>/</kbd> Search &nbsp;
+        <kbd>Esc</kbd> Clear &nbsp;
+        <kbd>2</kbd> 2D &nbsp;
+        <kbd>3</kbd> 3D &nbsp;
+        <kbd>D</kbd> Docs &nbsp;
+        <kbd>I</kbd> Ingest &nbsp;
+        <kbd>E</kbd> Export
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Processing...</div>
+        <div class="loading-progress" id="loadingProgress"></div>
+    </div>
+
+    <script>
+        // =============================================================
+        // MCP MEMORY DATA - Initial seed data
+        // =============================================================
+        let mcpData = {
+            entities: [
+                { name: "H3M Portals Project", type: "project", observations: ["Unity 6000.1.2f1 AR/XR application", "iOS, Android, WebGL, VisionOS", "AR Foundation, OpenXR, URP rendering"] },
+                { name: "HartXR Project", type: "project", observations: ["WebGL-based AR application", "Unity 6000.1.2f1 + URP 17.1.0", "Imagine WebAR framework"] },
+                { name: "WarpJobs System", type: "project", observations: ["Job search automation", "6 active sources", "Intelligence scoring"] },
+                { name: "Self-Improving Memory", type: "system", observations: ["5-phase architecture", "Auto pattern extraction", "LEARNING_LOG.md journal"] },
+                { name: "HyperGraph Knowledge Explorer", type: "system", observations: ["Universal 3D visualization", "Semantic zoom levels", "Adapter-based ingestion"] },
+                { name: "Daily Priority System", type: "workflow", observations: ["10 priorities daily", "5-star rating system", "AI learning patterns"] },
+                { name: "Pattern Extraction Pipeline", type: "workflow", observations: ["Session-end analysis", "LEARNING_LOG.md append", "MCP entity creation"] },
+                { name: "XRApp State Architecture", type: "pattern", observations: ["Stateley framework", "9 main states", "Firebase backend"] },
+                { name: "Notable Technical Patterns", type: "pattern", observations: ["Partial classes", "ScriptableObjects", "Event-based communication"] },
+                { name: "Leverage Hierarchy", type: "mentalmodel", observations: ["Use existing (0h)", "Adapt from KB (0.1x)", "AI-assisted (0.3x)"] },
+                { name: "iOS Debugging Protocol", type: "bestpractice", observations: ["Cache clearing first", "DerivedData purge", "Full rebuild sequence"] },
+                { name: "Imagine WebAR Framework", type: "framework", observations: ["Custom WebGL AR tracking", "3DOF, 6DOF, 3DOF Orbit", "GPS/compass support"] },
+                { name: "HartXR Dependencies", type: "framework", observations: ["DOTween Pro, TextMesh Pro", "Firebase WebGL", "uLipSync"] },
+                { name: "James Tunick", type: "person", observations: ["IMC Lab", "GitHub: imclab, jamestunick", "Unity + AR/XR developer"] },
+                { name: "keijiro", type: "developer", observations: ["VFX Graph master", "10k+ followers", "SplatVFX, Minis, Lasp, Kino, Rcam4"] },
+                { name: "Unity Intelligence Optimization", type: "goal", observations: ["50-70% token reduction", "M3 Max 128GB optimization"] },
+                { name: "SplatVFX", type: "repository", observations: ["keijiro/SplatVFX", "Gaussian Splatting + VFX Graph", "iOS, Windows, macOS"] },
+                { name: "Rcam4", type: "repository", observations: ["keijiro/Rcam4", "LiDAR depth streaming", "iOS (LiDAR required)"] },
+                { name: "MediaPipeUnityPlugin", type: "repository", observations: ["homuler/MediaPipeUnityPlugin", "Body/face/hand tracking", "iOS, Android, Windows"] },
+                { name: "arfoundation-samples", type: "repository", observations: ["Unity-Technologies", "Official AR Foundation samples", "iOS, Android"] },
+                { name: "HoloKit Unity SDK", type: "repository", observations: ["holokit/holokit-unity-sdk", "Stereoscopic AR", "iOS, Android"] },
+                { name: "3d-force-graph", type: "repository", observations: ["vasturiano/3d-force-graph", "3D graph visualization", "WebGL, All browsers"] },
+                { name: "Open Brush", type: "repository", observations: ["icosa-foundation/open-brush", "VR painting (Tilt Brush successor)", "Quest, PCVR"] },
+                { name: "uLipSync", type: "repository", observations: ["hecomi/uLipSync", "Real-time lip sync", "All platforms"] },
+                { name: "XRAI Format", type: "format", observations: ["Binary container format", "11 section types", "Mesh, Splat, NeRF geometry"] },
+                { name: "VNMF", type: "format", observations: ["Volumetric Neural Media Format", "Perception-first architecture", "6 semantic layers"] }
+            ],
+            relations: [
+                { from: "H3M Portals Project", to: "HartXR Project", type: "shares_codebase_with" },
+                { from: "HartXR Project", to: "Imagine WebAR Framework", type: "uses" },
+                { from: "James Tunick", to: "H3M Portals Project", type: "develops" },
+                { from: "James Tunick", to: "HartXR Project", type: "develops" },
+                { from: "iOS Debugging Protocol", to: "H3M Portals Project", type: "applies_to" },
+                { from: "XRApp State Architecture", to: "HartXR Project", type: "implements" },
+                { from: "HyperGraph Knowledge Explorer", to: "Self-Improving Memory", type: "extends" },
+                { from: "HyperGraph Knowledge Explorer", to: "Pattern Extraction Pipeline", type: "visualizes" },
+                { from: "HyperGraph Knowledge Explorer", to: "Leverage Hierarchy", type: "implements" },
+                { from: "Pattern Extraction Pipeline", to: "Self-Improving Memory", type: "feeds_into" },
+                { from: "keijiro", to: "SplatVFX", type: "created" },
+                { from: "keijiro", to: "Rcam4", type: "created" },
+                { from: "SplatVFX", to: "H3M Portals Project", type: "used_by" },
+                { from: "MediaPipeUnityPlugin", to: "HartXR Project", type: "used_by" },
+                { from: "arfoundation-samples", to: "H3M Portals Project", type: "reference_for" },
+                { from: "Open Brush", to: "James Tunick", type: "workspace_of" },
+                { from: "3d-force-graph", to: "HyperGraph Knowledge Explorer", type: "used_by" },
+                { from: "uLipSync", to: "HartXR Dependencies", type: "included_in" },
+                { from: "XRAI Format", to: "HyperGraph Knowledge Explorer", type: "exports_to" },
+                { from: "VNMF", to: "XRAI Format", type: "extends" }
+            ]
+        };
+
+        let pendingData = { entities: [], relations: [] };
+
+        // =============================================================
+        // TYPE COLORS
+        // =============================================================
+        const typeColors = {
+            project: '#ff6b6b', workflow: '#4ecdc4', system: '#4ecdc4',
+            pattern: '#ffe66d', mentalmodel: '#ffe66d', framework: '#a29bfe',
+            person: '#fd79a8', developer: '#fd79a8', goal: '#74b9ff',
+            bestpractice: '#74b9ff', repository: '#00ff88', format: '#feca57',
+            technology: '#74b9ff', technique: '#ffe66d', concept: '#a29bfe',
+            code: '#00d4ff', file: '#888888', class: '#00ff88',
+            function: '#4ecdc4', package: '#a29bfe'
+        };
+
+        // =============================================================
+        // STATE
+        // =============================================================
+        let cy = null;
+        let graph3d = null;
+        let currentView = '2d';
+        let showLabels = true;
+        let selectedExportType = 'full';
+        let performanceMode = 'standard';
+
+        const CLUSTER_THRESHOLD = 500;
+        const LOD_THRESHOLD = 5000;
+        const MAX_VISIBLE_NODES = 10000;
+
+        // =============================================================
+        // ENTITY EXTRACTION ENGINE
+        // =============================================================
+        const EntityExtractor = {
+            patterns: {
+                codeBlock: /```(\w+)?\n([\s\S]*?)```/g,
+                className: /class\s+(\w+)/g,
+                functionName: /(?:function|def|func)\s+(\w+)/g,
+                header: /^#+\s+(.+)$/gm,
+                link: /\[([^\]]+)\]\(([^)]+)\)/g,
+                boldText: /\*\*([^*]+)\*\*/g,
+                listItem: /^[-*]\s+\*\*([^*]+)\*\*/gm,
+                repoPath: /([\w\-]+\/[\w\-]+)/g,
+                techTerm: /\b(ARKit|ARCore|VFX Graph|Unity|iOS|Android|WebGL|LiDAR|GPU|CPU|FFT|WebRTC|DOTS|Burst|Compute Shader)\b/gi
+            },
+
+            extractEntities(text, options = {}) {
+                const entities = new Map();
+                const relations = [];
+
+                if (options.useHeaders) {
+                    let match;
+                    const headerPattern = new RegExp(this.patterns.header);
+                    while ((match = headerPattern.exec(text)) !== null) {
+                        const name = match[1].trim();
+                        if (name.length > 2 && name.length < 100) {
+                            this.addEntity(entities, name, 'concept', ['Extracted from header']);
+                        }
+                    }
+                }
+
+                if (options.parseCodeBlocks) {
+                    let match;
+                    const codePattern = new RegExp(this.patterns.codeBlock);
+                    while ((match = codePattern.exec(text)) !== null) {
+                        const lang = match[1] || 'code';
+                        const code = match[2];
+                        let classMatch;
+                        const classPattern = new RegExp(this.patterns.className);
+                        while ((classMatch = classPattern.exec(code)) !== null) {
+                            this.addEntity(entities, classMatch[1], 'class', ['Language: ' + lang]);
+                        }
+                        let funcMatch;
+                        const funcPattern = new RegExp(this.patterns.functionName);
+                        while ((funcMatch = funcPattern.exec(code)) !== null) {
+                            this.addEntity(entities, funcMatch[1], 'function', ['Language: ' + lang]);
+                        }
+                    }
+                }
+
+                if (options.extractEntities) {
+                    let match;
+                    const techPattern = new RegExp(this.patterns.techTerm);
+                    while ((match = techPattern.exec(text)) !== null) {
+                        this.addEntity(entities, match[1], 'technology', ['Technical term']);
+                    }
+
+                    const repoPattern = new RegExp(this.patterns.repoPath);
+                    while ((match = repoPattern.exec(text)) !== null) {
+                        const repoPath = match[1];
+                        if (!repoPath.includes('.') && repoPath.length > 3) {
+                            this.addEntity(entities, repoPath, 'repository', ['GitHub repository']);
+                        }
+                    }
+
+                    const linkPattern = new RegExp(this.patterns.link);
+                    while ((match = linkPattern.exec(text)) !== null) {
+                        const linkText = match[1];
+                        const linkUrl = match[2];
+                        if (linkText.length > 2 && linkText.length < 50) {
+                            const obs = linkUrl.startsWith('http') ? ['URL: ' + linkUrl] : ['Reference: ' + linkUrl];
+                            this.addEntity(entities, linkText, 'concept', obs);
+                        }
+                    }
+
+                    const listPattern = new RegExp(this.patterns.listItem);
+                    while ((match = listPattern.exec(text)) !== null) {
+                        const itemName = match[1].trim();
+                        if (itemName.length > 2 && itemName.length < 100) {
+                            this.addEntity(entities, itemName, 'pattern', ['From list item']);
+                        }
+                    }
+                }
+
+                if (options.extractRelations) {
+                    this.extractRelations(text, entities, relations);
+                }
+
+                return { entities: Array.from(entities.values()), relations: relations };
+            },
+
+            addEntity(map, name, type, observations) {
+                const normalizedName = name.trim();
+                if (map.has(normalizedName)) {
+                    const existing = map.get(normalizedName);
+                    existing.observations = [...new Set([...existing.observations, ...observations])];
+                } else {
+                    map.set(normalizedName, { name: normalizedName, type: type, observations: observations });
+                }
+            },
+
+            extractRelations(text, entities, relations) {
+                const sentences = text.split(/[.!?]\s+/);
+                for (const sentence of sentences) {
+                    const foundEntities = [];
+                    for (const name of entities.keys()) {
+                        if (sentence.toLowerCase().includes(name.toLowerCase())) {
+                            foundEntities.push(name);
+                        }
+                    }
+                    for (let i = 0; i < foundEntities.length - 1; i++) {
+                        for (let j = i + 1; j < foundEntities.length; j++) {
+                            relations.push({ from: foundEntities[i], to: foundEntities[j], type: 'related_to' });
+                        }
+                    }
+                }
+            },
+
+            parseJSON(jsonStr) {
+                try {
+                    const data = JSON.parse(jsonStr);
+                    if (data.entities && Array.isArray(data.entities)) {
+                        return {
+                            entities: data.entities.map(e => ({
+                                name: e.name || e.id || e.label,
+                                type: e.type || e.entityType || 'concept',
+                                observations: e.observations || e.properties || [JSON.stringify(e).slice(0, 100)]
+                            })),
+                            relations: (data.relations || data.edges || data.links || []).map(r => ({
+                                from: r.from || r.source,
+                                to: r.to || r.target,
+                                type: r.type || r.relationType || r.label || 'related_to'
+                            }))
+                        };
+                    }
+                    if (data.dependencies) {
+                        const entities = [];
+                        const relations = [];
+                        if (data.name) {
+                            entities.push({ name: data.name, type: 'package', observations: [data.description || 'Root package', 'Version: ' + (data.version || 'unknown')] });
+                        }
+                        for (const [pkg, version] of Object.entries(data.dependencies || {})) {
+                            entities.push({ name: pkg, type: 'package', observations: ['Version: ' + version] });
+                            if (data.name) {
+                                relations.push({ from: data.name, to: pkg, type: 'depends_on' });
+                            }
+                        }
+                        return { entities, relations };
+                    }
+                    if (Array.isArray(data)) {
+                        return {
+                            entities: data.map((item, i) => ({
+                                name: item.name || item.id || item.title || 'Item ' + i,
+                                type: item.type || 'concept',
+                                observations: Object.entries(item).filter(([k]) => !['name', 'id', 'type'].includes(k)).map(([k, v]) => k + ': ' + JSON.stringify(v).slice(0, 50)).slice(0, 5)
+                            })),
+                            relations: []
+                        };
+                    }
+                    return { entities: [], relations: [] };
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    return { entities: [], relations: [] };
+                }
+            }
+        };
+
+        // =============================================================
+        // CYTOSCAPE 2D VIEW
+        // =============================================================
+        function mcpToCytoscape(data) {
+            const elements = [];
+            data.entities.forEach((entity) => {
+                const color = typeColors[entity.type.toLowerCase()] || '#888';
+                elements.push({ data: { id: entity.name.replace(/\s+/g, '_'), label: entity.name, type: entity.type, observations: entity.observations, color: color } });
+            });
+            data.relations.forEach((rel, i) => {
+                const sourceId = rel.from.replace(/\s+/g, '_');
+                const targetId = rel.to.replace(/\s+/g, '_');
+                if (data.entities.some(e => e.name.replace(/\s+/g, '_') === sourceId) && data.entities.some(e => e.name.replace(/\s+/g, '_') === targetId)) {
+                    elements.push({ data: { id: 'edge_' + i, source: sourceId, target: targetId, relationType: rel.type } });
+                }
+            });
+            return elements;
+        }
+
+        function initCytoscape() {
+            const elements = mcpToCytoscape(mcpData);
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    { selector: 'node', style: { 'background-color': 'data(color)', 'label': showLabels ? 'data(label)' : '', 'color': '#fff', 'font-size': '11px', 'text-wrap': 'wrap', 'text-max-width': '100px', 'text-valign': 'bottom', 'text-margin-y': 5, 'width': 25, 'height': 25, 'border-width': 2, 'border-color': 'data(color)', 'border-opacity': 0.3 } },
+                    { selector: 'node:selected', style: { 'border-width': 4, 'border-color': '#00d4ff', 'border-opacity': 1, 'width': 35, 'height': 35 } },
+                    { selector: 'node.highlighted', style: { 'border-width': 3, 'border-color': '#00ff00', 'border-opacity': 1 } },
+                    { selector: 'node.faded', style: { 'opacity': 0.2 } },
+                    { selector: 'edge', style: { 'width': 1.5, 'line-color': 'rgba(0, 212, 255, 0.4)', 'target-arrow-color': 'rgba(0, 212, 255, 0.6)', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'arrow-scale': 0.8 } },
+                    { selector: 'edge:selected', style: { 'line-color': '#00d4ff', 'target-arrow-color': '#00d4ff', 'width': 3 } },
+                    { selector: 'edge.faded', style: { 'opacity': 0.1 } }
+                ],
+                layout: { name: 'cose', animate: true, animationDuration: 500, nodeRepulsion: 8000, idealEdgeLength: 100, gravity: 0.3 },
+                minZoom: 0.1,
+                maxZoom: 5,
+                wheelSensitivity: 0.3
+            });
+            cy.on('tap', 'node', (evt) => showDetails(evt.target.data()));
+            cy.on('tap', (evt) => { if (evt.target === cy) { hideDetails(); cy.elements().removeClass('faded'); } });
+            cy.on('mouseover', 'node', (evt) => { const neighborhood = evt.target.closedNeighborhood(); cy.elements().addClass('faded'); neighborhood.removeClass('faded'); });
+            cy.on('mouseout', 'node', () => cy.elements().removeClass('faded'));
+            updateStats();
+            checkPerformanceMode();
+        }
+
+        // =============================================================
+        // 3D FORCE GRAPH VIEW
+        // =============================================================
+        function mcpTo3DGraph(data) {
+            const nodes = data.entities.map((entity, i) => ({ id: entity.name.replace(/\s+/g, '_'), name: entity.name, type: entity.type, observations: entity.observations, color: typeColors[entity.type.toLowerCase()] || '#888', val: entity.observations ? entity.observations.length : 1 }));
+            const nodeIds = new Set(nodes.map(n => n.id));
+            const links = data.relations.filter(rel => { const sourceId = rel.from.replace(/\s+/g, '_'); const targetId = rel.to.replace(/\s+/g, '_'); return nodeIds.has(sourceId) && nodeIds.has(targetId); }).map((rel, i) => ({ source: rel.from.replace(/\s+/g, '_'), target: rel.to.replace(/\s+/g, '_'), type: rel.type }));
+            return { nodes, links };
+        }
+
+        function init3DGraph() {
+            const graphData = mcpTo3DGraph(mcpData);
+            const container = document.getElementById('graph3d');
+            graph3d = ForceGraph3D({ controlType: 'orbit' })(container).graphData(graphData).nodeColor(node => node.color).nodeLabel(node => node.name + ' (' + node.type + ')').nodeThreeObject(node => { const size = Math.max(3, Math.min(15, 5 + (node.val || 1) * 2)); const geometry = new THREE.SphereGeometry(size); const material = new THREE.MeshLambertMaterial({ color: node.color, transparent: true, opacity: 0.8 }); return new THREE.Mesh(geometry, material); }).linkColor(() => 'rgba(0, 212, 255, 0.3)').linkWidth(1).linkDirectionalParticles(2).linkDirectionalParticleWidth(2).linkDirectionalParticleColor(() => '#00d4ff').backgroundColor('#0a0a0f').showNavInfo(false).onNodeClick(node => { showDetails({ id: node.id, label: node.name, type: node.type, observations: node.observations, color: node.color }); const distance = 100; const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z); graph3d.cameraPosition({ x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }, node, 1000); });
+        }
+
+        function setViewMode(mode) {
+            currentView = mode;
+            document.getElementById('btn2d').classList.toggle('active', mode === '2d');
+            document.getElementById('btn3d').classList.toggle('active', mode === '3d');
+            document.getElementById('cy').style.display = mode === '2d' ? 'block' : 'none';
+            document.getElementById('graph3d').style.display = mode === '3d' ? 'block' : 'none';
+            if (mode === '3d') { if (!graph3d) { init3DGraph(); } else { graph3d.graphData(mcpTo3DGraph(mcpData)); } }
+            document.getElementById('layoutCose').style.display = mode === '2d' ? 'inline-block' : 'none';
+            document.getElementById('layoutCircle').style.display = mode === '2d' ? 'inline-block' : 'none';
+            document.getElementById('layoutTree').style.display = mode === '2d' ? 'inline-block' : 'none';
+        }
+
+        // =============================================================
+        // DETAILS PANEL
+        // =============================================================
+        function showDetails(data) {
+            const panel = document.getElementById('details');
+            document.getElementById('detail-name').textContent = data.label;
+            document.getElementById('detail-type').textContent = data.type;
+            const obsEl = document.getElementById('detail-observations');
+            obsEl.replaceChildren();
+            if (data.observations) { data.observations.forEach(obs => { const li = document.createElement('li'); li.textContent = obs; obsEl.appendChild(li); }); }
+            const relEl = document.getElementById('detail-relations');
+            relEl.replaceChildren();
+            if (cy) {
+                const nodeId = data.id;
+                const edges = cy.edges().filter(e => e.source().id() === nodeId || e.target().id() === nodeId);
+                edges.forEach(edge => {
+                    const isSource = edge.source().id() === nodeId;
+                    const otherNode = isSource ? edge.target() : edge.source();
+                    const relType = edge.data('relationType');
+                    const div = document.createElement('div');
+                    div.className = 'relation';
+                    const arrowSpan = document.createElement('span');
+                    arrowSpan.textContent = isSource ? '\u2192 ' : '\u2190 ';
+                    div.appendChild(arrowSpan);
+                    const typeSpan = document.createElement('span');
+                    typeSpan.className = 'relation-type';
+                    typeSpan.textContent = relType;
+                    div.appendChild(typeSpan);
+                    div.appendChild(document.createTextNode(' '));
+                    const targetSpan = document.createElement('span');
+                    targetSpan.className = 'relation-target';
+                    targetSpan.textContent = otherNode.data('label');
+                    targetSpan.onclick = () => { if (currentView === '2d') { cy.center(otherNode); cy.$(':selected').unselect(); otherNode.select(); } showDetails(otherNode.data()); };
+                    div.appendChild(targetSpan);
+                    relEl.appendChild(div);
+                });
+            }
+            document.getElementById('xrai-node-id').textContent = generateXRAINodeId(data.label);
+            document.getElementById('xrai-spatial-hash').textContent = generateSpatialHash(data.label);
+            document.getElementById('xrai-cluster').textContent = getClusterRegion(data.type);
+            panel.classList.add('visible');
+        }
+
+        function hideDetails() { document.getElementById('details').classList.remove('visible'); if (cy) cy.$(':selected').unselect(); }
+
+        // =============================================================
+        // INGEST PANEL
+        // =============================================================
+        function showIngestPanel() { document.getElementById('ingestPanel').classList.add('visible'); updateIngestStats(); }
+        function hideIngestPanel() { document.getElementById('ingestPanel').classList.remove('visible'); }
+
+        function switchIngestTab(tab) {
+            document.querySelectorAll('.ingest-tabs button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.ingest-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+        fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
+
+        async function handleFiles(files) {
+            showLoading('Processing files...');
+            for (const file of files) {
+                updateLoadingText('Processing ' + file.name + '...');
+                const text = await file.text();
+                const options = { extractEntities: document.getElementById('optEntities').checked, extractRelations: document.getElementById('optRelations').checked, parseCodeBlocks: document.getElementById('optCodeBlocks').checked, useHeaders: document.getElementById('optHeaders').checked };
+                let extracted;
+                if (file.name.endsWith('.json')) { extracted = EntityExtractor.parseJSON(text); } else { extracted = EntityExtractor.extractEntities(text, options); }
+                extracted.entities.forEach(e => { e.observations = e.observations || []; e.observations.push('Source: ' + file.name); });
+                pendingData.entities.push(...extracted.entities);
+                pendingData.relations.push(...extracted.relations);
+            }
+            hideLoading();
+            updateIngestStats();
+            showToast('Extracted ' + pendingData.entities.length + ' entities from ' + files.length + ' file(s)');
+        }
+
+        async function fetchURL() {
+            const url = document.getElementById('urlInput').value.trim();
+            if (!url) { showToast('Please enter a URL', 'error'); return; }
+            showLoading('Fetching ' + url + '...');
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const text = await response.text();
+                const options = { extractEntities: document.getElementById('optEntities').checked, extractRelations: document.getElementById('optRelations').checked, parseCodeBlocks: document.getElementById('optCodeBlocks').checked, useHeaders: document.getElementById('optHeaders').checked };
+                let extracted;
+                if (url.endsWith('.json')) { extracted = EntityExtractor.parseJSON(text); } else { extracted = EntityExtractor.extractEntities(text, options); }
+                extracted.entities.forEach(e => { e.observations = e.observations || []; e.observations.push('Source: ' + url); });
+                pendingData.entities.push(...extracted.entities);
+                pendingData.relations.push(...extracted.relations);
+                hideLoading();
+                updateIngestStats();
+                showToast('Extracted ' + extracted.entities.length + ' entities from URL');
+                saveRecentUrl(url);
+            } catch (e) { hideLoading(); showToast('Failed to fetch: ' + e.message, 'error'); }
+        }
+
+        function indexFilePath() { const path = document.getElementById('pathInput').value.trim(); if (!path) { showToast('Please enter a file path', 'error'); return; } showToast('Use file drop zone for local files (browser security)', 'error'); }
+
+        function updateIngestStats() { document.getElementById('pendingEntities').textContent = pendingData.entities.length; document.getElementById('pendingRelations').textContent = pendingData.relations.length; document.getElementById('totalInGraph').textContent = mcpData.entities.length; document.getElementById('btnIngest').disabled = pendingData.entities.length === 0; }
+
+        function clearPending() { pendingData = { entities: [], relations: [] }; updateIngestStats(); showToast('Cleared pending data'); }
+
+        function ingestPending() {
+            if (pendingData.entities.length === 0) return;
+            showLoading('Adding to graph...');
+            const existingNames = new Set(mcpData.entities.map(e => e.name.toLowerCase()));
+            const newEntities = pendingData.entities.filter(e => !existingNames.has(e.name.toLowerCase()));
+            mcpData.entities.push(...newEntities);
+            const allNames = new Set(mcpData.entities.map(e => e.name));
+            const newRelations = pendingData.relations.filter(r => allNames.has(r.from) && allNames.has(r.to));
+            mcpData.relations.push(...newRelations);
+            pendingData = { entities: [], relations: [] };
+            refreshGraph();
+            hideLoading();
+            updateIngestStats();
+            hideIngestPanel();
+            showToast('Added ' + newEntities.length + ' entities, ' + newRelations.length + ' relations');
+        }
+
+        function refreshGraph() {
+            if (cy) { const elements = mcpToCytoscape(mcpData); cy.elements().remove(); cy.add(elements); cy.layout({ name: 'cose', animate: true, animationDuration: 500, nodeRepulsion: 8000 }).run(); }
+            if (graph3d) { graph3d.graphData(mcpTo3DGraph(mcpData)); }
+            updateStats();
+            checkPerformanceMode();
+        }
+
+        function saveRecentUrl(url) { let recent = JSON.parse(localStorage.getItem('recentUrls') || '[]'); recent = [url, ...recent.filter(u => u !== url)].slice(0, 5); localStorage.setItem('recentUrls', JSON.stringify(recent)); updateRecentUrls(); }
+        function updateRecentUrls() { const recent = JSON.parse(localStorage.getItem('recentUrls') || '[]'); const container = document.getElementById('recentUrls'); if (recent.length === 0) { container.textContent = 'No recent URLs'; return; } container.innerHTML = recent.map(u => '<div style="cursor:pointer;padding:3px 0;color:#00d4ff;" onclick="document.getElementById(\'urlInput\').value=\'' + u + '\'">' + u.slice(0, 50) + '...</div>').join(''); }
+
+        document.getElementById('pasteInput').addEventListener('input', (e) => {
+            const text = e.target.value;
+            if (text.length < 10) return;
+            const options = { extractEntities: document.getElementById('optEntities').checked, extractRelations: document.getElementById('optRelations').checked, parseCodeBlocks: document.getElementById('optCodeBlocks').checked, useHeaders: document.getElementById('optHeaders').checked };
+            let extracted;
+            try { extracted = EntityExtractor.parseJSON(text); } catch { extracted = EntityExtractor.extractEntities(text, options); }
+            pendingData.entities = extracted.entities;
+            pendingData.relations = extracted.relations;
+            updateIngestStats();
+        });
+
+        // =============================================================
+        // PERFORMANCE MODE
+        // =============================================================
+        function checkPerformanceMode() {
+            const nodeCount = mcpData.entities.length;
+            const perfEl = document.getElementById('perfMode');
+            const clusterEl = document.getElementById('clusterInfo');
+            if (nodeCount > LOD_THRESHOLD) {
+                performanceMode = 'lod';
+                perfEl.textContent = 'LOD Mode (' + nodeCount.toLocaleString() + ' nodes)';
+                perfEl.classList.add('active');
+                clusterEl.style.display = 'block';
+                document.getElementById('visibleCount').textContent = Math.min(nodeCount, MAX_VISIBLE_NODES).toLocaleString();
+                document.getElementById('totalCount').textContent = nodeCount.toLocaleString();
+            } else if (nodeCount > CLUSTER_THRESHOLD) {
+                performanceMode = 'cluster';
+                perfEl.textContent = 'Cluster Mode (' + nodeCount.toLocaleString() + ' nodes)';
+                perfEl.classList.add('active');
+                clusterEl.style.display = 'none';
+            } else {
+                performanceMode = 'standard';
+                perfEl.textContent = 'Standard Mode';
+                perfEl.classList.remove('active');
+                clusterEl.style.display = 'none';
+            }
+        }
+
+        // =============================================================
+        // LOADING OVERLAY
+        // =============================================================
+        function showLoading(text) { document.getElementById('loadingText').textContent = text || 'Processing...'; document.getElementById('loadingProgress').textContent = ''; document.getElementById('loadingOverlay').classList.add('visible'); }
+        function updateLoadingText(text) { document.getElementById('loadingText').textContent = text; }
+        function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
+
+        // =============================================================
+        // XRAI UTILITIES
+        // =============================================================
+        function generateXRAINodeId(name) { let hash = 0; for (let i = 0; i < name.length; i++) { const char = name.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash = hash & hash; } return 'xrai_' + Math.abs(hash).toString(16).substring(0, 8); }
+        function generateSpatialHash(name) { let x = 0, y = 0, z = 0; for (let i = 0; i < name.length; i++) { const char = name.charCodeAt(i); x += char * (i % 3 === 0 ? 1 : 0); y += char * (i % 3 === 1 ? 1 : 0); z += char * (i % 3 === 2 ? 1 : 0); } return '[' + ((x % 100) - 50) + ', ' + (y % 50) + ', ' + ((z % 100) - 50) + ']'; }
+        function getClusterRegion(type) { const regions = { project: 'Central Hub', system: 'Systems District', workflow: 'Process Corridor', pattern: 'Pattern Garden', mentalmodel: 'Pattern Garden', framework: 'Framework Tower', person: 'Creator Atrium', developer: 'Creator Atrium', repository: 'Code Archive', goal: 'Vision Spire', bestpractice: 'Wisdom Hall', format: 'Format Gallery', technology: 'Tech Hub', technique: 'Pattern Garden', concept: 'Concept Cloud', code: 'Code Archive', file: 'File System', class: 'Code Archive', function: 'Code Archive', package: 'Package Registry' }; return regions[type.toLowerCase()] || 'Unknown Region'; }
+
+        // =============================================================
+        // XRAI EXPORT
+        // =============================================================
+        function showExportPanel() { document.getElementById('overlay').classList.add('visible'); document.getElementById('exportPanel').classList.add('visible'); }
+        function hideExportPanel() { document.getElementById('overlay').classList.remove('visible'); document.getElementById('exportPanel').classList.remove('visible'); }
+        function selectExportOption(el, type) { document.querySelectorAll('.export-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected'); el.querySelector('input[type="radio"]').checked = true; selectedExportType = type; }
+
+        function performExport() {
+            hideExportPanel();
+            let exportData, filename;
+            switch (selectedExportType) {
+                case 'full': exportData = generateFullXRAIWorld(); filename = 'knowledge-world.xrai.json'; break;
+                case 'graph': exportData = generateGraphXRAI(); filename = 'knowledge-graph.xrai.json'; break;
+                case 'json': exportData = generateXRAIManifest(); filename = 'knowledge-manifest.xrai.json'; break;
+            }
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Exported ' + filename + ' successfully');
+        }
+
+        function generateFullXRAIWorld() {
+            const nodes = mcpData.entities.map((entity, i) => ({ id: generateXRAINodeId(entity.name), name: entity.name, type: entity.type, observations: entity.observations, spatialPosition: { region: getClusterRegion(entity.type), coordinates: [0, 0, 0] }, geometry: { type: 'room', template: getRoomTemplate(entity.type), scale: 1.0 + (entity.observations?.length || 0) * 0.2 }, materials: [{ type: 'pbr', color: typeColors[entity.type.toLowerCase()] || '#888888', emission: 0.1 }] }));
+            const portals = mcpData.relations.map((rel, i) => ({ id: 'portal_' + i, type: 'bidirectional', source: generateXRAINodeId(rel.from), target: generateXRAINodeId(rel.to), label: rel.type, vfx: { particleSystem: 'portal_glow', color: '#00d4ff' } }));
+            return { format: 'XRAI', version: { major: 3, minor: 0 }, metadata: { title: 'Knowledge Graph World', description: 'Auto-generated XRAI world from knowledge graph', created: new Date().toISOString(), generator: 'XRAI Knowledge Graph Explorer v3.0', entityCount: nodes.length, portalCount: portals.length }, worldStructure: { regions: getUniqueRegions(), nodes: nodes, portals: portals }, aiComponents: { adaptationRules: [{ trigger: 'user_proximity', action: 'highlight_connections' }, { trigger: 'user_focus', action: 'expand_observations' }], behaviorModels: [{ type: 'semantic_zoom', levels: ['overview', 'cluster', 'entity', 'detail'] }] }, vfx: { particleSystems: [{ id: 'portal_glow', type: 'energy_flow', color: '#00d4ff' }, { id: 'entity_aura', type: 'ambient_glow', intensity: 0.3 }] } };
+        }
+
+        function generateGraphXRAI() {
+            const graphData = mcpTo3DGraph(mcpData);
+            return { format: 'XRAI', version: { major: 3, minor: 0 }, metadata: { title: 'Knowledge Graph Visualization', description: '3D force-directed graph visualization', created: new Date().toISOString(), generator: 'XRAI Knowledge Graph Explorer v3.0' }, geometry: graphData.nodes.map(node => ({ id: node.id, type: 'sphere', position: [0, 0, 0], scale: node.val || 1, color: node.color })), connections: graphData.links.map(link => ({ type: 'line', source: link.source, target: link.target, label: link.type, color: 'rgba(0, 212, 255, 0.5)' })) };
+        }
+
+        function generateXRAIManifest() {
+            return { format: 'XRAI-Manifest', version: '3.0', metadata: { title: 'Knowledge Graph Manifest', created: new Date().toISOString(), generator: 'XRAI Knowledge Graph Explorer v3.0' }, entities: mcpData.entities.map(entity => ({ id: generateXRAINodeId(entity.name), name: entity.name, type: entity.type, observations: entity.observations, xraiMetadata: { spatialHash: generateSpatialHash(entity.name), clusterRegion: getClusterRegion(entity.type), color: typeColors[entity.type.toLowerCase()] || '#888888' } })), relations: mcpData.relations.map((rel, i) => ({ id: 'rel_' + i, from: generateXRAINodeId(rel.from), to: generateXRAINodeId(rel.to), type: rel.type })) };
+        }
+
+        function getRoomTemplate(type) { const templates = { project: 'command_center', system: 'server_room', workflow: 'corridor', pattern: 'garden_pavilion', mentalmodel: 'meditation_space', framework: 'tower_floor', person: 'studio', developer: 'workshop', repository: 'library', goal: 'observatory', bestpractice: 'lecture_hall', format: 'gallery', technology: 'lab', technique: 'garden_pavilion', concept: 'cloud_space', code: 'terminal', file: 'archive', class: 'blueprint_room', function: 'workshop', package: 'warehouse' }; return templates[type.toLowerCase()] || 'generic_room'; }
+        function getUniqueRegions() { const regions = new Set(); mcpData.entities.forEach(e => regions.add(getClusterRegion(e.type))); return Array.from(regions).map(name => ({ name: name, position: { x: 0, y: 0, z: 0 }, atmosphere: { ambientColor: '#1a1a2e', fogDensity: 0.02 } })); }
+
+        function showToast(message, type) { const toast = document.getElementById('toast'); toast.textContent = message; toast.className = 'toast visible' + (type === 'error' ? ' error' : ''); setTimeout(() => toast.classList.remove('visible'), 3000); }
+
+        // =============================================================
+        // CONTROLS
+        // =============================================================
+        function setLayout(name) { if (currentView !== '2d') return; document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active')); if (event && event.target) event.target.classList.add('active'); const opts = { name: name, animate: true, animationDuration: 500 }; if (name === 'cose') { opts.nodeRepulsion = 8000; opts.idealEdgeLength = 100; opts.gravity = 0.3; } if (name === 'breadthfirst') { opts.directed = true; opts.spacingFactor = 1.2; } cy.layout(opts).run(); }
+        function fitGraph() { if (currentView === '2d' && cy) { cy.fit(50); cy.center(); } else if (currentView === '3d' && graph3d) { graph3d.zoomToFit(1000, 100); } }
+        function toggleLabels() { showLabels = !showLabels; if (cy) { cy.style().selector('node').style('label', showLabels ? 'data(label)' : '').update(); } }
+
+        // =============================================================
+        // SEARCH
+        // =============================================================
+        const searchInput = document.getElementById('search');
+        searchInput.addEventListener('input', (e) => { const query = e.target.value.toLowerCase(); if (!query) { if (cy) cy.elements().removeClass('highlighted faded'); return; } if (cy) { cy.nodes().forEach(node => { const label = node.data('label').toLowerCase(); const type = node.data('type').toLowerCase(); const obs = (node.data('observations') || []).join(' ').toLowerCase(); if (label.includes(query) || type.includes(query) || obs.includes(query)) { node.addClass('highlighted').removeClass('faded'); } else { node.removeClass('highlighted').addClass('faded'); } }); cy.edges().addClass('faded'); } });
+
+        // =============================================================
+        // KEYBOARD SHORTCUTS
+        // =============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
+            else if (e.key === 'Escape') { searchInput.value = ''; searchInput.blur(); hideDetails(); hideExportPanel(); hideIngestPanel(); if (cy) cy.elements().removeClass('highlighted faded'); }
+            else if (e.key === '2' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') setViewMode('2d');
+            else if (e.key === '3' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') setViewMode('3d');
+            else if (e.key === 'e' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') showExportPanel();
+            else if (e.key === 'i' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') showIngestPanel();
+            else if (e.key === 'd' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') toggleDocsPanel();
+            else if (e.key === 'f' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') { e.preventDefault(); fitGraph(); }
+        });
+
+        // =============================================================
+        // STATS & INIT
+        // =============================================================
+        function updateStats() { const nodeCount = mcpData.entities.length; const edgeCount = mcpData.relations.length; const now = new Date().toLocaleTimeString(); document.getElementById('stats').textContent = nodeCount.toLocaleString() + ' entities | ' + edgeCount.toLocaleString() + ' relations | ' + now; }
+
+        // =============================================================
+        // DOCS PANEL - Knowledge Base Integration
+        // =============================================================
+        const knowledgeBaseDocs = [
+            { name: '_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md', category: 'Core', size: '28KB', icon: '🎯', desc: 'AR Foundation VFX patterns from 520+ repos' },
+            { name: '_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md', category: 'Core', size: '41KB', icon: '📦', desc: 'Master GitHub repository index' },
+            { name: '_MASTER_KNOWLEDGEBASE_INDEX.md', category: 'Core', size: '13KB', icon: '📋', desc: 'Knowledge base index and navigation' },
+            { name: '_JT_PRIORITIES.md', category: 'Core', size: '55KB', icon: '⭐', desc: 'Priority system and task management' },
+            { name: '_REPO_GRAPH_SCHEMA.md', category: 'Core', size: '21KB', icon: '🔗', desc: 'Repository graph schema definition' },
+            { name: '_VISUALIZATION_RESOURCES_INDEX.md', category: 'Core', size: '21KB', icon: '📊', desc: 'Visualization tools and resources' },
+            { name: '_SELF_IMPROVING_MEMORY_ARCHITECTURE.md', category: 'Architecture', size: '18KB', icon: '🧠', desc: 'Self-improving memory system design' },
+            { name: '_ADVANCED_AR_FEATURES_IMPLEMENTATION_PLAN.md', category: 'Architecture', size: '261KB', icon: '📐', desc: 'Advanced AR features implementation' },
+            { name: '_COMPREHENSIVE_AI_DEVELOPMENT_GUIDE.md', category: 'AI', size: '16KB', icon: '🤖', desc: 'AI development guide and patterns' },
+            { name: '_AI_AGENT_PHILOSOPHY.md', category: 'AI', size: '8KB', icon: '💡', desc: 'AI agent philosophy and principles' },
+            { name: '_CLAUDE_AI_DOCUMENTATION.md', category: 'AI', size: '12KB', icon: '📝', desc: 'Claude AI integration docs' },
+            { name: '_CLAUDE_CODE_WORKFLOW_OPTIMIZATION.md', category: 'AI', size: '5KB', icon: '⚡', desc: 'Claude Code workflow optimization' },
+            { name: '_MULTI_AGENT_COORDINATION.md', category: 'AI', size: '4KB', icon: '🔄', desc: 'Multi-agent coordination patterns' },
+            { name: '_MASTER_AI_TOOLS_REGISTRY.md', category: 'AI', size: '12KB', icon: '🛠️', desc: 'AI tools registry and catalog' },
+            { name: '_UNITY_AS_A_LIBRARY_OVERVIEW.md', category: 'Unity', size: '8KB', icon: '🎮', desc: 'Unity as a Library overview' },
+            { name: '_UNITY_AS_A_LIBRARY_IOS.md', category: 'Unity', size: '10KB', icon: '📱', desc: 'Unity as a Library - iOS' },
+            { name: '_UNITY_AS_A_LIBRARY_ANDROID.md', category: 'Unity', size: '7KB', icon: '🤖', desc: 'Unity as a Library - Android' },
+            { name: '_UNITY_DEBUGGING_REFERENCE.md', category: 'Unity', size: '21KB', icon: '🐛', desc: 'Unity debugging reference' },
+            { name: '_UNITY_ASSET_MANAGEMENT.md', category: 'Unity', size: '10KB', icon: '📂', desc: 'Unity asset management guide' },
+            { name: '_REACT_NATIVE_UNITY_PACKAGES.md', category: 'Integration', size: '11KB', icon: '⚛️', desc: 'React Native Unity packages' },
+            { name: '_REACT_NATIVE_UNITY_FABRIC_FIX.md', category: 'Integration', size: '4KB', icon: '🔧', desc: 'React Native Unity Fabric fix' },
+            { name: '_WEB_INTEROPERABILITY_STANDARDS.md', category: 'Web', size: '235KB', icon: '🌐', desc: 'Web interoperability standards' },
+            { name: '_WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md', category: 'Web', size: '9KB', icon: '🎨', desc: 'WebGL Three.js guide' },
+            { name: '_PERFORMANCE_PATTERNS_REFERENCE.md', category: 'Performance', size: '13KB', icon: '🚀', desc: 'Performance patterns reference' },
+            { name: '_AUTOMATED_MAINTENANCE_GUIDE.md', category: 'DevOps', size: '13KB', icon: '🔧', desc: 'Automated maintenance guide' },
+            { name: '_AUTOMATION_IMPLEMENTATION_SUMMARY.md', category: 'DevOps', size: '11KB', icon: '⚙️', desc: 'Automation implementation summary' },
+            { name: '_IMPLEMENTATION_SUMMARY.md', category: 'DevOps', size: '11KB', icon: '📋', desc: 'Implementation summary' },
+            { name: '_H3M_PORTALS_ROADMAP.md', category: 'Projects', size: '3KB', icon: '🚪', desc: 'H3M Portals project roadmap' },
+            { name: '_H3M_HOLOGRAM_ROADMAP.md', category: 'Projects', size: '1KB', icon: '✨', desc: 'H3M Hologram project roadmap' }
+        ];
+
+        const KNOWLEDGE_BASE_PATH = '/Users/jamestunick/Documents/GitHub/Unity-XR-AI/KnowledgeBase/';
+        let selectedDocs = new Set();
+
+        function toggleDocsPanel() {
+            const panel = document.getElementById('docsPanel');
+            const toggle = document.getElementById('docsToggle');
+            panel.classList.toggle('visible');
+            toggle.classList.toggle('active');
+        }
+
+        function renderDocsList(filter) {
+            filter = filter || '';
+            const container = document.getElementById('docsList');
+            container.replaceChildren();
+
+            const categories = {};
+            knowledgeBaseDocs.forEach(doc => {
+                if (filter && !doc.name.toLowerCase().includes(filter.toLowerCase()) && !doc.desc.toLowerCase().includes(filter.toLowerCase())) return;
+                if (!categories[doc.category]) categories[doc.category] = [];
+                categories[doc.category].push(doc);
+            });
+
+            let totalDocs = 0;
+            for (const [category, docs] of Object.entries(categories)) {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'docs-category';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'docs-category-title';
+                titleDiv.textContent = category + ' (' + docs.length + ')';
+                catDiv.appendChild(titleDiv);
+
+                docs.forEach(doc => {
+                    totalDocs++;
+                    const item = document.createElement('div');
+                    item.className = 'doc-item' + (selectedDocs.has(doc.name) ? ' selected' : '');
+                    item.title = doc.desc;
+                    item.onclick = (e) => { if (e.target.tagName !== 'BUTTON') toggleDocSelection(doc.name, item); };
+
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'doc-item-icon';
+                    iconSpan.textContent = doc.icon;
+                    item.appendChild(iconSpan);
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'doc-item-name';
+                    nameSpan.textContent = doc.name.replace(/^_/, '').replace('.md', '');
+                    item.appendChild(nameSpan);
+
+                    const sizeSpan = document.createElement('span');
+                    sizeSpan.className = 'doc-item-size';
+                    sizeSpan.textContent = doc.size;
+                    item.appendChild(sizeSpan);
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'doc-item-actions';
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'doc-item-btn';
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.onclick = () => copyDocPath(doc.name);
+                    actionsDiv.appendChild(copyBtn);
+
+                    item.appendChild(actionsDiv);
+                    catDiv.appendChild(item);
+                });
+
+                container.appendChild(catDiv);
+            }
+
+            document.getElementById('docsStats').textContent = totalDocs + ' documents' + (filter ? ' (filtered)' : '');
+        }
+
+        function toggleDocSelection(docName, element) {
+            if (selectedDocs.has(docName)) {
+                selectedDocs.delete(docName);
+                element.classList.remove('selected');
+            } else {
+                selectedDocs.add(docName);
+                element.classList.add('selected');
+            }
+            updateDocsButton();
+        }
+
+        function updateDocsButton() {
+            const btn = document.getElementById('btnIngestDocs');
+            const count = selectedDocs.size;
+            btn.textContent = 'Ingest Selected (' + count + ')';
+            btn.disabled = count === 0;
+        }
+
+        function copyDocPath(docName) {
+            const path = KNOWLEDGE_BASE_PATH + docName;
+            navigator.clipboard.writeText(path).then(() => {
+                showToast('Copied path: ' + docName);
+            }).catch(() => {
+                showToast('Copy failed - path: ' + path, 'error');
+            });
+        }
+
+        function ingestSelectedDocs() {
+            if (selectedDocs.size === 0) return;
+            showToast('Drag & drop the selected docs into the Ingest panel, or use file picker');
+            showIngestPanel();
+            selectedDocs.clear();
+            renderDocsList(document.getElementById('docsSearch').value);
+            updateDocsButton();
+        }
+
+        document.getElementById('docsSearch').addEventListener('input', (e) => { renderDocsList(e.target.value); });
+        renderDocsList();
+
+        // =============================================================
+        // INIT
+        // =============================================================
+        initCytoscape();
+        updateRecentUrls();
+        window.addEventListener('resize', () => { if (cy) { cy.resize(); cy.fit(50); } if (graph3d) graph3d.width(window.innerWidth).height(window.innerHeight); });
+    </script>
+</body>
+</html>
