@@ -1,0 +1,124 @@
+# MCP LLM-Optimized Full Reference
+# Source: https://modelcontextprotocol.io/llms-full.txt
+# Downloaded: 2025-01-13
+# Note: This is a comprehensive reference document (~150KB+)
+# Use for detailed implementation guidance
+
+## Quick Navigation
+- Build MCP Client: Search "Build an MCP client"
+- Build MCP Server: Search "Build an MCP server"  
+- Connect Local Servers: Search "Connect to local MCP servers"
+- Connect Remote Servers: Search "Connect to remote MCP Servers"
+- Architecture: Search "Architecture overview"
+
+## Key Implementation Languages Covered
+- Python (FastMCP)
+- TypeScript/JavaScript
+- Java (Spring AI)
+- Kotlin
+- C# (.NET)
+- Rust
+
+## Server Configuration Examples
+- Claude Desktop: claude_desktop_config.json
+- VS Code: .vscode/mcp.json
+
+---
+# FULL DOCUMENTATION BELOW
+# (Truncated for storage - fetch full version from URL when needed)
+
+## Build an MCP Client - Python Quick Start
+
+```python
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+from anthropic import Anthropic
+
+class MCPClient:
+    def __init__(self):
+        self.session = None
+        self.anthropic = Anthropic()
+    
+    async def connect_to_server(self, server_script_path: str):
+        command = "python" if server_script_path.endswith('.py') else "node"
+        server_params = StdioServerParameters(
+            command=command,
+            args=[server_script_path],
+            env=None
+        )
+        # Connect and initialize...
+        
+    async def process_query(self, query: str) -> str:
+        # Get tools from server
+        response = await self.session.list_tools()
+        available_tools = [{
+            "name": tool.name,
+            "description": tool.description,
+            "input_schema": tool.inputSchema
+        } for tool in response.tools]
+        
+        # Send to Claude with tools
+        response = self.anthropic.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1000,
+            messages=[{"role": "user", "content": query}],
+            tools=available_tools
+        )
+        # Handle tool calls...
+```
+
+## Build an MCP Server - Python Quick Start
+
+```python
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("my-server")
+
+@mcp.tool()
+async def my_tool(param: str) -> str:
+    """Tool description for the LLM."""
+    return f"Result: {param}"
+
+@mcp.resource("resource://my-resource")
+async def my_resource() -> str:
+    """Resource that provides context."""
+    return "Resource content here"
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
+```
+
+## Configuration Templates
+
+### Claude Desktop (macOS)
+Location: ~/Library/Application Support/Claude/claude_desktop_config.json
+
+```json
+{
+  "mcpServers": {
+    "server-name": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-name", "/path/to/dir"]
+    }
+  }
+}
+```
+
+### VS Code
+Location: .vscode/mcp.json
+
+```json
+{
+  "servers": {
+    "server-name": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-name", "${workspaceFolder}"]
+    }
+  }
+}
+```
+
+---
+
+For complete documentation, fetch from:
+https://modelcontextprotocol.io/llms-full.txt

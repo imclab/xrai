@@ -1,0 +1,193 @@
+#pragma kernel DepthToPointCloud
+
+// Thread group size optimized for Metal (8x8 = 64 threads per group)
+[numthreads(8, 8, 1)]
+
+// Input textures and buffers
+Texture2D<float> _DepthTexture;
+SamplerState sampler_DepthTexture;
+
+// Camera intrinsics from XRCameraIntrinsics
+float4x4 _CameraIntrinsicsMatrix;      // Camera intrinsics matrix
+float4x4 _InverseCameraIntrinsicsMatrix; // Inverse for unprojection
+float4x4 _ViewToWorldMatrix;           // View to world transformation matrix
+
+// Output structured buffer for point cloud
+struct PointCloudData
+{
+    float3 position;    // World space position
+    float3 normal;      // World space normal (optional)
+};
+
+RWStructuredBuffer<PointCloudData> _PointCloudBuffer;
+RWStructuredBuffer<uint> _PointCountBuffer; // Single element buffer to track count
+
+// Shader parameters
+uint _MaxPointCount;           // Maximum number of points (e.g., 200k)
+uint2 _TextureSize;           // Depth texture dimensions
+float _MinDepth;              // Minimum valid depth (meters)
+float _MaxDepth;              // Maximum valid depth (meters)
+float _DepthScale;            // Scale factor for depth values
+bool _GenerateNormals;        // Whether to generate normals
+float _NormalSampleDistance;  // Distance for normal calculation sampling
+
+// Unproject pixel coordinates to camera space
+float3 UnprojectToCamera(uint2 pixelCoord, float depth)
+{
+    // Convert pixel coordinates to normalized device coordinates [-1, 1]
+    float2 uv = (float2(pixelCoord) + 0.5) / float2(_TextureSize);
+    float2 ndc = uv * 2.0 - 1.0;
+    
+    // Create homogeneous coordinates
+    float4 clipSpace = float4(ndc.x, -ndc.y, 1.0, 1.0); // Flip Y for Unity
+    
+    // Transform to camera space using inverse intrinsics
+    float4 cameraSpace = mul(_InverseCameraIntrinsicsMatrix, clipSpace);
+    
+    // Scale by depth (Z-coordinate)
+    float3 cameraPos = cameraSpace.xyz / cameraSpace.w;
+    cameraPos.z = depth; // Use actual depth value
+    
+    // Adjust for Unity's coordinate system
+    cameraPos.x *= depth;
+    cameraPos.y *= depth;
+    
+    return cameraPos;
+}
+
+// Calculate normal from neighboring depth samples
+float3 CalculateNormal(uint2 pixelCoord)
+{
+    if (!_GenerateNormals)
+        return float3(0, 0, 1); // Default forward normal
+    
+    float2 texelSize = 1.0 / float2(_TextureSize);
+    float sampleDist = _NormalSampleDistance;
+    
+    // Sample neighboring depths
+    float depthCenter = _DepthTexture.SampleLevel(sampler_DepthTexture, 
+        (float2(pixelCoord) + 0.5) / float2(_TextureSize), 0);
+    
+    float depthRight = _DepthTexture.SampleLevel(sampler_DepthTexture, 
+        (float2(pixelCoord + uint2(sampleDist, 0)) + 0.5) / float2(_TextureSize), 0);
+    
+    float depthUp = _DepthTexture.SampleLevel(sampler_DepthTexture, 
+        (float2(pixelCoord + uint2(0, sampleDist)) + 0.5) / float2(_TextureSize), 0);
+    
+    // Skip if any sample is invalid
+    if (depthCenter < _MinDepth || depthRight < _MinDepth || depthUp < _MinDepth ||
+        depthCenter > _MaxDepth || depthRight > _MaxDepth || depthUp > _MaxDepth)
+        return float3(0, 0, 1);
+    
+    // Unproject to camera space
+    float3 posCenter = UnprojectToCamera(pixelCoord, depthCenter);
+    float3 posRight = UnprojectToCamera(pixelCoord + uint2(sampleDist, 0), depthRight);
+    float3 posUp = UnprojectToCamera(pixelCoord + uint2(0, sampleDist), depthUp);
+    
+    // Calculate normal using cross product
+    float3 deltaRight = posRight - posCenter;
+    float3 deltaUp = posUp - posCenter;
+    float3 normal = normalize(cross(deltaRight, deltaUp));
+    
+    // Transform normal to world space
+    return normalize(mul((float3x3)_ViewToWorldMatrix, normal));
+}
+
+[numthreads(8, 8, 1)]
+void DepthToPointCloud(uint3 id : SV_DispatchThreadID)
+{
+    uint2 pixelCoord = id.xy;
+    
+    // Check bounds
+    if (pixelCoord.x >= _TextureSize.x || pixelCoord.y >= _TextureSize.y)
+        return;
+    
+    // Sample depth texture
+    float2 uv = (float2(pixelCoord) + 0.5) / float2(_TextureSize);
+    float depth = _DepthTexture.SampleLevel(sampler_DepthTexture, uv, 0);
+    
+    // Apply depth scale
+    depth *= _DepthScale;
+    
+    // Skip invalid depth values
+    if (depth < _MinDepth || depth > _MaxDepth)
+        return;
+    
+    // Check if we've reached the maximum point count
+    uint currentCount;
+    InterlockedAdd(_PointCountBuffer[0], 1, currentCount);
+    
+    if (currentCount >= _MaxPointCount)
+    {
+        // Rollback the counter if we exceeded the limit
+        InterlockedAdd(_PointCountBuffer[0], -1);
+        return;
+    }
+    
+    // Unproject to camera space
+    float3 cameraSpacePos = UnprojectToCamera(pixelCoord, depth);
+    
+    // Transform to world space
+    float4 worldSpacePos = mul(_ViewToWorldMatrix, float4(cameraSpacePos, 1.0));
+    
+    // Calculate normal
+    float3 normal = CalculateNormal(pixelCoord);
+    
+    // Store in buffer
+    PointCloudData pointData;
+    pointData.position = worldSpacePos.xyz;
+    pointData.normal = normal;
+    
+    _PointCloudBuffer[currentCount] = pointData;
+}
+
+// Alternative kernel for append buffer approach
+RWStructuredBuffer<PointCloudData> _AppendBuffer;
+
+#pragma kernel DepthToPointCloudAppend
+
+[numthreads(8, 8, 1)]
+void DepthToPointCloudAppend(uint3 id : SV_DispatchThreadID)
+{
+    uint2 pixelCoord = id.xy;
+    
+    // Check bounds
+    if (pixelCoord.x >= _TextureSize.x || pixelCoord.y >= _TextureSize.y)
+        return;
+    
+    // Sample depth texture
+    float2 uv = (float2(pixelCoord) + 0.5) / float2(_TextureSize);
+    float depth = _DepthTexture.SampleLevel(sampler_DepthTexture, uv, 0);
+    
+    // Apply depth scale
+    depth *= _DepthScale;
+    
+    // Skip invalid depth values
+    if (depth < _MinDepth || depth > _MaxDepth)
+        return;
+    
+    // Unproject to camera space
+    float3 cameraSpacePos = UnprojectToCamera(pixelCoord, depth);
+    
+    // Transform to world space
+    float4 worldSpacePos = mul(_ViewToWorldMatrix, float4(cameraSpacePos, 1.0));
+    
+    // Calculate normal
+    float3 normal = CalculateNormal(pixelCoord);
+    
+    // Store in append buffer
+    PointCloudData pointData;
+    pointData.position = worldSpacePos.xyz;
+    pointData.normal = normal;
+    
+    _AppendBuffer.Append(pointData);
+}
+
+// Utility kernel to clear the point count buffer
+#pragma kernel ClearPointCount
+
+[numthreads(1, 1, 1)]
+void ClearPointCount(uint3 id : SV_DispatchThreadID)
+{
+    _PointCountBuffer[0] = 0;
+}

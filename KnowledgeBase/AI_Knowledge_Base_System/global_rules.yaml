@@ -1,0 +1,65 @@
+# AI Knowledge Base Global Rules Configuration
+# This file defines automatic behaviors for AI assistants
+
+# Claude Desktop Global Rules
+claude_rules:
+  knowledge_base:
+    enabled: true
+    auto_detect_links: true
+    min_links_to_save: 3
+    
+    triggers:
+      - pattern: "list.*links"
+      - pattern: "collection.*url"
+      - pattern: "github.*projects"
+      - pattern: "resources.*bookmark"
+      - pattern: "useful.*sites"
+    
+    save_formats:
+      - markdown
+      - json
+      - html
+    
+    storage:
+      local_path: "~/Desktop/AI_Knowledge_Base/Claude"
+      gdrive_path: "~/Google Drive/My Drive/AI_Knowledge_Base/Claude"
+      
+    auto_actions:
+      - save_on_detection: true
+      - sync_to_gdrive: true
+      - extract_metadata: true
+      - weekly_sync_check: true
+
+# Additional AI Assistants
+chatgpt_rules:
+  knowledge_base:
+    enabled: true
+    local_path: "~/Desktop/AI_Knowledge_Base/ChatGPT"
+    gdrive_path: "~/Google Drive/My Drive/AI_Knowledge_Base/ChatGPT"
+
+gemini_rules:
+  knowledge_base:
+    enabled: true
+    local_path: "~/Desktop/AI_Knowledge_Base/Gemini"
+    gdrive_path: "~/Google Drive/My Drive/AI_Knowledge_Base/Gemini"
+
+# Global Settings
+global_settings:
+  sync_frequency: "weekly"
+  backup_retention: "365 days"
+  duplicate_detection: true
+  
+  file_naming:
+    format: "{timestamp}_{title}"
+    timestamp_format: "%Y%m%d_%H%M%S"
+    max_title_length: 50
+    
+  monitoring:
+    clipboard_check_interval: 5  # seconds
+    file_watch_enabled: true
+    auto_categorization: true
+    
+  notifications:
+    on_save: false
+    on_sync_error: true
+    weekly_summary: true
