@@ -12,6 +12,7 @@
 
 | Need | File |
 |------|------|
+| **AI health checks** | `_AI_HEALTH_SCRIPTS.md` |
 | **Unity debugging** | `_UNITY_DEBUGGING_REFERENCE.md` |
 | **Unity + React Native** | `_UNITY_AS_A_LIBRARY_OVERVIEW.md`, `_REACT_NATIVE_UNITY_PACKAGES.md` |
 | **AR/VFX development** | `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` |
