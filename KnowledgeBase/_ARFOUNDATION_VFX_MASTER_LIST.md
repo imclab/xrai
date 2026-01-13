@@ -1,89 +1,4 @@
-# Master GitHub Repository Knowledge Base (530+ Projects)
-
-**Purpose**: Comprehensive reference of GitHub repos used across all workspaces (Portals_6, Paint-AR, Open Brush) to improve Claude's coding capabilities for AR/VFX/XR/Unity development.
-
-**Last Updated**: 2025-01-07
-**Recent Additions**: Unity-Technologies official repos, Gaussian Splatting Unity implementations, Dilmerv VisionOS examples, Icosa Gallery Unity tools, enhanced Keijiro collection
-
----
-
-## 📱 Workspace Projects (Active Development)
-
-| Project | Description | Platform Support | Status |
-|---------|-------------|------------------|--------|
-| [imclab/Paint-AR_app_Unity](https://github.com/imclab/Paint-AR_app_Unity) | iOS AR painting app with 3D brushes, portals, VFX | iOS (ARKit, URP) | ⭐ **WORKSPACE** |
-| [imclab/Apple-Vision-PRO-AR-VR-XR-AI](https://github.com/imclab/Apple-Vision-PRO-AR-VR-XR-AI) | Vision Pro AR/VR/XR/AI resources and examples | visionOS | ⭐ **WORKSPACE** |
-| [icosa-foundation/open-brush](https://github.com/icosa-foundation/open-brush) | VR brush painting tool (Tilt Brush successor) | VR (Quest, PCVR) | ⭐ **WORKSPACE** |
-| [icosa-foundation/open-brush-unity-tools](https://github.com/icosa-foundation/open-brush-unity-tools) | Unity tools for Open Brush integration | Unity | ⭐ **WORKSPACE** |
-| [jwtan/SwiftToUnityExample](https://github.com/jwtan/SwiftToUnityExample) | Swift to Unity bridge example | iOS | 🔧 **TOOL** |
-| [cdmvision/unity-figma-importer](https://github.com/cdmvision/unity-figma-importer) | Import Figma designs into Unity | Unity Editor | 🔧 **TOOL** |
-
-## 🛠️ Development Workflow & AI Tools
-
-| Project | Description | Use Case |
-|---------|-------------|----------|
-| [github/spec-kit](https://github.com/github/spec-kit) | Spec-Driven Development toolkit - transforms specs into executable implementations via AI | AI-assisted development workflow |
-| [anthropics/claude-code](https://github.com/anthropics/claude-code) | Claude Code CLI for AI-assisted development | AI coding assistant |
-
-**Spec-Kit Workflow**:
-- **Constitution** → Project principles
-- **Specify** → Requirements definition
-- **Plan** → Technical decisions
-- **Tasks** → Actionable breakdown
-- **Implement** → AI-assisted coding
-
-**Icosa Gallery Resources**:
-- Gallery: https://icosa.gallery/
-- API Documentation: https://api.icosa.gallery/v1/docs
-- Open Brush Docs: https://docs.openbrush.app/
-- Example Artwork: https://icosa.gallery/view/3UL8Bz_Id6I
-
-## 🎨 Unity XR Development Tools & Frameworks
-
-### Unity Technologies (Official Repos)
-| Project | Description | Platform Support |
-|---------|-------------|------------------|
-| [Unity-Technologies](https://github.com/Unity-Technologies) | Main organization - all official Unity repos | All |
-| [Unity-Technologies/EntityComponentSystemSamples](https://github.com/Unity-Technologies/EntityComponentSystemSamples) | DOTS/ECS examples and best practices | Multi-platform |
-| [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | Machine Learning agents toolkit | Multi-platform |
-| [Unity-Technologies/Addressables-Sample](https://github.com/Unity-Technologies/Addressables-Sample) | Official Addressables examples | Multi-platform |
-| [Unity-Technologies/XR-Interaction-Toolkit-Examples](https://github.com/Unity-Technologies/XR-Interaction-Toolkit-Examples) | Official XRI 3.1+ examples and samples | Multi-platform |
-
-### Community XR Tools
-| Project | Description | Platform Support |
-|---------|-------------|------------------|
-| [dilmerv/XRInteractionDemo](https://github.com/dilmerv/XRInteractionDemo) | XR Interaction Toolkit examples for AR and VR | Multi-platform |
-| [dilmerv/UnityVisionOS2DAndVR](https://github.com/dilmerv/UnityVisionOS2DAndVR) | Vision OS development examples | visionOS |
-| [KhronosGroup/UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) | Official Unity glTF importer/exporter | Multi-platform |
-| [needle-tools/UnityGLTF](https://github.com/needle-tools/UnityGLTF) | Needle fork with Draco compression | Multi-platform |
-| [microsoft/MixedRealityToolkit](https://github.com/microsoft/MixedRealityToolkit-Unity) | MRTK for HoloLens, Quest, VR | Multi-platform |
-
-## 🎮 Multiplayer & Networking Tools
-
-| Project | Description | Platform Support |
-|---------|-------------|------------------|
-| [NormalVR/Normcore-Samples](https://github.com/NormalVR/Normcore-Samples) | Official Normcore multiplayer samples | Multi-platform |
-| [absurd-joy/Quest-hands-for-Normcore](https://github.com/absurd-joy/Quest-hands-for-Normcore) | Quest hand tracking with Normcore | Quest |
-| [calebcram/Passthrough-Online-MRTK_Quest---Sample](https://github.com/calebcram/Passthrough-Online-MRTK_Quest---Sample) | Quest passthrough multiplayer | Quest |
-
-## 🧠 ML & Neural Rendering (Keijiro Collection)
-
-**Profile**: [github.com/keijiro](https://github.com/keijiro?tab=repositories) - Unity VFX/Graphics master
-
-### Machine Learning
-| Project | Description | ML Framework |
-|---------|-------------|--------------|
-| [keijiro/BodyPixSentis](https://github.com/keijiro/BodyPixSentis) | Body segmentation with Unity Sentis | Sentis |
-| [keijiro/Minis](https://github.com/keijiro/Minis) | Hand detection with Sentis | Sentis |
-| [keijiro/SelfieBarracuda](https://github.com/keijiro/SelfieBarracuda) | Portrait segmentation (deprecated Barracuda) | Barracuda |
-
-### VFX Graph & Effects
-| Project | Description | Techniques |
-|---------|-------------|------------|
-| [keijiro/SplatVFX](https://github.com/keijiro/SplatVFX) | Gaussian Splatting VFX rendering | Neural rendering |
-| [keijiro/Kino](https://github.com/keijiro/Kino) | Image effects collection for Unity | Post-processing |
-
----
+# Master List: ARFoundation → VFX Graph & WebGL Projects (500+ Projects)
 
 ## 🧍 Human Depth/Stencil/Body Tracking → VFX (45+ Projects)
 
@@ -103,12 +18,7 @@
 | [emilianavt/OpenSeeFace](https://github.com/emilianavt/OpenSeeFace) | Robust face tracking | OpenCV, Unity integration | ✅ |
 | [homuler/MediaPipeUnityPlugin](https://github.com/homuler/MediaPipeUnityPlugin) | MediaPipe for Unity | ML body/face tracking | ✅ |
 | [keijiro/FaceLandmarkBarracuda](https://github.com/keijiro/FaceLandmarkBarracuda) | Face landmarks ML | MediaPipe, Barracuda | ✅ |
-| [yeemachine/kalidokit](https://github.com/yeemachine/kalidokit) | MediaPipe → VRM blendshapes | Face/pose/hands conversion | ✅ |
-| [yeemachine/kalidoface](https://github.com/yeemachine/kalidoface) | Live VTuber web app | three.js + MediaPipe | ✅ |
-| [yeemachine/kalidoface-3d](https://github.com/yeemachine/kalidoface-3d) | 3D face mesh generator | 468 landmarks → mesh | ✅ |
-| [yeemachine/theremix](https://github.com/yeemachine/theremix) | WebXR multiplayer VTuber | WebRTC + tracking sync | ✅ |
-| [oculus-samples/Unity-Movement](https://github.com/oculus-samples/Unity-Movement) | Body/eye/face tracking (Quest Pro) | Movement SDK, 17 joints | ❌ |
-| [jemmec/metaface-utilities](https://github.com/jemmec/metaface-utilities) | Meta Quest Pro face and eye tracking utilities | OVRFaceExpressions | ❌ |
+| [oculus-samples/Unity-Movement](https://github.com/oculus-samples/Unity-Movement) | Body/eye/face tracking | OpenXR tracking | ❌ |
 | [keijiro/Rsvfx](https://github.com/keijiro/Rsvfx) | RealSense → VFX | Depth camera → VFX | ❌ |
 | [keijiro/Dkvfx](https://github.com/keijiro/Dkvfx) | Depthkit → VFX | Volumetric video | ✅ |
 | [keijiro/DkvfxSketches](https://github.com/keijiro/DkvfxSketches) | Depthkit VFX experiments | Volumetric video sketches | ✅ |
@@ -173,24 +83,14 @@
 | [daniel-ilett/shaders-hologram](https://github.com/daniel-ilett/shaders-hologram) | Hologram shader collection | Various hologram effects | ✅ |
 | [andydbc/HologramShader](https://github.com/andydbc/HologramShader) | Hologram shader | Unity shader | ✅ |
 
-## 🌐 Gaussian Splatting - Unity & Web
+## 🌐 Web-Based Gaussian Splat Viewers
 
-### Unity Implementations
 | Project | Description | Platform |
 |---------|-------------|----------|
-| [aras-p/UnityGaussianSplatting](https://github.com/aras-p/UnityGaussianSplatting) | Full Unity gaussian splatting implementation | Unity |
-| [clarte53/GaussianSplattingVRViewerUnity](https://github.com/clarte53/GaussianSplattingVRViewerUnity) | VR gaussian splat viewer | Unity VR |
-| [keijiro/SplatVFX](https://github.com/keijiro/SplatVFX) | Gaussian splatting with VFX Graph | Unity |
-
-### Web-Based Viewers
-| Project | Description | Platform |
-|---------|-------------|----------|
-| [graphdeco-inria/gaussian-splatting](https://github.com/graphdeco-inria/gaussian-splatting) | Original gaussian splatting research | Python |
-| [mkkellogg/GaussianSplats3D](https://github.com/mkkellogg/GaussianSplats3D) | Three.js gaussian splats | Web |
-| [buaacyw/GaussianEditor](https://github.com/buaacyw/GaussianEditor) | Edit gaussian splat scenes | Web |
 | [playcanvas/supersplat](https://github.com/playcanvas/supersplat) | PlayCanvas splat editor | Web |
 | [Looking-Glass/super-splat](https://github.com/Looking-Glass/super-splat) | Looking Glass splat viewer | Web |
 | [antimatter15.com/splat](https://antimatter15.com/splat/) | Web splat viewer | Web |
+| [mkkellogg/GaussianSplats3D](https://github.com/mkkellogg/GaussianSplats3D) | Three.js gaussian splats | Web |
 | [vincent-lecrubier-skydio/react-three-fiber-gaussian-splat](https://github.com/vincent-lecrubier-skydio/react-three-fiber-gaussian-splat) | React Three Fiber splats | Web |
 | [guyettinger/gle-gs3d](https://github.com/guyettinger/gle-gs3d) | WebGL gaussian splats | Web |
 | [playcanvas/supersplat-viewer](https://github.com/playcanvas/supersplat-viewer) | PlayCanvas splat viewer | Web |
@@ -203,16 +103,6 @@
 |---------|-------------|----------|
 | [tuqire/webcam-particles](https://github.com/tuqire/webcam-particles) | Webcam particle effects | Web |
 | [threejs.org/examples/#webcam](https://threejs.org/examples/#webcam) | Three.js webcam examples | Web |
-
-## ⚡ DOTS/ECS High-Performance Systems
-
-| Project | Description | Techniques | iOS Support |
-|---------|-------------|------------|-------------|
-| [pablothedolphin/DOTS-Point-Clouds](https://github.com/pablothedolphin/DOTS-Point-Clouds) | Million-particle point clouds with ECS | DOTS, Burst, Quest 90fps | ✅ |
-| [keijiro/ECS-Strawman](https://github.com/keijiro/ECS-Strawman) | Simplest Unity ECS/DOTS example | ECS basics | ✅ |
-| [keijiro/Voxelman](https://github.com/keijiro/Voxelman) | Voxel rendering with DOTS | ECS, procedural generation | ✅ |
-| [particlelife-3d-unity-ecs](https://github.com/particlelife-3d-unity-ecs/particlelife-3d-unity-ecs.github.io) | Particle Life 3D with Unity ECS DOTS | ECS, particle simulation | ✅ |
-| [Unity-Technologies/EntityComponentSystemSamples](https://github.com/Unity-Technologies/EntityComponentSystemSamples) | Official DOTS samples | ECS, Physics, Netcode | ✅ |
 
 ## 🧪 Experimental/Advanced Projects
 
@@ -456,9 +346,7 @@
 | [TestedLines/Style-Text-WebGL-iOS-LLM](https://assetstore.unity.com/packages/tools/ai-ml-integration/style-text-webgl-ios-stand-alone-llm-llama-cpp-wrapper-292902) | Standalone LLM wrapper | WebGL, iOS |
 
 ## 📊 Summary Statistics
-- **Total Projects**: 524+
-- **Workspace Projects**: 5 (Paint-AR, Open Brush, etc.)
-- **Unity XR Tools**: 10+
+- **Total Projects**: 500+
 - **HoloKit & Reality Labs**: 100+
 - **WebRTC Projects**: 20+
 - **Streaming Projects**: 20+
@@ -477,79 +365,3 @@
 - **Needle Tools** - Unity to Web pipeline
 - **Rerun.io** - Multimodal data visualization
 - **Convai** - Conversational AI for Unity
-- **James Tunick (imclab)** - Paint-AR, Apple Vision Pro resources
-
----
-
-## 🌐 External Resources & Documentation
-
-### visionOS Development
-
-- [Apple visionOS Documentation](https://developer.apple.com/documentation/visionos) - Official Apple docs for visionOS development
-- [Creating First visionOS App](https://developer.apple.com/documentation/visionos/creating-your-first-visionos-app) - Apple's official getting started guide
-- [Unity PolySpatial visionOS](https://unity.com/polyspatial-visionos-industry) - Unity's official visionOS development tools
-
-### AI/ML Frameworks & LLM Tools
-
-- [LangChain](https://github.com/langchain-ai/langchain) - Python framework for LLM applications (250K+ stars)
-- [LangChain.js](https://js.langchain.com/docs/get_started/introduction/) - JavaScript/TypeScript LangChain SDK
-- [Awesome LangChain](https://github.com/kyrolabs/awesome-langchain) - Curated list of LangChain tools and resources
-- [LlamaIndex](https://docs.llamaindex.ai/en/stable/) - Data framework for LLM applications
-- [Hugging Face](https://huggingface.co) - ML model hub and platform (transformers, diffusers, datasets)
-- [DeepLearning.ai](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/) - Prompt engineering courses by Andrew Ng
-- [Voyager (MineDojo)](https://github.com/MineDojo/Voyager) - LLM-powered autonomous agent in Minecraft
-
-### WebXR & Three.js Ecosystem
-
-- [Three.js](https://threejs.org/) - JavaScript 3D library (105K+ stars)
-- [Three.js Examples](https://threejs.org/examples/) - Official examples gallery
-- [Three.js Animations](https://threejs.org/examples/#webgl_animation_keyframes) - Keyframe animation examples
-- [React Three Fiber](https://github.com/pmndrs/react-three-fiber) - React renderer for Three.js (28K+ stars)
-- [R3F Documentation](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) - Official React Three Fiber docs
-- [R3F Examples](https://docs.pmnd.rs/react-three-fiber/getting-started/examples) - React Three Fiber examples
-- [drei](https://github.com/pmndrs/drei) - Helpers and abstractions for React Three Fiber (8K+ stars)
-- [drei README](https://github.com/pmndrs/drei#readme) - drei component documentation
-- [React PostProcessing](https://docs.pmnd.rs/react-postprocessing/effect-composer) - PostProcessing for R3F
-- [React Spring](https://www.react-spring.dev/) - Spring-physics based animation library
-- [React Spring Docs](https://www.react-spring.dev/docs/getting-started) - Getting started guide
-- [Three.js Journey](https://threejs-journey.com/lessons/what-are-react-and-react-three-fiber#13-create-a-game-with-r3f) - R3F game development course
-
-### 8th Wall (WebAR Platform)
-
-- [8th Wall Discover](https://www.8thwall.com/discover) - WebAR experience showcase
-- [8th Wall Projects](https://www.8thwall.com/projects) - Community projects and templates
-- [8th Wall Docs](https://www.8thwall.com/docs/) - Official documentation
-- [8th Wall Modules](https://www.8thwall.com/modules) - Reusable WebAR components
-- [8th Wall OpenAI Module](https://www.8thwall.com/8thwall/modules/openai) - OpenAI integration for WebAR
-- [8th Wall Web GitHub](https://github.com/8thwall/web) - Official GitHub examples
-
-### Development Platforms & Tools
-
-- [Node.js](https://nodejs.org/en) - JavaScript runtime for backend development
-- [Meta Quest Pro](https://www.meta.com/quest/quest-pro/) - Official Meta Quest Pro product page
-- [ShaderToy](https://www.shadertoy.com/view/4ss3Dn) - GLSL shader playground and community
-
-### Community Forums & Discussion
-
-- [Unity Forums](https://forum.unity.com/) - Official Unity community forums
-- [Unity Scripting Forum](https://forum.unity.com/forums/scripting.12/) - C# scripting discussions
-- [Unity Multiplayer Forum](https://forum.unity.com/forums/multiplayer.26/) - Networking and multiplayer
-- [Unity AR Forum](https://forum.unity.com/forums/ar.161/) - AR Foundation discussions
-- [Unity AR/VR/XR Forum](https://forum.unity.com/forums/ar-vr-xr-discussion.80/) - General XR discussions
-- [Unity General Discussion](https://forum.unity.com/forums/general-discussion.14/) - General Unity topics
-- [Unreal Engine Forums](https://forums.unrealengine.com/categories?tag=unreal-engine) - Official Unreal forums
-- [Unreal Development Discussion](https://forums.unrealengine.com/tags/c/development-discussion/11/unreal-engine) - Development topics
-- [Unreal Programming Forum](https://forums.unrealengine.com/tags/c/programming-scripting/148/unreal-engine) - C++ and Blueprint scripting
-
-### Personal/Project Sites
-
-- [TheIMCLab.com](https://TheIMCLab.com) - James Tunick's portfolio and projects
-- [ZeroSpace.co](https://ZeroSpace.co) - XR/AR development studio
-
----
-
-**Maintained by**: Claude Code Sessions
-**Project Lead**: James Tunick
-**Workspaces**: Portals_6, Paint-AR, Open Brush
-**Total**: 520+ GitHub repositories + 45+ external resources
-**Last Session**: 2025-11-02 (Added external resources: visionOS, LangChain, Three.js, Unity/Unreal forums)

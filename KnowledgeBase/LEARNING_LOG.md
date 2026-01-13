@@ -1279,3 +1279,62 @@ Metavido RayParams Format:
 - VFX operator: `Metavido Inverse Projection.vfxoperator`
 - HLSL source: `Packages/jp.keijiro.metavido/Decoder/Shaders/Utils.hlsl`
 - See: H3M Hologram Roadmap Phase 1
+
+---
+
+## 2026-01-13 14:55 - Claude Code - KnowledgeBase Consolidation & Health Check
+
+**Discovery**: Consolidated dual KB system into single source of truth + comprehensive health check
+
+**Context**: Downloads/AI_Knowledge_Base_Setup had accumulated parallel knowledge that needed merging with main KB
+
+**Actions Taken**:
+1. **Merged 18 unique MD files** from Downloads KB → Main KB
+2. **Preserved 9 hologram code snippets** to `KnowledgeBase/CodeSnippets/`
+3. **Extracted VFX25 patterns** from 56+ Unity projects → `_VFX25_HOLOGRAM_PORTAL_PATTERNS.md`
+4. **Updated knowledge graph** with 6 new entities + 11 relations
+5. **Verified/created symlinks** for all AI tools (Claude, Cursor, Gemini, Windsurf, Codex)
+6. **Updated dates** in GLOBAL_RULES.md and GEMINI.md
+
+**New Files Created**:
+- `_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` - BodyPix, MetavidoVFX, Portal stencil patterns
+- `_ARFOUNDATION_VFX_GRAPH_PROJECTS.md` - 70+ repos
+- `_ARFOUNDATION_VFX_MASTER_LIST.md` - 500+ repos indexed
+- `CodeSnippets/*.cs` - 9 ready-to-use hologram code files
+
+**Key Patterns Documented**:
+1. **BodyPixSentis**: Neural body segmentation without LiDAR (Unity Sentis)
+2. **MetavidoVFX Binder**: ColorMap/DepthMap/RayParams/InverseView/DepthRange
+3. **Portal Stencil**: StencilMask shader + PortalManager.cs bidirectional traversal
+4. **Rcam4 Metadata**: Camera pose + projection matrix for depth streaming
+
+**Impact**:
+- Single source of truth: `~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/`
+- 78 MD files + 9 code snippets in central location
+- All 5 AI tools have symlinked access
+- BodyPixSentis enables hologram without LiDAR (accelerates Phase 4)
+
+**AI Tool Config Status**:
+| Tool | Symlink | Config Updated |
+|------|---------|----------------|
+| Claude Code | ✅ ~/.claude/knowledgebase | ✅ |
+| Cursor | ✅ ~/.cursor/knowledgebase | ✅ |
+| Gemini | ✅ ~/.gemini/knowledgebase | ✅ |
+| Windsurf | ✅ ~/.windsurf/knowledgebase | ✅ |
+| Codex | ✅ ~/.codex/knowledgebase | ✅ (just created) |
+
+**MCP Memory Entities Added**:
+- KnowledgeBase_Central (System)
+- VFX25_Reference_Collection (Resource)
+- BodyPixSentis_Pattern (CodePattern)
+- MetavidoVFX_Binder_Pattern (CodePattern)
+- Portal_Stencil_Pattern (CodePattern)
+- CodeSnippets_Collection (Resource)
+
+**Category**: maintenance|organization|health-check
+
+**ROI**: High - Prevents knowledge fragmentation, ensures AI tool consistency
+
+**Related**:
+- See: `_H3M_HOLOGRAM_ROADMAP.md` (updated with pattern references)
+- See: `GLOBAL_RULES.md` (date updated to 2026-01-13)

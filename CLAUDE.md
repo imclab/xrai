@@ -1,62 +1,92 @@
-# Unity-XR-AI Knowledgebase
+# Unity-XR-AI Project
 
-**520+ Curated GitHub Repos for Unity XR/AR/VR/AI Development**
+**Comprehensive Unity XR/AR/VR Development Knowledgebase + Visualization Tools**
 
-This repository contains production-ready code patterns, GitHub repo references, and platform compatibility matrices for Unity XR/AR/VR development.
+This repository contains production-ready code patterns, 520+ GitHub repo references, 10 visualization frontends, and the MetavidoVFX Unity project.
 
 ---
 
 ## 📂 Repository Structure
 
-| File | Contents | Size |
-|------|----------|------|
-| `KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` | 520+ repos indexed by category | Find implementations |
-| `KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | 50+ code snippets | Copy-paste ready |
-| `PLATFORM_COMPATIBILITY_MATRIX.md` | Platform support matrix | Check compatibility |
-| `Examples/PROJECT_CLAUDE_TEMPLATE.md` | Project setup template | Start new projects |
+```
+Unity-XR-AI/
+├── KnowledgeBase/           # 75+ knowledge files, patterns, references
+├── Vis/                     # 10 3D visualization frontends
+├── MetavidoVFX-main/        # Unity VFX project (AR Foundation + H3M)
+├── mcp-server/              # MCP KB Server (TypeScript)
+├── Scripts/                 # Utility scripts
+├── specs/                   # Spec-Kit specifications
+└── xrai-speckit/            # Specify.ai templates
+```
 
 ---
 
-## 📊 Repository Statistics
+## 🔑 Key Files
 
-- **GitHub Repos**: 520+ (ARFoundation, VFX, DOTS, Networking, CrossPlatform, ML/AI)
+| File | Purpose |
+|------|---------|
+| `KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` | 520+ repos indexed by category |
+| `KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | 50+ production-ready code snippets |
+| `KnowledgeBase/_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` | Hologram, portal, depth patterns |
+| `KnowledgeBase/_PROJECT_CONFIG_REFERENCE.md` | All configs/scripts documented |
+| `KnowledgeBase/LEARNING_LOG.md` | Continuous discoveries |
+| `Vis/README.md` | Visualization setup documentation |
+| `PLATFORM_COMPATIBILITY_MATRIX.md` | Platform support matrix |
+
+---
+
+## 📊 Statistics
+
+- **KnowledgeBase**: 75+ active MD files
+- **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
+- **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
 - **Platform Coverage**: iOS, Android, Quest 3/Pro, WebGL, Vision Pro
-- **Last Verified**: 2025-11-02 (triple-verified)
 - **Unity Version**: 6000.1.2f1, AR Foundation 6.1.0
 
 ---
 
-## 🔍 How to Use This Repository
+## 🖥️ Visualization Frontends (Vis/)
 
-### For AI Assistants
+| Project | Stack | Purpose |
+|---------|-------|---------|
+| **xrai-kg** | ES6 + ECharts | Modular knowledge graph library |
+| **HOLOVIS** | Three.js + Express | Unity codebase 3D visualizer |
+| **cosmos-standalone-web** | 3d-force-graph | Force-directed graphs |
+| **cosmos-needle-web** | Needle Engine | WebXR visualization |
+| **WarpDashboard** | Static HTML | Jobs data dashboard |
+| **chalktalk-master** | Node.js + WebGL | Ken Perlin's sketch-to-3D |
 
-See global CLAUDE.md rules (already loaded) for:
+**Quick Start**: `cd Vis/xrai-kg && npm install && npm run dev`
 
-- 4 Core Rules for using this knowledgebase
-- When to search before implementing
-- How to add discoveries
-- Auto-update notification format
+---
 
-### For Developers
+## 🎮 MetavidoVFX Unity Project
 
-1. **Search first**: Check `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` for existing solutions
-2. **Copy patterns**: Use `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` for ready-to-use code
-3. **Verify compatibility**: Check `PLATFORM_COMPATIBILITY_MATRIX.md` before implementing
-4. **Reference sources**: Always attribute code snippets to original repos
+AR Foundation VFX project with H3M Hologram system.
+
+**Build**: `./build_ios.sh`
+**Deploy**: `./deploy_ios.sh`
+
+---
+
+## 🔍 For AI Assistants
+
+1. **Search KB first** before implementing new features
+2. **Check `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md`** for existing solutions
+3. **Reference `_VFX25_HOLOGRAM_PORTAL_PATTERNS.md`** for hologram/portal work
+4. **Log discoveries** to `LEARNING_LOG.md`
 
 ---
 
 ## 📄 License
 
-- **Knowledge bases**: MIT License
-- **Code snippets**: Attributed to original source repos (MIT/Apache 2.0)
-- **External repos**: Respective original licenses
+MIT License - Knowledge bases and code snippets attributed to original repos.
 
 ---
 
-**Repository**: <https://github.com/imclab/Unity-XR-AI>
+**Repository**: https://github.com/imclab/Unity-XR-AI
 
-**Maintained by**: James Tunick ([@theimclab](https://instagram.com/theimclab))
+**Maintained by**: James Tunick
 
-**Last Updated**: 2025-11-02
+**Last Updated**: 2026-01-13

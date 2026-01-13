@@ -300,3 +300,24 @@ config-backup        # Manual backup all configs
 **Last Updated**: 2026-01-08
 **Total Token Savings**: ~90-140K tokens per session across all IDEs
 **Maintenance**: 90% automated (see PERIODIC_MAINTENANCE.md)
+
+---
+
+## 🤖 AntiGravity Automation Protocols
+
+**Mandatory Rules for Agents**:
+
+### 1. 🔍 Automatic Verification (Zero-User-Burden)
+*   **NEVER** ask the user to "check logs" or "monitor the build" if you can do it yourself.
+*   **ALWAYS** spawn a background log capture (`idevicesyslog`, `adb logcat`) *before* asking the user to trigger an action.
+*   **Action**: If a manual step is required (e.g., "Tap Record"), you must ALREADY be recording logs to capture the result.
+
+### 2. 🆔 Version Proofing (Stale Build Prevention)
+*   **Context**: When fixing persistent native bugs (freezes, crashes), assume the old binary might be cached.
+*   **Rule**: You MUST add a unique, traceable log (e.g., `console.log("FIX_V2_APPLIED")` or `return "VERSION_XYZ"`) to the native code.
+*   **Verify**: After build, you MUST grep the logs for this specific string to prove the new code is actually running.
+
+### 3. 🛡️ Verification before Notification
+*   Do not notify the user "It is fixed, please test" until YOU have verified it via logs/tests.
+*   If you cannot verify it (e.g., requires physical interaction), state exactly what you are monitoring in the background while they test.
+
