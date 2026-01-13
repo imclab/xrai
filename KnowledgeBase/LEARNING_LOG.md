@@ -50,6 +50,86 @@ ln -sf ~/CLAUDE.md ~/.cursor/CLAUDE.md
 
 ---
 
+## 2026-01-08 07:55 - Claude Code - AI CLI Tools Reference Created
+
+**Discovery**: Comprehensive documentation compiled for all major AI coding CLIs (Claude Code, Windsurf, OpenAI Codex, Gemini CLI)
+
+**Context**: User requested knowledge base addition for cross-tool reference. Fetched official documentation and latest 2026 features.
+
+**Impact**:
+- Single reference file for comparing 4 major AI coding tools
+- Model configurations, memory systems, and features documented
+- Cross-tool patterns identified (MCP, Plan Mode, memory files)
+- Updated search date rule in GLOBAL_RULES.md
+
+**Files Created/Modified**:
+- **Created**: `AI_CLI_TOOLS_REFERENCE.md` - Comprehensive 4-tool reference guide
+- **Modified**: `~/GLOBAL_RULES.md` - Added web search current-date rule
+
+**Key Findings**:
+
+| Tool | Latest Model | Unique Feature |
+|------|--------------|----------------|
+| Claude Code | Opus 4.5 | Plan Mode, Extended Thinking |
+| Windsurf | SWE-1.5 (950 tok/s) | Flow Awareness, Codemaps |
+| Codex CLI | GPT-5.2-Codex | Agent Skills, Rust-built |
+| Gemini CLI | Gemini 2.5 Pro | 1M context, Free tier |
+
+**Global Rule Added**:
+```markdown
+### Web Search Date Rule
+**CRITICAL**: Always use CURRENT YEAR in web searches
+- Search for "feature X 2026" not "feature X 2025" when in 2026
+```
+
+**Related**:
+- See: `AI_CLI_TOOLS_REFERENCE.md` for full documentation
+- See: `~/GLOBAL_RULES.md` for updated search rules
+
+**Sources**:
+- https://code.claude.com/docs/en/
+- https://docs.windsurf.com/windsurf/cascade/cascade
+- https://developers.openai.com/codex/cli
+- https://developers.google.com/gemini-code-assist/docs/gemini-cli
+
+---
+
+## 2026-01-08 09:20 - Portals V4 - Unity-RN Integration Debugging
+
+**Discovery**: Unity not initializing - **CORRECTED**: Build pipeline issue, NOT Fabric
+
+**Context**: Unity scene shows green RN banner but "Initializing..." status permanently
+
+**Initial (WRONG) Hypothesis**:
+- Assumed Fabric/New Architecture registration issue based on GitHub #85
+- Added layoutSubviews patch to RNUnityView.mm
+- This was INCORRECT - led to unnecessary changes
+
+**Actual Root Cause (Found by Gemini 2026-01-08 09:45)**:
+- **Evidence**: `cp: unity/builds/ios/UnityFramework.framework/UnityFramework: No such file or directory`
+- **Problem**: Build pipeline expected framework at `unity/builds/ios/UnityFramework.framework/`
+- **Actual Location**: `unity/builds/ios/DerivedData/Build/Products/Release-iphoneos/UnityFramework.framework`
+- **Result**: App was running OLD Unity binary without new BridgeTarget.cs
+
+**Fix Applied**:
+```bash
+# Copy from actual build location to expected locations
+cp -R unity/builds/ios/DerivedData/Build/Products/Release-iphoneos/UnityFramework.framework ios/UnityFramework.framework
+cp -R ios/UnityFramework.framework node_modules/@azesmway/react-native-unity/ios/UnityFramework.framework
+```
+
+**Lesson Learned**:
+- **Don't chase GitHub issues without verifying they match your specific problem**
+- Check actual file paths and build outputs FIRST
+- Evidence-based debugging > hypothesis-driven debugging
+- My Fabric patch was reverted as unnecessary
+
+**Files Modified**:
+- `scripts/build_and_run_ios.sh` - DEVELOPMENT_TEAM for code signing
+- `~/GLOBAL_RULES.md` - Added Persistent Bug Protocol and validation rules
+
+---
+
 ## 2026-01-08 00:15 - Claude Code - Discord Webhook Formatting Fix
 
 **Discovery**: Discord webhook JSON formatting requires careful handling of newlines - shell string interpolation vs Python f-strings produce different results
@@ -590,3 +670,612 @@ Created kb-add and kb-audit tools for easy KB management
 Testing kb tools for the first time!
 
 ---
+
+## 2026-01-08: Unity MCP Server Fix (Claude Code - AntiGravity)
+
+**Issue**: Unity MCP tools not responding in Claude Code
+**Root Cause**: MCP bridge stops during Unity builds/domain reloads and config mismatches
+
+**Solutions**:
+1. Restart MCP bridge: `Window > MCP for Unity > Start Server`
+2. Restart Claude Code CLI to pick up new MCP config
+3. Use `stdio` transport (default), not HTTP
+4. After headless builds, reopen Unity Editor
+
+**Config Location**: `~/.claude.json` → `mcpServers.unity-mcp`
+
+**Related**: GLOBAL_RULES.md now has "Unity MCP Server" section
+
+---
+
+## 2026-01-08: Knowledgebase Date Audit
+
+**Task**: Track "Last Updated" dates and refresh stale docs as needed
+
+**Current Status**:
+| File | Last Updated | Status |
+|------|--------------|--------|
+| _ADVANCED_AR_FEATURES_IMPLEMENTATION_PLAN.md | 2025-11-01 | Review needed |
+| _ARFOUNDATION_VFX_KNOWLEDGE_BASE.md | 2025-11-02 | Review needed |
+| _MASTER_GITHUB_REPO_KNOWLEDGEBASE.md | 2025-01-07 | Review needed |
+| _JT_PRIORITIES.md | 2025-10-31 | Review needed |
+| AI_CLI_TOOLS_REFERENCE.md | 2026-01-08 | Current |
+| CLOUD_NATIVE_KB_ARCHITECTURE_2025.md | 2026-01-07 | Current |
+
+**Files Missing Dates** (need to add):
+- _AI_AGENT_PHILOSOPHY.md
+- _AUTOMATION_IMPLEMENTATION_SUMMARY.md
+- _COMPREHENSIVE_AI_DEVELOPMENT_GUIDE.md
+- _H3M_HOLOGRAM_ROADMAP.md
+- _IMPLEMENTATION_SUMMARY.md
+- AUTOMATION_QUICK_START.md
+
+**Action**: Update docs when new learnings/research are added. Check quarterly.
+
+---
+
+## 2026-01-08: react-native-unity iOS Build Bug & Linker Research
+
+**Task**: Debug iOS build failing with `__mh_dylib_header undefined symbol`
+
+**Root Cause Found**: Bug in `@artmajeur/react-native-unity` (`RNUnityView.mm` lines 22-27):
+```objc
+#ifdef DEBUG
+  [ufw setExecuteHeader: &_mh_dylib_header];  // BUG: This symbol only exists in dylibs!
+#else
+  [ufw setExecuteHeader: &_mh_execute_header]; // Works: symbol exists in executables
+#endif
+```
+
+**Solution**: Always build with `-configuration Release`
+
+**Additional Research**:
+
+| Topic | Finding |
+|-------|---------|
+| `_mh_dylib_header` | Mach-O linker symbol auto-provided in dynamic libraries |
+| `_mh_execute_header` | Mach-O linker symbol auto-provided in executables |
+| `-Wl,-ld_classic` | Required for Xcode 15+ Unity IL2CPP builds (new linker is stricter) |
+| `-force_load il2cpp.a` | Ensures all IL2CPP runtime symbols are linked (even unreferenced) |
+
+**Sources**:
+- [Apple Dev Forums: __mh_execute_header](https://developer.apple.com/forums/thread/749458)
+- [Unity Issue Tracker: Xcode 15 IL2CPP](https://issuetracker.unity3d.com/issues/building-projects-with-il2cpp-scripting-backend-for-apple-platforms-fails-with-xcode-15-dot-0b6-or-newer)
+- [azesmway/react-native-unity](https://github.com/azesmway/react-native-unity)
+
+**Files Created/Updated**:
+- `scripts/build_minimal.sh` - New fail-fast build script (~130 lines vs 560+ in full script)
+- `CLAUDE.md` - Added build troubleshooting table
+
+**Impact**: Reduced build debugging from hours to immediate (fail-fast checks in first 5 seconds)
+
+---
+
+## 2026-01-08: Unity iOS Build Architecture Deep Dive
+
+**Task**: Research why build script was overcomplicated
+
+**Key Findings**:
+
+### 1. il2cpp.a Generation
+- **NOT generated during Unity export** - by design
+- Generated BY Xcode during build via IL2CPP tool bundled in exported project
+- Location: `DerivedData/Build/Products/Release-iphoneos/il2cpp.a`
+
+### 2. GameAssembly Target Dependency
+```
+UnityFramework target has PBXTargetDependency on GameAssembly
+```
+- Xcode automatically builds GameAssembly when building UnityFramework
+- **No need for separate GameAssembly build step**
+- Verified: Building only UnityFramework succeeds (94 sec) - GameAssembly built automatically
+
+### 3. force_load il2cpp.a
+```bash
+# Unity's exported project already includes:
+OTHER_LDFLAGS = ... /path/to/DerivedData/.../il2cpp.a
+```
+- **NOT needed to manually force_load** - Unity includes it in project settings
+- force_load critical for UAAL because MetadataCache::Initialize() must be loaded
+- But Unity handles this automatically
+
+### 4. What IS Needed
+| Flag | Reason |
+|------|--------|
+| `-Wl,-ld_classic` | Xcode 15+ linker compatibility |
+| `-configuration Release` | react-native-unity DEBUG bug |
+
+### Script Simplification
+- Before: 172 lines with separate GameAssembly build + manual force_load
+- After: 130 lines relying on Unity's proper Xcode project configuration
+
+**Sources**:
+- [Unity Xcode Structure Docs](https://docs.unity3d.com/Manual/StructureOfXcodeProject.html)
+- Verified via `xcodebuild -showBuildSettings` and `project.pbxproj` inspection
+
+---
+
+## 2026-01-09 07:30 - Portals V4 - Multi-Layer Debug Architecture & Metacognitive Learning
+
+**Discovery**: Four-channel verbose logging pattern for Unity-RN debugging + metacognitive self-improvement loop
+
+**Context**: Adding basic AR Foundation scene to replace Unity test scene. Device debugging was blind without proper logging channels.
+
+**Impact**:
+- Debug output now visible through 4 independent channels
+- No more "black box" debugging on device
+- Patterns extracted and encoded in GLOBAL_RULES.md for all future sessions
+- Self-improvement loop documented as explicit process
+
+**Four-Channel Logging Pattern**:
+```csharp
+// ARDebugOverlay.cs - Log to all channels simultaneously
+public static void Log(string message) {
+    Debug.Log(message);           // 1. Unity Console (Xcode debugger)
+    NSLog_Native(message);        // 2. iOS Native (Console.app, idevicesyslog)
+    WriteFileLog(message);        // 3. File (can pull from device)
+    LogBuffer.Enqueue(message);   // 4. On-screen overlay (no tools needed)
+}
+```
+
+**Metacognitive Framework Added to GLOBAL_RULES.md**:
+1. **Persistent Long-Term Memory**: Encode all learnings in GLOBAL_RULES/CLAUDE.md
+2. **Automatic Self-Improvement Loop**: Execute → Observe → Extract → Encode → Verify
+3. **Resource-Aware Thinking**: Spend tokens where ROI is highest
+4. **Evidence-Based Decisions**: Triple-verify everything
+
+**Key Insight**:
+The mechanism for long-term memory ALREADY EXISTS:
+- `GLOBAL_RULES.md` → Cross-project patterns
+- `CLAUDE.md` → Project-specific patterns  
+- `LEARNING_LOG.md` → Discovery journal (this file)
+- Symlinks → All AI tools share same knowledge
+
+The breakthrough was REALIZING this system exists and USING it consistently.
+
+**Files Modified**:
+- `~/GLOBAL_RULES.md` - Added Multi-Layer Verbose Logging, MCP-First Verification Loop, Metacognitive Intelligence sections
+- `unity/Assets/Scripts/ARDebugOverlay.cs` - Created with four-channel logging
+- `unity/Assets/Scripts/ARSessionLogger.cs` - Created with AR event logging
+- `unity/Assets/Plugins/iOS/ARDebugNative.mm` - Created for NSLog support
+- `LEARNING_LOG.md` - This entry
+
+**Self-Improvement Verification**:
+- [ ] Future sessions access these patterns via GLOBAL_RULES
+- [ ] Other AI tools (Windsurf, Cursor) can see via symlinks
+- [ ] Context compaction preserves key learnings
+
+---
+
+## 2026-01-09 08:55 - Claude Code - Multi-Agent Coordination Rules
+
+**Discovery**: Established formal rules for process awareness and agent parallelism across all AI tools
+
+**Context**: User observed potential for conflicts when multiple AI tools, agents, or processes work simultaneously. Need for clear coordination rules to prevent stepping on toes.
+
+**Impact**:
+- Prevents accidental process termination
+- Avoids build conflicts across tools (Claude Code, Cursor, Windsurf)
+- Establishes clear parallelism safety guidelines
+- Reduces debugging time from coordination failures
+
+**Key Rules Established**:
+
+1. **Process Sovereignty**:
+   - Never kill processes without verifying ownership
+   - Ask before terminating ambiguous processes
+   - Check `ps aux` to identify who started a process
+
+2. **Agent Parallelism Safety Matrix**:
+   | Safe | Caution | Never |
+   |------|---------|-------|
+   | Independent reads | Same-project edits | Git operations |
+   | Web research | Test runs | Build processes |
+   | Different directories | Cache operations | Device deploys |
+
+3. **Shared Resource Awareness**:
+   - DerivedData, node_modules, Pods shared across all tools
+   - Respect lock files (`/tmp/*.lock`) from any tool
+   - One Unity MCP connection at a time
+
+4. **Build Lock Pattern**:
+   ```bash
+   LOCK_FILE="/tmp/build.lock"
+   if [ -f "$LOCK_FILE" ]; then
+       OTHER_PID=$(cat "$LOCK_FILE")
+       kill -0 "$OTHER_PID" 2>/dev/null && exit 1
+   fi
+   echo $$ > "$LOCK_FILE"
+   trap "rm -f '$LOCK_FILE'" EXIT
+   ```
+
+**Files Created/Modified**:
+- `~/GLOBAL_RULES.md` - Added "Process & Agent Coordination" section
+- `~/.claude/knowledgebase/_MULTI_AGENT_COORDINATION.md` - Full coordination guide
+- `~/.claude/knowledgebase/_CLAUDE_CODE_WORKFLOW_OPTIMIZATION.md` - Added quick reference
+
+**Cross-Tool Application**:
+- Rules apply to ALL AI tools (Claude Code, Cursor, Windsurf, Copilot)
+- Rules apply to ALL IDEs and services
+- Rules apply to automation scripts and CI/CD
+
+**Related**:
+- See: `_MULTI_AGENT_COORDINATION.md` for full guide
+- See: `_CLAUDE_CODE_WORKFLOW_OPTIMIZATION.md` for Claude-specific patterns
+- See: `~/GLOBAL_RULES.md` for authoritative rules
+
+---
+
+## 2026-01-09 09:20 - Claude Code - Portals V4 - Fabric Component Registration Fix
+
+**Discovery**: React Native New Architecture (Fabric) requires manual component registration for `@artmajeur/react-native-unity`
+
+**Context**: Unity-React Native integration was silently failing - Unity view appeared but C# code never executed
+
+**Symptoms**:
+- Unity view renders but shows "Waiting for Unity to initialize" forever
+- Native logs show `layoutSubviews` but no `updateProps`
+- No `bridge_log.txt` created (C# runtime never starts)
+- No crash, no errors - completely silent failure
+
+**Root Cause**:
+1. React Native Fabric uses `RCTThirdPartyComponentsProvider.mm` to register third-party components
+2. The codegen discovers components via `codegenConfig.ios.componentProvider` in package.json
+3. `@artmajeur/react-native-unity` package is missing this config
+4. Without registration, Fabric never calls `updateProps` → `initUnityModule` never runs → Unity C# never starts
+
+**Solution** (Two-Layer Automatic Fix):
+1. **Pre-codegen** (npm postinstall): `scripts/patch-react-native-unity.js` patches package.json
+2. **Post-codegen** (Podfile post_install): `scripts/patch-fabric-registry.sh` patches generated file
+
+**Patch Content**:
+```objc
+// Added to ios/build/generated/ios/RCTThirdPartyComponentsProvider.mm
+@"RNUnityView": NSClassFromString(@"RNUnityView"), // react-native-unity
+```
+
+**Verification** (from device logs):
+```
+[9:19:19 AM] [RNUnity] updateProps CALLED  ← Fabric lifecycle working
+[9:19:19 AM] [RNUnity] initUnityModule called
+[9:19:19 AM] [RNUnity] initUnityModule COMPLETE - Unity should be running
+```
+
+**Impact**:
+- Unity-RN bridge now fully functional
+- AR tracking working (plane detection confirmed)
+- BridgeTarget.cs executing, sending `unity_ready` messages
+- Ready for message roundtrip testing
+
+**Files Modified**:
+- `scripts/patch-react-native-unity.js` - Created (pre-codegen patch)
+- `scripts/patch-fabric-registry.sh` - Updated (post-codegen backup)
+- `ios/Podfile` - Added post_install hook
+- `package.json` - Added postinstall script
+- `CLAUDE.md` - Documented fix in Build Troubleshooting
+
+**Related**:
+- See: `CLAUDE.md#fabric-component-fix-critical-for-new-architecture`
+- See: `scripts/patch-fabric-registry.sh` for manual fix
+- Package: `@artmajeur/react-native-unity@0.0.6`
+
+**Tags**: React Native, Fabric, New Architecture, Unity as a Library, iOS, Component Registration
+
+---
+
+## 2026-01-09 09:30 - Claude Code - ccache Limited Benefit with RN 0.81+
+
+**Discovery**: ccache provides minimal benefit for React Native 0.81+ projects due to prebuilt binaries.
+
+**Context**: Attempted to optimize build times with ccache for a Unity + React Native iOS project.
+
+**Investigation**:
+1. Enabled `apple.ccacheEnabled: "true"` in `Podfile.properties.json`
+2. Ran fresh `pod install` - saw "[Ccache] Setting CC, LD, CXX & LDPLUSPLUS"
+3. Ran multiple builds - ccache stats showed 0% cache usage
+4. Investigated: clang invocations bypassing ccache wrapper
+
+**Root Cause**:
+- React Native 0.81+ uses `React-Core-prebuilt` (pre-compiled by Meta)
+- Most C++ compilation is eliminated - nothing to cache
+- Third-party pods use Swift (ccache = C/C++ only) or direct clang
+- Unity IL2CPP compiled separately (not via Pods)
+
+**Verified Configuration** (correct but ineffective):
+```
+CC = $(REACT_NATIVE_PATH)/scripts/xcode/ccache-clang.sh
+CCACHE_BINARY = /opt/homebrew/bin/ccache
+```
+
+**Actual Build Optimizations That Work**:
+| Optimization | Benefit | How |
+|--------------|---------|-----|
+| Unity Append Mode | 5-8 min savings | `BuildOptions.AcceptExternalModificationsToPlayer` |
+| Xcode DerivedData | Automatic caching | Built into Xcode |
+| `--skip-unity-export` | Skip unchanged Unity | Build script flag |
+| Build locks | Prevent conflicts | `/tmp/*.lock` pattern |
+
+**Recommendation**:
+- Keep ccache enabled (zero cost)
+- Don't expect significant speedups on RN 0.81+
+- Focus on Unity Append mode for real improvements
+
+**Files Documented**:
+- `CLAUDE.md` - Added RN 0.81+ note to ccache section
+- `TODO.md` - Added ccache investigation findings
+- `_CLAUDE_CODE_WORKFLOW_OPTIMIZATION.md` - Added limitation note
+
+**Tags**: React Native, ccache, Build Optimization, iOS, Prebuilt Binaries
+
+---
+
+## 2026-01-12 - Claude Code - AI Memory Systems Architecture & Self-Healing
+
+**Discovery**: Unified documentation of how Claude, Gemini/AntiGravity, and Codex think/remember, with self-healing audit system
+
+**Context**: User requested cross-tool memory interoperability without overcomplicating or breaking existing systems
+
+**Impact**:
+- Single reference file for all AI tool memory systems (`_AI_MEMORY_SYSTEMS_DEEP_DIVE.md`)
+- KB_AUDIT.sh now auto-heals broken symlinks
+- History tracking enables trend analysis over time
+- Best practices per tool prevent common pitfalls
+- No redundant files created (enhanced existing)
+
+**Key Patterns**:
+
+1. **Memory Hierarchy** (where to store what):
+   - Universal patterns → `GLOBAL_RULES.md`
+   - Discoveries → `LEARNING_LOG.md`
+   - Tool-specific → `~/.{tool}/*.md`
+   - Structured facts → MCP Memory
+   - Project-specific → `project/CLAUDE.md`
+
+2. **Self-Healing Architecture**:
+   - KB_AUDIT.sh auto-repairs broken/missing symlinks
+   - History log (`audit-history.jsonl`) tracks pass/fail over time
+   - `grep '"fail":[1-9]' audit-history.jsonl` spots trends
+
+3. **Bash `set -e` with Arithmetic**:
+   - `((VAR++))` returns exit code 1 when VAR=0
+   - Fix: `((VAR++)) || true` prevents script exit
+   - Critical for fail-fast scripts with counters
+
+4. **Cross-Tool Best Practices**:
+   - One Unity MCP connection at a time
+   - Sequential git operations (never parallel across tools)
+   - Share via KB files, not memory assumptions
+   - Token budget: GLOBAL_RULES.md < 10K tokens
+
+**Files Created**:
+- `_AI_MEMORY_SYSTEMS_DEEP_DIVE.md` - How each tool thinks/remembers
+
+**Files Enhanced**:
+- `KB_AUDIT.sh` v2.0 - Self-healing + history tracking
+- `GLOBAL_RULES.md` - Added "Cross-Tool Memory Architecture" section
+- `~/.local/bin/sync-ai-memories` - Cross-tool status viewer
+
+**Validation**:
+```bash
+kb-audit                    # Full health check with self-healing
+sync-ai-memories            # View all AI tool memory status
+tail audit-history.jsonl    # Trend analysis
+```
+
+**Category**: architecture | **ROI**: High - prevents cross-tool conflicts, enables self-correction
+
+**Related**:
+- See: `_AI_MEMORY_SYSTEMS_DEEP_DIVE.md`
+- See: `GLOBAL_RULES.md#cross-tool-memory-architecture`
+
+---
+
+## 2026-01-10 - Claude Code - H3M Portals Roadmap Added
+
+**Discovery**: Cross-platform volumetric hologram streaming roadmap documented for 8-phase development
+
+**Context**: H3M Portals project aims to turn sparse video depth + audio from mobile/VR/webcam into volumetric VFX-based holograms. Roadmap captures progressive scaling from local iOS to MMO-scale conferencing.
+
+**Impact**:
+- Clear 8-phase development path from local prototype to MMO scale
+- Key repos linked per phase for implementation reference
+- Technical constraints documented (depth formats, compression, architecture options)
+- Enables AI tools to provide phase-appropriate guidance
+
+**File Created**:
+- `_H3M_PORTALS_ROADMAP.md` - Complete roadmap with phase tables and key repo references
+
+**Phase Summary**:
+| Phase | Target | Key Tech |
+|-------|--------|----------|
+| 1 | Local iOS | LiDAR + VFX Graph (Rcam4) |
+| 2 | Phone-to-Phone | WebRTC RGBD streaming |
+| 3 | Phone-to-WebGL | Needle Engine / browser |
+| 4 | WebCam-to-Phone | Neural depth (BodyPix) |
+| 5 | Web ↔ App | Bi-directional streaming |
+| 6 | Conferencing | Mesh/SFU multi-user |
+| 7 | Quest MR | Passthrough integration |
+| 8 | MMO Scale | Gaussian Splats |
+
+**Related**:
+- See: `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` for Rcam4, WebRTC repos
+- See: `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` for VFX patterns
+- GitHub: `keijiro/Rcam4`, `Unity-Technologies/com.unity.webrtc`
+
+**Tags**: H3M, Portals, Volumetric, Hologram, WebRTC, VFX Graph, Gaussian Splats, LiDAR
+
+---
+
+## 2026-01-12 - Claude Code - H3M Hologram Phase 1 Fix
+
+**Discovery**: "Empty Scene" bug caused by using wrong depth texture source
+
+**Context**: Phase 1 of H3M Hologram Roadmap - Local Foundation for LiDAR volumetric VFX
+
+**Root Cause Analysis**:
+1. `PeopleOcclusionVFXManager.cs` used `humanStencilTexture` and `humanDepthTexture` (people segmentation)
+2. Phase 1 requires `environmentDepthTexture` (LiDAR environment depth)
+3. Silent early-return when textures null (no debug logging)
+4. Hardcoded depth scale factor in compute shader
+
+**Solution Implemented**:
+1. Created `LiDARDepthVFXManager.cs` - Uses `environmentDepthTexture`
+2. Added event-driven callbacks (Rcam4 pattern) for efficiency
+3. Added comprehensive debug logging for texture availability
+4. Updated `GeneratePositionTexture.compute` with configurable depth range
+5. Created `LiDARDepthVFXSetup.cs` Editor utility for easy scene configuration
+
+**Pattern Extracted**:
+```
+AR Foundation Depth Textures:
+- humanDepthTexture → People segmentation (body tracking)
+- environmentDepthTexture → LiDAR scene depth (environment)
+Always use event-driven callbacks (frameReceived) not polling in Update()
+```
+
+**Files Created/Modified**:
+- `Assets/[H3M]/.../LiDARDepthVFXManager.cs` (NEW)
+- `Assets/[H3M]/.../Editor/LiDARDepthVFXSetup.cs` (NEW)
+- `Assets/[H3M]/.../GeneratePositionTexture.compute` (UPDATED)
+
+**Category**: debugging|architecture
+
+**ROI**: High - Unblocks entire H3M Hologram Phase 1
+
+**Related**: H3M Portals Project, Rcam4, PeopleOcclusionVFXManager
+
+---
+
+## 2026-01-13 - Claude Code - SimpleHumanHologram Minimal Implementation & Echovision Integration
+
+**Discovery**: Simplified H3M hologram from complex Rcam4/Metavido pattern to 20-line core binding + integrated Echovision mesh-based VFX
+
+**Context**: Previous implementation was overcomplicating MVP by using network streaming patterns (Rcam4/Metavido designed for remote streaming) for local on-device rendering.
+
+**Impact**:
+- Reduced core depth→VFX binding from ~200 lines to 20 lines
+- Two VFX pipelines now available: depth-based (SimpleHumanHologram) and mesh-based (Echovision)
+- Echovision assets successfully ported with HoloKit dependencies removed
+- Clear separation of concerns for future development
+
+**SimpleHumanHologram Core Pattern** (20 lines):
+```csharp
+void Update() {
+    if (vfx == null || occlusionManager == null) return;
+
+    Texture depth = null;
+    if (useHumanDepth) depth = occlusionManager.humanDepthTexture;
+    if (depth == null && useLiDARDepth) depth = occlusionManager.environmentDepthTexture;
+    if (depth == null) return;
+
+    vfx.SetTexture("DepthMap", depth);
+    vfx.SetMatrix4x4("InverseView", arCamera.cameraToWorldMatrix);
+
+    float fov = arCamera.fieldOfView * Mathf.Deg2Rad;
+    float h = Mathf.Tan(fov * 0.5f);
+    float w = h * arCamera.aspect;
+    vfx.SetVector4("RayParams", new Vector4(0, 0, w, h));  // xy=offset, zw=scale
+    vfx.SetVector2("DepthRange", new Vector2(0.1f, 5f));
+    vfx.SetBool("Spawn", true);
+}
+```
+
+**Echovision Integration**:
+| Component | Purpose | Modification |
+|-----------|---------|--------------|
+| MeshVFX.cs | ARMesh → GraphicsBuffer → VFX | Removed HoloKit import |
+| SoundWaveEmitter.cs | Audio-reactive wave effects | Removed HoloKit import |
+| MicrophoneAPI.cs | Microphone capture | Removed HoloKitVideoRecorder |
+| LiDarRequirement.cs | Device capability check | Replaced with ARFoundation check |
+| BufferedMesh.vfx | Point cache VFX from mesh | No changes needed |
+
+**Key Insight - Two VFX Approaches**:
+1. **Depth-based** (SimpleHumanHologram): ARKit depth texture → VFX unproject → particles
+   - Pros: Works on all devices, body segmentation available
+   - Cons: Lower resolution (256x192)
+
+2. **Mesh-based** (Echovision): ARMeshManager → GraphicsBuffer → VFX
+   - Pros: Higher fidelity geometry, audio reactivity
+   - Cons: Requires LiDAR, more setup
+
+**Files Created**:
+- `Assets/H3M/Core/SimpleHumanHologram.cs` - Minimal depth binding
+- `Assets/H3M/Editor/SimpleHologramSetup.cs` - Editor setup utility
+- `Assets/Echovision/` - Full Echovision port (32 files, 1.6MB)
+- `build_and_deploy.sh` - iOS build automation script
+
+**Category**: architecture|simplification|integration
+
+**ROI**: High - Unblocks MVP testing with cleaner code
+
+**Related**:
+- See: _H3M_HOLOGRAM_ROADMAP.md (updated status)
+- Source: keijiro/Echovision, YoHana19/HumanParticleEffect
+- Pattern: Prefer humanDepthTexture for body, environmentDepthTexture for scene
+
+---
+
+## 2026-01-13 - Claude Code - H3M RayParams Format Discovery (Critical Bug Fix)
+
+**Discovery**: Metavido/Rcam4 VFX Graph uses RayParams differently than commonly assumed - fixed invisible particles bug
+
+**Context**: H3M Hologram MVP - particles were invisible or not tracking body correctly. Deep dive into Keijiro's Metavido HLSL revealed parameter format mismatch.
+
+**Root Cause Analysis**:
+
+1. **ARKitMetavidoBinder.cs** used `Vector4(w, h, 0, 0)` - putting scale in xy, zeros in zw
+2. **Metavido HLSL** (Utils.hlsl line 15) shows actual format:
+   ```hlsl
+   ray.xy = (ray.xy + rayParams.xy) * rayParams.zw;
+   ```
+   - `xy` = **offset** (typically 0)
+   - `zw` = **scale** (tan(fov/2) values)
+
+3. Wrong format caused: `ray.xy = (ray.xy + w,h) * 0` = **zero** = no particles visible!
+
+**Solution**:
+```csharp
+// WRONG (original ARKitMetavidoBinder):
+Vector4 ray = new Vector4(w, h, 0, 0);  // xy=scale, zw=0
+
+// CORRECT (fixed):
+Vector4 ray = new Vector4(0, 0, w, h);  // xy=offset, zw=scale
+```
+
+**Files Fixed**:
+- `Assets/Scripts/ARKitMetavidoBinder.cs` - Line 90
+- `Assets/H3M/Core/HologramRenderer.cs` - Already correct in latest version
+
+**Files Created**:
+- `Assets/H3M/Core/HologramLayerManager.cs` - VFX layer switching for body/hands/face/background
+- `Assets/Editor/BuildScript.cs` - Batch build script for iOS
+
+**Key HLSL Reference** (Metavido VFX Inverse Projection):
+```hlsl
+float3 MetavidoInverseProjection(float2 UV, float Depth, float4 RayParams, float4x4 InverseView)
+{
+  float3 p = float3(UV * 2 - 1, 1);
+  p.xy = (p.xy + RayParams.xy) * RayParams.zw;  // xy=offset, zw=scale!
+  p *= Depth;
+  return mul(InverseView, float4(p, 1)).xyz;
+}
+```
+
+**Pattern Extracted**:
+```
+Metavido RayParams Format:
+- Vector4(offsetX, offsetY, scaleX, scaleY)
+- offset = typically (0, 0) for centered
+- scale = (tan(fovY/2) * aspect, tan(fovY/2))
+- NEVER (scale, scale, 0, 0) - that produces zero ray!
+```
+
+**Category**: debugging|vfx|shaders
+
+**ROI**: Critical - Unblocks particle visibility for entire H3M hologram system
+
+**Related**:
+- Metavido package: `jp.keijiro.metavido`
+- VFX operator: `Metavido Inverse Projection.vfxoperator`
+- HLSL source: `Packages/jp.keijiro.metavido/Decoder/Shaders/Utils.hlsl`
+- See: H3M Hologram Roadmap Phase 1
