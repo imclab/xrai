@@ -1,5 +1,11 @@
 # Quick Reference - Common Patterns
 
+## Activation Phrases
+
+| Say This | Activates |
+|----------|-----------|
+| **"Using Unity Intelligence patterns"** | 500+ Unity repo patterns (ARFoundation, VFX, DOTS, networking) |
+
 ## Unity Debugging
 
 ```bash
