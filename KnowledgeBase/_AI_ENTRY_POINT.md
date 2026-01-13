@@ -12,6 +12,7 @@
 
 | Need | File |
 |------|------|
+| **AI config files** | `_AI_CONFIG_FILES_REFERENCE.md` |
 | **Shell config/aliases** | `_SHELL_CONFIG_REFERENCE.md` |
 | **AI health checks** | `_AI_HEALTH_SCRIPTS.md` |
 | **Unity debugging** | `_UNITY_DEBUGGING_REFERENCE.md` |
