@@ -105,7 +105,8 @@
 
 ### Memory File
 **Location**: `~/Applications/claude_memory.json`
-**Size**: ~38KB (grows over time)
+**Verified**: 2026-01-13 (42KB, 155 lines, 99+ entities)
+**Format**: JSONL (one entity/relation per line)
 
 ### Entity Types Stored
 - Projects (H3M Portals, Paint AR, WarpJobs, etc.)
@@ -195,12 +196,24 @@ cat ~/Applications/claude_memory.json | jq '.entities[] | .name'
 # View learning log
 cat ~/.claude/knowledgebase/LEARNING_LOG.md | tail -100
 
-# Check memory size
+# Check memory size and line count
 ls -lh ~/Applications/claude_memory.json
+wc -l ~/Applications/claude_memory.json
+
+# Preview first entity
+head -c 500 ~/Applications/claude_memory.json
 
 # Search memory (in Claude Code)
 # Use: mcp__memory__search_nodes with query
+# Or: mcp__memory__read_graph for full graph
 ```
+
+## Verification
+
+To verify knowledge graph is working:
+1. In Claude Code, call `mcp__memory__read_graph`
+2. Should return `entities` and `relations` arrays
+3. File at `~/Applications/claude_memory.json` should exist and be non-empty
 
 ---
 
