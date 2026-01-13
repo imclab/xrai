@@ -5,6 +5,8 @@
 | Say This | Activates |
 |----------|-----------|
 | **"Using Unity Intelligence patterns"** | 500+ Unity repo patterns (ARFoundation, VFX, DOTS, networking) |
+| **"Using WebGL Intelligence patterns"** | WebGL/WebGPU/Three.js/R3F patterns |
+| **"Using 3DVis Intelligence patterns"** | Sorting, clustering, anomaly detection, graphing |
 
 ## Unity Debugging
 

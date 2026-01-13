@@ -22,8 +22,10 @@
 | **AR/VFX development** | `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` |
 | **Gaussian splatting** | `_GAUSSIAN_SPLATTING_AND_VIZ_TOOLS.md` |
 | **Unity patterns (500+)** | `_UNITY_INTELLIGENCE_PATTERNS.md` - Say: **"Using Unity Intelligence patterns"** |
+| **Patterns by interest** | `_UNITY_PATTERNS_BY_INTEREST.md` - Brushes, hand tracking, audio, depth |
+| **WebGL patterns** | `_WEBGL_INTELLIGENCE_PATTERNS.md` - Say: **"Using WebGL Intelligence patterns"** |
+| **3DVis patterns** | `_3DVIS_INTELLIGENCE_PATTERNS.md` - Say: **"Using 3DVis Intelligence patterns"** |
 | **3D visualization** | `_3D_VISUALIZATION_KNOWLEDGEBASE.md` |
-| **WebGPU/Three.js** | `_WEBGPU_THREEJS_2025.md` |
 | **Unity MCP tools** | `_UNITY_MCP_DEV_HOOKS.md` |
 | **Spec-driven dev** | `_SPEC_KIT_METHODOLOGY.md` |
 | **AI memory patterns** | `_AI_MEMORY_SYSTEMS_DEEP_DIVE.md` |
