@@ -456,4 +456,26 @@ public class RealtimeBrushStroke : RealtimeComponent<RealtimeBrushStrokeModel> {
 
 ---
 
+## Related KB Files
+
+### Core Unity Patterns
+- `_UNITY_INTELLIGENCE_PATTERNS.md` - 500+ Unity repo patterns (parent file)
+- `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - AR Foundation + VFX deep dive
+- `_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` - Hologram/portal code patterns
+
+### By Topic
+- `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` - Full GitHub repo list
+- `_GAUSSIAN_SPLATTING_AND_VIZ_TOOLS.md` - Gaussian splatting tools
+- `_PERFORMANCE_PATTERNS_REFERENCE.md` - Platform optimization
+
+### Related Domains
+- `_WEBGL_INTELLIGENCE_PATTERNS.md` - Web 3D patterns
+- `_3DVIS_INTELLIGENCE_PATTERNS.md` - Visualization algorithms
+
+### Project Context
+- `_JT_PRIORITIES.md` - Current priorities (source of interests)
+- `_H3M_HOLOGRAM_ROADMAP.md` - H3M hologram project
+
+---
+
 *Updated: 2026-01-13*

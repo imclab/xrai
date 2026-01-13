@@ -545,4 +545,28 @@ loader.load('scene.splat', (splat) => {
 
 ---
 
+## Related KB Files
+
+### Web 3D Deep Dives
+- `_WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md` - Full Three.js guide
+- `_WEBGPU_THREEJS_2025.md` - WebGPU + Three.js patterns
+- `_WEBXR_MODEL_VIEWER.md` - Model viewer + WebXR
+- `_WEB_INTEROPERABILITY_STANDARDS.md` - Web standards
+
+### Visualization
+- `_3DVIS_INTELLIGENCE_PATTERNS.md` - Visualization algorithms
+- `_3D_VISUALIZATION_KNOWLEDGEBASE.md` - 3D vis patterns
+- `_ECHARTS_VISUALIZATION_PATTERNS.md` - ECharts patterns
+- `_GAUSSIAN_SPLATTING_AND_VIZ_TOOLS.md` - Gaussian splatting
+
+### Unity Integration
+- `_UNITY_INTELLIGENCE_PATTERNS.md` - Unity patterns
+- `_UNITY_AS_A_LIBRARY_OVERVIEW.md` - Unity WebGL export
+
+### Reference
+- `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` - GitHub repos
+- `_KB_CROSS_LINKS.md` - Full KB navigation
+
+---
+
 *Updated: 2026-01-13*

@@ -695,4 +695,31 @@ function extractDimensions(tokens) {
 
 ---
 
+## Related KB Files
+
+### Visualization Resources
+- `_3D_VISUALIZATION_KNOWLEDGEBASE.md` - 3D visualization patterns
+- `_VISUALIZATION_RESOURCES_INDEX.md` - Visualization index
+- `_ECHARTS_VISUALIZATION_PATTERNS.md` - ECharts charts
+- `_COSMOS_VISUALIZATION_RESOURCES.md` - Cosmos visualizer
+
+### Web Implementation
+- `_WEBGL_INTELLIGENCE_PATTERNS.md` - WebGL/Three.js patterns
+- `_WEBGPU_THREEJS_2025.md` - WebGPU patterns
+- `_GAUSSIAN_SPLATTING_AND_VIZ_TOOLS.md` - Gaussian splatting
+
+### Unity Implementation
+- `_UNITY_INTELLIGENCE_PATTERNS.md` - Unity VFX patterns
+- `_UNITY_PATTERNS_BY_INTEREST.md` - Particle systems
+
+### Graph/Network
+- `_REPO_GRAPH_SCHEMA.md` - Graph schema
+- `_XRAI_HYPERGRAPH_WORLD_GENERATION.md` - Hypergraph generation
+
+### Reference
+- `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` - GitHub repos
+- `_KB_CROSS_LINKS.md` - Full KB navigation
+
+---
+
 *Updated: 2026-01-13*

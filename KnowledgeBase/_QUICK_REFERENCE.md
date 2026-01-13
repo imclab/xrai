@@ -100,4 +100,23 @@ ARFoundation → Texture2D → VFX Graph Property → Particle Position
 
 ---
 
+## Related KB Files
+
+### Entry Points
+- `_AI_ENTRY_POINT.md` - Universal navigation hub
+- `_KB_CROSS_LINKS.md` - Full file relationship map
+
+### Deep Dives by Topic
+| Topic | File |
+|-------|------|
+| Unity AR/VFX | `_UNITY_INTELLIGENCE_PATTERNS.md`, `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` |
+| Brushes/Hands/Audio | `_UNITY_PATTERNS_BY_INTEREST.md` |
+| WebGL/Three.js | `_WEBGL_INTELLIGENCE_PATTERNS.md` |
+| Data Visualization | `_3DVIS_INTELLIGENCE_PATTERNS.md` |
+| Debugging | `_UNITY_DEBUGGING_REFERENCE.md`, `_TROUBLESHOOTING_AND_LOGIC.md` |
+| MCP Tools | `_UNITY_MCP_DEV_HOOKS.md` |
+| Memory Systems | `_GLOBAL_RULES_AND_MEMORY.md`, `_AI_MEMORY_SYSTEMS_DEEP_DIVE.md` |
+
+---
+
 *Load full references from knowledgebase files as needed*

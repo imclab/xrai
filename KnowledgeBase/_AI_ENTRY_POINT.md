@@ -31,6 +31,7 @@
 | **AI memory patterns** | `_AI_MEMORY_SYSTEMS_DEEP_DIVE.md` |
 | **GitHub repos** | `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` |
 | **Project priorities** | `_JT_PRIORITIES.md` |
+| **KB cross-links** | `_KB_CROSS_LINKS.md` - Full navigation map between all files |
 
 ### By Domain
 
@@ -161,6 +162,22 @@ const entry = await fetchKB("_AI_ENTRY_POINT.md");
 | Quick Ref | [_QUICK_REFERENCE.md](https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/_QUICK_REFERENCE.md) |
 | Unity MCP | [_UNITY_MCP_DEV_HOOKS.md](https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/_UNITY_MCP_DEV_HOOKS.md) |
 | Learning Log | [LEARNING_LOG.md](https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/LEARNING_LOG.md) |
+| Cross-Links | [_KB_CROSS_LINKS.md](https://raw.githubusercontent.com/imclab/xrai/main/KnowledgeBase/_KB_CROSS_LINKS.md) |
+
+---
+
+## Cross-Domain Navigation
+
+### Intelligence Pattern Libraries
+| Domain | Entry File | Cross-Links |
+|--------|------------|-------------|
+| **Unity/XR** | `_UNITY_INTELLIGENCE_PATTERNS.md` | `_ARFOUNDATION_VFX_*`, `_VFX25_*`, `_UNITY_MCP_*` |
+| **WebGL/Web** | `_WEBGL_INTELLIGENCE_PATTERNS.md` | `_WEBGPU_*`, `_WEBXR_*`, `_WEB_*` |
+| **3D Vis** | `_3DVIS_INTELLIGENCE_PATTERNS.md` | `_ECHARTS_*`, `_COSMOS_*`, `_VISUALIZATION_*` |
+| **AI/Agents** | `_AI_AGENT_PHILOSOPHY.md` | `_CLAUDE_CODE_*`, `_MCP_*`, `_MULTI_AGENT_*` |
+
+### Full Navigation Map
+See `_KB_CROSS_LINKS.md` for complete file-to-file relationships.
 
 ---
 
