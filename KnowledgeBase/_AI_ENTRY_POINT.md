@@ -20,6 +20,8 @@
 | **Unity debugging** | `_UNITY_DEBUGGING_REFERENCE.md` |
 | **Unity + React Native** | `_UNITY_AS_A_LIBRARY_OVERVIEW.md`, `_REACT_NATIVE_UNITY_PACKAGES.md` |
 | **AR/VFX development** | `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` |
+| **Gaussian splatting** | `_GAUSSIAN_SPLATTING_AND_VIZ_TOOLS.md` |
+| **Unity patterns (500+)** | `_UNITY_INTELLIGENCE_PATTERNS.md` |
 | **3D visualization** | `_3D_VISUALIZATION_KNOWLEDGEBASE.md` |
 | **WebGPU/Three.js** | `_WEBGPU_THREEJS_2025.md` |
 | **Unity MCP tools** | `_UNITY_MCP_DEV_HOOKS.md` |
