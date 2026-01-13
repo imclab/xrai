@@ -30,7 +30,13 @@ log*
 
 # Node modules
 node_modules/
+**/node_modules/
 
 # Build artifacts
 dist/
+**/dist/
 *.min.js
+
+# Large data files
+*.json.gz
+*_index_lite.json
