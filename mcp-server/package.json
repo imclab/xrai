@@ -1,0 +1,38 @@
+{
+  "name": "unity-xr-kb-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Unity XR Knowledgebase search with modular plugin architecture",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "unity-xr-kb-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "mcp",
+    "unity",
+    "xr",
+    "ar",
+    "vr",
+    "knowledgebase"
+  ],
+  "author": "James Tunick",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
