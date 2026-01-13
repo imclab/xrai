@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Token Optimized](https://img.shields.io/badge/tokens-9.3K-green.svg)](https://github.com/imclab/xrai)
-[![Security Audited](https://img.shields.io/badge/security-audited-brightgreen.svg)](KnowledgeBase/FINAL_AUDIT_REPORT_2026-01-08.md)
+[![Security Audited](https://img.shields.io/badge/security-audited-brightgreen.svg)](KnowledgeBase/_PROJECT_CONFIG_REFERENCE.md)
 
 A comprehensive, token-optimized knowledgebase with an AI Agent Intelligence Amplification System designed for 10x faster learning and execution in Unity XR development.
 
@@ -17,11 +17,13 @@ A comprehensive, token-optimized knowledgebase with an AI Agent Intelligence Amp
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
 - [AI Agent System](#ai-agent-system)
+- [Visualization Frontends](#️-visualization-frontends-vis)
 - [Knowledgebase Structure](#knowledgebase-structure)
 - [Monitoring & Maintenance](#monitoring--maintenance)
 - [KB Management Tools](#kb-management-tools)
 - [Usage Examples](#usage-examples)
 - [Contributing](#contributing)
+- [Recent Updates](#-recent-updates)
 
 ---
 
@@ -36,6 +38,7 @@ This repository contains a self-improving knowledgebase and AI agent system opti
 - **Comprehensive documentation** - AR Foundation, VFX, WebGL, performance patterns, and more
 
 **Primary use cases**:
+
 - Unity AR/VR/XR development with AR Foundation 6.x
 - VFX and particle systems optimization
 - WebGL/Three.js integration
@@ -57,7 +60,17 @@ Ultra-compact directive (875 tokens) that transforms every interaction into comp
 
 **Philosophy**: Based on mental models from Elon Musk (first principles), Naval Ravikant (leverage), and Jeff Bezos (long-term thinking).
 
-### 2. **Comprehensive Unity XR Knowledge**
+### 2. **Intelligence Pattern Libraries (NEW)**
+
+Three activation phrase-based pattern libraries for domain-specific knowledge:
+
+| Phrase | Patterns | Coverage |
+|--------|----------|----------|
+| **"Using Unity Intelligence patterns"** | 500+ | ARFoundation, VFX Graph, DOTS, Normcore, Open Brush |
+| **"Using WebGL Intelligence patterns"** | 200+ | WebGPU, Three.js, R3F, GLSL, WebXR |
+| **"Using 3DVis Intelligence patterns"** | 100+ | Sorting, clustering, anomaly detection, force layouts |
+
+### 3. **Comprehensive Unity XR Knowledge**
 
 - **AR Foundation 6.2+** - Plane detection, image tracking, human segmentation, meshing
 - **VFX Optimization** - Quest 2/3 performance patterns, GPU-instanced particles
@@ -65,7 +78,7 @@ Ultra-compact directive (875 tokens) that transforms every interaction into comp
 - **Cross-platform** - iOS, Android, Quest, WebGL compatibility matrices
 - **GitHub Repos** - Curated collection of high-quality XR projects
 
-### 3. **Monitoring & Automation**
+### 4. **Monitoring & Automation**
 
 Built-in tools for health checking and optimization:
 
@@ -74,10 +87,11 @@ Built-in tools for health checking and optimization:
 - `validate-ai-config.sh` - Configuration validation and auto-healing
 
 **New KB Management Tools**:
+
 - `kb-add` - Easy manual/automatic KB additions (patterns, insights, auto-git extraction)
 - `kb-audit` - Health check with metrics, recommendations, and security scan
 
-### 4. **Token-Optimized Architecture**
+### 5. **Token-Optimized Architecture**
 
 ```
 Load Order:
@@ -111,17 +125,20 @@ ln -sf $(pwd)/KnowledgeBase ~/.cursor/knowledgebase
 ### Basic Usage
 
 **With Claude Code**:
+
 ```bash
 # The knowledgebase is automatically loaded via configuration hierarchy
 # See ~/.claude/CLAUDE.md for load order
 ```
 
 **Access the AI Agent directive**:
+
 ```bash
 cat ~/.claude/AI_AGENT_CORE_DIRECTIVE_V3.md
 ```
 
 **Browse the knowledgebase**:
+
 ```bash
 ls KnowledgeBase/
 cat KnowledgeBase/_MASTER_KNOWLEDGEBASE_INDEX.md
@@ -175,6 +192,7 @@ ls -lh ~/.cursor/knowledgebase
 **3. IDE/Editor Integration**
 
 **VS Code** (with Claude Code extension):
+
 ```bash
 # Open in VS Code
 code ~/path/to/xrai
@@ -184,6 +202,7 @@ code ~/path/to/xrai
 ```
 
 **Command Line** (with ripgrep):
+
 ```bash
 # Search for Unity patterns
 rg -i "AR Foundation|ARKit" ~/.claude/knowledgebase/
@@ -215,6 +234,7 @@ ai-system-monitor.sh --full | grep "token usage"
 **1. GitHub Web Interface**
 
 Browse directly in your browser:
+
 - **Main repo**: https://github.com/imclab/xrai
 - **Knowledgebase**: https://github.com/imclab/xrai/tree/main/KnowledgeBase
 - **Specific file**: https://github.com/imclab/xrai/blob/main/KnowledgeBase/LEARNING_LOG.md
@@ -271,6 +291,7 @@ cd xrai-main/KnowledgeBase
 **5. GitHub Mobile App**
 
 On iOS/Android:
+
 1. Install GitHub mobile app
 2. Navigate to `imclab/xrai`
 3. Browse `KnowledgeBase/` folder
@@ -322,6 +343,7 @@ gh browse  # Opens in browser
 ### AI Tool Integration
 
 **Claude Code** (automatic):
+
 ```bash
 # Configuration auto-loads KB via symlink
 # Location: ~/.claude/knowledgebase/
@@ -333,6 +355,7 @@ gh browse  # Opens in browser
 ```
 
 **Windsurf**:
+
 ```bash
 # Set up symlink (one-time)
 ln -sf ~/xrai/KnowledgeBase ~/.windsurf/knowledgebase
@@ -342,6 +365,7 @@ ln -sf ~/xrai/KnowledgeBase ~/.windsurf/knowledgebase
 ```
 
 **Cursor**:
+
 ```bash
 # Set up symlink (one-time)
 ln -sf ~/xrai/KnowledgeBase ~/.cursor/knowledgebase
@@ -351,6 +375,7 @@ ln -sf ~/xrai/KnowledgeBase ~/.cursor/knowledgebase
 ```
 
 **MCP Server** (if available):
+
 ```python
 # Via Model Context Protocol
 # Tools have access to:
@@ -363,16 +388,17 @@ ln -sf ~/xrai/KnowledgeBase ~/.cursor/knowledgebase
 
 ### Access Patterns Comparison
 
-| Method | Speed | Offline | Multi-device | Versioned | AI-Ready |
-|--------|-------|---------|--------------|-----------|----------|
-| **Local filesystem** | Instant | ✅ | ❌ | ✅ (git) | ✅ |
-| **Symlinks** | Instant | ✅ | ❌ | ✅ (git) | ✅✅ |
-| **GitHub web** | 1-2s | ❌ | ✅ | ✅ | ❌ |
-| **GitHub API** | 1-2s | ❌ | ✅ | ✅ | ✅ (programmatic) |
-| **Git clone** | 5-10s | ✅ (after) | ✅ | ✅ | ✅ |
-| **Raw files** | 1-2s | ❌ | ✅ | ❌ | ⚠️ (limited) |
+| Method                     | Speed   | Offline    | Multi-device | Versioned | AI-Ready          |
+| -------------------------- | ------- | ---------- | ------------ | --------- | ----------------- |
+| **Local filesystem** | Instant | ✅         | ❌           | ✅ (git)  | ✅                |
+| **Symlinks**         | Instant | ✅         | ❌           | ✅ (git)  | ✅✅              |
+| **GitHub web**       | 1-2s    | ❌         | ✅           | ✅        | ❌                |
+| **GitHub API**       | 1-2s    | ❌         | ✅           | ✅        | ✅ (programmatic) |
+| **Git clone**        | 5-10s   | ✅ (after) | ✅           | ✅        | ✅                |
+| **Raw files**        | 1-2s    | ❌         | ✅           | ❌        | ⚠️ (limited)    |
 
 **Recommended**:
+
 - **Development**: Local clone + symlinks (instant, AI-integrated)
 - **Reference**: GitHub web (convenient, no setup)
 - **Automation**: GitHub API (programmatic access)
@@ -385,19 +411,39 @@ ln -sf ~/xrai/KnowledgeBase ~/.cursor/knowledgebase
 ### Directory Structure
 
 ```
-xrai/
-├── KnowledgeBase/                 # Core knowledge repository (1.1MB)
+Unity-XR-AI/
+├── KnowledgeBase/                 # Core knowledge repository (~75 MD files)
 │   ├── .claude/                   # Claude-specific documentation
 │   ├── AgentSystems/              # Agent architecture patterns
-│   ├── scripts/                   # Automation scripts
+│   ├── CodeSnippets/              # Reusable code snippets
+│   ├── scripts/                   # KB automation scripts
+│   ├── _scraps/                   # Archived files (aliases, dated reports)
 │   ├── LEARNING_LOG.md            # Continuous discovery log
-│   ├── _AI_AGENT_PHILOSOPHY.md    # Mental models & philosophy
-│   ├── _ARFOUNDATION_VFX_KNOWLEDGE_BASE.md
-│   ├── _WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md
-│   ├── _PERFORMANCE_PATTERNS_REFERENCE.md
-│   └── [45+ knowledge files]
-├── specs/                         # Project specifications (GitHub spec-kit)
-├── Examples/                      # Template files
+│   ├── _MASTER_KNOWLEDGEBASE_INDEX.md
+│   ├── _PROJECT_CONFIG_REFERENCE.md  # All configs documented
+│   ├── _VFX25_HOLOGRAM_PORTAL_PATTERNS.md
+│   └── [70+ knowledge files]
+├── Vis/                           # 3D Visualization frontends
+│   ├── xrai-kg/                   # Modular KG library (ECharts)
+│   ├── HOLOVIS/                   # Three.js holographic visualizer
+│   ├── cosmos-standalone-web/     # 3d-force-graph visualizer
+│   ├── cosmos-needle-web/         # Needle Engine WebXR
+│   ├── cosmos-visualizer/         # D3 + Three.js graphs
+│   ├── WarpDashboard/             # Jobs data dashboard
+│   ├── chalktalk-master/          # Ken Perlin's Chalktalk (WebGL)
+│   └── *.html                     # Standalone dashboards
+├── MetavidoVFX-main/              # Unity VFX project (AR Foundation)
+│   ├── Assets/H3M/                # H3M Hologram system
+│   ├── Packages/                  # Unity packages
+│   └── build_and_deploy.sh        # iOS build scripts
+├── Scripts/                       # Utility scripts
+│   └── scraps/                    # Archived experimental scripts
+├── mcp-server/                    # MCP KB Server (TypeScript)
+├── specs/                         # Spec-Kit specifications
+├── xrai-speckit/                  # Specify.ai templates
+├── build_ios.sh                   # iOS Unity build
+├── deploy_ios.sh                  # iOS device deploy
+├── install.sh                     # Project setup
 ├── CLAUDE.md                      # Configuration pointer
 └── README.md                      # This file
 ```
@@ -405,6 +451,7 @@ xrai/
 ### Integration Points
 
 **Local Tools** (via symlinks):
+
 ```
 ~/.claude/knowledgebase/    → xrai/KnowledgeBase/
 ~/.windsurf/knowledgebase/  → xrai/KnowledgeBase/
@@ -412,6 +459,7 @@ xrai/
 ```
 
 **Cloud Access** (via GitHub):
+
 ```
 GitHub API: https://api.github.com/repos/imclab/xrai/contents/
 Web: https://github.com/imclab/xrai
@@ -424,6 +472,7 @@ Web: https://github.com/imclab/xrai
 ### Core Principles
 
 **1. Leverage-First Execution**
+
 ```
 Always prefer higher leverage:
 ├─ 0h:   Use existing solution (search KB, past projects)
@@ -434,14 +483,16 @@ Always prefer higher leverage:
 
 **2. Compound Learning**
 Every task should:
+
 - Extract 2-3 reusable patterns
 - Document novel insights → `LEARNING_LOG.md`
 - Identify automation opportunities
 - Connect to past projects (cross-domain learning)
 
 **3. Emergency Override**
-If stuck >15 minutes:
-1. **Simplify**: What's the dumbest working solution?
+If stuck >5 minutes:
+
+1. **Simplify**: Did we overcomplicate? What's the dumbest working solution?
 2. **Leverage**: Who solved this already?
 3. **Reframe**: Is this the right problem?
 4. **Ship**: Can we ship 20% now and iterate?
@@ -449,6 +500,7 @@ If stuck >15 minutes:
 ### Philosophy
 
 See [`KnowledgeBase/_AI_AGENT_PHILOSOPHY.md`](KnowledgeBase/_AI_AGENT_PHILOSOPHY.md) for deep-dive on:
+
 - Billionaire-level thinking (systems over symptoms)
 - 10x learning velocity (spaced extraction, Feynman technique)
 - Time compression strategies (10 years → 1 year)
@@ -459,14 +511,43 @@ See [`KnowledgeBase/_AI_AGENT_PHILOSOPHY.md`](KnowledgeBase/_AI_AGENT_PHILOSOPHY
 Daily activation checklist:
 
 **Pre-Task** (5 seconds):
+
 - [ ] Can I reuse existing solution?
 - [ ] What's the 20% that gives 80%?
 - [ ] What pattern will I extract?
 
 **Post-Task** (10 seconds):
+
 - [ ] Novel pattern → `LEARNING_LOG.md`
 - [ ] Automation opportunity?
 - [ ] Meta-reflection: How can I think better?
+
+---
+
+## 🖥️ Visualization Frontends (Vis/)
+
+The `Vis/` folder contains 10 3D visualization and dashboard tools, sorted by creation date:
+
+| Project | Created | Stack | Description |
+|---------|---------|-------|-------------|
+| **chalktalk-master** | 2018 | Node.js + WebGL | Ken Perlin's sketch-to-3D visualization |
+| **HOLOVIS** | 2025-06 | Three.js + Express | Unity codebase 3D visualizer |
+| **cosmos-visualizer** | 2025-09 | Vite + D3 + Three.js | Force-directed graph visualization |
+| **cosmos-standalone-web** | 2025-09 | Vite + 3d-force-graph | Standalone 3D force graphs |
+| **cosmos-needle-web** | 2025-09 | Needle Engine + Vite | WebXR-ready visualization |
+| **WarpDashboard** | 2025-12 | Static HTML | Jobs data dashboard |
+| **xrai-kg** | 2026-01 | ES6 + ECharts | Modular knowledge graph library |
+| **dashboard.html** | 2026-01 | Standalone HTML | General dashboard |
+| **knowledge-graph-*.html** | 2026-01 | ECharts | Interactive knowledge graph dashboards |
+
+**Quick Start**:
+```bash
+cd Vis/xrai-kg && npm install && npm run dev     # ECharts KG library
+cd Vis/HOLOVIS && npm install && npm run serve   # Three.js visualizer
+cd Vis/cosmos-standalone-web && npm run dev      # 3D force graph
+```
+
+See [`Vis/README.md`](Vis/README.md) for complete setup documentation.
 
 ---
 
@@ -474,36 +555,40 @@ Daily activation checklist:
 
 ### Core Files
 
-| File | Purpose | Size |
-|------|---------|------|
-| `LEARNING_LOG.md` | Continuous discoveries & patterns | Growing |
-| `_AI_AGENT_PHILOSOPHY.md` | Mental models & why | ~3.5K tokens |
-| `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | AR Foundation + VFX patterns | ~15K tokens |
-| `_WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md` | WebGL/Three.js integration | ~12K tokens |
-| `_PERFORMANCE_PATTERNS_REFERENCE.md` | Unity & WebGL optimization | ~8K tokens |
-| `_MASTER_KNOWLEDGEBASE_INDEX.md` | Navigation & organization | ~2K tokens |
+| File                                      | Purpose                           | Size         |
+| ----------------------------------------- | --------------------------------- | ------------ |
+| `LEARNING_LOG.md`                       | Continuous discoveries & patterns | Growing      |
+| `_AI_AGENT_PHILOSOPHY.md`               | Mental models & why               | ~3.5K tokens |
+| `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md`   | AR Foundation + VFX patterns      | ~15K tokens  |
+| `_WEBGL_THREEJS_COMPREHENSIVE_GUIDE.md` | WebGL/Three.js integration        | ~12K tokens  |
+| `_PERFORMANCE_PATTERNS_REFERENCE.md`    | Unity & WebGL optimization        | ~8K tokens   |
+| `_MASTER_KNOWLEDGEBASE_INDEX.md`        | Navigation & organization         | ~2K tokens   |
 
 ### Topics Covered
 
 **Unity XR**:
+
 - AR Foundation 6.x (plane detection, image tracking, meshing)
 - ARKit & ARCore platform-specific features
 - Human segmentation, body tracking, face tracking
 - XR Interaction Toolkit patterns
 
 **VFX & Performance**:
+
 - GPU-instanced particles (Quest 2/3 optimized)
 - Visual Effect Graph best practices
 - Shader optimization patterns
 - Cross-platform performance targets
 
 **WebGL Integration**:
+
 - Unity → Three.js bridges
 - WebXR compatibility
 - Performance considerations
 - Asset pipeline
 
 **GitHub Resources**:
+
 - Curated high-quality XR repositories
 - Example projects & demos
 - Community tools & libraries
@@ -531,16 +616,19 @@ tail -n 100 KnowledgeBase/LEARNING_LOG.md
 ### Health Dashboard
 
 **Quick check** (<3 seconds):
+
 ```bash
 ai-system-monitor.sh --quick
 ```
 
 **Full audit** (~10 seconds):
+
 ```bash
 ai-system-monitor.sh --full
 ```
 
 **Auto-heal issues**:
+
 ```bash
 ai-system-monitor.sh --fix
 ```
@@ -552,6 +640,7 @@ kb-security-audit.sh
 ```
 
 Checks for:
+
 - Sensitive data patterns (API keys, passwords)
 - File permissions (world-writable files)
 - Symlink integrity
@@ -588,6 +677,7 @@ kb-add --file unity-xr-tips.md -i
 ```
 
 **Quick aliases** (load with `source ~/.local/bin/kb-aliases.sh`):
+
 ```bash
 kb-p "pattern"       # Add pattern
 kb-i "insight"       # Add insight
@@ -618,6 +708,7 @@ kb-audit --health
 ```
 
 **Example output**:
+
 ```
 ━━━ KB Quick Audit ━━━
 
@@ -631,12 +722,14 @@ Health Score: 100/100 (Excellent)
 ```
 
 **Health score ranges**:
+
 - **90-100**: Excellent ⭐
 - **70-89**: Good ✓
 - **50-69**: Needs improvement ⚠️
 - **<50**: Critical issues ❌
 
 **Full audit includes**:
+
 1. Metrics (file counts, size, growth rate)
 2. Security (sensitive data scan, permissions)
 3. Health score (overall rating)
@@ -646,6 +739,7 @@ Health Score: 100/100 (Excellent)
 ### Quick Workflows
 
 **Daily pattern extraction** (30 seconds):
+
 ```bash
 kb-check              # Quick health check
 kb-auto               # Extract from git
@@ -653,6 +747,7 @@ kb-i "Your insight"   # Add manual insights
 ```
 
 **Weekly full audit** (5 minutes):
+
 ```bash
 kb-full --report ~/Desktop/kb-audit-$(date +%Y%m%d).md
 # Review recommendations
@@ -660,6 +755,7 @@ kb-commit             # Commit changes
 ```
 
 **Post-session reflection** (2 minutes):
+
 ```bash
 kb-p "Pattern discovered"
 kb-i "Insight about system"
@@ -706,18 +802,21 @@ echo "## $(date +%Y-%m-%d) - VFX Optimization Discovery
 ### Example 3: AI-Assisted Development
 
 **Activate AI Agent directive**:
+
 ```
 > "Apply AI Agent Core Directive: Check knowledgebase for AR Foundation
   patterns, focus on highest-leverage approach, explain trade-offs."
 ```
 
 **When stuck**:
+
 ```
 > "Emergency override: simplest solution for hand tracking on Quest 3?
   Who solved this already?"
 ```
 
 **End of session**:
+
 ```
 > "Extract 2-3 patterns for LEARNING_LOG.md. What automation
   opportunities exist?"
@@ -730,6 +829,7 @@ echo "## $(date +%Y-%m-%d) - VFX Optimization Discovery
 ### Adding to Knowledgebase
 
 **When to add**:
+
 - ✅ Novel patterns discovered
 - ✅ Performance optimizations found
 - ✅ Platform-specific workarounds
@@ -737,6 +837,7 @@ echo "## $(date +%Y-%m-%d) - VFX Optimization Discovery
 - ✅ Reusable code patterns
 
 **When NOT to add**:
+
 - ❌ Routine tasks with no new learning
 - ❌ Temporary/session-specific info
 - ❌ Already documented elsewhere
@@ -765,16 +866,19 @@ echo "## $(date +%Y-%m-%d) - VFX Optimization Discovery
 ## 📈 Success Metrics
 
 ### Per Session
+
 - **Leverage ratio**: Hours saved / invested (target: >3:1)
 - **Insights extracted**: (target: ≥2)
 - **Automations identified**: (target: ≥1)
 
 ### Per Month
+
 - **Speed**: 2x faster than last month?
 - **Patterns reused**: ≥5?
 - **Complexity**: Decreasing?
 
 ### Per Quarter
+
 - **Capability multiplier**: ≥3 new capabilities unlocked
 - **Time freedom**: ≥20 hours gained through automation
 - **Mastery progression**: ≥1 skill level increase
@@ -797,44 +901,69 @@ MIT License - See [LICENSE](LICENSE) for details
 
 ## 📝 Recent Updates
 
+### 2026-01-13 - Intelligence Pattern Libraries & Memory System
+
+- ✅ **Intelligence Pattern Libraries** (NEW):
+  - `_UNITY_PATTERNS_BY_INTEREST.md` - Brushes, hand tracking, audio reactive, LiDAR (459 lines)
+  - `_WEBGL_INTELLIGENCE_PATTERNS.md` - WebGPU, Three.js, R3F, GLSL (548 lines)
+  - `_3DVIS_INTELLIGENCE_PATTERNS.md` - Sorting, clustering, anomaly detection (698 lines)
+  - Activation phrases added to GLOBAL_RULES.md (REQUIRED for all projects)
+- ✅ **MCP Memory/Knowledge Graph**:
+  - Location verified: `~/Applications/claude_memory.json` (42KB, 99+ entities)
+  - New entities added: Unity_Intelligence_Patterns, WebGL_Intelligence_Patterns, 3DVis_Intelligence_Patterns
+  - Documentation updated: `_GLOBAL_RULES_AND_MEMORY.md`
+- ✅ **GitHub repos extracted**:
+  - Open Brush (GeometryPool, GeniusParticlesBrush patterns)
+  - Operation Swarm (WebGPU 400K+ particles)
+  - HandPoseBarracuda (gesture recognition)
+
+### 2026-01-13 (Earlier) - Project Organization & Vis Folder
+
+- ✅ **Vis/ folder created**: Centralized 10 visualization frontends
+  - xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk-master
+  - Comprehensive `Vis/README.md` with setup docs sorted by date
+- ✅ **KnowledgeBase cleanup**:
+  - Moved 35 files to `_scraps/` (aliases, dated reports, old docs)
+  - Now 78+ active MD files with clear organization
+  - Created `_PROJECT_CONFIG_REFERENCE.md` documenting all configs
+- ✅ **Scripts organized**:
+  - Moved 19 experimental scripts to `Scripts/scraps/`
+  - Kept core build scripts (`build_ios.sh`, `deploy_ios.sh`, `install.sh`)
+- ✅ **VFX25 patterns extracted**: `_VFX25_HOLOGRAM_PORTAL_PATTERNS.md`
+  - BodyPixSentis, MetavidoVFX, Rcam4, Portal stencil patterns
+
 ### 2026-01-08 - KB Management Tools Added
+
 - ✅ **kb-add**: Easy manual/automatic KB additions
-  - Pattern, insight, anti-pattern extraction
-  - Auto-extract from git commits
-  - Interactive mode with templates
-  - Daily notes support
-- ✅ **kb-audit**: Comprehensive health check
-  - Metrics (file counts, growth rate, size)
-  - Security scan (sensitive data, permissions)
-  - Health score (0-100) with recommendations
-  - Quick (<5s) and full (15s) audit modes
+- ✅ **kb-audit**: Comprehensive health check with metrics
 - ✅ Shell aliases for rapid access (kb-p, kb-i, kb-check, etc.)
-- ✅ Complete documentation in KB_TOOLS_REFERENCE.md
 
 ### 2026-01-08 - Initial Release
+
 - ✅ AI Agent Intelligence Amplification System (V3 ultra-compact)
 - ✅ Token optimization: 9.3K overhead (26% reduction)
 - ✅ Security audit passed
-- ✅ 48 knowledgebase files
 - ✅ Monitoring tools (health dashboard, security scanner)
 - ✅ Full spec-kit compliance
-- ✅ Clean git history (single initial commit)
 
 ---
 
 ## 🙏 Acknowledgments
 
 **AI Agent philosophy** based on:
+
 - Naval Ravikant (leverage thinking)
 - Elon Musk (first principles reasoning)
 - Jeff Bezos (long-term compounding)
 
 **Knowledge contributions** from:
+
 - Unity XR AI community
 - AR Foundation developers
 - Open source XR projects
 
 **Built with**:
+
 - Claude Sonnet 4.5 (AI pair programming)
 - GitHub spec-kit (specification format)
 - State-of-the-art 2026 best practices
