@@ -12,6 +12,7 @@
 
 | Need | File |
 |------|------|
+| **Shell config/aliases** | `_SHELL_CONFIG_REFERENCE.md` |
 | **AI health checks** | `_AI_HEALTH_SCRIPTS.md` |
 | **Unity debugging** | `_UNITY_DEBUGGING_REFERENCE.md` |
 | **Unity + React Native** | `_UNITY_AS_A_LIBRARY_OVERVIEW.md`, `_REACT_NATIVE_UNITY_PACKAGES.md` |
