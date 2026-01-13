@@ -1,0 +1,42 @@
+{
+  "id": "arfoundationreplay-main",
+  "name": "ARFoundationReplay-main",
+  "unity": "6000.0.41f1",
+  "type": "general",
+  "size": 13,
+  "highlights": {
+    "scripts": 1,
+    "vfx": 0,
+    "scenes": 1
+  },
+  "packages": 3,
+  "complexity": 1,
+  "connections": [
+    {
+      "id": "hdrp",
+      "strength": 0.65
+    },
+    {
+      "id": "urp",
+      "strength": 0.65
+    },
+    {
+      "id": "arkitstreamer-master",
+      "strength": 0.45
+    },
+    {
+      "id": "bodypixsentis-main",
+      "strength": 0.75
+    },
+    {
+      "id": "flashglitch-main",
+      "strength": 0.75
+    }
+  ],
+  "visualHints": {
+    "primaryColor": "#2196F3",
+    "radius": 56.5,
+    "orbitSpeed": 0.0011,
+    "glowIntensity": 0.3
+  }
+}

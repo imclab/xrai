@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Casa Gallery Integration</title>
+</head>
+<body>
+    <h1>Testing Casa Gallery Integration</h1>
+    <p>Open the developer console to test Casa Gallery search and visualization:</p>
+    
+    <script>
+        console.log(`
+Casa Gallery Integration Test
+============================
+
+1. Search for Casa Gallery artworks (uses sample data for demo):
+   window.cosmosApp.performSearch('', ['icosa']);
+   window.cosmosApp.performSearch('sculpture', ['icosa']);
+   window.cosmosApp.performSearch('vr', ['icosa']);
+   window.cosmosApp.performSearch('generative', ['icosa']);
+
+2. Direct Casa search test:
+   const dm = window.cosmosApp.dataManager;
+   dm.searchProviders.icosa.searchCasaAPI('').then(results => {
+       console.log('Casa API returned:', results.length, 'items');
+       console.log('Sample item:', results[0]);
+   });
+
+3. Load and visualize Casa Gallery data:
+   async function testCasaVisualization() {
+       const dm = window.cosmosApp.dataManager;
+       const results = await dm.search('', ['icosa']);
+       const graphData = dm.convertToGraphData(results);
+       console.log('Casa visualization data:', graphData);
+       await window.cosmosApp.updateVisualization(graphData);
+   }
+   testCasaVisualization();
+
+4. Visual indicators for Casa Gallery items:
+   - Color: Red/Pink (#FF6B6B)
+   - Shape: Icosahedron for artworks
+   - Artists shown as cone shapes
+   - Labels for prominent artworks
+   - Rotating animation for 3D artworks
+
+5. Click on Casa nodes to:
+   - See artwork details
+   - View artist information
+   - Load 3D model (if available)
+   - See tags and metadata
+
+Current Status:
+- ✅ Sample Casa data integrated for demonstration
+- ✅ Visual distinctions working (red/pink color)
+- ✅ 3D model loading with sample GLB files
+- ⚠️  Real Casa API requires authentication key
+- ⚠️  Using fallback data until API key is available
+
+To enable full Casa API integration:
+1. Obtain API key from poly.pizza
+2. Update casaApiEndpoint with correct URL
+3. Add 'Authorization: Bearer YOUR_API_KEY' header
+4. Uncomment the API code in searchCasaAPI method
+
+Alternative data sources currently active:
+- ✅ Sketchfab API (public models)
+- ✅ Objaverse index (200k+ models)
+- ✅ GitHub repositories
+- ✅ Local file search
+- ✅ Web search (Wikipedia)
+        `);
+        
+        // Test Casa search directly
+        async function quickCasaTest() {
+            console.log('\\nQuick Casa Gallery test...');
+            const results = await window.cosmosApp.dataManager.searchProviders.icosa.searchCasaAPI('');
+            console.log('Found', results.length, 'Casa Gallery items');
+            results.forEach((item, i) => {
+                console.log(`${i + 1}. ${item.name} by ${item.artist}`);
+            });
+        }
+        
+        setTimeout(quickCasaTest, 1000);
+    </script>
+</body>
+</html>

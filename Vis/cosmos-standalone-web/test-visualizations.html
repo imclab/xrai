@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Visual Distinctions</title>
+</head>
+<body>
+    <h1>Testing Visual Distinctions</h1>
+    <p>Open the developer console to run these tests:</p>
+    
+    <script>
+        // Test different source types and media types
+        const testData = {
+            nodes: [
+                // GitHub sources
+                {
+                    id: 'github-1',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'three.js',
+                    description: 'JavaScript 3D library',
+                    val: 5
+                },
+                {
+                    id: 'github-2', 
+                    source: 'github',
+                    type: 'user',
+                    name: 'mrdoob',
+                    val: 3
+                },
+                
+                // Casa Gallery sources
+                {
+                    id: 'casa-1',
+                    source: 'casa',
+                    type: 'artwork',
+                    name: 'Digital Sculpture',
+                    modelUrl: 'https://example.com/model.glb',
+                    val: 4
+                },
+                {
+                    id: 'casa-2',
+                    source: 'casa',
+                    type: 'artist',
+                    name: 'Jane Artist',
+                    val: 3
+                },
+                
+                // Objaverse sources
+                {
+                    id: 'objaverse-1',
+                    source: 'objaverse',
+                    type: '3d_object',
+                    name: 'Scanned Chair',
+                    modelUrl: 'https://example.com/chair.glb',
+                    val: 2
+                },
+                {
+                    id: 'objaverse-2',
+                    source: 'objaverse',
+                    type: 'model',
+                    name: 'Game Asset',
+                    val: 3
+                },
+                
+                // Local files
+                {
+                    id: 'local-1',
+                    source: 'local',
+                    type: 'unity_project',
+                    name: 'MyUnityProject',
+                    path: '/Users/test/project',
+                    val: 4
+                },
+                {
+                    id: 'local-2',
+                    source: 'local',
+                    type: 'file',
+                    name: 'data.json',
+                    val: 1
+                },
+                {
+                    id: 'local-3',
+                    source: 'local',
+                    type: 'folder',
+                    name: 'Assets',
+                    val: 2
+                },
+                
+                // Web search results
+                {
+                    id: 'web-1',
+                    source: 'web',
+                    type: 'image',
+                    name: '3D Rendering Tutorial',
+                    url: 'https://example.com/tutorial',
+                    val: 2
+                },
+                {
+                    id: 'web-2',
+                    source: 'web',
+                    type: 'video',
+                    name: 'WebGL Demo',
+                    val: 3
+                },
+                {
+                    id: 'web-3',
+                    source: 'web',
+                    type: 'place',
+                    name: 'Virtual Museum',
+                    val: 4
+                }
+            ],
+            links: [
+                { source: 'github-2', target: 'github-1', value: 1 },
+                { source: 'casa-2', target: 'casa-1', value: 1 },
+                { source: 'local-3', target: 'local-1', value: 0.5 }
+            ]
+        };
+        
+        console.log(`
+Test Visual Distinctions:
+========================
+
+1. Test all source types with different colors:
+   window.cosmosApp.lastGraphData = testData;
+   window.cosmosApp.updateVisualization(testData);
+
+2. Test specific source:
+   window.cosmosApp.performSearch('', ['github']);
+   window.cosmosApp.performSearch('', ['casa']);
+   window.cosmosApp.performSearch('', ['objaverse']);
+   window.cosmosApp.performSearch('', ['local']);
+   window.cosmosApp.performSearch('', ['web']);
+
+3. Test large dataset with mixed types:
+   window.cosmosApp.runStressTest(1000);
+
+4. Test click-to-zoom on different node types:
+   // Click on any node to see details
+
+5. Test keyboard navigation:
+   // ESC - Reset camera
+   // Arrow keys - Navigate between nodes
+   // Tab - Cycle through visible nodes
+   // Space - Toggle detail panel
+   // +/- Zoom in/out
+
+Colors by Source:
+- GitHub: Light Green (#95E1D3)
+- Casa Gallery: Red/Pink (#FF6B6B)
+- Objaverse: Teal (#4ECDC4)
+- Local Files: Coral (#F38181)
+- Web Search: Purple (#AA96DA)
+
+Shapes by Media Type:
+- Image: Flat square
+- Video: Thin box
+- 3D Object/Model/Artwork: Icosahedron
+- Person/User/Artist: Cone
+- Place: Cylinder
+- Repository/Project: Octahedron
+- File/Document: Tetrahedron
+- Folder: Cube
+        `);
+        
+        // Make test data available globally
+        window.testData = testData;
+    </script>
+</body>
+</html>

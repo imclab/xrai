@@ -1,0 +1,22 @@
+{
+  "name": "cosmos-standalone-web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.169.0",
+    "3d-force-graph": "^1.71.4",
+    "d3-force-3d": "^3.0.5",
+    "pako": "^2.1.0",
+    "axios": "^1.6.5",
+    "gsap": "^3.12.4"
+  },
+  "devDependencies": {
+    "vite": "^5.0.11",
+    "@types/three": "^0.169.0"
+  }
+}

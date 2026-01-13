@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos Hypergraph Visualizer - Needle Engine</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+        
+        #needle-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            z-index: 1000;
+        }
+        
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .source-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .source-btn {
+            padding: 8px 16px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .source-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .source-btn.active {
+            background: #0066ff;
+            border-color: #0066ff;
+        }
+        
+        .layout-selector {
+            margin-top: 20px;
+        }
+        
+        .layout-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .layout-btn {
+            padding: 6px 12px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .layout-btn.active {
+            background: #ff0066;
+            border-color: #ff0066;
+        }
+        
+        .multiplayer-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff0000;
+        }
+        
+        .status-dot.connected {
+            background: #00ff00;
+        }
+        
+        .viewer-modes {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 25px;
+        }
+        
+        .mode-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn.active {
+            background: #ffffff;
+            color: #000;
+        }
+        
+        #icosa-viewer-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2000;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #333;
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .file-drop-zone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 3000;
+        }
+        
+        .file-drop-zone.active {
+            display: flex;
+        }
+        
+        .drop-message {
+            font-size: 24px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="needle-container"></div>
+    
+    <div class="ui-panel">
+        <h3 style="margin-top: 0;">Hypergraph Search</h3>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search across sources..." id="searchInput">
+            <div class="source-buttons">
+                <button class="source-btn active" data-source="all">All Sources</button>
+                <button class="source-btn" data-source="icosa">Icosa Gallery</button>
+                <button class="source-btn" data-source="objaverse">Objaverse</button>
+                <button class="source-btn" data-source="github">GitHub</button>
+                <button class="source-btn" data-source="local">Local Files</button>
+                <button class="source-btn" data-source="web">Web Search</button>
+            </div>
+        </div>
+        
+        <div class="layout-selector">
+            <label>3D Layout:</label>
+            <div class="layout-buttons">
+                <button class="layout-btn active" data-layout="force">Force Graph</button>
+                <button class="layout-btn" data-layout="city">City Blocks</button>
+                <button class="layout-btn" data-layout="cosmos">Cosmos</button>
+                <button class="layout-btn" data-layout="tree">Tree</button>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <input type="file" id="fileInput" style="display: none;" accept=".json,.gltf,.glb,.obj,.fbx,.usdz">
+            <button class="source-btn" onclick="document.getElementById('fileInput').click()">
+                Upload Model/Data
+            </button>
+        </div>
+    </div>
+    
+    <div class="multiplayer-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+        <span id="userCount">(0 users)</span>
+    </div>
+    
+    <div class="viewer-modes">
+        <button class="mode-btn active" data-mode="hypergraph">Hypergraph</button>
+        <button class="mode-btn" data-mode="metavido">MetavidoVFX</button>
+        <button class="mode-btn" data-mode="icosa">Icosa Gallery</button>
+        <button class="mode-btn" data-mode="split">Split View</button>
+    </div>
+    
+    <iframe id="icosa-viewer-frame"></iframe>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div>Loading...</div>
+    </div>
+    
+    <div class="file-drop-zone" id="fileDropZone">
+        <div class="drop-message">Drop 3D model or JSON file here</div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

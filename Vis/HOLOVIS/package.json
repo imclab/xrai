@@ -1,0 +1,25 @@
+{
+  "name": "holovis",
+  "version": "0.1.0",
+  "description": "3D visualization tool for Unity codebases",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "analyze": "node src/analyzer/index.js",
+    "serve": "node src/server.js",
+    "demo": "node src/demo-server.js",
+    "batch": "node batch-analyze.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "glob": "^10.3.10",
+    "yaml": "^2.3.4",
+    "three": "^0.159.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOLOVIS - Unity Project Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        input[type="text"] {
+            width: 300px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 14px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .mode-button {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mode-button.active {
+            background: linear-gradient(45deg, #00ff88, #0088ff);
+            color: #000;
+        }
+        
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+        }
+        
+        #stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(20, 20, 20, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+        
+        .stat-line {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-value {
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        
+        <div id="controls">
+            <h1>HOLOVIS</h1>
+            <div class="input-group">
+                <label for="projectPath">Unity Project Path</label>
+                <input type="text" id="projectPath" placeholder="/path/to/unity/project">
+            </div>
+            <button id="analyzeBtn">Analyze Project</button>
+            
+            <div class="mode-buttons">
+                <div class="mode-button active" data-mode="treegraph">Tree Graph</div>
+                <div class="mode-button" data-mode="nodegraph">Node Graph</div>
+                <div class="mode-button" data-mode="flowchart">Flow Chart</div>
+            </div>
+        </div>
+        
+        <div id="stats" style="display: none;">
+            <div class="stat-line">
+                <span>Scripts:</span>
+                <span class="stat-value" id="scriptCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>Scenes:</span>
+                <span class="stat-value" id="sceneCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>Prefabs:</span>
+                <span class="stat-value" id="prefabCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>Materials:</span>
+                <span class="stat-value" id="materialCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>VFX:</span>
+                <span class="stat-value" id="vfxCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>Shaders:</span>
+                <span class="stat-value" id="shaderCount">0</span>
+            </div>
+            <div class="stat-line">
+                <span>Packages:</span>
+                <span class="stat-value" id="packageCount">0</span>
+            </div>
+        </div>
+        
+        <div id="info" style="display: none;">
+            <h3 id="infoTitle"></h3>
+            <p id="infoContent"></p>
+        </div>
+    </div>
+    
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>

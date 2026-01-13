@@ -1,0 +1,46 @@
+{
+  "id": "urp",
+  "name": "URP",
+  "unity": "2023.1.19f1",
+  "type": "general",
+  "size": 10,
+  "highlights": {
+    "scripts": 2,
+    "vfx": 2,
+    "scenes": 2
+  },
+  "packages": 3,
+  "complexity": 1,
+  "connections": [
+    {
+      "id": "hdrp",
+      "strength": 0.75
+    },
+    {
+      "id": "vfx",
+      "strength": 0.45
+    },
+    {
+      "id": "arfoundationreplay-main",
+      "strength": 0.65
+    },
+    {
+      "id": "arkitstreamer-master",
+      "strength": 0.45
+    },
+    {
+      "id": "bodypixsentis-main",
+      "strength": 0.65
+    },
+    {
+      "id": "flashglitch-main",
+      "strength": 0.65
+    }
+  ],
+  "visualHints": {
+    "primaryColor": "#2196F3",
+    "radius": 55,
+    "orbitSpeed": 0.0011,
+    "glowIntensity": 0.3
+  }
+}

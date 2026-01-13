@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test APIs</title>
+</head>
+<body>
+    <h1>Testing Casa and Polli APIs</h1>
+    <button onclick="testAPIs()">Test APIs</button>
+    <pre id="results"></pre>
+    
+    <script>
+        async function testAPIs() {
+            const results = document.getElementById('results');
+            results.textContent = 'Testing APIs...\n\n';
+            
+            // Test Casa/Poly.pizza API
+            try {
+                results.textContent += '1. Testing Casa/Poly.pizza API...\n';
+                const casaResponse = await fetch('https://poly.pizza/api/v1/assets?q=robot&page=1&per_page=10');
+                results.textContent += `   Status: ${casaResponse.status}\n`;
+                if (casaResponse.ok) {
+                    const data = await casaResponse.json();
+                    results.textContent += `   Success! Found ${data.length || data.assets?.length || 0} assets\n`;
+                } else {
+                    results.textContent += `   Error: ${await casaResponse.text()}\n`;
+                }
+            } catch (error) {
+                results.textContent += `   Failed: ${error.message}\n`;
+            }
+            
+            // Test Polli API
+            try {
+                results.textContent += '\n2. Testing Polli API...\n';
+                const polliResponse = await fetch('https://api.polli.com/v1/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: 'robot',
+                        limit: 10
+                    })
+                });
+                results.textContent += `   Status: ${polliResponse.status}\n`;
+                if (polliResponse.ok) {
+                    const data = await polliResponse.json();
+                    results.textContent += `   Success! Found ${data.models?.length || 0} models\n`;
+                } else {
+                    results.textContent += `   Error: ${await polliResponse.text()}\n`;
+                }
+            } catch (error) {
+                results.textContent += `   Failed: ${error.message}\n`;
+            }
+            
+            // Test Objaverse index
+            try {
+                results.textContent += '\n3. Testing local Objaverse index...\n';
+                const objaverseResponse = await fetch('/objaverse_gltf_index_lite.json');
+                results.textContent += `   Status: ${objaverseResponse.status}\n`;
+                if (objaverseResponse.ok) {
+                    const data = await objaverseResponse.json();
+                    results.textContent += `   Success! Index contains ${data.length} models\n`;
+                    results.textContent += `   Sample: ${JSON.stringify(data[0], null, 2)}\n`;
+                }
+            } catch (error) {
+                results.textContent += `   Failed: ${error.message}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

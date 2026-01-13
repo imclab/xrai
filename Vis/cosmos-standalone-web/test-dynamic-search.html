@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Search Test</title>
+</head>
+<body>
+    <h1>Dynamic Search Integration Test</h1>
+    <p>Testing the new streaming, non-blocking search functionality</p>
+    
+    <div style="padding: 20px; background: #f0f8ff; margin: 20px 0; border-radius: 8px;">
+        <h2>🚀 New Features:</h2>
+        <ul>
+            <li><strong>Real-time results</strong> - See results as you type</li>
+            <li><strong>Non-blocking</strong> - UI stays responsive during search</li>
+            <li><strong>Progressive loading</strong> - Results appear incrementally</li>
+            <li><strong>Smart cancellation</strong> - Previous searches automatically cancelled</li>
+            <li><strong>Live preview</strong> - Floating results panel</li>
+            <li><strong>Quick filters</strong> - One-click category searches</li>
+        </ul>
+    </div>
+    
+    <div style="padding: 20px; background: #e8f5e8; margin: 20px 0; border-radius: 8px;">
+        <h2>⌨️ Keyboard Shortcuts:</h2>
+        <ul>
+            <li><kbd>Cmd/Ctrl + K</kbd> - Focus search box</li>
+            <li><kbd>Escape</kbd> - Clear search</li>
+            <li><kbd>Enter</kbd> - Immediate search (no debounce)</li>
+        </ul>
+    </div>
+    
+    <div style="padding: 20px; background: #fff8e1; margin: 20px 0; border-radius: 8px;">
+        <h2>🧪 Test Commands:</h2>
+        <button onclick="testStreamingSearch()">Test Streaming Search</button>
+        <button onclick="testDebounce()">Test Debounced Search</button>
+        <button onclick="testCancellation()">Test Search Cancellation</button>
+        <button onclick="testParallelSearch()">Test Parallel Searches</button>
+        <button onclick="showSearchStats()">Show Search Statistics</button>
+    </div>
+    
+    <div id="testResults" style="padding: 20px; margin: 20px 0; background: #f5f5f5; border-radius: 8px;"></div>
+    
+    <script>
+        console.log(`
+Dynamic Search System
+====================
+
+The new streaming search system provides:
+
+1. **Non-blocking Performance**
+   - Uses requestIdleCallback for smooth UI
+   - Processes results in batches
+   - Yields to browser between operations
+
+2. **Smart Search Management**
+   - Automatic debouncing (300ms)
+   - Search cancellation for better performance
+   - Progress tracking with callbacks
+
+3. **Real-time Feedback**
+   - Live results counter
+   - Progressive visualization updates
+   - Floating preview panel
+
+4. **Enhanced UX**
+   - Quick filter buttons for categories
+   - Keyboard shortcuts
+   - Visual search status indicators
+
+Usage Examples:
+===============
+
+// Basic streaming search
+const handle = await window.cosmosApp.dataManager.searchStreaming('robot', ['objaverse']);
+
+// With progress tracking
+handle.onProgress(({ newResults, totalResults, count }) => {
+    console.log('New results:', newResults.length);
+    console.log('Total so far:', count);
+});
+
+// Debounced search (good for typing)
+const handle2 = await window.cosmosApp.dataManager.searchDebounced('architecture');
+
+// Cancel search
+handle.cancel();
+
+// Parallel searches
+const results = await window.cosmosApp.dataManager.searchParallel([
+    'robot', 'car', 'house'
+], ['objaverse', 'icosa']);
+        `);
+        
+        async function testStreamingSearch() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<h3>Testing Streaming Search...</h3>';
+            
+            try {
+                const manager = window.cosmosApp.dataManager;
+                const handle = await manager.searchStreaming('architecture', ['objaverse', 'icosa']);
+                
+                let progressUpdates = 0;
+                handle.onProgress(({ newResults, count }) => {
+                    progressUpdates++;
+                    resultsDiv.innerHTML += `<p>Progress ${progressUpdates}: +${newResults.length} results (total: ${count})</p>`;
+                });
+                
+                handle.onComplete(({ results, count }) => {
+                    resultsDiv.innerHTML += `<p style="color: green;"><strong>✓ Complete: ${count} results in ${progressUpdates} updates</strong></p>`;
+                });
+                
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        async function testDebounce() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<h3>Testing Debounced Search...</h3>';
+            
+            const manager = window.cosmosApp.dataManager;
+            
+            // Simulate rapid typing
+            const queries = ['a', 'ar', 'arc', 'arch', 'archi', 'archit', 'architecture'];
+            
+            for (let i = 0; i < queries.length; i++) {
+                resultsDiv.innerHTML += `<p>Typing: "${queries[i]}"</p>`;
+                
+                const handle = await manager.searchDebounced(queries[i], ['objaverse']);
+                
+                if (i < queries.length - 1) {
+                    // Cancel previous searches (simulates typing)
+                    setTimeout(() => handle.cancel(), 50);
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            resultsDiv.innerHTML += `<p style="color: green;"><strong>✓ Only final search should complete</strong></p>`;
+        }
+        
+        async function testCancellation() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<h3>Testing Search Cancellation...</h3>';
+            
+            const manager = window.cosmosApp.dataManager;
+            const handle = await manager.searchStreaming('robot', ['objaverse']);
+            
+            let cancelled = false;
+            handle.onComplete(() => {
+                resultsDiv.innerHTML += cancelled ? 
+                    `<p style="color: orange;">⚠️ Search completed despite cancellation</p>` :
+                    `<p style="color: red;">❌ Search should have been cancelled</p>`;
+            });
+            
+            // Cancel after 1 second
+            setTimeout(() => {
+                handle.cancel();
+                cancelled = true;
+                resultsDiv.innerHTML += `<p style="color: green;">✓ Search cancelled</p>`;
+            }, 1000);
+        }
+        
+        async function testParallelSearch() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<h3>Testing Parallel Searches...</h3>';
+            
+            const manager = window.cosmosApp.dataManager;
+            const startTime = Date.now();
+            
+            const results = await manager.searchParallel([
+                'robot', 
+                'architecture', 
+                'furniture'
+            ], ['objaverse']);
+            
+            const duration = Date.now() - startTime;
+            
+            resultsDiv.innerHTML += `
+                <p style="color: green;">
+                    <strong>✓ Parallel search complete:</strong><br>
+                    - ${results.length} unique results<br>
+                    - Duration: ${duration}ms<br>
+                    - 3 queries executed in parallel
+                </p>
+            `;
+        }
+        
+        function showSearchStats() {
+            const resultsDiv = document.getElementById('testResults');
+            const stats = window.cosmosApp.dataManager.getSearchStats();
+            
+            resultsDiv.innerHTML = `
+                <h3>Search Statistics</h3>
+                <ul>
+                    <li><strong>Active searches:</strong> ${stats.active}</li>
+                    <li><strong>Completed searches:</strong> ${stats.completed}</li>
+                    <li><strong>Total results found:</strong> ${stats.totalResults}</li>
+                </ul>
+            `;
+        }
+        
+        // Auto-run a demonstration
+        setTimeout(() => {
+            console.log('🔍 Dynamic search system ready!');
+            console.log('Try typing in the search box to see real-time results.');
+            console.log('Use Cmd/Ctrl + K to focus search, or click the quick filter buttons.');
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<head>
+<meta name="viewport" content="width=device-width">
+
+<!-- LOADING ORDER OF SOME SCRIPTS IS IMPORTANT. CHANGE AT YOUR OWN PERIL. -KP -->
+
+<!-- THIRD PARTY LIBRARIES -->
+<script src="lib/three.js"></script>
+
+<script src="lib/ImprovedNoise.js"></script>
+<script src="lib/utility.js"></script>
+<script src="lib/midi.js"></script>
+<script src="lib/palette.js"></script>
+<script src="lib/imageLibrary.js"></script>
+<script src="lib/drawing.js"></script>
+<script src="lib/faders.js"></script>
+<script src="lib/lightTracker.js"></script>
+<script src="lib/sphereTracker.js"></script>
+<script src="lib/displayStrokes.js"></script>
+<script src="lib/bounds.js"></script>
+<script src="lib/mat.js"></script>
+<script src="lib/tentacle.js"></script>
+<script src="lib/tt.js"></script>
+<script src="lib/trackball.js"></script>
+
+<script src="lib/CT_Modeler.js"></script>
+<script src="lib/CT_Path.js"></script>
+<script src="lib/CT_DrawModel.js"></script>
+<script src="lib/CT_LineFont.js"></script>
+
+<script src="lib/four.js"></script>
+<script src="lib/draw2D.js"></script>
+<script src="lib/graph.js"></script>
+<script src="lib/widgets.js"></script>
+<script src="lib/toolTips.js"></script>
+<script src="lib/glyphChart.js"></script>
+<script src="lib/overview.js"></script>
+<script src="lib/group.js"></script>
+<script src="lib/parseStrokes.js"></script>
+
+<script src="lib/sketchText.js"></script>
+<script src="lib/sketchLink.js"></script>
+<script src="lib/sketchGlyph.js"></script>
+<script src="lib/sketchPage.js"></script>
+<script src="lib/sketch.js"></script>
+
+<script src="lib/characterGlyphData.js"></script>
+
+<script src="lib/g.js"></script>
+
+<script src="libs/dat.gui.js"></script>
+<script src="libs/gl-matrix.js"></script>
+<script src="lib/chroma-key.js"></script>
+
+<!-- VARIOUS DATA SOURCES -->
+
+<script src="lib/controllerData.js"></script>
+
+<!-- THE HTML SLIDE SHOW -->
+
+<script src="content/blank_page.js">
+</script>
+
+<style>
+   p {
+     font-family: "hand2-Medium";
+     font-size: 50px;
+     font-variant-ligatures: contextual;
+     -moz-font-feature-settings: "calt";
+     -ms-font-feature-settings: "calt";
+     -webkit-font-feature-settings: "calt";
+     font-feature-settings: "calt";
+   }
+   body{
+      id=body;
+      color: white;
+      background-color:black;
+      font-family: 'Arial', sans-serif;
+      margin:0;
+      padding:0;
+      text-decoration:none;
+      overflow: hidden;
+    }
+</style>
+
+<link rel="manifest" href="manifest.json">
+</head>
+<body onLoad=setTimeout(gStart,500)>
+</body>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Objaverse Integration Test</title>
+</head>
+<body>
+    <h1>Objaverse-XL Integration Test</h1>
+    <p>Testing integration with the Objaverse dataset (10M+ 3D objects)</p>
+    
+    <div style="padding: 20px; background: #f0f0f0; margin: 20px 0;">
+        <h2>About Objaverse-XL:</h2>
+        <ul>
+            <li><strong>Size:</strong> 10+ million 3D objects</li>
+            <li><strong>Sources:</strong> GitHub, Thingiverse, Polycam, Sketchfab</li>
+            <li><strong>License:</strong> ODC-By v1.0</li>
+            <li><strong>Website:</strong> <a href="https://objaverse.allenai.org/" target="_blank">objaverse.allenai.org</a></li>
+        </ul>
+    </div>
+    
+    <div style="padding: 20px; background: #e8f5e9; margin: 20px 0;">
+        <h2>Quick Tests:</h2>
+        <button onclick="testObjaverseSearch('')">Show All Categories</button>
+        <button onclick="testObjaverseSearch('architecture')">Architecture</button>
+        <button onclick="testObjaverseSearch('character')">Characters</button>
+        <button onclick="testObjaverseSearch('furniture')">Furniture</button>
+        <button onclick="testObjaverseSearch('vehicle')">Vehicles</button>
+        <button onclick="testObjaverseSearch('medical')">Medical</button>
+        <button onclick="visualizeObjaverse()">Load in 3D View</button>
+    </div>
+    
+    <div id="results" style="padding: 20px;"></div>
+    
+    <script>
+        console.log(`
+Objaverse-XL Integration
+========================
+
+Objaverse-XL contains over 10 million 3D objects from:
+- GitHub (open source models)
+- Thingiverse (maker community)
+- Polycam (3D scans)
+- Sketchfab (artist uploads)
+
+Current Integration Status:
+==========================
+✅ Local index support (if objaverse_gltf_index_lite.json present)
+✅ Demonstration data with 10 categories
+✅ Visual distinctions (teal color #4ECDC4)
+✅ 3D model loading (GLB/GLTF)
+⚠️  Full dataset requires Python API bridge
+
+Test Commands:
+=============
+// Search Objaverse
+window.cosmosApp.performSearch('robot', ['objaverse']);
+window.cosmosApp.performSearch('architecture', ['objaverse']);
+window.cosmosApp.performSearch('', ['objaverse']); // Show all
+
+// Direct provider test
+const provider = window.cosmosApp.dataManager.searchProviders.objaverse;
+await provider.search('character');
+
+// Check if local index exists
+import('../src/config/objaverse-config.js').then(module => {
+    module.checkObjaverseIndex().then(hasIndex => {
+        console.log('Local Objaverse index available:', hasIndex);
+    });
+});
+
+Visual Indicators:
+- Color: Teal (#4ECDC4)
+- Shape: Icosahedron for 3D objects
+- Size: Based on object complexity
+- Animation: Rotating 3D models
+
+To Enable Full Objaverse Access:
+1. Download index files from Objaverse
+2. Set up Python API bridge (pip install objaverse)
+3. Configure backend proxy endpoint
+4. Or download objaverse_gltf_index_lite.json locally
+        `);
+        
+        // Test functions
+        async function testObjaverseSearch(query) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Searching Objaverse...</p>';
+            
+            try {
+                const provider = window.cosmosApp.dataManager.searchProviders.objaverse;
+                const results = await provider.search(query);
+                
+                let html = `<h3>Objaverse Results for "${query || 'all categories'}":</h3>`;
+                html += `<p>Found ${results.length} objects (demo data)</p>`;
+                
+                if (results.length > 0) {
+                    html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">';
+                    
+                    results.forEach(item => {
+                        html += `
+                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white;">
+                                <h4 style="margin-top: 0; color: #4ECDC4;">${item.name}</h4>
+                                <p style="color: #666; font-size: 14px;">${item.description}</p>
+                                <div style="font-size: 12px; color: #888;">
+                                    <strong>Category:</strong> ${item.category}<br>
+                                    <strong>Source:</strong> ${item.provider}<br>
+                                    <strong>Format:</strong> ${item.format.toUpperCase()}<br>
+                                    <strong>Dataset:</strong> ${item.dataset}
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    ${item.tags.map(tag => 
+                                        `<span style="display: inline-block; padding: 2px 8px; background: #4ECDC4; color: white; border-radius: 12px; font-size: 11px; margin-right: 5px;">${tag}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                } else {
+                    html += '<p>No results found.</p>';
+                }
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Search error:', error);
+            }
+        }
+        
+        async function visualizeObjaverse() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Loading Objaverse objects in 3D visualization...</p>';
+            
+            try {
+                await window.cosmosApp.performSearch('', ['objaverse']);
+                resultsDiv.innerHTML = '<p style="color: green;">✓ Loaded in 3D view! Look for teal-colored nodes.</p>';
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Check Objaverse configuration on load
+        setTimeout(async () => {
+            try {
+                const module = await import('../src/config/objaverse-config.js');
+                const hasIndex = await module.checkObjaverseIndex();
+                console.log('Objaverse local index available:', hasIndex);
+                
+                if (!hasIndex) {
+                    console.log('💡 Tip: Download objaverse_gltf_index_lite.json for full dataset access');
+                    console.log('Currently using demonstration data with sample categories');
+                }
+            } catch (error) {
+                console.log('Could not check Objaverse index:', error.message);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

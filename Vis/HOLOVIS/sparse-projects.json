@@ -1,0 +1,223 @@
+{
+  "projects": [
+    {
+      "id": "hdrp",
+      "name": "HDRP",
+      "unity": "2023.1.19f1",
+      "type": "general",
+      "size": 4,
+      "highlights": {
+        "scripts": 0,
+        "vfx": 0,
+        "scenes": 1
+      },
+      "packages": 3,
+      "complexity": 0
+    },
+    {
+      "id": "urp",
+      "name": "URP",
+      "unity": "2023.1.19f1",
+      "type": "general",
+      "size": 10,
+      "highlights": {
+        "scripts": 2,
+        "vfx": 2,
+        "scenes": 2
+      },
+      "packages": 3,
+      "complexity": 1
+    },
+    {
+      "id": "vfx",
+      "name": "VFX",
+      "unity": "2023.1.19f1",
+      "type": "vfx-focused",
+      "size": 6,
+      "highlights": {
+        "scripts": 0,
+        "vfx": 1,
+        "scenes": 1
+      },
+      "packages": 3,
+      "complexity": 0
+    },
+    {
+      "id": "arbodytracking-master",
+      "name": "ARBodyTracking-master",
+      "unity": "2019.2.17f1",
+      "type": "code-heavy",
+      "size": 257,
+      "highlights": {
+        "scripts": 49,
+        "vfx": 2,
+        "scenes": 20
+      },
+      "packages": 3,
+      "complexity": 17
+    },
+    {
+      "id": "arfoundationreplay-main",
+      "name": "ARFoundationReplay-main",
+      "unity": "6000.0.41f1",
+      "type": "general",
+      "size": 13,
+      "highlights": {
+        "scripts": 1,
+        "vfx": 0,
+        "scenes": 1
+      },
+      "packages": 3,
+      "complexity": 1
+    },
+    {
+      "id": "arkitstreamer-master",
+      "name": "ARKitStreamer-master",
+      "unity": "2020.3.36f1",
+      "type": "general",
+      "size": 73,
+      "highlights": {
+        "scripts": 14,
+        "vfx": 0,
+        "scenes": 6
+      },
+      "packages": 3,
+      "complexity": 4
+    },
+    {
+      "id": "arvolumevfx-main",
+      "name": "ARVolumeVFX-main",
+      "unity": "6000.1.2f1",
+      "type": "code-heavy",
+      "size": 290,
+      "highlights": {
+        "scripts": 68,
+        "vfx": 3,
+        "scenes": 24
+      },
+      "packages": 3,
+      "complexity": 26
+    },
+    {
+      "id": "bibjamstage-jt2",
+      "name": "BibJamStage-JT2",
+      "unity": "2021.3.18f1",
+      "type": "code-heavy",
+      "size": 283,
+      "highlights": {
+        "scripts": 59,
+        "vfx": 5,
+        "scenes": 11
+      },
+      "packages": 3,
+      "complexity": 23
+    },
+    {
+      "id": "bodypixsentis-main",
+      "name": "BodyPixSentis-main",
+      "unity": "6000.0.21f1",
+      "type": "general",
+      "size": 11,
+      "highlights": {
+        "scripts": 2,
+        "vfx": 0,
+        "scenes": 2
+      },
+      "packages": 2,
+      "complexity": 1
+    },
+    {
+      "id": "flashglitch-main",
+      "name": "FlashGlitch-main",
+      "unity": "6000.0.22f1",
+      "type": "general",
+      "size": 7,
+      "highlights": {
+        "scripts": 1,
+        "vfx": 0,
+        "scenes": 1
+      },
+      "packages": 3,
+      "complexity": 0
+    }
+  ],
+  "categories": {
+    "byType": {
+      "general": [
+        "hdrp",
+        "urp",
+        "arfoundationreplay-main",
+        "arkitstreamer-master",
+        "bodypixsentis-main",
+        "flashglitch-main"
+      ],
+      "vfx-focused": [
+        "vfx"
+      ],
+      "code-heavy": [
+        "arbodytracking-master",
+        "arvolumevfx-main",
+        "bibjamstage-jt2"
+      ]
+    },
+    "bySize": {
+      "small": [
+        "hdrp",
+        "urp",
+        "vfx",
+        "arfoundationreplay-main",
+        "bodypixsentis-main",
+        "flashglitch-main"
+      ],
+      "medium": [
+        "arkitstreamer-master"
+      ],
+      "large": [
+        "arbodytracking-master",
+        "arvolumevfx-main",
+        "bibjamstage-jt2"
+      ]
+    },
+    "byUnityVersion": {
+      "2019": [
+        "arbodytracking-master"
+      ],
+      "2020": [
+        "arkitstreamer-master"
+      ],
+      "2021": [
+        "bibjamstage-jt2"
+      ],
+      "2023": [
+        "hdrp",
+        "urp",
+        "vfx"
+      ],
+      "6000": [
+        "arfoundationreplay-main",
+        "arvolumevfx-main",
+        "bodypixsentis-main",
+        "flashglitch-main"
+      ]
+    }
+  },
+  "stats": {
+    "totalProjects": 10,
+    "averageSize": 95,
+    "types": [
+      "general",
+      "vfx-focused",
+      "code-heavy"
+    ],
+    "unityVersions": [
+      "2023.1.19f1",
+      "2019.2.17f1",
+      "6000.0.41f1",
+      "2020.3.36f1",
+      "6000.1.2f1",
+      "2021.3.18f1",
+      "6000.0.21f1",
+      "6000.0.22f1"
+    ]
+  }
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test GitHub Repository Visualization</title>
+</head>
+<body>
+    <h1>Testing GitHub Repository Visual Distinctions</h1>
+    <p>Open the developer console to run these tests:</p>
+    
+    <script>
+        // Test data with GitHub repos of varying popularity
+        const testGitHubData = {
+            nodes: [
+                // Very popular repo (like three.js)
+                {
+                    id: 'github-repo-1',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'three.js',
+                    description: 'JavaScript 3D Library',
+                    stars: 95000,
+                    forks: 35000,
+                    watchers: 95000,
+                    openIssues: 500,
+                    language: 'JavaScript',
+                    owner: 'mrdoob',
+                    url: 'https://github.com/mrdoob/three.js',
+                    // These are calculated by DataManager
+                    val: 9.5,
+                    brightness: 0.9,
+                    activity: 0.5
+                },
+                
+                // Medium popularity (like react-three-fiber)
+                {
+                    id: 'github-repo-2',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'react-three-fiber',
+                    description: 'React renderer for Three.js',
+                    stars: 24000,
+                    forks: 1400,
+                    watchers: 24000,
+                    openIssues: 50,
+                    language: 'TypeScript',
+                    owner: 'pmndrs',
+                    url: 'https://github.com/pmndrs/react-three-fiber',
+                    val: 7.2,
+                    brightness: 0.7,
+                    activity: 0.2
+                },
+                
+                // Small but active repo
+                {
+                    id: 'github-repo-3',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'cosmos-visualizer',
+                    description: '3D visualization of code relationships',
+                    stars: 150,
+                    forks: 25,
+                    watchers: 150,
+                    openIssues: 15,
+                    language: 'JavaScript',
+                    owner: 'developer',
+                    val: 3.5,
+                    brightness: 0.3,
+                    activity: 0.8
+                },
+                
+                // New repo with few stars
+                {
+                    id: 'github-repo-4',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'my-new-project',
+                    description: 'Just started this week',
+                    stars: 3,
+                    forks: 0,
+                    watchers: 3,
+                    openIssues: 1,
+                    language: 'Python',
+                    owner: 'newdev',
+                    val: 1.2,
+                    brightness: 0.1,
+                    activity: 0.3
+                },
+                
+                // Highly forked educational repo
+                {
+                    id: 'github-repo-5',
+                    source: 'github',
+                    type: 'repository',
+                    name: 'javascript-algorithms',
+                    description: 'Algorithms and data structures',
+                    stars: 180000,
+                    forks: 30000,
+                    watchers: 180000,
+                    openIssues: 100,
+                    language: 'JavaScript',
+                    owner: 'trekhleb',
+                    val: 10,
+                    brightness: 1.0,
+                    activity: 0.4
+                },
+                
+                // Add repo owners as nodes
+                {
+                    id: 'github-user-1',
+                    source: 'github',
+                    type: 'user',
+                    name: 'mrdoob',
+                    val: 5
+                },
+                {
+                    id: 'github-user-2',
+                    source: 'github',
+                    type: 'user',
+                    name: 'pmndrs',
+                    val: 4
+                },
+                {
+                    id: 'github-user-3',
+                    source: 'github',
+                    type: 'user',
+                    name: 'developer',
+                    val: 2
+                },
+                {
+                    id: 'github-user-4',
+                    source: 'github',
+                    type: 'user',
+                    name: 'newdev',
+                    val: 1
+                },
+                {
+                    id: 'github-user-5',
+                    source: 'github',
+                    type: 'user',
+                    name: 'trekhleb',
+                    val: 5
+                }
+            ],
+            links: [
+                { source: 'github-user-1', target: 'github-repo-1', value: 1 },
+                { source: 'github-user-2', target: 'github-repo-2', value: 1 },
+                { source: 'github-user-3', target: 'github-repo-3', value: 1 },
+                { source: 'github-user-4', target: 'github-repo-4', value: 1 },
+                { source: 'github-user-5', target: 'github-repo-5', value: 1 },
+                // Some repos reference each other
+                { source: 'github-repo-2', target: 'github-repo-1', value: 0.5 },
+                { source: 'github-repo-3', target: 'github-repo-2', value: 0.3 }
+            ]
+        };
+        
+        console.log(`
+Test GitHub Repository Visualizations:
+=====================================
+
+1. Load test GitHub repos with different popularity levels:
+   window.cosmosApp.lastGraphData = testGitHubData;
+   window.cosmosApp.updateVisualization(testGitHubData);
+
+2. Search for real GitHub repositories:
+   window.cosmosApp.performSearch('three.js', ['github']);
+   window.cosmosApp.performSearch('machine learning', ['github']);
+   window.cosmosApp.performSearch('webgl', ['github']);
+
+3. Visual indicators to look for:
+   - SIZE: Bigger nodes = more stars/forks/watchers
+   - BRIGHTNESS: Brighter glow = more popular
+   - GREEN RING: Pulsing ring = active development (open issues)
+   - FORK INDICATORS: Green cones around node = highly forked (100+ forks)
+   - EXTRA GLOW: Repos with 1000+ stars pulse with extra brightness
+
+4. Click on any GitHub repo node to see detailed metrics:
+   - Stars count
+   - Forks count
+   - Watchers count
+   - Open issues
+   - Primary language
+   - Owner information
+
+5. Compare node sizes:
+   - three.js (95k stars) should be HUGE and BRIGHT
+   - javascript-algorithms (180k stars) should be MAXIMUM size
+   - my-new-project (3 stars) should be tiny and dim
+
+Colors:
+- GitHub repositories: Light Green (#95E1D3)
+- GitHub users: Light Green (cone shape)
+        `);
+        
+        // Make test data available globally
+        window.testGitHubData = testGitHubData;
+    </script>
+</body>
+</html>

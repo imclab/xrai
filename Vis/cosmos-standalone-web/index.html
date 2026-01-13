@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmos Hypergraph Visualizer</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <div id="app">
+        <canvas id="canvas"></canvas>
+        
+        <div class="control-panel">
+            <h2>Hypergraph Search</h2>
+            
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search across all sources..." />
+                <button id="searchBtn">Search</button>
+            </div>
+            
+            <div class="source-filters">
+                <label><input type="checkbox" class="source" value="icosa" checked> Icosa Gallery</label>
+                <label><input type="checkbox" class="source" value="objaverse" checked> Objaverse</label>
+                <label><input type="checkbox" class="source" value="github" checked> GitHub</label>
+                <label><input type="checkbox" class="source" value="local"> Local Files</label>
+                <label><input type="checkbox" class="source" value="web"> Web Search</label>
+            </div>
+            
+            <div class="layout-options">
+                <h3>Layout Type</h3>
+                <label><input type="radio" name="layout" value="force" checked> Force Graph</label>
+                <label><input type="radio" name="layout" value="city"> City Blocks</label>
+                <label><input type="radio" name="layout" value="cosmos"> Cosmos</label>
+                <label><input type="radio" name="layout" value="tree"> Tree</label>
+            </div>
+            
+            <div class="file-section">
+                <h3>Import Data</h3>
+                <input type="file" id="fileInput" accept=".json,.gltf,.glb,.obj,.fbx,.usdz" />
+                <div id="dropZone" class="drop-zone">
+                    <p>Drop 3D models or JSON data here</p>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <h3>Statistics</h3>
+                <div id="nodeCount">Nodes: 0</div>
+                <div id="linkCount">Links: 0</div>
+                <div id="fps">FPS: 0</div>
+            </div>
+            
+            <div class="test-section">
+                <h3>Stress Test</h3>
+                <button onclick="stressTest(10000)">10K Nodes</button>
+                <button onclick="stressTest(100000)">100K Nodes</button>
+                <button onclick="stressTest(1000000)">1M Nodes</button>
+            </div>
+        </div>
+        
+        <div class="viewer-toggle">
+            <button class="viewer-btn active" data-viewer="graph">Graph View</button>
+            <button class="viewer-btn" data-viewer="metavido">MetavidoVFX</button>
+            <button class="viewer-btn" data-viewer="icosa">Icosa Gallery</button>
+        </div>
+        
+        <div id="icosaViewer" class="icosa-viewer">
+            <iframe id="icosaFrame"></iframe>
+            <button class="close-btn" onclick="closeIcosaViewer()">×</button>
+        </div>
+        
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+        
+        <div id="tooltip" class="tooltip"></div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+    <script>
+        // Stress test function
+        window.stressTest = async function(nodeCount) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = ''; // Empty search to get all models
+            
+            const app = window.cosmosApp;
+            if (app) {
+                console.log(`Stress testing with ${nodeCount} nodes...`);
+                // Trigger search with high limit
+                app.performSearch('', ['icosa'], nodeCount);
+            }
+        }
+    </script>
+</body>
+</html>

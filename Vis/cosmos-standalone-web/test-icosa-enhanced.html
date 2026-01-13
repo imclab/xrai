@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enhanced Icosa Gallery Integration Test</title>
+</head>
+<body>
+    <h1>Enhanced Icosa Gallery Integration Test</h1>
+    <p>Testing the improved Icosa Gallery API integration with multiple endpoints</p>
+    
+    <div style="padding: 20px; background: #f0f0f0; margin: 20px 0;">
+        <h2>Quick Tests:</h2>
+        <button onclick="testIcosaSearch('')">Search All Icosa Assets</button>
+        <button onclick="testIcosaSearch('robot')">Search "robot"</button>
+        <button onclick="testIcosaSearch('architecture')">Search "architecture"</button>
+        <button onclick="testIcosaSearch('character')">Search "character"</button>
+        <button onclick="testFullVisualization()">Load in 3D View</button>
+    </div>
+    
+    <div id="results" style="padding: 20px;"></div>
+    
+    <script>
+        console.log(`
+Enhanced Icosa Gallery Integration
+==================================
+
+The integration now attempts to connect to real Icosa Gallery APIs:
+
+1. Primary: poly.pizza public instance
+2. Fallback: Google Poly legacy API  
+3. Final fallback: Sample demo data
+
+Available test commands:
+========================
+
+// Test direct Icosa Gallery search
+await window.cosmosApp.dataManager.searchProviders.icosa.searchIcosaGallery('robot');
+
+// Test full search with visualization
+window.cosmosApp.performSearch('architecture', ['icosa']);
+
+// Load massive dataset test
+window.cosmosApp.performSearch('', ['icosa']);
+
+// Check configuration
+import('../src/config/icosa-config.js').then(module => {
+    console.log('Icosa Config:', module.IcosaConfig);
+});
+
+Visual Indicators:
+- Color: Red/Pink (#FF6B6B)
+- Shapes: Icosahedron for 3D artworks
+- Artists: Cone shapes
+- Animations: Rotating artworks
+- Labels: Artist names on prominent pieces
+
+Integration Features:
+- Multi-endpoint support
+- Automatic fallback mechanism
+- Real 3D model loading (GLB/GLTF)
+- Artist attribution preserved
+- License information included
+- Pagination for large results
+        `);
+        
+        // Test functions
+        async function testIcosaSearch(query) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Searching Icosa Gallery...</p>';
+            
+            try {
+                const dm = window.cosmosApp.dataManager;
+                const results = await dm.searchProviders.icosa.searchIcosaGallery(query);
+                
+                let html = `<h3>Search Results for "${query || 'all'}":</h3>`;
+                html += `<p>Found ${results.length} assets</p>`;
+                
+                if (results.length > 0) {
+                    html += '<ul>';
+                    results.slice(0, 10).forEach(item => {
+                        html += `<li>
+                            <strong>${item.name}</strong> by ${item.artist}<br>
+                            <small>${item.description || 'No description'}</small><br>
+                            <small>Format: ${item.format || 'unknown'} | 
+                                   Tags: ${item.tags?.join(', ') || 'none'}</small>
+                        </li>`;
+                    });
+                    if (results.length > 10) {
+                        html += `<li>... and ${results.length - 10} more</li>`;
+                    }
+                    html += '</ul>';
+                } else {
+                    html += '<p>No results found. This could mean:</p>';
+                    html += '<ul>';
+                    html += '<li>The API endpoint is not accessible (CORS issue)</li>';
+                    html += '<li>The search term has no matches</li>';
+                    html += '<li>Using fallback sample data only</li>';
+                    html += '</ul>';
+                }
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Search error:', error);
+            }
+        }
+        
+        async function testFullVisualization() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Loading Icosa assets in 3D visualization...</p>';
+            
+            try {
+                await window.cosmosApp.performSearch('', ['icosa']);
+                resultsDiv.innerHTML = '<p style="color: green;">✓ Loaded in 3D view! Check the main window.</p>';
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Auto-test on load
+        setTimeout(() => {
+            console.log('Running automatic connection test...');
+            testIcosaSearch('').then(() => {
+                console.log('Initial test complete. Check results above.');
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+{
+  "name": "xrai-kg",
+  "version": "1.0.0",
+  "description": "XRAI Knowledge Graph - Modular, fast, platform-agnostic knowledge graph with fuzzy search and visualization",
+  "main": "dist/xrai-kg.cjs.js",
+  "module": "dist/xrai-kg.esm.js",
+  "browser": "dist/xrai-kg.umd.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/xrai-kg.esm.js",
+      "require": "./dist/xrai-kg.cjs.js",
+      "browser": "./dist/xrai-kg.umd.js"
+    },
+    "./data": {
+      "import": "./src/data/KnowledgeGraph.js"
+    },
+    "./search": {
+      "import": "./src/search/SearchEngine.js"
+    },
+    "./ai": {
+      "import": "./src/ai/ChatParser.js",
+      "require": "./src/ai/ChatParser.js"
+    },
+    "./viz/echarts": {
+      "import": "./src/viz/EChartsRenderer.js",
+      "require": "./src/viz/EChartsRenderer.js"
+    },
+    "./viz/mermaid": {
+      "import": "./src/viz/MermaidExporter.js",
+      "require": "./src/viz/MermaidExporter.js"
+    },
+    "./viz": {
+      "import": "./src/viz/index.js"
+    },
+    "./adapters/vscode": {
+      "import": "./src/adapters/VSCodeAdapter.js"
+    },
+    "./adapters/chrome": {
+      "import": "./src/adapters/ChromeAdapter.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "dev": "vite",
+    "demo": "npx serve .",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src/**/*.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "knowledge-graph",
+    "visualization",
+    "echarts",
+    "fuzzy-search",
+    "graph",
+    "vscode-extension",
+    "chrome-extension"
+  ],
+  "author": "XRAI Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Unity-XR-AI/xrai-kg"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "echarts": ">=5.0.0",
+    "echarts-gl": ">=2.0.0",
+    "fuse.js": ">=6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "echarts": {
+      "optional": true
+    },
+    "echarts-gl": {
+      "optional": true
+    },
+    "fuse.js": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup": "^4.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "hdrp",
+  "name": "HDRP",
+  "unity": "2023.1.19f1",
+  "type": "general",
+  "size": 4,
+  "highlights": {
+    "scripts": 0,
+    "vfx": 0,
+    "scenes": 1
+  },
+  "packages": 3,
+  "complexity": 0,
+  "connections": [
+    {
+      "id": "urp",
+      "strength": 0.75
+    },
+    {
+      "id": "vfx",
+      "strength": 0.45
+    },
+    {
+      "id": "arfoundationreplay-main",
+      "strength": 0.65
+    },
+    {
+      "id": "arkitstreamer-master",
+      "strength": 0.45
+    },
+    {
+      "id": "bodypixsentis-main",
+      "strength": 0.65
+    },
+    {
+      "id": "flashglitch-main",
+      "strength": 0.65
+    }
+  ],
+  "visualHints": {
+    "primaryColor": "#2196F3",
+    "radius": 52,
+    "orbitSpeed": 0.001,
+    "glowIntensity": 0.3
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "vfx",
+  "name": "VFX",
+  "unity": "2023.1.19f1",
+  "type": "vfx-focused",
+  "size": 6,
+  "highlights": {
+    "scripts": 0,
+    "vfx": 1,
+    "scenes": 1
+  },
+  "packages": 3,
+  "complexity": 0,
+  "connections": [
+    {
+      "id": "hdrp",
+      "strength": 0.45
+    },
+    {
+      "id": "urp",
+      "strength": 0.45
+    }
+  ],
+  "visualHints": {
+    "primaryColor": "#00BCD4",
+    "radius": 53,
+    "orbitSpeed": 0.001,
+    "glowIntensity": 0.6
+  }
+}

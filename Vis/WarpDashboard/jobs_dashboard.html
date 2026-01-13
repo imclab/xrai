@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WARP.JOBS // TERMINAL_V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --glass-panel: rgba(10, 15, 20, 0.7);
+            --glass-border: rgba(0, 240, 255, 0.15);
+            --glass-highlight: rgba(0, 240, 255, 0.05);
+
+            --text-main: #e0f2f1;
+            --text-muted: #546e7a;
+            --text-dim: #37474f;
+
+            --accent-cyan: #00f0ff;
+            --accent-blue: #2979ff;
+            --accent-purple: #d500f9;
+            --accent-success: #00e676;
+            --accent-warning: #ffea00;
+
+            --glow-cyan: 0 0 10px rgba(0, 240, 255, 0.2);
+            --glow-text: 0 0 5px rgba(0, 240, 255, 0.4);
+
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100vh;
+            overflow: hidden;
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(0, 40, 60, 0.2) 0%, transparent 60%),
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        /* CRT Scanline Overlay */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+        }
+
+        /* SIDEBAR HUD */
+        .sidebar {
+            border-right: 1px solid var(--glass-border);
+            background: rgba(5, 8, 10, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent-cyan);
+            text-shadow: var(--glow-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .brand span {
+            color: var(--text-main);
+            font-weight: 300;
+        }
+
+        .hud-module {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hud-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .stat-box {
+            background: rgba(0, 240, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
+            position: relative;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 8px;
+            height: 8px;
+            border-top: 2px solid var(--accent-cyan);
+            border-left: 2px solid var(--accent-cyan);
+        }
+
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 8px;
+            height: 8px;
+            border-bottom: 2px solid var(--accent-cyan);
+            border-right: 2px solid var(--accent-cyan);
+        }
+
+        .big-num {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .trend-line {
+            height: 24px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .bar {
+            background: var(--accent-cyan);
+            width: 100%;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-btn {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 0.5rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .filter-btn:hover {
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: var(--glow-cyan);
+        }
+
+        /* MAIN FEED */
+        .main-feed {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .top-bar {
+            min-height: 58px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 2rem;
+            justify-content: space-between;
+            background: rgba(5, 8, 10, 0.9);
+            flex-wrap: wrap;
+        }
+
+        .status-indicator {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent-success);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 0.45rem 0.65rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            width: 240px;
+        }
+
+        .pill-btn {
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 240, 255, 0.08);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            padding: 0.45rem 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill-btn.secondary {
+            background: rgba(213, 0, 249, 0.1);
+            border-color: rgba(213, 0, 249, 0.3);
+        }
+
+        .pill-btn:hover {
+            box-shadow: var(--glow-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .session-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.2rem 0.6rem;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--accent-cyan);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+        }
+
+        .blink-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-success);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--accent-success);
+            animation: blink 2s infinite;
+        }
+
+        .grid-header {
+            display: grid;
+            grid-template-columns: 60px 3fr 1.5fr 4fr 2fr 80px;
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+
+        /* JOB ROW - HIGH DENSITY */
+        .job-row {
+            display: grid;
+            grid-template-columns: 60px 3fr 1.5fr 4fr 2fr 80px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 2rem;
+            align-items: center;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .job-row:hover {
+            background: rgba(0, 240, 255, 0.03);
+        }
+
+        .job-row:hover .match-val {
+            text-shadow: var(--glow-text);
+        }
+
+        /* Columns */
+        .col-match {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mini-spark {
+            display: flex;
+            gap: 1px;
+            align-items: flex-end;
+            height: 10px;
+        }
+
+        .spark-bar {
+            width: 3px;
+            background: var(--text-muted);
+        }
+
+        .job-row:hover .spark-bar {
+            background: var(--accent-cyan);
+        }
+
+        .col-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .job-title {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .job-company {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .col-loc {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .salary-tag {
+            color: var(--accent-success);
+        }
+
+        .col-insight {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            border-left: 2px solid var(--glass-border);
+            padding-left: 1rem;
+        }
+
+        .highlight {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0 4px;
+        }
+
+        .col-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding-left: 1rem;
+        }
+
+        .tech-token {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border: 1px solid transparent;
+        }
+
+        .job-row:hover .tech-token {
+            color: var(--accent-cyan);
+            border-color: rgba(0, 240, 255, 0.3);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .col-action {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-link {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+            color: var(--accent-cyan);
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .job-row:hover .btn-link {
+            opacity: 1;
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: var(--glow-cyan);
+        }
+
+        /* Animations */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border: 1px solid #000;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <!-- LEFT HUD -->
+        <aside class="sidebar">
+            <div class="brand">WARP<span>JOBS</span> // SYS</div>
+
+            <div class="hud-module">
+                <div class="hud-label">TARGET ACQUISITION</div>
+                <div class="stat-box">
+                    <div class="big-num" id="totalCount">14</div>
+                    <div class="hud-label" style="margin-top: 4px; color: var(--accent-success);">HIGH RELEVANCE</div>
+                    <div class="trend-line">
+                        <div class="bar" style="height: 30%"></div>
+                        <div class="bar" style="height: 50%"></div>
+                    <div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 90%; background: #fff; box-shadow: 0 0 10px #fff;"></div>
+                </div>
+                <div class="hud-label" style="margin-top: 0.65rem;">JOB SITES // <span id="siteCount">--</span></div>
+            </div>
+        </div>
+
+            <div class="hud-module">
+                <div class="hud-label">FILTERS // REGION</div>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">GLOBAL_SCAN <span>[ON]</span></button>
+                    <button class="filter-btn" data-filter="remote">REMOTE_ONLY <span></span></button>
+                    <button class="filter-btn" data-filter="us">SECTOR_US <span></span></button>
+                    <button class="filter-btn" data-filter="uk">SECTOR_UK <span></span></button>
+                </div>
+            </div>
+
+            <div class="hud-module" style="margin-top: auto;">
+                <div class="hud-label">SYSTEM STATUS</div>
+                <div
+                    style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    > SCRAPER_DAEMON: <span style="color: var(--accent-success)">ONLINE</span><br>
+                    > LAST_SYNC: <span style="color: var(--text-main)">T-MINUS 2M</span><br>
+                    > LATENCY: 12ms
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN TERMINAL -->
+        <main class="main-feed">
+            <div class="top-bar">
+                <div class="status-indicator">
+                    <div class="blink-dot"></div>
+                    LIVE DATA STREAM // INTELLIGENCE MODE
+                </div>
+                <div class="top-actions">
+                    <div class="session-info">
+                        <div>SESSION_ID: <span style="color: var(--accent-cyan)">WJ-2050-X</span></div>
+                        <div>DATASET: <span id="datasetLabel" class="badge">LOADING...</span></div>
+                    </div>
+                    <input id="searchInput" class="search-input" type="search" placeholder="Search title, company, tags">
+                    <button id="refreshBtn" class="pill-btn">Reload Data</button>
+                    <button id="explorerBtn" class="pill-btn secondary">Data Explorer</button>
+                </div>
+            </div>
+
+            <div class="grid-header">
+                <div>Fit</div>
+                <div>Entity / Role</div>
+                <div>Coordinates</div>
+                <div>Intelligence Analysis</div>
+                <div>Tech Vector</div>
+                <div style="text-align: right">Link</div>
+            </div>
+
+            <div class="scroll-area" id="jobList">
+                <!-- JS Injection -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const DATA_URL = 'jobs_data.json';
+
+        // Bundled fallback so the page still loads if the external dataset is missing.
+        const fallbackJobs = [
+            {
+                match: 98,
+                title: "Research Scientist, Extended Reality",
+                company: "GOOGLE [XR]",
+                location: "San Jose, CA",
+                salary: "$141k - $202k",
+                posted: "2d ago",
+                insight: "Direct fit for <span class='highlight'>Hand Tracking</span> & AI convergence. 3D capture focus.",
+                tags: ["C++", "Python", "XR", "ML", "US"],
+                url: "https://careers.google.com/jobs/results/?q=Research%20Scientist%20Extended%20Reality",
+                sparks: [80, 90, 100]
+            },
+            {
+                match: 97,
+                title: "Senior Graphics Engineer",
+                company: "NVIDIA",
+                location: "Santa Clara, CA",
+                salary: "$180k - $260k",
+                posted: "1d ago",
+                insight: "Critical role for <span class='highlight'>Neural Rendering</span> pipeline optimization.",
+                tags: ["C++", "CUDA", "Vulkan", "DirectX", "US"],
+                url: "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite?q=Neural%20Rendering",
+                sparks: [90, 85, 95]
+            },
+            {
+                match: 95,
+                title: "Staff AI Software Engineer",
+                company: "GOOGLE [LABS]",
+                location: "Mountain View, CA",
+                salary: "$197k - $291k",
+                posted: "2d ago",
+                insight: "High impact <span class='highlight'>Rapid Prototyping</span>. Zero-to-one AI products.",
+                tags: ["AI", "Audio", "Mobile", "Proto", "US"],
+                url: "https://careers.google.com/jobs/results/?q=Staff%20AI%20Software%20Engineer%20Rapid%20Prototyping",
+                sparks: [85, 95, 80]
+            },
+            {
+                match: 94,
+                title: "XR Prototyper",
+                company: "APPLE",
+                location: "Cupertino, CA",
+                salary: "$170k - $250k",
+                posted: "3d ago",
+                insight: "Vision Pro team. Focus on <span class='highlight'>Spatial Input</span> paradigms.",
+                tags: ["Swift", "RealityKit", "Unity", "C#", "US"],
+                url: "https://jobs.apple.com/en-us/search?search=XR%20Prototyper",
+                sparks: [90, 90, 90]
+            },
+            {
+                match: 92,
+                title: "Software Engineer (Audio)",
+                company: "META [RL]",
+                location: "Cambridge, UK",
+                salary: "Competitive",
+                posted: "1d ago",
+                insight: "Perfect match for <span class='highlight'>audio-reactive VFX</span> background.",
+                tags: ["Python", "Audio", "Data", "AR/VR", "UK"],
+                url: "https://www.metacareers.com/jobs/?q=Audio%20Software%20Engineer",
+                sparks: [80, 80, 100]
+            },
+            {
+                match: 91,
+                title: "3D Gaussian Splatting Researcher",
+                company: "NIANTIC",
+                location: "London, UK",
+                salary: "£80k - £120k",
+                posted: "4h ago",
+                insight: "Cutting edge <span class='highlight'>3DGS</span> implementation for mobile AR.",
+                tags: ["Python", "PyTorch", "C++", "AR", "UK"],
+                url: "https://careers.nianticlabs.com/openings/?q=Research",
+                sparks: [95, 80, 85]
+            },
+            {
+                match: 90,
+                title: "Frontend Dev (XR Prototyping)",
+                company: "NEXUS STUDIOS",
+                location: "Remote (EU)",
+                salary: "Freelance",
+                posted: "6h ago",
+                insight: "Rare freelance remote. <span class='highlight'>Spatial UI</span> & interaction.",
+                tags: ["Kotlin", "XR", "UI/UX", "Remote", "UK"],
+                url: "https://nexusstudios.com/careers/",
+                sparks: [70, 90, 80]
+            },
+            {
+                match: 89,
+                title: "Unity Developer (Spatial)",
+                company: "MAGNOPUS",
+                location: "Los Angeles, CA",
+                salary: "$120k - $160k",
+                posted: "1d ago",
+                insight: "Building <span class='highlight'>Connected Spaces</span>. Multiplayer focus.",
+                tags: ["Unity", "C#", "Photon", "Quest", "US"],
+                url: "https://www.magnopus.com/careers",
+                sparks: [85, 85, 85]
+            },
+            {
+                match: 88,
+                title: "ML Engineer (AR/VR Vision)",
+                company: "LINNO",
+                location: "Dhaka, BD",
+                salary: "Competitive",
+                posted: "2d ago",
+                insight: "Strong <span class='highlight'>CV/ML</span> focus. Core tech experience.",
+                tags: ["CV", "Deep Learning", "SaaS"],
+                url: "https://linno.io/",
+                sparks: [90, 70, 80]
+            },
+            {
+                match: 87,
+                title: "Technical Artist (VFX)",
+                company: "EPIC GAMES",
+                location: "Cary, NC",
+                salary: "$130k - $190k",
+                posted: "3d ago",
+                insight: "Unreal Engine 5 <span class='highlight'>Niagara</span> systems development.",
+                tags: ["Unreal", "HLSL", "Python", "VFX", "US"],
+                url: "https://www.epicgames.com/site/en-US/careers",
+                sparks: [80, 90, 85]
+            },
+            {
+                match: 85,
+                title: "Senior Systems Engineer",
+                company: "MORSON",
+                location: "Portsmouth, UK",
+                salary: "Competitive",
+                posted: "Today",
+                insight: "Simulation & <span class='highlight'>Digital Twins</span>. H3M roadmap.",
+                tags: ["Sim", "AI/ML", "Systems", "UK"],
+                url: "https://www.morson.com/",
+                sparks: [75, 80, 80]
+            },
+            {
+                match: 84,
+                title: "Creative Technologist",
+                company: "UNIT9",
+                location: "London, UK",
+                salary: "£60k - £80k",
+                posted: "2d ago",
+                insight: "Agency work. Fast-paced <span class='highlight'>WebAR</span> & GenAI.",
+                tags: ["Three.js", "WebGL", "AI", "React", "UK"],
+                url: "https://www.unit9.com/careers",
+                sparks: [80, 85, 75]
+            },
+            {
+                match: 82,
+                title: "VR Gameplay Engineer",
+                company: "SKYDANCE",
+                location: "Marina Del Rey, CA",
+                salary: "$140k - $180k",
+                posted: "4d ago",
+                insight: "AAA VR combat mechanics. <span class='highlight'>Physics</span> heavy.",
+                tags: ["Unreal", "C++", "VR", "Physics", "US"],
+                url: "https://skydance.com/careers/",
+                sparks: [70, 90, 80]
+            },
+            {
+                match: 80,
+                title: "AR Cloud Engineer",
+                company: "SNAP INC.",
+                location: "Santa Monica, CA",
+                salary: "$160k - $220k",
+                posted: "5d ago",
+                insight: "Backend for <span class='highlight'>Lens Studio</span> & City Scale AR.",
+                tags: ["Go", "C++", "Cloud", "AR", "US"],
+                url: "https://careers.snap.com/",
+                sparks: [85, 70, 80]
+            }
+        ];
+
+        let jobs = [];
+        let activeFilter = 'all';
+        let searchTerm = '';
+
+        const elements = {
+            jobList: document.getElementById('jobList'),
+            totalCount: document.getElementById('totalCount'),
+            siteCount: document.getElementById('siteCount'),
+            datasetLabel: document.getElementById('datasetLabel'),
+            filterButtons: document.querySelectorAll('.filter-btn'),
+            searchInput: document.getElementById('searchInput'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            explorerBtn: document.getElementById('explorerBtn')
+        };
+
+        const regionTags = ['us', 'uk', 'remote', 'eu', 'ca', 'apac', 'latam'];
+
+        function safeHost(url) {
+            try {
+                return new URL(url).hostname.replace(/^www\./, '');
+            } catch {
+                return 'unknown';
+            }
+        }
+
+        function normalizeJob(job, index) {
+            const rawTags = Array.isArray(job.tags) ? job.tags : [];
+            const tagsNormalized = rawTags.map(t => String(t).toLowerCase());
+            const host = safeHost(job.url);
+            const stack = (job.stack || rawTags).filter(t => !regionTags.includes(String(t).toLowerCase()));
+            const insight = job.insight || job.description || '';
+            const sparks = job.sparks || [80, 88, 92].map(v => Math.max(40, Math.min(100, v - index)));
+
+            return {
+                id: job.id || `job_${index}`,
+                title: job.title || 'Untitled Role',
+                company: job.company || 'UNKNOWN',
+                location: job.location || 'Remote',
+                salary: job.salary || job.salary_range || 'Competitive',
+                posted: job.posted || job.date_posted || '—',
+                insight,
+                stack: stack.length ? stack : ['XR', 'AI'],
+                url: job.url || '#',
+                tags: rawTags,
+                tagsNormalized,
+                host,
+                match: job.match || Math.max(75, Math.min(99, 95 - index)),
+                sparks
+            };
+        }
+
+        function normalizeData(data) {
+            return data.map((job, index) => normalizeJob(job, index));
+        }
+
+        function setDatasetLabel(text, tone = 'success') {
+            if (!elements.datasetLabel) return;
+            elements.datasetLabel.textContent = text;
+            const color = tone === 'warning' ? 'var(--accent-warning)' : tone === 'neutral' ? 'var(--text-main)' : 'var(--accent-success)';
+            elements.datasetLabel.style.color = color;
+            elements.datasetLabel.style.borderColor = tone === 'warning' ? 'rgba(255, 234, 0, 0.4)' : 'var(--glass-border)';
+        }
+
+        function matchesFilter(job) {
+            if (activeFilter === 'all') return true;
+            if (activeFilter === 'remote') {
+                return job.tagsNormalized.includes('remote') || job.location.toLowerCase().includes('remote');
+            }
+            return job.tagsNormalized.includes(activeFilter);
+        }
+
+        function matchesSearch(job) {
+            if (!searchTerm) return true;
+            const q = searchTerm.toLowerCase();
+            const haystack = [
+                job.title,
+                job.company,
+                job.location,
+                job.insight,
+                job.salary,
+                job.host,
+                job.tags.join(' ')
+            ].join(' ').toLowerCase();
+            return haystack.includes(q);
+        }
+
+        function renderJobs(list) {
+            elements.jobList.innerHTML = '';
+            list.forEach((job, index) => {
+                const row = document.createElement('a');
+                row.className = 'job-row';
+                row.href = job.url;
+                row.target = "_blank";
+                row.style.animation = `fadeIn 0.3s ease forwards ${index * 0.05}s`;
+                row.style.opacity = '0';
+
+                const sparkValues = job.sparks && job.sparks.length ? job.sparks : [70, 80, 90];
+                const sparksHtml = sparkValues.map(h => `<div class="spark-bar" style="height: ${h}%"></div>`).join('');
+
+                row.innerHTML = `
+                    <div class="col-match">
+                        <div class="match-val">${job.match}</div>
+                        <div class="mini-spark">${sparksHtml}</div>
+                    </div>
+                    <div class="col-main">
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-company">${job.company}</div>
+                    </div>
+                    <div class="col-loc">
+                        <div>${job.location}</div>
+                        <div class="salary-tag">${job.salary}</div>
+                        <div style="opacity: 0.5">${job.posted} · ${job.host}</div>
+                    </div>
+                    <div class="col-insight">
+                        ${job.insight}
+                    </div>
+                    <div class="col-stack">
+                        ${job.stack.map(t => `<span class="tech-token">${t}</span>`).join('')}
+                    </div>
+                    <div class="col-action">
+                        <div class="btn-link">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </div>
+                    </div>
+                `;
+                elements.jobList.appendChild(row);
+            });
+        }
+
+        function render() {
+            const filtered = jobs.filter(j => matchesFilter(j) && matchesSearch(j));
+            elements.totalCount.innerText = filtered.length.toString().padStart(2, '0');
+            const uniqueHosts = new Set(jobs.map(j => j.host));
+            elements.siteCount.innerText = uniqueHosts.size.toString().padStart(2, '0');
+            renderJobs(filtered);
+        }
+
+        function bindFilters() {
+            elements.filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeFilter = btn.dataset.filter || 'all';
+                    elements.filterButtons.forEach(b => {
+                        const isActive = b.dataset.filter === activeFilter;
+                        b.classList.toggle('active', isActive);
+                        const span = b.querySelector('span');
+                        if (span) span.innerText = isActive ? '[ON]' : '';
+                    });
+                    render();
+                });
+            });
+        }
+
+        async function loadJobs() {
+            setDatasetLabel('LOADING...', 'neutral');
+            try {
+                const response = await fetch(DATA_URL, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                jobs = normalizeData(data);
+                setDatasetLabel('LIVE: jobs_data.json', 'success');
+            } catch (err) {
+                console.warn('Falling back to bundled data', err);
+                jobs = normalizeData(fallbackJobs);
+                setDatasetLabel('FALLBACK (bundled sample)', 'warning');
+            }
+            render();
+        }
+
+        function bindControls() {
+            if (elements.searchInput) {
+                elements.searchInput.addEventListener('input', (e) => {
+                    searchTerm = e.target.value;
+                    render();
+                });
+            }
+            if (elements.refreshBtn) {
+                elements.refreshBtn.addEventListener('click', loadJobs);
+            }
+            if (elements.explorerBtn) {
+                elements.explorerBtn.addEventListener('click', () => {
+                    window.open('jobs_data_explorer.html', '_blank');
+                });
+            }
+        }
+
+        // Add fade animation
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes fadeIn { to { opacity: 1; } }`;
+        document.head.appendChild(style);
+
+        bindFilters();
+        bindControls();
+        loadJobs();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XRAI Knowledge Graph - Demo</title>
+
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"></script>
+
+    <!-- Fuse.js for fuzzy search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+
+    <!-- Mermaid for diagram preview -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr 350px;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            gap: 1px;
+            background: #30363d;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            background: #161b22;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #30363d;
+        }
+
+        header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+
+        header .stats {
+            font-size: 13px;
+            color: #8b949e;
+        }
+
+        .sidebar {
+            background: #161b22;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-section {
+            padding: 12px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .sidebar-section h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #8b949e;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .search-result {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-result:hover {
+            background: #21262d;
+        }
+
+        .search-result .name {
+            font-size: 13px;
+        }
+
+        .search-result .type {
+            font-size: 11px;
+            padding: 2px 6px;
+            background: #30363d;
+            border-radius: 10px;
+            color: #8b949e;
+        }
+
+        .type-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .type-filter {
+            padding: 4px 8px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .type-filter:hover {
+            border-color: #58a6ff;
+        }
+
+        .type-filter.active {
+            background: #388bfd33;
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }
+
+        .type-filter .count {
+            margin-left: 4px;
+            opacity: 0.6;
+        }
+
+        .entity-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 12px;
+        }
+
+        .entity-item {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .entity-item:hover {
+            background: #21262d;
+        }
+
+        .entity-item.selected {
+            background: #388bfd33;
+            border-left: 2px solid #58a6ff;
+        }
+
+        .entity-item .name {
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .entity-item .meta {
+            font-size: 11px;
+            color: #8b949e;
+        }
+
+        .main {
+            background: #0d1117;
+            position: relative;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .graph-controls {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .graph-controls button {
+            padding: 6px 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .graph-controls button:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+        }
+
+        .right-panel {
+            background: #161b22;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #30363d;
+            min-height: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .chat-message.user {
+            background: #388bfd33;
+            margin-left: 20px;
+        }
+
+        .chat-message.system {
+            background: #21262d;
+            margin-right: 20px;
+        }
+
+        .chat-message code {
+            color: #58a6ff;
+            font-family: monospace;
+        }
+
+        .chat-message .result {
+            color: #7ee787;
+        }
+
+        .chat-message .error {
+            color: #f85149;
+        }
+
+        .chat-input-container {
+            padding: 12px;
+            border-top: 1px solid #30363d;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .chat-hint {
+            font-size: 11px;
+            color: #8b949e;
+            margin-top: 6px;
+        }
+
+        .mermaid-section {
+            max-height: 280px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mermaid-tabs {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .mermaid-tab {
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .mermaid-tab:hover {
+            background: #21262d;
+        }
+
+        .mermaid-tab.active {
+            border-bottom-color: #58a6ff;
+            color: #58a6ff;
+        }
+
+        .mermaid-content {
+            flex: 1;
+            overflow: auto;
+            padding: 12px;
+        }
+
+        .mermaid-code {
+            background: #0d1117;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 11px;
+            white-space: pre-wrap;
+            max-height: 180px;
+            overflow: auto;
+        }
+
+        footer {
+            grid-column: 1 / -1;
+            background: #161b22;
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #8b949e;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #30363d;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        .details-panel {
+            padding: 12px;
+            border-bottom: 1px solid #30363d;
+            display: none;
+        }
+
+        .details-panel.visible {
+            display: block;
+        }
+
+        .details-panel h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #58a6ff;
+        }
+
+        .details-panel .detail-row {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .details-panel .detail-label {
+            color: #8b949e;
+        }
+
+        .details-panel .observations {
+            margin-top: 8px;
+            padding: 8px;
+            background: #0d1117;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>XRAI Knowledge Graph</h1>
+            <div class="stats" id="stats">Loading...</div>
+        </header>
+
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3>Search</h3>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search entities...">
+                </div>
+                <div class="search-results" id="search-results"></div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Filter by Type</h3>
+                <div class="type-filters" id="type-filters"></div>
+            </div>
+
+            <div class="entity-list" id="entity-list"></div>
+        </div>
+
+        <div class="main">
+            <div class="graph-controls">
+                <button id="btn-reset">Reset View</button>
+                <button id="btn-layout">Toggle Layout</button>
+                <button id="btn-export">Export PNG</button>
+            </div>
+            <div id="graph-container"></div>
+        </div>
+
+        <div class="right-panel">
+            <div class="details-panel" id="details-panel">
+                <h4 id="detail-name">Entity Name</h4>
+                <div class="detail-row">
+                    <span class="detail-label">Type:</span>
+                    <span id="detail-type"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Relations:</span>
+                    <span id="detail-relations"></span>
+                </div>
+                <div class="observations" id="detail-observations"></div>
+            </div>
+
+            <div class="chat-section">
+                <div class="sidebar-section">
+                    <h3>Chat Commands</h3>
+                </div>
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Type a command...">
+                    <div class="chat-hint">Press Enter to execute | Try: search, add, relate, stats, help</div>
+                </div>
+            </div>
+
+            <div class="mermaid-section">
+                <div class="mermaid-tabs" id="mermaid-tabs">
+                    <div class="mermaid-tab active" data-type="flowchart">Flowchart</div>
+                    <div class="mermaid-tab" data-type="mindmap">Mindmap</div>
+                    <div class="mermaid-tab" data-type="classDiagram">Class</div>
+                </div>
+                <div class="mermaid-content">
+                    <div class="mermaid-code" id="mermaid-code"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <span>xrai-kg v1.0.0 | Modular Knowledge Graph Library</span>
+            <span id="render-info">Renderer: graph</span>
+        </footer>
+    </div>
+
+    <script type="module">
+        // Import XRAI modules
+        import { KnowledgeGraph } from '../src/data/KnowledgeGraph.js';
+        import { SearchEngine } from '../src/search/SearchEngine.js';
+        import { ChatParser } from '../src/ai/ChatParser.js';
+        import { EChartsRenderer } from '../src/viz/EChartsRenderer.js';
+        import { MermaidExporter } from '../src/viz/MermaidExporter.js';
+
+        // Sample data - Unity XR ecosystem
+        const sampleData = {
+            entities: [
+                { name: 'Unity', entityType: 'Engine', observations: ['Game engine', 'Real-time 3D development platform', 'Supports AR/VR'] },
+                { name: 'ARFoundation', entityType: 'Framework', observations: ['Cross-platform AR framework', 'Supports ARKit and ARCore'] },
+                { name: 'XR Interaction Toolkit', entityType: 'Framework', observations: ['VR/AR interaction system', 'Hand tracking support'] },
+                { name: 'Universal Render Pipeline', entityType: 'Technology', observations: ['Scriptable render pipeline', 'Optimized for mobile'] },
+                { name: 'Visual Effect Graph', entityType: 'Technology', observations: ['Node-based VFX', 'GPU particle system'] },
+                { name: 'ARKit', entityType: 'Platform', observations: ['Apple AR platform', 'LiDAR support', 'iOS only'] },
+                { name: 'ARCore', entityType: 'Platform', observations: ['Google AR platform', 'Android support'] },
+                { name: 'Meta Quest', entityType: 'Platform', observations: ['Standalone VR headset', 'Hand tracking', 'Passthrough AR'] },
+                { name: 'OpenXR', entityType: 'Standard', observations: ['Cross-platform XR standard', 'Khronos Group'] },
+                { name: 'Depth Sensing', entityType: 'Feature', observations: ['LiDAR depth data', 'Occlusion support'] },
+                { name: 'Hand Tracking', entityType: 'Feature', observations: ['Gesture recognition', 'Skeleton tracking'] },
+                { name: 'Plane Detection', entityType: 'Feature', observations: ['Surface detection', 'AR anchoring'] },
+                { name: 'Point Cloud', entityType: 'Feature', observations: ['3D point data', 'Environment mapping'] },
+                { name: 'Shader Graph', entityType: 'Technology', observations: ['Visual shader editor', 'Node-based'] },
+                { name: 'HDRP', entityType: 'Technology', observations: ['High Definition Render Pipeline', 'PC/Console quality'] },
+                { name: 'ECS', entityType: 'Pattern', observations: ['Entity Component System', 'Data-oriented design'] },
+                { name: 'Burst Compiler', entityType: 'Technology', observations: ['High-performance compiler', 'SIMD optimization'] },
+                { name: 'Jobs System', entityType: 'Technology', observations: ['Multi-threaded jobs', 'Parallel processing'] },
+                { name: 'Netcode', entityType: 'Framework', observations: ['Multiplayer networking', 'Client-server architecture'] },
+                { name: 'Addressables', entityType: 'Technology', observations: ['Asset management', 'Remote content delivery'] }
+            ],
+            relations: [
+                { from: 'Unity', to: 'ARFoundation', relationType: 'includes' },
+                { from: 'Unity', to: 'XR Interaction Toolkit', relationType: 'includes' },
+                { from: 'Unity', to: 'Universal Render Pipeline', relationType: 'includes' },
+                { from: 'Unity', to: 'Visual Effect Graph', relationType: 'includes' },
+                { from: 'Unity', to: 'Shader Graph', relationType: 'includes' },
+                { from: 'Unity', to: 'HDRP', relationType: 'includes' },
+                { from: 'Unity', to: 'ECS', relationType: 'supports' },
+                { from: 'Unity', to: 'Burst Compiler', relationType: 'includes' },
+                { from: 'Unity', to: 'Jobs System', relationType: 'includes' },
+                { from: 'Unity', to: 'Netcode', relationType: 'includes' },
+                { from: 'Unity', to: 'Addressables', relationType: 'includes' },
+                { from: 'ARFoundation', to: 'ARKit', relationType: 'supports' },
+                { from: 'ARFoundation', to: 'ARCore', relationType: 'supports' },
+                { from: 'ARFoundation', to: 'Depth Sensing', relationType: 'provides' },
+                { from: 'ARFoundation', to: 'Hand Tracking', relationType: 'provides' },
+                { from: 'ARFoundation', to: 'Plane Detection', relationType: 'provides' },
+                { from: 'ARFoundation', to: 'Point Cloud', relationType: 'provides' },
+                { from: 'XR Interaction Toolkit', to: 'OpenXR', relationType: 'implements' },
+                { from: 'XR Interaction Toolkit', to: 'Meta Quest', relationType: 'supports' },
+                { from: 'XR Interaction Toolkit', to: 'Hand Tracking', relationType: 'uses' },
+                { from: 'ARKit', to: 'Depth Sensing', relationType: 'provides' },
+                { from: 'Meta Quest', to: 'Hand Tracking', relationType: 'provides' },
+                { from: 'Meta Quest', to: 'OpenXR', relationType: 'implements' },
+                { from: 'Visual Effect Graph', to: 'Universal Render Pipeline', relationType: 'requires' },
+                { from: 'Visual Effect Graph', to: 'HDRP', relationType: 'supports' },
+                { from: 'Shader Graph', to: 'Universal Render Pipeline', relationType: 'integrates' },
+                { from: 'Shader Graph', to: 'HDRP', relationType: 'integrates' },
+                { from: 'ECS', to: 'Burst Compiler', relationType: 'uses' },
+                { from: 'ECS', to: 'Jobs System', relationType: 'uses' },
+                { from: 'Burst Compiler', to: 'Jobs System', relationType: 'optimizes' }
+            ]
+        };
+
+        // Initialize core
+        const kg = new KnowledgeGraph();
+        kg.bulkAdd(sampleData);
+
+        // Set Fuse.js for search
+        SearchEngine.setFuseLibrary(window.Fuse);
+        const search = new SearchEngine(kg);
+
+        // Chat parser
+        const chat = new ChatParser();
+
+        // Mermaid exporter
+        const mermaidExporter = new MermaidExporter();
+
+        // ECharts renderer
+        EChartsRenderer.setEChartsLibrary(window.echarts);
+        const renderer = new EChartsRenderer('#graph-container', {
+            theme: 'dark',
+            autoPerformance: true,
+            focusOnClick: true,
+            labelThreshold: 3
+        });
+        renderer.render(kg);
+
+        // Expose globally for debugging
+        window.xrai = { kg, search, chat, renderer, mermaidExporter };
+
+        // ========== DOM Elements ==========
+        const statsEl = document.getElementById('stats');
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const typeFilters = document.getElementById('type-filters');
+        const entityList = document.getElementById('entity-list');
+        const detailsPanel = document.getElementById('details-panel');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const mermaidCode = document.getElementById('mermaid-code');
+        const renderInfo = document.getElementById('render-info');
+
+        // ========== Helper Functions ==========
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.textContent;
+        }
+
+        function createEl(tag, className, text) {
+            const el = document.createElement(tag);
+            if (className) el.className = className;
+            if (text) el.textContent = text;
+            return el;
+        }
+
+        // ========== UI Update Functions ==========
+        function updateStats() {
+            const stats = kg.getStats();
+            statsEl.textContent = `${stats.entityCount} entities | ${stats.relationCount} relations | ${stats.types.length} types`;
+        }
+
+        function updateTypeFilters() {
+            const types = search.getTypes();
+            typeFilters.replaceChildren();
+
+            types.forEach(t => {
+                const filter = createEl('div', 'type-filter active');
+                filter.dataset.type = t.name;
+                filter.textContent = t.name;
+                const count = createEl('span', 'count', t.count);
+                filter.appendChild(count);
+
+                filter.addEventListener('click', () => {
+                    filter.classList.toggle('active');
+                    applyTypeFilters();
+                });
+
+                typeFilters.appendChild(filter);
+            });
+        }
+
+        function applyTypeFilters() {
+            const activeTypes = Array.from(typeFilters.querySelectorAll('.type-filter.active'))
+                .map(el => el.dataset.type);
+            renderer.filterTypes(activeTypes);
+            updateEntityList(activeTypes);
+        }
+
+        function updateEntityList(filterTypes = null) {
+            const entities = filterTypes
+                ? search.filterByTypes(filterTypes)
+                : kg.getAllEntities();
+
+            entityList.replaceChildren();
+
+            entities.forEach(e => {
+                const item = createEl('div', 'entity-item');
+                item.dataset.name = e.name;
+
+                const name = createEl('div', 'name', e.name);
+                const meta = createEl('div', 'meta', `${e.entityType} | ${e.observations?.length || 0} obs`);
+
+                item.appendChild(name);
+                item.appendChild(meta);
+
+                item.addEventListener('click', () => selectEntity(e.name));
+                entityList.appendChild(item);
+            });
+        }
+
+        function selectEntity(name) {
+            entityList.querySelectorAll('.entity-item').forEach(el => {
+                el.classList.toggle('selected', el.dataset.name === name);
+            });
+            renderer.focusNode(name);
+            showEntityDetails(name);
+        }
+
+        function showEntityDetails(name) {
+            const entity = kg.getEntityByName(name);
+            if (!entity) return;
+
+            const relations = kg.getRelationsFor(name);
+
+            document.getElementById('detail-name').textContent = entity.name;
+            document.getElementById('detail-type').textContent = entity.entityType;
+            document.getElementById('detail-relations').textContent = relations.length;
+
+            const obsEl = document.getElementById('detail-observations');
+            obsEl.replaceChildren();
+            if (entity.observations?.length) {
+                entity.observations.forEach(o => {
+                    const div = createEl('div', '', `• ${o}`);
+                    obsEl.appendChild(div);
+                });
+            } else {
+                obsEl.textContent = 'No observations';
+            }
+
+            detailsPanel.classList.add('visible');
+        }
+
+        function updateMermaid(type = 'flowchart') {
+            const code = mermaidExporter.export(kg, { diagramType: type });
+            mermaidCode.textContent = code;
+        }
+
+        function addChatMessage(text, type, isResult = false) {
+            const msg = createEl('div', `chat-message ${type}`);
+
+            if (type === 'user') {
+                const code = createEl('code', '', text);
+                msg.appendChild(code);
+            } else if (isResult) {
+                const span = createEl('span', 'result', text);
+                msg.appendChild(span);
+            } else {
+                msg.textContent = text;
+            }
+
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ========== Event Handlers ==========
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            const results = search.search(query, { limit: 10 });
+
+            searchResults.replaceChildren();
+
+            if (results.length === 0 && query.length > 1) {
+                const noResults = createEl('div', '', 'No results');
+                noResults.style.cssText = 'padding:8px;color:#8b949e;font-size:12px;';
+                searchResults.appendChild(noResults);
+                return;
+            }
+
+            results.forEach(r => {
+                const result = createEl('div', 'search-result');
+                result.dataset.name = r.entity.name;
+
+                const left = createEl('div');
+                const name = createEl('div', 'name', r.entity.name);
+                const score = createEl('div', 'score', `${Math.round(r.score * 100)}% match`);
+                score.style.cssText = 'font-size:10px;color:#8b949e;';
+                left.appendChild(name);
+                left.appendChild(score);
+
+                const typeTag = createEl('span', 'type', r.entity.entityType);
+
+                result.appendChild(left);
+                result.appendChild(typeTag);
+
+                result.addEventListener('click', () => selectEntity(r.entity.name));
+                searchResults.appendChild(result);
+            });
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key !== 'Enter') return;
+
+            const input = e.target.value.trim();
+            if (!input) return;
+
+            addChatMessage(input, 'user');
+
+            const result = chat.execute(input, {
+                find: (q, opts) => search.search(q, opts),
+                addEntity: (data) => kg.addEntity(data),
+                addRelation: (from, to, type) => kg.addRelation({ from, to, relationType: type }),
+                filterByTypes: (types) => search.filterByTypes(types),
+                getNeighbors: (name, depth) => kg.getNeighbors(name, depth),
+                getStats: () => kg.getStats(),
+                toJSON: () => kg.toJSON(),
+                kg: kg
+            });
+
+            if (result.success) {
+                addChatMessage(result.message, 'system', true);
+
+                if (['addEntity', 'addRelation', 'clear'].includes(result.type)) {
+                    updateStats();
+                    updateTypeFilters();
+                    updateEntityList();
+                    renderer.render(kg);
+                    updateMermaid();
+                }
+
+                if (result.type === 'search' && result.data?.length > 0) {
+                    selectEntity(result.data[0].entity.name);
+                }
+
+                if (result.type === 'neighbors' && result.data?.length > 0) {
+                    const names = result.data.map(n => n.name).join(', ');
+                    addChatMessage(`Neighbors: ${names}`, 'system');
+                }
+            } else {
+                const errorMsg = createEl('div', 'chat-message system');
+                const errorSpan = createEl('span', 'error', result.message);
+                errorMsg.appendChild(errorSpan);
+                chatMessages.appendChild(errorMsg);
+            }
+
+            e.target.value = '';
+        });
+
+        document.getElementById('mermaid-tabs').addEventListener('click', (e) => {
+            const tab = e.target.closest('.mermaid-tab');
+            if (!tab) return;
+
+            document.querySelectorAll('.mermaid-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            updateMermaid(tab.dataset.type);
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            renderer.clearFocus();
+            renderer.showAllTypes();
+            typeFilters.querySelectorAll('.type-filter').forEach(el => el.classList.add('active'));
+        });
+
+        document.getElementById('btn-layout').addEventListener('click', () => {
+            renderer.startLayout();
+            setTimeout(() => renderer.stopLayout(), 3000);
+        });
+
+        document.getElementById('btn-export').addEventListener('click', () => {
+            const url = renderer.toImage({ type: 'png', pixelRatio: 2 });
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'knowledge-graph.png';
+            a.click();
+        });
+
+        renderer.on('click', (params) => {
+            if (params.dataType === 'node') {
+                selectEntity(params.name);
+            }
+        });
+
+        // ========== Initialize ==========
+        const nodeCount = kg.entityCount;
+        renderInfo.textContent = `Renderer: ${nodeCount > 2000 ? 'graphGL' : 'graph'} | ${nodeCount} nodes`;
+
+        // Add welcome message
+        const welcomeMsg = createEl('div', 'chat-message system');
+        welcomeMsg.innerHTML = `Welcome! Try commands like:<br>
+            <code>search unity</code><br>
+            <code>add MyProject as Project</code><br>
+            <code>relate Unity to ARFoundation</code><br>
+            <code>neighbors of Unity</code><br>
+            <code>stats</code> | <code>help</code>`;
+        chatMessages.appendChild(welcomeMsg);
+
+        updateStats();
+        updateTypeFilters();
+        updateEntityList();
+        updateMermaid();
+
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+        console.log('XRAI Demo loaded. Access via window.xrai');
+    </script>
+</body>
+</html>

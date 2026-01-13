@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HOLOVIS Test</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #00ff88;
+            font-family: monospace;
+            padding: 50px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HOLOVIS Server Test</h1>
+    <p>If you see this, the server is working!</p>
+    <p>Time: <span id="time"></span></p>
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        console.log('Test page loaded successfully');
+    </script>
+</body>
+</html>

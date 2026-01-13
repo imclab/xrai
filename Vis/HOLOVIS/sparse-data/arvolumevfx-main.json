@@ -1,0 +1,30 @@
+{
+  "id": "arvolumevfx-main",
+  "name": "ARVolumeVFX-main",
+  "unity": "6000.1.2f1",
+  "type": "code-heavy",
+  "size": 290,
+  "highlights": {
+    "scripts": 68,
+    "vfx": 3,
+    "scenes": 24
+  },
+  "packages": 3,
+  "complexity": 26,
+  "connections": [
+    {
+      "id": "arbodytracking-master",
+      "strength": 0.65
+    },
+    {
+      "id": "bibjamstage-jt2",
+      "strength": 0.65
+    }
+  ],
+  "visualHints": {
+    "primaryColor": "#4CAF50",
+    "radius": 195,
+    "orbitSpeed": 0.0036000000000000003,
+    "glowIntensity": 0.3
+  }
+}

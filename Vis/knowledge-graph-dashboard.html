@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Knowledge Graph Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-cola@2.5.1/cytoscape-cola.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'SF Pro Display', -apple-system, Monaco, monospace;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #cy {
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #00d4ff;
+            margin-right: 30px;
+        }
+
+        .header .stats {
+            font-size: 12px;
+            color: #666;
+            margin-left: auto;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+        }
+
+        #search {
+            width: 300px;
+            padding: 8px 12px 8px 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #search:focus {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        #search::placeholder {
+            color: #666;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .controls button {
+            padding: 10px 16px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 20px;
+            color: #00d4ff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .controls button:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+
+        .controls button.active {
+            background: rgba(0, 212, 255, 0.5);
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 100;
+        }
+
+        .legend h3 {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 11px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Details Panel */
+        .details-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            max-height: calc(100vh - 100px);
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 100;
+            display: none;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .details-panel.visible {
+            display: block;
+        }
+
+        .details-panel .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .details-panel h2 {
+            font-size: 18px;
+            color: #00d4ff;
+            margin-bottom: 5px;
+            padding-right: 30px;
+        }
+
+        .details-panel .type-badge {
+            display: inline-block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .details-panel h3 {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 8px;
+        }
+
+        .details-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .details-panel li {
+            font-size: 12px;
+            color: #aaa;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .details-panel .relation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 12px;
+        }
+
+        .details-panel .relation-type {
+            color: #00d4ff;
+            font-size: 10px;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        .details-panel .relation-target {
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .details-panel .relation-target:hover {
+            color: #00d4ff;
+            text-decoration: underline;
+        }
+
+        /* Keyboard hints */
+        .keyboard-hints {
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            font-size: 10px;
+            color: #444;
+            z-index: 100;
+        }
+
+        .keyboard-hints kbd {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Knowledge Graph</h1>
+        <div class="search-container">
+            <span class="search-icon">/</span>
+            <input type="text" id="search" placeholder="Search entities... (press / to focus)">
+        </div>
+        <div class="stats" id="stats">Loading...</div>
+    </div>
+
+    <div id="cy"></div>
+
+    <div class="controls">
+        <button onclick="setLayout('cose')" class="active">Force</button>
+        <button onclick="setLayout('circle')">Circle</button>
+        <button onclick="setLayout('breadthfirst')">Tree</button>
+        <button onclick="setLayout('grid')">Grid</button>
+        <button onclick="fitGraph()">Fit All</button>
+        <button onclick="toggleLabels()">Labels</button>
+    </div>
+
+    <div class="legend">
+        <h3>Entity Types</h3>
+        <div class="legend-item"><div class="legend-dot" style="background: #ff6b6b"></div> Project</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #00ff88"></div> Repository</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #4ecdc4"></div> Workflow/System</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #ffe66d"></div> Pattern/Model</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #a29bfe"></div> Framework</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #fd79a8"></div> Person/Developer</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #74b9ff"></div> Goal/Practice</div>
+    </div>
+
+    <div class="details-panel" id="details">
+        <button class="close" onclick="hideDetails()">&times;</button>
+        <h2 id="detail-name"></h2>
+        <span class="type-badge" id="detail-type"></span>
+        <h3>Observations</h3>
+        <ul id="detail-observations"></ul>
+        <h3>Relations</h3>
+        <div id="detail-relations"></div>
+    </div>
+
+    <div class="keyboard-hints">
+        <kbd>/</kbd> Search &nbsp;
+        <kbd>Esc</kbd> Clear &nbsp;
+        <kbd>F</kbd> Fit &nbsp;
+        <kbd>1-4</kbd> Layout
+    </div>
+
+    <script>
+        // MCP Memory Data (auto-generated from mcp__memory__read_graph)
+        // Updated: 2026-01-10 with 24 entities, 17 relations including GitHub repos
+        const mcpData = {
+            entities: [
+                // === PROJECTS ===
+                { name: "H3M Portals Project", type: "project", observations: ["Unity 6000.1.2f1 AR/XR application", "iOS, Android, WebGL, VisionOS", "AR Foundation, OpenXR, URP rendering"] },
+                { name: "HartXR Project", type: "project", observations: ["WebGL-based AR application", "Unity 6000.1.2f1 + URP 17.1.0", "Imagine WebAR framework"] },
+                { name: "WarpJobs System", type: "project", observations: ["Job search automation", "6 active sources", "Intelligence scoring"] },
+
+                // === SYSTEMS ===
+                { name: "Self-Improving Memory", type: "system", observations: ["5-phase architecture", "Auto pattern extraction", "LEARNING_LOG.md journal"] },
+                { name: "HyperGraph Knowledge Explorer", type: "system", observations: ["Universal 3D visualization", "Semantic zoom levels", "Adapter-based ingestion"] },
+                { name: "Daily Priority System", type: "workflow", observations: ["10 priorities daily", "5-star rating system", "AI learning patterns"] },
+                { name: "Pattern Extraction Pipeline", type: "workflow", observations: ["Session-end analysis", "LEARNING_LOG.md append", "MCP entity creation"] },
+
+                // === PATTERNS & MODELS ===
+                { name: "XRApp State Architecture", type: "pattern", observations: ["Stateley framework", "9 main states", "Firebase backend"] },
+                { name: "Notable Technical Patterns", type: "pattern", observations: ["Partial classes", "ScriptableObjects", "Event-based communication"] },
+                { name: "Leverage Hierarchy", type: "mentalmodel", observations: ["Use existing (0h)", "Adapt from KB (0.1x)", "AI-assisted (0.3x)"] },
+                { name: "iOS Debugging Protocol", type: "bestpractice", observations: ["Cache clearing first", "DerivedData purge", "Full rebuild sequence"] },
+
+                // === FRAMEWORKS ===
+                { name: "Imagine WebAR Framework", type: "framework", observations: ["Custom WebGL AR tracking", "3DOF, 6DOF, 3DOF Orbit", "GPS/compass support"] },
+                { name: "HartXR Dependencies", type: "framework", observations: ["DOTween Pro, TextMesh Pro", "Firebase WebGL", "uLipSync"] },
+
+                // === PEOPLE ===
+                { name: "James Tunick", type: "person", observations: ["IMC Lab", "GitHub: imclab, jamestunick", "Unity + AR/XR developer"] },
+                { name: "keijiro", type: "developer", observations: ["VFX Graph master", "10k+ followers", "SplatVFX, Minis, Lasp, Kino, Rcam4"] },
+
+                // === GOALS ===
+                { name: "Unity Intelligence Optimization", type: "goal", observations: ["50-70% token reduction", "M3 Max 128GB optimization"] },
+
+                // === REPOSITORIES (GitHub) ===
+                { name: "SplatVFX", type: "repository", observations: ["keijiro/SplatVFX", "Gaussian Splatting + VFX Graph", "iOS ✅ Windows ✅ macOS ✅"] },
+                { name: "Rcam4", type: "repository", observations: ["keijiro/Rcam4", "LiDAR depth streaming", "iOS ✅ (LiDAR required)"] },
+                { name: "MediaPipeUnityPlugin", type: "repository", observations: ["homuler/MediaPipeUnityPlugin", "Body/face/hand tracking", "iOS ✅ Android ✅ Windows ✅"] },
+                { name: "arfoundation-samples", type: "repository", observations: ["Unity-Technologies", "Official AR Foundation samples", "iOS ✅ Android ✅"] },
+                { name: "HoloKit Unity SDK", type: "repository", observations: ["holokit/holokit-unity-sdk", "Stereoscopic AR", "iOS ✅ Android ✅"] },
+                { name: "3d-force-graph", type: "repository", observations: ["vasturiano/3d-force-graph", "3D graph visualization", "WebGL ✅ All browsers"] },
+                { name: "Open Brush", type: "repository", observations: ["icosa-foundation/open-brush", "VR painting (Tilt Brush successor)", "Quest ✅ PCVR ✅", "WORKSPACE"] },
+                { name: "uLipSync", type: "repository", observations: ["hecomi/uLipSync", "Real-time lip sync", "iOS ✅ Android ✅ All platforms"] }
+            ],
+            relations: [
+                // Project relations
+                { from: "H3M Portals Project", to: "HartXR Project", type: "shares_codebase_with" },
+                { from: "HartXR Project", to: "Imagine WebAR Framework", type: "uses" },
+                { from: "James Tunick", to: "H3M Portals Project", type: "develops" },
+                { from: "James Tunick", to: "HartXR Project", type: "develops" },
+                { from: "iOS Debugging Protocol", to: "H3M Portals Project", type: "applies_to" },
+                { from: "XRApp State Architecture", to: "HartXR Project", type: "implements" },
+
+                // System relations
+                { from: "HyperGraph Knowledge Explorer", to: "Self-Improving Memory", type: "extends" },
+                { from: "HyperGraph Knowledge Explorer", to: "Pattern Extraction Pipeline", type: "visualizes" },
+                { from: "HyperGraph Knowledge Explorer", to: "Leverage Hierarchy", type: "implements" },
+                { from: "Pattern Extraction Pipeline", to: "Self-Improving Memory", type: "feeds_into" },
+
+                // Repository relations
+                { from: "keijiro", to: "SplatVFX", type: "created" },
+                { from: "keijiro", to: "Rcam4", type: "created" },
+                { from: "SplatVFX", to: "H3M Portals Project", type: "used_by" },
+                { from: "MediaPipeUnityPlugin", to: "HartXR Project", type: "used_by" },
+                { from: "arfoundation-samples", to: "H3M Portals Project", type: "reference_for" },
+                { from: "Open Brush", to: "James Tunick", type: "workspace_of" },
+                { from: "3d-force-graph", to: "HyperGraph Knowledge Explorer", type: "used_by" },
+                { from: "uLipSync", to: "HartXR Dependencies", type: "included_in" }
+            ]
+        };
+
+        // Color mapping by type
+        const typeColors = {
+            project: '#ff6b6b',        // Red - projects
+            workflow: '#4ecdc4',       // Teal - workflows
+            system: '#4ecdc4',         // Teal - systems
+            pattern: '#ffe66d',        // Yellow - patterns
+            mentalmodel: '#ffe66d',    // Yellow - mental models
+            framework: '#a29bfe',      // Purple - frameworks
+            person: '#fd79a8',         // Pink - people
+            developer: '#fd79a8',      // Pink - developers
+            goal: '#74b9ff',           // Light blue - goals
+            bestpractice: '#74b9ff',   // Light blue - best practices
+            user: '#fd79a8',           // Pink - users
+            repository: '#00ff88'      // Green - GitHub repos
+        };
+
+        // Convert MCP data to Cytoscape format
+        function mcpToCytoscape(data) {
+            const elements = [];
+
+            // Add nodes
+            data.entities.forEach((entity, i) => {
+                const color = typeColors[entity.type.toLowerCase()] || '#888';
+                elements.push({
+                    data: {
+                        id: entity.name.replace(/\s+/g, '_'),
+                        label: entity.name,
+                        type: entity.type,
+                        observations: entity.observations,
+                        color: color
+                    }
+                });
+            });
+
+            // Add edges
+            data.relations.forEach((rel, i) => {
+                elements.push({
+                    data: {
+                        id: 'edge_' + i,
+                        source: rel.from.replace(/\s+/g, '_'),
+                        target: rel.to.replace(/\s+/g, '_'),
+                        relationType: rel.type
+                    }
+                });
+            });
+
+            return elements;
+        }
+
+        // Initialize Cytoscape
+        let cy;
+        let showLabels = true;
+
+        function initGraph() {
+            const elements = mcpToCytoscape(mcpData);
+
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': 'data(color)',
+                            'label': showLabels ? 'data(label)' : '',
+                            'color': '#fff',
+                            'font-size': '11px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '100px',
+                            'text-valign': 'bottom',
+                            'text-margin-y': 5,
+                            'width': 25,
+                            'height': 25,
+                            'border-width': 2,
+                            'border-color': 'data(color)',
+                            'border-opacity': 0.3
+                        }
+                    },
+                    {
+                        selector: 'node:selected',
+                        style: {
+                            'border-width': 4,
+                            'border-color': '#00d4ff',
+                            'border-opacity': 1,
+                            'width': 35,
+                            'height': 35
+                        }
+                    },
+                    {
+                        selector: 'node.highlighted',
+                        style: {
+                            'border-width': 3,
+                            'border-color': '#00ff00',
+                            'border-opacity': 1
+                        }
+                    },
+                    {
+                        selector: 'node.faded',
+                        style: {
+                            'opacity': 0.2
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 1.5,
+                            'line-color': 'rgba(0, 212, 255, 0.4)',
+                            'target-arrow-color': 'rgba(0, 212, 255, 0.6)',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'arrow-scale': 0.8
+                        }
+                    },
+                    {
+                        selector: 'edge:selected',
+                        style: {
+                            'line-color': '#00d4ff',
+                            'target-arrow-color': '#00d4ff',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge.faded',
+                        style: {
+                            'opacity': 0.1
+                        }
+                    }
+                ],
+
+                layout: {
+                    name: 'cose',
+                    animate: true,
+                    animationDuration: 500,
+                    nodeRepulsion: 8000,
+                    idealEdgeLength: 100,
+                    gravity: 0.3
+                },
+
+                minZoom: 0.3,
+                maxZoom: 3,
+                wheelSensitivity: 0.3
+            });
+
+            // Click handler
+            cy.on('tap', 'node', function(evt) {
+                const node = evt.target;
+                showDetails(node.data());
+            });
+
+            // Background click to deselect
+            cy.on('tap', function(evt) {
+                if (evt.target === cy) {
+                    hideDetails();
+                    cy.elements().removeClass('faded');
+                }
+            });
+
+            // Hover effects
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const neighborhood = node.closedNeighborhood();
+                cy.elements().addClass('faded');
+                neighborhood.removeClass('faded');
+            });
+
+            cy.on('mouseout', 'node', function(evt) {
+                cy.elements().removeClass('faded');
+            });
+
+            updateStats();
+        }
+
+        // Show details panel
+        function showDetails(data) {
+            const panel = document.getElementById('details');
+            const nameEl = document.getElementById('detail-name');
+            const typeEl = document.getElementById('detail-type');
+            const obsEl = document.getElementById('detail-observations');
+            const relEl = document.getElementById('detail-relations');
+
+            nameEl.textContent = data.label;
+            typeEl.textContent = data.type;
+
+            // Observations
+            obsEl.replaceChildren();
+            if (data.observations) {
+                data.observations.forEach(obs => {
+                    const li = document.createElement('li');
+                    li.textContent = obs;
+                    obsEl.appendChild(li);
+                });
+            }
+
+            // Relations
+            relEl.replaceChildren();
+            const nodeId = data.id;
+            const edges = cy.edges().filter(e =>
+                e.source().id() === nodeId || e.target().id() === nodeId
+            );
+
+            edges.forEach(edge => {
+                const isSource = edge.source().id() === nodeId;
+                const otherNode = isSource ? edge.target() : edge.source();
+                const relType = edge.data('relationType');
+
+                const div = document.createElement('div');
+                div.className = 'relation';
+
+                const arrow = isSource ? '→' : '←';
+                div.textContent = arrow + ' ';
+
+                const typeSpan = document.createElement('span');
+                typeSpan.className = 'relation-type';
+                typeSpan.textContent = relType;
+                div.appendChild(typeSpan);
+
+                div.appendChild(document.createTextNode(' '));
+
+                const targetSpan = document.createElement('span');
+                targetSpan.className = 'relation-target';
+                targetSpan.textContent = otherNode.data('label');
+                targetSpan.onclick = () => {
+                    cy.center(otherNode);
+                    cy.$(':selected').unselect();
+                    otherNode.select();
+                    showDetails(otherNode.data());
+                };
+                div.appendChild(targetSpan);
+
+                relEl.appendChild(div);
+            });
+
+            panel.classList.add('visible');
+        }
+
+        function hideDetails() {
+            document.getElementById('details').classList.remove('visible');
+            cy.$(':selected').unselect();
+        }
+
+        // Layout switching
+        function setLayout(name) {
+            document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const layoutOptions = {
+                name: name,
+                animate: true,
+                animationDuration: 500
+            };
+
+            if (name === 'cose') {
+                layoutOptions.nodeRepulsion = 8000;
+                layoutOptions.idealEdgeLength = 100;
+                layoutOptions.gravity = 0.3;
+            } else if (name === 'breadthfirst') {
+                layoutOptions.directed = true;
+                layoutOptions.spacingFactor = 1.2;
+            }
+
+            cy.layout(layoutOptions).run();
+        }
+
+        function fitGraph() {
+            cy.fit(50);
+            cy.center();
+        }
+
+        function toggleLabels() {
+            showLabels = !showLabels;
+            cy.style().selector('node').style('label', showLabels ? 'data(label)' : '').update();
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search');
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+
+            if (!query) {
+                cy.elements().removeClass('highlighted faded');
+                return;
+            }
+
+            cy.nodes().forEach(node => {
+                const label = node.data('label').toLowerCase();
+                const type = node.data('type').toLowerCase();
+                const obs = (node.data('observations') || []).join(' ').toLowerCase();
+
+                if (label.includes(query) || type.includes(query) || obs.includes(query)) {
+                    node.addClass('highlighted').removeClass('faded');
+                } else {
+                    node.removeClass('highlighted').addClass('faded');
+                }
+            });
+
+            cy.edges().addClass('faded');
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '/') {
+                e.preventDefault();
+                searchInput.focus();
+            } else if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchInput.blur();
+                hideDetails();
+                cy.elements().removeClass('highlighted faded');
+            } else if (e.key === 'f' && document.activeElement !== searchInput) {
+                e.preventDefault();
+                fitGraph();
+            } else if (e.key >= '1' && e.key <= '4' && document.activeElement !== searchInput) {
+                const layouts = ['cose', 'circle', 'breadthfirst', 'grid'];
+                setLayout(layouts[parseInt(e.key) - 1]);
+            }
+        });
+
+        // Update stats
+        function updateStats() {
+            const nodeCount = cy.nodes().length;
+            const edgeCount = cy.edges().length;
+            const now = new Date().toLocaleTimeString();
+            document.getElementById('stats').textContent =
+                nodeCount + ' entities | ' + edgeCount + ' relations | ' + now;
+        }
+
+        // Initialize
+        initGraph();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            cy.resize();
+            cy.fit(50);
+        });
+    </script>
+</body>
+</html>

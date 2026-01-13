@@ -1,0 +1,95 @@
+[
+  {
+    "id": "james-tunick",
+    "name": "James Tunick",
+    "source": "local",
+    "type": "person",
+    "description": "Creator of XRAI ecosystem and cosmos visualizer",
+    "path": "/Users/jamestunick",
+    "relationships": [
+      { "target": "xrai-project", "strength": 1.0 },
+      { "target": "cosmos-visualizer", "strength": 1.0 }
+    ]
+  },
+  {
+    "id": "xrai-project",
+    "name": "XRAI Project",
+    "source": "local",
+    "type": "project_folder",
+    "description": "Comprehensive AI+XR development ecosystem",
+    "path": "/Users/jamestunick/Desktop/XRAI",
+    "relationships": [
+      { "target": "james-tunick", "strength": 1.0 },
+      { "target": "objaverse-index", "strength": 0.8 }
+    ]
+  },
+  {
+    "id": "objaverse-index",
+    "name": "objaverse_gltf_index_lite.json",
+    "source": "local",
+    "type": "data_file",
+    "description": "Index of 200,000+ 3D models from Objaverse dataset",
+    "path": "/Users/jamestunick/Desktop/XRAI/objaverse_gltf_index_lite.json",
+    "size": "26MB",
+    "relationships": [
+      { "target": "xrai-project", "strength": 0.8 }
+    ]
+  },
+  {
+    "id": "mrdoob",
+    "name": "mrdoob",
+    "source": "github",
+    "type": "person",
+    "description": "Creator of Three.js",
+    "url": "https://github.com/mrdoob",
+    "relationships": [
+      { "target": "threejs-repo", "strength": 1.0 }
+    ]
+  },
+  {
+    "id": "threejs-repo",
+    "name": "three.js",
+    "source": "github",
+    "type": "repository",
+    "description": "JavaScript 3D library",
+    "url": "https://github.com/mrdoob/three.js",
+    "stars": 95000,
+    "relationships": [
+      { "target": "mrdoob", "strength": 1.0 },
+      { "target": "cosmos-visualizer", "strength": 0.6 }
+    ]
+  },
+  {
+    "id": "cosmos-visualizer",
+    "name": "cosmos-standalone-web",
+    "source": "local",
+    "type": "web_project",
+    "description": "Three.js hypergraph visualizer you're currently using",
+    "path": "/Users/jamestunick/Desktop/XRAI/cosmos-standalone-web",
+    "relationships": [
+      { "target": "james-tunick", "strength": 1.0 },
+      { "target": "threejs-repo", "strength": 0.6 }
+    ]
+  },
+  {
+    "id": "damaged-helmet",
+    "name": "Damaged Helmet",
+    "source": "icosa",
+    "type": "artwork",
+    "description": "Battle-worn sci-fi helmet with PBR materials by theblueturtle_",
+    "modelUrl": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb",
+    "format": "glb",
+    "artist": "theblueturtle_"
+  },
+  {
+    "id": "unity-cosmos",
+    "name": "unity-cosmos",
+    "source": "local",
+    "type": "unity_project",
+    "description": "Unity VR cosmos visualization project",
+    "path": "/Users/jamestunick/Desktop/XRAI/unity-cosmos",
+    "relationships": [
+      { "target": "xrai-project", "strength": 0.7 }
+    ]
+  }
+]

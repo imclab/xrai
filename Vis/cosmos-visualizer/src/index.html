@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cosmos Knowledge Atlas</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <p id="loading-text">Initializing starfield...</p>
+    </div>
+    <header>
+      <h1>Cosmos Knowledge Atlas</h1>
+      <nav>
+        <button id="mode-stars" class="active">Star Catalog</button>
+        <button id="mode-gh">GitHub Activity</button>
+        <button id="mode-objaverse">Objaverse Explorer</button>
+        <button id="mode-rerun">Rerun Viewer</button>
+        <button id="mode-icosa">Icosa Viewer</button>
+        <button id="mode-needle">Needle Multiplayer</button>
+      </nav>
+    </header>
+    <main>
+      <section id="canvas-container"></section>
+      <section id="iframe-container" class="hidden">
+        <iframe id="embedded-viewer" title="Embedded Viewer" allow="fullscreen; vr; xr" loading="lazy"></iframe>
+      </section>
+      <aside id="control-panel">
+        <h2>Controls</h2>
+        <div class="control-group">
+          <label for="github-date">GitHub Archive Date (UTC)</label>
+          <input type="date" id="github-date" />
+          <button id="load-github">Load GH Archive</button>
+        </div>
+        <div class="control-group">
+          <button id="fetch-artwork">Fetch Icosa Poly Artwork</button>
+          <div id="artwork-info"></div>
+        </div>
+        <div class="control-group">
+          <label for="objaverse-search">Objaverse Query</label>
+          <input type="text" id="objaverse-search" placeholder="e.g. astronaut" />
+          <button id="load-objaverse">Load Objaverse</button>
+        </div>
+        <div class="control-group">
+          <label for="json-upload">Load Custom JSON</label>
+          <input type="file" id="json-upload" accept="application/json" />
+        </div>
+        <div class="control-group">
+          <label for="model-upload">Load 3D Model (.glb/.gltf/.obj/.fbx)</label>
+          <input type="file" id="model-upload" accept=".glb,.gltf,.obj,.fbx" />
+        </div>
+        <div class="control-group">
+          <h3>Cosmic Search</h3>
+          <label for="search-term">Search Term</label>
+          <input type="text" id="search-term" placeholder="Enter keyword" />
+          <label for="search-source">Data Source</label>
+          <select id="search-source">
+            <option value="github">GitHub Repositories</option>
+            <option value="icosa">Icosa Artworks</option>
+            <option value="objaverse">Objaverse Assets</option>
+            <option value="local">Local JSON (uploaded)</option>
+          </select>
+          <label for="layout-style">Layout Style</label>
+          <select id="layout-style">
+            <option value="hypergraph">Hypergraph</option>
+            <option value="city">City Blocks</option>
+          </select>
+          <button id="run-search">Run Search</button>
+        </div>
+        <div class="control-group">
+          <h3>Rerun Viewer</h3>
+          <label for="rerun-url">Viewer URL</label>
+          <input type="text" id="rerun-url" placeholder="http://127.0.0.1:9876" />
+          <button id="load-rerun">Open Rerun Viewer</button>
+          <small>Run <code>rerun --web-viewer</code> in your project, then paste the URL above.</small>
+        </div>
+        <div class="control-group">
+          <h3>Icosa Gallery</h3>
+          <button id="open-icosa-embed">Open Last Artwork in Viewer</button>
+          <small>Requires at least one Icosa artwork fetch.</small>
+        </div>
+        <div class="control-group">
+          <h3>Needle Multiplayer</h3>
+          <label for="needle-room">Room Code</label>
+          <input type="text" id="needle-room" value="329395" />
+          <button id="load-needle">Join Needle Session</button>
+        </div>
+        <div class="control-group">
+          <h3>Visualization</h3>
+          <div id="legend"></div>
+          <div id="stats"></div>
+        </div>
+      </aside>
+    </main>
+    <footer>
+      <p>
+        Data sources: Hipparcos star catalog, GH Archive, Objaverse, Icosa Gallery.
+        Rendering via <a href="https://threejs.org" target="_blank">Three.js</a> (WebGPU fallback).
+      </p>
+    </footer>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
