@@ -1,0 +1,36 @@
+{
+  "shortcutName": "create3d",
+  "toolName": "webgl-3d-visualization",
+  "description": "Create a 3D visualization of a website, GitHub repo or local directory",
+  "defaultParams": {
+    "depth": 2,
+    "layout": "force",
+    "outputFormat": "html"
+  },
+  "parameterMapping": {
+    "1": "source",
+    "2": "sourceType",
+    "3": "layout",
+    "4": "depth"
+  },
+  "parameterDefaults": {
+    "sourceType": "local",
+    "layout": "force",
+    "depth": 2
+  },
+  "examples": [
+    {
+      "command": "/create3d https://example.com website",
+      "description": "Create a 3D visualization of a website"
+    },
+    {
+      "command": "/create3d https://github.com/username/repo github",
+      "description": "Create a 3D visualization of a GitHub repository"
+    },
+    {
+      "command": "/create3d /path/to/directory local hierarchical 3",
+      "description": "Create a hierarchical 3D visualization of a local directory with depth 3"
+    }
+  ],
+  "helpText": "Creates an interactive 3D force-directed graph visualization.\n\nUsage: /create3d [source] [sourceType] [layout] [depth]\n\n- source: URL or path to visualize\n- sourceType: 'website', 'github', or 'local'\n- layout: 'force', 'radial', or 'hierarchical'\n- depth: scanning depth (1-5)"
+}

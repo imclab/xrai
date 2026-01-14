@@ -1,0 +1,34 @@
+{
+  "clientName": "WindSurf Browser AI",
+  "serverName": "AI-XR-MCP-3D",
+  "description": "Generate interactive 3D visualizations of web content and code repositories",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "webgl-3d-visualization",
+      "shortDescription": "Create 3D visualizations",
+      "longDescription": "Generate interactive 3D force-directed graph visualizations of websites, GitHub repositories, or local directories",
+      "icon": "3d_rotation",
+      "quickAccess": true,
+      "defaultParams": {
+        "layout": "force",
+        "outputFormat": "html"
+      }
+    }
+  ],
+  "permissions": {
+    "fileSystem": {
+      "read": true,
+      "write": false
+    },
+    "network": {
+      "domains": ["*"],
+      "protocols": ["https"]
+    }
+  },
+  "ui": {
+    "theme": "dark",
+    "position": "sidebar",
+    "defaultExpanded": true
+  }
+}

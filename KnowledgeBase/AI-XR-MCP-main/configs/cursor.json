@@ -1,0 +1,42 @@
+{
+  "serverName": "XR-3D-Visualization",
+  "serverDescription": "Generate interactive 3D visualizations for code analysis and exploration",
+  "serverCommand": "npx example-mcp-tool",
+  "tools": [
+    {
+      "name": "webgl-3d-visualization",
+      "description": "Generate a 3D force-directed graph visualization for websites, GitHub repositories, or local file systems",
+      "showInContext": true,
+      "category": "Visualization",
+      "icon": "construction",
+      "allowedModels": ["*"]
+    }
+  ],
+  "contextActions": [
+    {
+      "name": "Visualize Repository",
+      "description": "Create a 3D visualization of the current repository structure",
+      "tool": "webgl-3d-visualization",
+      "defaultParams": {
+        "sourceType": "local",
+        "depth": 3,
+        "layout": "hierarchical"
+      },
+      "showOn": ["repo", "directory"]
+    },
+    {
+      "name": "Visualize Website",
+      "description": "Create a 3D visualization of a website structure",
+      "tool": "webgl-3d-visualization",
+      "defaultParams": {
+        "sourceType": "website"
+      },
+      "showOn": ["url"]
+    }
+  ],
+  "configuration": {
+    "autoStart": true,
+    "debug": false,
+    "timeout": 60000
+  }
+}

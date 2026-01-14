@@ -1,0 +1,50 @@
+{
+  "shortcuts": [
+    {
+      "name": "create3d",
+      "description": "Create a 3D visualization",
+      "toolName": "webgl-3d-visualization",
+      "mapping": [
+        {
+          "shortcutParam": "source",
+          "toolParam": "source",
+          "required": true,
+          "description": "URL or path to visualize"
+        },
+        {
+          "shortcutParam": "type",
+          "toolParam": "sourceType",
+          "required": true,
+          "description": "Type: website, github, or local",
+          "validValues": ["website", "github", "local"]
+        },
+        {
+          "shortcutParam": "layout",
+          "toolParam": "layout",
+          "required": false,
+          "description": "Layout algorithm",
+          "validValues": ["force", "radial", "hierarchical"],
+          "default": "force"
+        },
+        {
+          "shortcutParam": "depth",
+          "toolParam": "depth",
+          "required": false,
+          "description": "Scanning depth (1-5)",
+          "default": 2
+        }
+      ],
+      "examples": [
+        "/create3d https://example.com website",
+        "/create3d https://github.com/user/repo github radial",
+        "/create3d ./src local hierarchical 3"
+      ]
+    }
+  ],
+  "defaults": {
+    "outputFormat": "html"
+  },
+  "registeredTools": [
+    "webgl-3d-visualization"
+  ]
+}

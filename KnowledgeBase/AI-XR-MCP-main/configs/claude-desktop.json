@@ -1,0 +1,17 @@
+{
+  "name": "AI-XR-MCP-3D-Visualization",
+  "description": "Generate 3D WebGL visualizations of websites, repositories, and file structures",
+  "tools": [
+    {
+      "name": "webgl-3d-visualization",
+      "description": "Generate a 3D force-directed graph visualization for websites, GitHub repositories, or local file systems",
+      "icon": "🌐",
+      "preferredOutput": "html",
+      "documentation": "Generates interactive 3D visualizations from websites, repositories, and directories"
+    }
+  ],
+  "settings": {
+    "defaultOutputFormat": "html",
+    "maxDepth": 3
+  }
+}
