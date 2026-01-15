@@ -237,9 +237,9 @@ namespace MetavidoVFX.VFX
                 _depthToWorldCompute.SetTexture(_depthToWorldKernel, "_PositionRT", _positionMapRT);
                 _depthToWorldCompute.SetInt("_UseStencil", _lastStencilTexture != null ? 1 : 0);
 
-                // Dispatch (assume 8x8 thread groups)
-                int groupsX = Mathf.CeilToInt(width / 8.0f);
-                int groupsY = Mathf.CeilToInt(height / 8.0f);
+                // Dispatch (32x32 thread groups to match DepthToWorld.compute numthreads)
+                int groupsX = Mathf.CeilToInt(width / 32.0f);
+                int groupsY = Mathf.CeilToInt(height / 32.0f);
                 _depthToWorldCompute.Dispatch(_depthToWorldKernel, groupsX, groupsY, 1);
             }
         }
