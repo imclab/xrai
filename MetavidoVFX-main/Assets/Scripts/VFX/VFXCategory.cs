@@ -1,0 +1,130 @@
+// VFX Category System - Groups VFX by type for organized switching
+// Categories: People (body), Face, Hands, Environment, Audio
+
+using UnityEngine;
+using UnityEngine.VFX;
+
+namespace MetavidoVFX.VFX
+{
+    /// <summary>
+    /// VFX category types for organized switching
+    /// </summary>
+    public enum VFXCategoryType
+    {
+        People,      // Body/person effects (depth-based, stencil-masked)
+        Face,        // Face tracking effects
+        Hands,       // Hand tracking effects
+        Environment, // World/environment effects
+        Audio,       // Audio-reactive effects
+        Hybrid       // Multiple input sources
+    }
+
+    /// <summary>
+    /// VFX data binding requirements
+    /// </summary>
+    [System.Flags]
+    public enum VFXBindingRequirements
+    {
+        None = 0,
+        DepthMap = 1,
+        ColorMap = 2,
+        StencilMap = 4,
+        HandTracking = 8,
+        FaceTracking = 16,
+        Audio = 32,
+        ARMesh = 64,
+        All = DepthMap | ColorMap | StencilMap | HandTracking | FaceTracking | Audio | ARMesh
+    }
+
+    /// <summary>
+    /// Attach to VFX to define its category and binding requirements
+    /// </summary>
+    [RequireComponent(typeof(VisualEffect))]
+    public class VFXCategory : MonoBehaviour
+    {
+        [Header("Category")]
+        [SerializeField] private VFXCategoryType category = VFXCategoryType.People;
+        [SerializeField] private VFXBindingRequirements bindings = VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap;
+
+        [Header("Metadata")]
+        [SerializeField] private string displayName;
+        [SerializeField] private Sprite thumbnail;
+        [SerializeField, TextArea] private string description;
+
+        [Header("Performance")]
+        [SerializeField, Range(1, 5)] private int performanceTier = 3; // 1=Light, 5=Heavy
+        [SerializeField] private bool mobileOptimized = true;
+
+        public VFXCategoryType Category => category;
+        public VFXBindingRequirements Bindings => bindings;
+        public string DisplayName => string.IsNullOrEmpty(displayName) ? gameObject.name : displayName;
+        public Sprite Thumbnail => thumbnail;
+        public string Description => description;
+        public int PerformanceTier => performanceTier;
+        public bool MobileOptimized => mobileOptimized;
+
+        private VisualEffect _vfx;
+        public VisualEffect VFX => _vfx ??= GetComponent<VisualEffect>();
+
+        /// <summary>
+        /// Check if this VFX requires a specific binding
+        /// </summary>
+        public bool RequiresBinding(VFXBindingRequirements binding)
+        {
+            return (bindings & binding) != 0;
+        }
+
+        /// <summary>
+        /// Auto-detect category from VFX asset name (Editor only)
+        /// </summary>
+#if UNITY_EDITOR
+        [ContextMenu("Auto-Detect Category")]
+        public void AutoDetectCategory()
+        {
+            if (VFX?.visualEffectAsset == null) return;
+
+            string name = VFX.visualEffectAsset.name.ToLower();
+            string path = UnityEditor.AssetDatabase.GetAssetPath(VFX.visualEffectAsset).ToLower();
+
+            // Detect from name
+            if (name.Contains("hand") || path.Contains("hand"))
+            {
+                category = VFXCategoryType.Hands;
+                bindings = VFXBindingRequirements.HandTracking | VFXBindingRequirements.ColorMap;
+            }
+            else if (name.Contains("face") || path.Contains("face"))
+            {
+                category = VFXCategoryType.Face;
+                bindings = VFXBindingRequirements.FaceTracking | VFXBindingRequirements.ColorMap;
+            }
+            else if (name.Contains("audio") || name.Contains("sound") || name.Contains("wave"))
+            {
+                category = VFXCategoryType.Audio;
+                bindings = VFXBindingRequirements.Audio;
+            }
+            else if (path.Contains("environment") || path.Contains("env") ||
+                     name.Contains("grid") || name.Contains("world"))
+            {
+                category = VFXCategoryType.Environment;
+                bindings = VFXBindingRequirements.None;
+            }
+            else if (path.Contains("body") || name.Contains("body") ||
+                     name.Contains("particle") || name.Contains("point"))
+            {
+                category = VFXCategoryType.People;
+                bindings = VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap | VFXBindingRequirements.StencilMap;
+            }
+
+            // Detect performance tier from features
+            if (name.Contains("trail") || name.Contains("strip"))
+                performanceTier = 4;
+            else if (name.Contains("voxel") || name.Contains("sdf"))
+                performanceTier = 5;
+            else if (name.Contains("simple") || name.Contains("point"))
+                performanceTier = 2;
+
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+#endif
+    }
+}
