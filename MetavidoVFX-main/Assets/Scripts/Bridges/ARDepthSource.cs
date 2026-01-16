@@ -67,8 +67,8 @@ public class ARDepthSource : MonoBehaviour
     public bool UsingMockData => _usingMockData;
     public float LastComputeTimeMs { get; private set; }
 
-    // Velocity support
-    [SerializeField] bool _enableVelocity = true;
+    // Velocity support (disabled by default - can cause tracking issues)
+    [SerializeField] bool _enableVelocity = false;
     RenderTexture _prevPositionMap;
     RenderTexture _velocityMap;
     public RenderTexture VelocityMap => _velocityMap;
