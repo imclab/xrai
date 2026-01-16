@@ -1,8 +1,28 @@
+// ┌────────────────────────────────────────────────────────────────────────────┐
+// │ ⚠️  LEGACY - DO NOT USE IN NEW CODE                                        │
+// │                                                                            │
+// │ This component has been replaced by the Hybrid Bridge Pattern:             │
+// │   - ARDepthSource.cs (single compute dispatch)                             │
+// │   - VFXARBinder.cs (lightweight per-VFX binding)                           │
+// │                                                                            │
+// │ Why deprecated:                                                            │
+// │   - Creates and manages its own VFX (overlaps with VFXLibraryManager)      │
+// │   - Runs per-instance compute (inefficient)                                │
+// │   - 376 lines that duplicate existing functionality                        │
+// │                                                                            │
+// │ Migration: Use VFXLibraryManager + ARDepthSource + VFXARBinder             │
+// │ Setup: H3M > VFX Pipeline Master > Setup Complete Pipeline                 │
+// └────────────────────────────────────────────────────────────────────────────┘
+
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
 using MetavidoVFX.VFX;
 
+/// <summary>
+/// DEPRECATED: Use ARDepthSource + VFXARBinder + VFXLibraryManager instead.
+/// </summary>
+[System.Obsolete("Use ARDepthSource + VFXARBinder instead. See Assets/Scripts/Bridges/")]
 [RequireComponent(typeof(Camera))]
 [RequireComponent(typeof(ARCameraBackground))]
 [RequireComponent(typeof(AROcclusionManager))]

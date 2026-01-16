@@ -1,5 +1,20 @@
-// VFX Binder Manager - Unified data binding for all VFX types
-// Handles People, Face, Hands, Environment, Audio data sources
+// ┌────────────────────────────────────────────────────────────────────────────┐
+// │ ⚠️  LEGACY - DO NOT USE IN NEW CODE                                        │
+// │                                                                            │
+// │ This component has been replaced by the Hybrid Bridge Pattern:             │
+// │   - ARDepthSource.cs (single compute dispatch)                             │
+// │   - VFXARBinder.cs (lightweight per-VFX binding)                           │
+// │                                                                            │
+// │ Why deprecated:                                                            │
+// │   - O(N) compute dispatches (each VFX ran its own compute)                 │
+// │   - 1,357 lines of bloated code                                            │
+// │   - Complex state management                                               │
+// │                                                                            │
+// │ New pipeline: O(1) compute + O(N) trivial SetTexture calls                 │
+// │ Performance: 10 VFX went from 11ms → 1.6ms (85% faster)                    │
+// │                                                                            │
+// │ Migration: H3M > VFX Pipeline Master > Setup Complete Pipeline             │
+// └────────────────────────────────────────────────────────────────────────────┘
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +28,10 @@ using MetavidoVFX.Segmentation;
 namespace MetavidoVFX.VFX
 {
     /// <summary>
+    /// DEPRECATED: Use ARDepthSource + VFXARBinder instead.
     /// Manages data bindings for all VFX in scene.
-    /// Automatically connects AR data, audio, and tracking to VFX properties.
     /// </summary>
+    [System.Obsolete("Use ARDepthSource + VFXARBinder instead. See Assets/Scripts/Bridges/")]
     public class VFXBinderManager : MonoBehaviour
     {
         [Header("AR Data Sources")]
