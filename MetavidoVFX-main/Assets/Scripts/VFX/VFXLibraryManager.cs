@@ -3,6 +3,11 @@
 // Attach to ALL_VFX parent GameObject
 //
 // VFX persist across play/stop when created via "Populate Library (Editor)" context menu
+//
+// Source Options:
+// 1. Direct References: Drag VFX assets to directVFXAssets array
+// 2. Resources Folders: Specify folders in resourceFolders (runtime-compatible)
+// 3. Project Search: Use searchPaths to find all VFX in specified folders (Editor only)
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +28,25 @@ namespace MetavidoVFX.VFX
     /// </summary>
     public class VFXLibraryManager : MonoBehaviour
     {
-        [Header("VFX Sources")]
+        [Header("VFX Sources - Direct References")]
+        [Tooltip("Directly referenced VFX assets (drag & drop). Always loaded first.")]
+        [SerializeField] private VisualEffectAsset[] directVFXAssets;
+
+        [Header("VFX Sources - Resources (Runtime Compatible)")]
+        [Tooltip("Folders inside Resources/ to load VFX from at runtime")]
         [SerializeField] private string[] resourceFolders = { "VFX" };
+
+        [Header("VFX Sources - Project Search (Editor Only)")]
+        [Tooltip("Search these paths for VFX assets. Use 'Assets/' prefix. Example: 'Assets/VFX', 'Assets/Effects'")]
+        [SerializeField] private string[] searchPaths = { "Assets/VFX", "Assets/Resources/VFX" };
+        [Tooltip("Include VFX from all subfolders")]
+        [SerializeField] private bool includeSubfolders = true;
+        [Tooltip("Use project search in Editor (finds VFX anywhere in searchPaths)")]
+        [SerializeField] private bool useProjectSearch = true;
+
+        [Header("Behavior")]
         [Tooltip("On Start, rebuild runtime lists from existing children instead of creating new VFX")]
         [SerializeField] private bool useExistingChildren = true;
-        [SerializeField] private bool includeSubfolders = true;
 
         [Header("Category Organization")]
         [SerializeField] private bool organizeByCategory = true;
@@ -275,7 +294,7 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
-        /// Create VFX instances from Resources folders
+        /// Create VFX instances from all configured sources
         /// </summary>
         private void CreateVFXFromResources(bool persistent)
         {
@@ -305,16 +324,56 @@ namespace MetavidoVFX.VFX
                 }
             }
 
-            // Load all VFX assets
+            // Collect all VFX assets from various sources
             var allAssets = new List<VisualEffectAsset>();
-            foreach (var folder in resourceFolders)
+
+            // Source 1: Direct references (always loaded first)
+            if (directVFXAssets != null && directVFXAssets.Length > 0)
             {
-                var assets = Resources.LoadAll<VisualEffectAsset>(folder);
-                allAssets.AddRange(assets);
-                Debug.Log($"[VFXLibrary] Loaded {assets.Length} VFX from Resources/{folder}");
+                int validCount = 0;
+                foreach (var asset in directVFXAssets)
+                {
+                    if (asset != null)
+                    {
+                        allAssets.Add(asset);
+                        validCount++;
+                    }
+                }
+                if (validCount > 0)
+                {
+                    Debug.Log($"[VFXLibrary] Added {validCount} VFX from direct references");
+                }
             }
 
-            // Remove duplicates by name
+            // Source 2: Resources folders (runtime compatible)
+            if (resourceFolders != null && resourceFolders.Length > 0)
+            {
+                foreach (var folder in resourceFolders)
+                {
+                    if (string.IsNullOrEmpty(folder)) continue;
+                    var assets = Resources.LoadAll<VisualEffectAsset>(folder);
+                    allAssets.AddRange(assets);
+                    if (assets.Length > 0)
+                    {
+                        Debug.Log($"[VFXLibrary] Loaded {assets.Length} VFX from Resources/{folder}");
+                    }
+                }
+            }
+
+#if UNITY_EDITOR
+            // Source 3: Project search (Editor only - searches anywhere in Assets)
+            if (useProjectSearch && searchPaths != null && searchPaths.Length > 0 && !Application.isPlaying)
+            {
+                var projectAssets = FindVFXInProject();
+                if (projectAssets.Count > 0)
+                {
+                    allAssets.AddRange(projectAssets);
+                    Debug.Log($"[VFXLibrary] Found {projectAssets.Count} VFX via project search");
+                }
+            }
+#endif
+
+            // Remove duplicates by name (direct references take priority)
             allAssets = allAssets.GroupBy(a => a.name).Select(g => g.First()).ToList();
             Debug.Log($"[VFXLibrary] Total unique VFX assets: {allAssets.Count}");
 
@@ -573,5 +632,125 @@ namespace MetavidoVFX.VFX
         {
             return _allVFX.FirstOrDefault(e => e.AssetName.Equals(name, System.StringComparison.OrdinalIgnoreCase));
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Find all VFX assets in configured search paths using AssetDatabase
+        /// </summary>
+        private List<VisualEffectAsset> FindVFXInProject()
+        {
+            var results = new List<VisualEffectAsset>();
+
+            // Search for all VFX assets in project
+            string[] guids = AssetDatabase.FindAssets("t:VisualEffectAsset", searchPaths);
+
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+
+                // Check if path matches any of our search paths
+                bool matchesSearchPath = false;
+                foreach (var searchPath in searchPaths)
+                {
+                    if (string.IsNullOrEmpty(searchPath)) continue;
+
+                    if (includeSubfolders)
+                    {
+                        // Match path or any subfolder
+                        if (path.StartsWith(searchPath + "/") || path.StartsWith(searchPath))
+                        {
+                            matchesSearchPath = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        // Match only direct children
+                        string directory = System.IO.Path.GetDirectoryName(path)?.Replace("\\", "/");
+                        if (directory == searchPath || directory == searchPath.TrimEnd('/'))
+                        {
+                            matchesSearchPath = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (matchesSearchPath)
+                {
+                    var asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>(path);
+                    if (asset != null)
+                    {
+                        results.Add(asset);
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Scan project and list all VFX assets found (debug utility)
+        /// </summary>
+        [ContextMenu("List All VFX in Project")]
+        public void ListAllVFXInProject()
+        {
+            string[] guids = AssetDatabase.FindAssets("t:VisualEffectAsset");
+            Debug.Log($"[VFXLibrary] Found {guids.Length} total VFX assets in project:");
+
+            var byFolder = new Dictionary<string, List<string>>();
+
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                string folder = System.IO.Path.GetDirectoryName(path)?.Replace("\\", "/") ?? "Root";
+                string name = System.IO.Path.GetFileNameWithoutExtension(path);
+
+                if (!byFolder.ContainsKey(folder))
+                    byFolder[folder] = new List<string>();
+                byFolder[folder].Add(name);
+            }
+
+            foreach (var kvp in byFolder.OrderBy(k => k.Key))
+            {
+                Debug.Log($"\n[{kvp.Key}] ({kvp.Value.Count}):");
+                foreach (var name in kvp.Value.OrderBy(n => n))
+                {
+                    Debug.Log($"  - {name}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add all VFX from a specific folder to search paths
+        /// </summary>
+        [ContextMenu("Add Common VFX Paths")]
+        public void AddCommonVFXPaths()
+        {
+            var commonPaths = new List<string>(searchPaths ?? System.Array.Empty<string>());
+
+            // Add common VFX locations
+            string[] potentialPaths = {
+                "Assets/VFX",
+                "Assets/Resources/VFX",
+                "Assets/Effects",
+                "Assets/Metavido",
+                "Assets/Rcam4",
+                "Assets/Echovision/VFX",
+                "Assets/H3M/VFX"
+            };
+
+            foreach (var path in potentialPaths)
+            {
+                if (!commonPaths.Contains(path) && AssetDatabase.IsValidFolder(path))
+                {
+                    commonPaths.Add(path);
+                    Debug.Log($"[VFXLibrary] Added search path: {path}");
+                }
+            }
+
+            searchPaths = commonPaths.ToArray();
+            EditorUtility.SetDirty(this);
+        }
+#endif
     }
 }
