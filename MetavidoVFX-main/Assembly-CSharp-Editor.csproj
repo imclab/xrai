@@ -194,6 +194,7 @@
     <Compile Include="Assets/Scripts/Editor/VFXLibrarySetup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Bloom/Editor/BloomEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/Editor/VFXVolumeMixerSettings.cs" />
+    <Compile Include="Assets/Scripts/Editor/InstantiateVFXFromResources.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXRenameUtility.cs" />
     <Compile Include="Assets/Scripts/Editor/Rcam4SceneSetup.cs" />
     <Compile Include="Assets/Scripts/Editor/SimpleVFXUISetup.cs" />
@@ -1189,20 +1190,20 @@
     <Reference Include="Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InferenceEngine.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="LaspVfx.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/LaspVfx.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    <Reference Include="Unity.InferenceEngine.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Pugrad.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Editor.dll</HintPath>
@@ -1243,14 +1244,14 @@
     <Reference Include="Metavido.Common">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Metavido.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Pugrad.Runtime">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.WebRTC">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.WebRTC.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
-    </Reference>
-    <Reference Include="Pugrad.Runtime">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Interaction.Toolkit.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.Editor.dll</HintPath>
@@ -1360,6 +1361,9 @@
     <Reference Include="MCPForUnity.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/MCPForUnity.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Klak.TestTools.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.TestTools.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="ARFoundationRemote.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/ARFoundationRemote.Runtime.dll</HintPath>
     </Reference>
@@ -1368,9 +1372,6 @@
     </Reference>
     <Reference Include="OscJack.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/OscJack.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Klak.TestTools.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.TestTools.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Simulation.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Simulation.Editor.dll</HintPath>

@@ -120,6 +120,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark02.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vignette/Vignette.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/ParticleSysem/RFX4_Turbulence.cs" />
+    <Compile Include="Assets/Scripts/_Legacy/VFXBinderManager.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_DemoReactivation.cs" />
     <Compile Include="Assets/Fluo/06 Controller/Scripts/ARVfxBridge.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeautyBeast/TextureToParticles.cs" />
@@ -165,7 +166,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
     <Compile Include="Assets/H3M/Core/SimpleHumanHologram.cs" />
     <Compile Include="Assets/Scripts/Segmentation/BodyPartSegmenter.cs" />
-    <Compile Include="Assets/Scripts/VFX/VFXBinderManager.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Standard Assets/Environment/Water/Water/Scripts/Displace.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixer.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_UVScroll.cs" />
@@ -213,6 +213,7 @@
     <Compile Include="Assets/H3M/Network/H3MWebRTCVFXBinder.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Scripts/HideInPlayMode.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_RaycastCollision.cs" />
+    <Compile Include="Assets/Scripts/_Legacy/VFXARDataBinder.cs" />
     <Compile Include="Assets/Fluo/03 Canvas/FluidSimulation/StableFluids/FluidSimulation.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/ParticleSysem/RFX4_CollisionPropertyDeactiavtion.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeatDetection/Tutorials/MusicSyncVisualizer/AudioSyncColor3D.cs" />
@@ -224,8 +225,8 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/Perlin.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeautyBeast/TapToMoveInfiniteZoom.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeA.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerVectorPropertyBinder.cs" />
     <Compile Include="Assets/Fluo/03 Canvas/Canvas/CanvasController.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerVectorPropertyBinder.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP RenderGraph Samples/MRT/MrtRendererFeature.cs" />
     <Compile Include="Assets/H3M/Network/H3MStreamMetadata.cs" />
     <Compile Include="Assets/Scripts/Painting/H3MBrushCatalog.cs" />
@@ -322,7 +323,6 @@
     <Compile Include="Assets/Scripts/ARKitMetavidoController.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_DeactivateRigidbodyByTime.cs" />
     <Compile Include="Assets/H3M/Core/DiagnosticOverlay.cs" />
-    <Compile Include="Assets/Scripts/PeopleOcclusion/PeopleOcclusionVFXManager.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ShaderID.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/AudioToTransform.cs" />
     <Compile Include="Assets/Echovision/Scripts/PowerSaver.cs" />
@@ -336,6 +336,7 @@
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/ParticleSysem/RFX4_ParticleTrail.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/ParticleSysem/RFX4_ParticleGravityDelay.cs" />
     <Compile Include="Assets/Fluo/04 Visualizer/Scripts/CameraController.cs" />
+    <Compile Include="Assets/Scripts/_Legacy/PeopleOcclusionVFXManager.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/XXHash.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Standard Assets/Environment/Water/Water/Scripts/MeshContainer.cs" />
     <Compile Include="Assets/H3M/Core/DepthDebugger.cs" />
@@ -354,7 +355,6 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Portal/Script/Lights.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/EffectSettings/RFX4_EffectSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerColorPropertyBinder.cs" />
-    <Compile Include="Assets/Scripts/VFX/Binders/VFXARDataBinder.cs" />
     <Compile Include="Assets/Fluo/03 Canvas/FluidSimulation/StableFluids/FluidUtils.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Galaxy/TriggerModelExplode.cs" />
     <Compile Include="Assets/NNCam/Scripts/NNCamVFXSwitcher.cs" />
@@ -394,11 +394,11 @@
     <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />
     <None Include="Assets/Packages/System.IO.Pipelines.9.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vision/Shader/MotionVectors.cginc" />
-    <None Include="Assets/Resources/MaskedDepth.compute" />
+    <None Include="Assets/Shaders/MaskedDepth.compute" />
     <None Include="Assets/Packages/Microsoft.CodeAnalysis.VisualBasic.Workspaces.5.0.0/lib/netstandard2.0/Microsoft.CodeAnalysis.VisualBasic.Workspaces.xml" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Feedback/Shader/Feedback.shader" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Streak/Shader/Streak.cginc" />
-    <None Include="Assets/Resources/ARGlobals.hlsl" />
+    <None Include="Assets/Shaders/ARGlobals.hlsl" />
     <None Include="Assets/TextMesh Pro/Examples &amp; Extras/Fonts/Oswald-Bold - OFL.txt" />
     <None Include="Assets/TextMesh Pro/Examples &amp; Extras/Fonts/Roboto-Bold - AFL.txt" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Binary/Shader/Binary.shader" />
@@ -418,9 +418,9 @@
     <None Include="Assets/Packages/Microsoft.CodeAnalysis.Workspaces.Common.5.0.0/lib/netstandard2.0/Microsoft.CodeAnalysis.Workspaces.xml" />
     <None Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_Lightning.shader" />
     <None Include="Assets/Fluo/06 Monitor/DebugView/DebugView.shader" />
-    <None Include="Assets/Resources/DepthToWorld.compute" />
+    <None Include="Assets/Shaders/DepthToWorld.compute" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fog/Shader/Fog.shader" />
-    <None Include="Assets/Resources/VFXProxCommon.hlsl" />
+    <None Include="Assets/Shaders/VFXProxCommon copy.hlsl" />
     <None Include="Assets/Fluo/00 Common/Fonts/Kode_Mono/README.txt" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets/Packages/Microsoft.CodeAnalysis.VisualBasic.5.0.0/lib/netstandard2.0/Microsoft.CodeAnalysis.VisualBasic.xml" />
@@ -429,19 +429,18 @@
     <None Include="Assets/Packages/System.Composition.AttributedModel.9.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Shaders/Rcam/VFXProxClear.compute" />
     <None Include="Assets/link.xml" />
-    <None Include="Assets/Resources/DepthHueEncoder.compute" />
+    <None Include="Assets/Shaders/DepthHueEncoder.compute" />
     <None Include="Assets/Packages/System.Threading.Channels.8.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/New Custom Render Texture 1.shader" />
-    <None Include="Assets/Resources/VFXProxClear.compute" />
     <None Include="Assets/H3M/Pipelines/PointCloud.compute" />
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.8.0.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Resources/MaskDepthWithStencil.compute" />
+    <None Include="Assets/Shaders/MaskDepthWithStencil.compute" />
     <None Include="Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl" />
     <None Include="Packages/jp.keijiro.fluo/Shaders/CustomRenderTexture.hlsl" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Shader/Common.cginc" />
     <None Include="Assets/Shaders/Rcam/Decoder.hlsl" />
     <None Include="Assets/Packages/System.Composition.9.0.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Resources/HumanDepthMapper.compute" />
+    <None Include="Assets/Shaders/HumanDepthMapper.compute" />
     <None Include="Assets/Shaders/Rcam/Recolor.shader" />
     <None Include="Assets/Shaders/HumanEffects/HumanSegmentation_Afterlmage.shader" />
     <None Include="Assets/Packages/Microsoft.CodeAnalysis.Common.5.0.0/lib/netstandard2.0/Microsoft.CodeAnalysis.xml" />
@@ -525,13 +524,14 @@
     <None Include="Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt" />
     <None Include="Assets/Packages/System.Reflection.Metadata.9.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/System.Composition.TypedParts.9.0.0/lib/netstandard2.0/System.Composition.TypedParts.xml" />
-    <None Include="Assets/Resources/DepthProcessor.compute" />
+    <None Include="Assets/Resources/DepthToWorld.compute" />
+    <None Include="Assets/Shaders/DepthProcessor.compute" />
     <None Include="Assets/UI/VFXLibrary.uss" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vision/Shader/Depth.cginc" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader" />
     <None Include="Assets/Samples/Scriptable Render Pipeline Core/Common/TextMesh Pro/Resources/Fonts &amp; Materials/Inter-LICENSE.txt" />
     <None Include="Assets/UI/VFXSelector.uss" />
-    <None Include="Assets/Resources/SegmentedDepthToWorld.compute" />
+    <None Include="Assets/Shaders/SegmentedDepthToWorld.compute" />
     <None Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_CutoutBorder.shader" />
     <None Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_ParallaxDecal.shader" />
     <None Include="Assets/UI/Monitor.uxml" />
@@ -1419,20 +1419,20 @@
     <Reference Include="Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InferenceEngine.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="LaspVfx.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/LaspVfx.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    <Reference Include="Unity.InferenceEngine.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Pugrad.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Editor.dll</HintPath>
@@ -1473,14 +1473,14 @@
     <Reference Include="Metavido.Common">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Metavido.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Pugrad.Runtime">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.WebRTC">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.WebRTC.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
-    </Reference>
-    <Reference Include="Pugrad.Runtime">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Interaction.Toolkit.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.Editor.dll</HintPath>
@@ -1590,6 +1590,9 @@
     <Reference Include="MCPForUnity.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/MCPForUnity.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Klak.TestTools.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.TestTools.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="ARFoundationRemote.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/ARFoundationRemote.Runtime.dll</HintPath>
     </Reference>
@@ -1598,9 +1601,6 @@
     </Reference>
     <Reference Include="OscJack.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/OscJack.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Klak.TestTools.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.TestTools.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Simulation.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Simulation.Editor.dll</HintPath>
