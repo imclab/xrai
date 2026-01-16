@@ -195,9 +195,13 @@ public class ARDepthSource : MonoBehaviour
         // Compute position map from mock depth
         if (_depthToWorld != null && _arCamera != null)
         {
+            var proj = _arCamera.projectionMatrix;
+            float centerShiftX = proj.m02;
+            float centerShiftY = proj.m12;
+
             float fov = _arCamera.fieldOfView * Mathf.Deg2Rad;
-            float h = Mathf.Tan(fov * 0.5f);
-            float w = h * _arCamera.aspect;
+            float tanV = Mathf.Tan(fov * 0.5f);
+            float tanH = tanV * _arCamera.aspect;
 
             _depthToWorld.SetTexture(_kernel, "_Depth", _mockDepthMap);
             _depthToWorld.SetTexture(_kernel, "_PositionRT", PositionMap);
@@ -218,7 +222,7 @@ public class ARDepthSource : MonoBehaviour
                 Graphics.Blit(PositionMap, _prevPositionMap);
             }
 
-            RayParams = new Vector4(0, 0, w, h);
+            RayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
             InverseView = _arCamera.cameraToWorldMatrix;
 
             Shader.SetGlobalVector("_ARRayParams", RayParams);
@@ -410,7 +414,11 @@ public class ARDepthSource : MonoBehaviour
             }
         }
 
-        // Compute RayParams - adjust for rotation
+        // Compute RayParams - extract principal point offset from projection matrix
+        var proj = _arCamera.projectionMatrix;
+        float centerShiftX = proj.m02;
+        float centerShiftY = proj.m12;
+
         float fov = _arCamera.fieldOfView * Mathf.Deg2Rad;
         float tanV = Mathf.Tan(fov * 0.5f);
         float tanH;
@@ -420,12 +428,12 @@ public class ARDepthSource : MonoBehaviour
             // Use depth texture aspect (after rotation) and negate tanH for correct orientation
             float depthAspect = (float)depth.width / depth.height;
             tanH = tanV * depthAspect;
-            RayParams = new Vector4(0, 0, -tanH, tanV); // Negate tanH for rotated depth
+            RayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
         }
         else
         {
             tanH = tanV * _arCamera.aspect;
-            RayParams = new Vector4(0, 0, tanH, tanV);
+            RayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
         }
 
         // SINGLE dispatch for ALL VFX
