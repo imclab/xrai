@@ -381,6 +381,36 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
+        /// Populate library (chooses Editor or Runtime mode automatically)
+        /// </summary>
+        public void PopulateLibrary()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                PopulateLibraryEditor();
+                return;
+            }
+#endif
+            PopulateLibraryRuntime();
+        }
+
+        /// <summary>
+        /// Clear library (chooses Editor or Runtime mode automatically)
+        /// </summary>
+        public void ClearLibrary()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                ClearLibraryEditor();
+                return;
+            }
+#endif
+            ClearLibraryRuntime();
+        }
+
+        /// <summary>
         /// Populate library at runtime
         /// </summary>
         [ContextMenu("Populate Library (Runtime)")]
