@@ -125,6 +125,81 @@ void ApplyBodyPose(ARHumanBody body) {
 
 ---
 
+#### Key Technique: ARKit Mesh → GraphicsBuffer → VFX Particles
+**Source**: MeshVFX.cs, SoundWaveEmitter.cs (EchoVision/Reality Design Lab - VERIFIED 2026-01-16)
+**Repos**: [realitydeslab/echovision](https://github.com/realitydeslab/echovision)
+
+**Pattern** (AR Mesh to VFX Pipeline):
+```csharp
+// MeshVFX.cs - Core pipeline
+[SerializeField] ARMeshManager meshManager;
+[SerializeField] VisualEffect vfx;
+const int BUFFER_STRIDE = 12; // 12 bytes for Vector3
+GraphicsBuffer bufferVertex, bufferNormal;
+
+void LateUpdate() {
+    IList<MeshFilter> mesh_list = meshManager.meshes;
+
+    // Sort meshes by distance to head (prioritize nearby)
+    listMeshDistance.Clear();
+    for (int i = 0; i < mesh_list.Count; i++) {
+        float distance = Vector3.Distance(head_pos, mesh_list[i].sharedMesh.bounds.center);
+        listMeshDistance.Add((distance, i));
+    }
+    listMeshDistance.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+
+    // Fill buffer with nearest meshes up to capacity
+    for (int i = 0; i < listMeshDistance.Count; i++) {
+        MeshFilter mesh = mesh_list[listMeshDistance[i].Item2];
+        listVertex.AddRange(mesh.sharedMesh.vertices);
+        listNormal.AddRange(mesh.sharedMesh.normals);
+        if (listVertex.Count > bufferInitialCapacity) break;
+    }
+
+    // Push to VFX via GraphicsBuffer
+    bufferVertex.SetData(listVertex);
+    bufferNormal.SetData(listNormal);
+    vfx.SetInt("MeshPointCount", listVertex.Count);
+    vfx.SetGraphicsBuffer("MeshPointCache", bufferVertex);
+    vfx.SetGraphicsBuffer("MeshNormalCache", bufferNormal);
+
+    // VisionPro compatibility: push mesh transform
+    vfx.SetVector3("MeshTransform_position", mesh_list[0].transform.position);
+    vfx.SetVector3("MeshTransform_angles", mesh_list[0].transform.rotation.eulerAngles);
+}
+```
+
+**Insights**:
+- GraphicsBuffer.Target.Structured with stride=12 for Vector3 data
+- Sort meshes by distance - render closest first within buffer capacity
+- ARKit iOS: mesh vertices are at world coordinates (position at 0,0,0)
+- VisionPro: meshes have non-zero transforms - push MeshTransform_* to VFX
+- Buffer capacity 64,000-100,000 vertices typical for mobile
+- LateUpdate() ensures camera/pose is updated before mesh processing
+
+**VFX Graph Properties**:
+| Property | Type | Description |
+|----------|------|-------------|
+| MeshPointCache | GraphicsBuffer | World-space vertex positions |
+| MeshNormalCache | GraphicsBuffer | Vertex normals |
+| MeshPointCount | int | Number of valid vertices |
+| MeshTransform_position | Vector3 | Mesh origin (VisionPro) |
+| MeshTransform_angles | Vector3 | Mesh rotation euler (VisionPro) |
+| MeshTransform_scale | Vector3 | Mesh scale (VisionPro) |
+
+**Applications**:
+- AR environment visualization with particles
+- Sound wave effects on mesh surfaces
+- LiDAR point cloud rendering
+- Spatial audio visualization
+
+**Related Repos**:
+- keijiro/Smrvfx: Skinned mesh sampling with VFX Graph
+- keijiro/Akvfx: Azure Kinect to VFX Graph
+- keijiro/Rsvfx: RealSense depth camera to VFX
+
+---
+
 ### 2. Audio Reactive VFX Patterns
 
 #### Key Technique: Microphone FFT → VFX Properties
@@ -167,6 +242,75 @@ vfx.SetFloat("TrebleAmount", treble);
 **Related Repos**:
 - keijiro/Lasp: Low-latency audio signal processing
 - tomer8007/real-time-audio-fft: iOS FFT optimization
+
+---
+
+#### Key Technique: Sound Wave Emission System
+**Source**: SoundWaveEmitter.cs (EchoVision/Reality Design Lab - VERIFIED 2026-01-16)
+**Repos**: [realitydeslab/echovision](https://github.com/realitydeslab/echovision)
+
+**Pattern** (Voice-Reactive Sound Waves):
+```csharp
+// SoundWaveEmitter.cs - Multiple concurrent waves
+const int MAX_SOUND_WAVE_COUNT = 3;
+SoundWave[] soundwaves = new SoundWave[MAX_SOUND_WAVE_COUNT];
+
+void Update() {
+    // Smooth audio values
+    smoothedSoundVolume = Mathf.SmoothDamp(smoothedSoundVolume, audioProcessor.AudioVolume, ref temp_vel, 0.05f);
+
+    // Emit wave when volume exceeds threshold
+    if (audioProcessor.AudioVolume > emitVolumeThreshold) {
+        EmitSoundWave();
+    } else {
+        StopAllSoundWaves();
+    }
+
+    UpdateSoundWave();
+    PushIteratedChanges();
+}
+
+void EmitSoundWave() {
+    SoundWave wave = soundwaves[nextEmitIndex];
+    wave.origin = head_transform.position;
+    wave.direction = head_transform.forward;
+    wave.speed = Random.Range(soundwaveSpeed.x, soundwaveSpeed.y);
+    wave.life = Random.Range(soundwaveLife.x, soundwaveLife.y);
+    wave.angle = Remap(smoothedSoundVolume, 0, 1, soundwaveAngle.x, soundwaveAngle.y);
+
+    // Push to VFX
+    vfx.SetVector3("WaveOrigin", wave.origin);
+    vfx.SetVector3("WaveDirection", wave.direction);
+    vfx.SetFloat("WaveRange", wave.range);
+    vfx.SetFloat("WaveAngle", wave.angle);
+    vfx.SetFloat("WaveAge", wave.age_in_percentage);
+}
+```
+
+**Insights**:
+- 3 concurrent waves allows overlapping emission while previous waves fade
+- Volume-driven angle: quiet = narrow cone, loud = wide spread
+- Pitch affects wave lifetime: higher pitch = longer-lasting waves
+- Wave parameters packed in transform structs for waves 1-2 (optimization)
+- Dual output: VFX properties + material shader arrays for mesh effects
+
+**VFX Graph Properties**:
+| Property | Type | Description |
+|----------|------|-------------|
+| WaveOrigin | Vector3 | Emission point (head position) |
+| WaveDirection | Vector3 | Wave travel direction |
+| WaveRange | float | Current wave expansion radius |
+| WaveAngle | float | Cone angle (90-180° based on volume) |
+| WaveAge | float | 0-1 normalized lifetime |
+| WaveMinThickness | float | Minimum wave ring thickness |
+| WaveParameter1_* | Transform | Packed params for wave 1 |
+| WaveParameter2_* | Transform | Packed params for wave 2 |
+
+**Applications**:
+- Voice visualization in AR (EchoVision bat echolocation)
+- Audio-reactive ripple effects on AR mesh
+- Sound wave propagation visualization
+- Spatial audio direction indicators
 
 ---
 

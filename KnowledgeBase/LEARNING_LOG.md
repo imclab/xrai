@@ -2596,3 +2596,81 @@ void Update()
 **Category**: workflow|claude-code|unity-mcp|rider|knowledgebase|metavidovfx
 
 ---
+
+## 2026-01-16 - EchoVision AR Mesh → VFX Deep Dive
+
+**Discovery**: Comprehensive analysis of EchoVision (realitydeslab/echovision) AR mesh visualization pipeline
+
+**Context**: Deep dive into MeshVFX.cs and SoundWaveEmitter.cs to understand AR mesh → VFX particle pipeline
+
+### Key Technical Findings
+
+#### MeshVFX Pipeline Architecture
+```
+ARMeshManager → MeshVFX.cs → GraphicsBuffer → VFX Graph
+                    ↓
+     Distance sorting (nearest meshes first)
+                    ↓
+     Buffer capacity limiting (64-100k vertices)
+                    ↓
+     VFX Properties: MeshPointCache, MeshNormalCache, MeshPointCount
+```
+
+**Critical Insights**:
+1. **GraphicsBuffer.Target.Structured** with stride=12 for Vector3 data
+2. **Distance-based mesh sorting** ensures nearest environment rendered first
+3. **ARKit iOS**: Mesh vertices at world coordinates (mesh.position = 0,0,0)
+4. **VisionPro**: Meshes have non-zero transforms - push MeshTransform_* for compatibility
+5. **LateUpdate()**: Ensures camera/pose updated before mesh processing
+
+#### SoundWaveEmitter Audio Integration
+```
+AudioProcessor.AudioVolume → SoundWaveEmitter → 3 Concurrent Waves → VFX + Material
+```
+
+**Wave System Design**:
+- 3 overlapping waves allow smooth transitions
+- Volume → cone angle (quiet=narrow, loud=wide)
+- Pitch → wave lifetime (higher pitch=longer duration)
+- Dual output to VFX properties AND mesh material shader arrays
+
+### VFX Property Reference (EchoVision)
+
+| Property | Type | Source | Description |
+|----------|------|--------|-------------|
+| MeshPointCache | GraphicsBuffer | MeshVFX | World-space vertices |
+| MeshNormalCache | GraphicsBuffer | MeshVFX | Vertex normals |
+| MeshPointCount | int | MeshVFX | Valid vertex count |
+| WaveOrigin | Vector3 | SoundWaveEmitter | Wave emission point |
+| WaveRange | float | SoundWaveEmitter | Current expansion radius |
+| WaveAngle | float | SoundWaveEmitter | Cone angle (90-180 deg) |
+| WaveAge | float | SoundWaveEmitter | 0-1 normalized lifetime |
+
+### Scene Setup Verification (MCP)
+
+**Objects Found**:
+- MeshVFX (ID: 458156) - 15,000 particles active, buffer 100k
+- SoundWaveEmitter (ID: 458620) - threshold 0.02, sharing MeshVFX's VisualEffect
+- MeshManager (ID: 458806) - ARMeshManager with 6 active meshes
+- AudioInput (ID: 459008) - Full audio chain with EnhancedAudioProcessor
+
+**Key Discovery**: MeshVFX and SoundWaveEmitter share the SAME VisualEffect component - integrated system where mesh data and wave data combine in single VFX graph.
+
+### Our Modifications vs Original
+
+| Modification | Purpose |
+|--------------|---------|
+| VFXBinderManager.SuppressMeshVFXLogs | Log control integration |
+| verboseLogging flag | Periodic logging (3s) not every frame |
+| Reference validation in Awake() | Clear error messages |
+| _initialized guard | Prevent updates before setup |
+
+**Original Source**: [realitydeslab/echovision](https://github.com/realitydeslab/echovision) (MIT License)
+
+**Related Documentation Updated**:
+- `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - Added ARKit Mesh → GraphicsBuffer pattern
+- `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - Added Sound Wave Emission System pattern
+
+**Category**: echovision|ar-mesh|vfx-graph|graphicsbuffer|audio-reactive|unity-mcp|realitydeslab
+
+---
