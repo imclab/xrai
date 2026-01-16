@@ -1,0 +1,392 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.InputSystem;
+
+/// <summary>
+/// Real-time pipeline visualization dashboard.
+/// Shows: FPS, pipeline flow, binding status, performance, memory.
+/// Toggle with Tab key.
+///
+/// Goal: Full visibility of pipeline flow, easy to measure performance & debug
+/// </summary>
+public class VFXPipelineDashboard : MonoBehaviour
+{
+    [Header("Display")]
+    [SerializeField] bool _visible = true;
+    [SerializeField] KeyCode _toggleKey = KeyCode.Tab;
+    [SerializeField] float _updateInterval = 0.1f;
+
+    [Header("Style")]
+    [SerializeField] int _fontSize = 14;
+    [SerializeField] Color _backgroundColor = new Color(0, 0, 0, 0.85f);
+    [SerializeField] Color _okColor = new Color(0.3f, 0.9f, 0.3f);
+    [SerializeField] Color _warningColor = new Color(0.9f, 0.7f, 0.2f);
+    [SerializeField] Color _errorColor = new Color(0.9f, 0.3f, 0.3f);
+
+    // FPS tracking
+    float[] _fpsHistory = new float[60];
+    int _fpsHistoryIndex = 0;
+    float _currentFps;
+    float _minFps = float.MaxValue;
+    float _maxFps = 0;
+    float _avgFps;
+
+    // Cached data
+    float _lastUpdateTime;
+    int _activeVFXCount;
+    int _totalVFXCount;
+    int _totalParticles;
+    List<VFXARBinder> _binders = new List<VFXARBinder>();
+    List<VisualEffect> _allVFX = new List<VisualEffect>();
+
+    // Styles
+    GUIStyle _boxStyle;
+    GUIStyle _headerStyle;
+    GUIStyle _labelStyle;
+    GUIStyle _valueStyle;
+    Texture2D _backgroundTex;
+
+    void Update()
+    {
+        // Toggle visibility with Tab key (using new Input System)
+        var keyboard = Keyboard.current;
+        if (keyboard != null && keyboard.tabKey.wasPressedThisFrame)
+        {
+            _visible = !_visible;
+        }
+
+        // Track FPS
+        _fpsHistory[_fpsHistoryIndex] = 1f / Time.unscaledDeltaTime;
+        _fpsHistoryIndex = (_fpsHistoryIndex + 1) % _fpsHistory.Length;
+
+        // Update stats periodically
+        if (Time.unscaledTime - _lastUpdateTime > _updateInterval)
+        {
+            UpdateStats();
+            _lastUpdateTime = Time.unscaledTime;
+        }
+    }
+
+    void UpdateStats()
+    {
+        // Calculate FPS stats
+        _currentFps = _fpsHistory[(_fpsHistoryIndex + _fpsHistory.Length - 1) % _fpsHistory.Length];
+        _minFps = Mathf.Min(_minFps, _currentFps);
+        _maxFps = Mathf.Max(_maxFps, _currentFps);
+        _avgFps = _fpsHistory.Average();
+
+        // Reset min/max every 5 seconds
+        if (Time.frameCount % 300 == 0)
+        {
+            _minFps = _currentFps;
+            _maxFps = _currentFps;
+        }
+
+        // Find all VFX and binders
+        _binders.Clear();
+        _binders.AddRange(FindObjectsByType<VFXARBinder>(FindObjectsSortMode.None));
+
+        _allVFX.Clear();
+        _allVFX.AddRange(FindObjectsByType<VisualEffect>(FindObjectsSortMode.None));
+
+        _totalVFXCount = _allVFX.Count;
+        _activeVFXCount = _allVFX.Count(v => v.enabled && v.gameObject.activeInHierarchy);
+
+        // Count particles
+        _totalParticles = 0;
+        foreach (var vfx in _allVFX)
+        {
+            if (vfx.enabled && vfx.gameObject.activeInHierarchy)
+            {
+                _totalParticles += vfx.aliveParticleCount;
+            }
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!_visible) return;
+
+        EnsureStyles();
+
+        // Responsive width - use min of 380 or 90% of screen width
+        float width = Mathf.Min(380, Screen.width * 0.9f);
+        float x = Screen.width - width - 10;
+        float y = 10;
+
+        // Ensure we're on screen
+        if (x < 5) x = 5;
+
+        // Background
+        GUI.Box(new Rect(x - 5, y - 5, width + 10, GetPanelHeight() + 10), "", _boxStyle);
+
+        // Header
+        GUI.Label(new Rect(x, y, width, 24), "VFX Pipeline Dashboard", _headerStyle);
+        y += 28;
+
+        // Quick Stats Row
+        DrawQuickStats(ref x, ref y, width);
+        y += 8;
+
+        // Pipeline Flow Section
+        DrawPipelineFlow(ref x, ref y, width);
+        y += 8;
+
+        // Performance Section
+        DrawPerformance(ref x, ref y, width);
+        y += 8;
+
+        // Active VFX Section
+        DrawActiveVFX(ref x, ref y, width);
+    }
+
+    void DrawQuickStats(ref float x, ref float y, float width)
+    {
+        // FPS | Active VFX | Particles
+        Color fpsColor = _currentFps >= 55 ? _okColor : (_currentFps >= 30 ? _warningColor : _errorColor);
+
+        string fpsText = $"FPS: {_currentFps:F0}";
+        string vfxText = $"VFX: {_activeVFXCount}/{_totalVFXCount}";
+        string particleText = $"Particles: {FormatNumber(_totalParticles)}";
+
+        float colWidth = width / 3f;
+
+        var oldColor = GUI.color;
+        GUI.color = fpsColor;
+        GUI.Label(new Rect(x, y, colWidth, 20), fpsText, _valueStyle);
+        GUI.color = oldColor;
+
+        GUI.Label(new Rect(x + colWidth, y, colWidth, 20), vfxText, _valueStyle);
+        GUI.Label(new Rect(x + colWidth * 2, y, colWidth, 20), particleText, _valueStyle);
+        y += 22;
+    }
+
+    void DrawPipelineFlow(ref float x, ref float y, float width)
+    {
+        GUI.Label(new Rect(x, y, width, 20), "Pipeline Flow", _headerStyle);
+        y += 22;
+
+        // ARDepthSource status
+        var source = ARDepthSource.Instance;
+        bool sourceOk = source != null && source.IsReady;
+        DrawStatusLine(ref x, ref y, width, "ARDepthSource",
+            sourceOk ? "Ready" : (source != null ? "No Data" : "Missing"),
+            sourceOk ? _okColor : _errorColor);
+
+        if (sourceOk)
+        {
+            // Sub-items
+            DrawSubItem(ref x, ref y, width, "DepthMap",
+                $"{source.DepthMap?.width}x{source.DepthMap?.height}",
+                source.DepthMap != null);
+
+            DrawSubItem(ref x, ref y, width, "StencilMap",
+                $"{source.StencilMap?.width}x{source.StencilMap?.height}",
+                source.StencilMap != null);
+
+            DrawSubItem(ref x, ref y, width, "PositionMap",
+                $"{source.PositionMap?.width}x{source.PositionMap?.height}",
+                source.PositionMap != null);
+
+            DrawSubItem(ref x, ref y, width, "RayParams",
+                $"({source.RayParams.z:F2}, {source.RayParams.w:F2})",
+                true);
+
+            DrawSubItem(ref x, ref y, width, "ComputeTime",
+                $"{source.LastComputeTimeMs:F2}ms",
+                source.LastComputeTimeMs < 2f);
+        }
+
+        // AudioBridge status
+        var audio = AudioBridge.Instance;
+        bool audioOk = audio != null;
+        DrawStatusLine(ref x, ref y, width, "AudioBridge",
+            audioOk ? $"Vol={audio.Volume:F2}" : "Not Active",
+            audioOk ? _okColor : _warningColor);
+
+        // VFXARBinder summary
+        int boundCount = _binders.Count(b => b.IsBound);
+        DrawStatusLine(ref x, ref y, width, "VFXARBinder",
+            $"{boundCount}/{_binders.Count} bound",
+            boundCount > 0 ? _okColor : _warningColor);
+    }
+
+    void DrawPerformance(ref float x, ref float y, float width)
+    {
+        GUI.Label(new Rect(x, y, width, 20), "Performance", _headerStyle);
+        y += 22;
+
+        // FPS Graph (simple ASCII-style)
+        string graphLine = "";
+        float graphMin = _fpsHistory.Min();
+        float graphMax = _fpsHistory.Max();
+        float range = Mathf.Max(graphMax - graphMin, 1f);
+
+        for (int i = 0; i < 30; i++)
+        {
+            int idx = (_fpsHistoryIndex + i * 2) % _fpsHistory.Length;
+            float normalized = (_fpsHistory[idx] - graphMin) / range;
+            int level = Mathf.Clamp((int)(normalized * 7), 0, 7);
+            char[] blocks = { ' ', '_', '.', '-', '=', '#', '*', '@' };
+            graphLine += blocks[level];
+        }
+
+        GUI.Label(new Rect(x, y, width, 20), $"[{graphLine}]", _labelStyle);
+        y += 18;
+
+        GUI.Label(new Rect(x, y, width, 20),
+            $"Min: {_minFps:F0}  Avg: {_avgFps:F0}  Max: {_maxFps:F0}",
+            _labelStyle);
+        y += 20;
+
+        // Memory estimate
+        var source = ARDepthSource.Instance;
+        if (source != null)
+        {
+            long totalBytes = 0;
+            if (source.PositionMap != null)
+                totalBytes += source.PositionMap.width * source.PositionMap.height * 16; // ARGBFloat
+            if (source.VelocityMap != null)
+                totalBytes += source.VelocityMap.width * source.VelocityMap.height * 16;
+
+            GUI.Label(new Rect(x, y, width, 20),
+                $"RenderTexture Memory: {totalBytes / 1024f:F0} KB",
+                _labelStyle);
+            y += 20;
+        }
+    }
+
+    void DrawActiveVFX(ref float x, ref float y, float width)
+    {
+        GUI.Label(new Rect(x, y, width, 20), $"Active VFX ({_activeVFXCount})", _headerStyle);
+        y += 22;
+
+        // Show top 5 active VFX
+        var activeVFX = _allVFX
+            .Where(v => v.enabled && v.gameObject.activeInHierarchy)
+            .OrderByDescending(v => v.aliveParticleCount)
+            .Take(5);
+
+        foreach (var vfx in activeVFX)
+        {
+            var binder = vfx.GetComponent<VFXARBinder>();
+            bool hasBinder = binder != null;
+            bool isBound = binder?.IsBound ?? false;
+
+            string status = hasBinder ? (isBound ? "bound" : "no data") : "no binder";
+            Color statusColor = isBound ? _okColor : (hasBinder ? _warningColor : _errorColor);
+
+            GUI.Label(new Rect(x + 10, y, width - 120, 18), vfx.name, _labelStyle);
+
+            var oldColor = GUI.color;
+            GUI.color = statusColor;
+            GUI.Label(new Rect(x + width - 110, y, 50, 18), status, _labelStyle);
+            GUI.color = oldColor;
+
+            GUI.Label(new Rect(x + width - 55, y, 50, 18),
+                $"{FormatNumber(vfx.aliveParticleCount)}p",
+                _labelStyle);
+
+            y += 18;
+        }
+
+        if (_activeVFXCount > 5)
+        {
+            GUI.Label(new Rect(x + 10, y, width, 18), $"... and {_activeVFXCount - 5} more", _labelStyle);
+            y += 18;
+        }
+    }
+
+    void DrawStatusLine(ref float x, ref float y, float width, string label, string value, Color color)
+    {
+        GUI.Label(new Rect(x, y, 150, 18), label, _labelStyle);
+
+        var oldColor = GUI.color;
+        GUI.color = color;
+        GUI.Label(new Rect(x + 155, y, width - 155, 18), value, _valueStyle);
+        GUI.color = oldColor;
+
+        y += 18;
+    }
+
+    void DrawSubItem(ref float x, ref float y, float width, string label, string value, bool ok)
+    {
+        GUI.Label(new Rect(x + 15, y, 130, 16), $"- {label}:", _labelStyle);
+
+        var oldColor = GUI.color;
+        GUI.color = ok ? _okColor : _errorColor;
+        GUI.Label(new Rect(x + 150, y, width - 150, 16), value, _labelStyle);
+        GUI.color = oldColor;
+
+        y += 16;
+    }
+
+    float GetPanelHeight()
+    {
+        float height = 30; // Header
+        height += 25; // Quick stats
+        height += 10 + 22 + (ARDepthSource.Instance?.IsReady == true ? 6 * 16 : 0) + 18 + 18 + 18; // Pipeline
+        height += 10 + 22 + 20 + 20 + 20; // Performance
+        height += 10 + 22 + Mathf.Min(_activeVFXCount, 5) * 18 + (_activeVFXCount > 5 ? 18 : 0); // VFX
+        return height;
+    }
+
+    void EnsureStyles()
+    {
+        if (_boxStyle != null) return;
+
+        // Create background texture
+        _backgroundTex = new Texture2D(1, 1);
+        _backgroundTex.SetPixel(0, 0, _backgroundColor);
+        _backgroundTex.Apply();
+
+        _boxStyle = new GUIStyle(GUI.skin.box)
+        {
+            normal = { background = _backgroundTex }
+        };
+
+        _headerStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = _fontSize + 2,
+            fontStyle = FontStyle.Bold,
+            normal = { textColor = Color.white }
+        };
+
+        _labelStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = _fontSize,
+            normal = { textColor = new Color(0.8f, 0.8f, 0.8f) }
+        };
+
+        _valueStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = _fontSize,
+            fontStyle = FontStyle.Bold,
+            normal = { textColor = Color.white }
+        };
+    }
+
+    string FormatNumber(int num)
+    {
+        if (num >= 1000000) return $"{num / 1000000f:F1}M";
+        if (num >= 1000) return $"{num / 1000f:F1}K";
+        return num.ToString();
+    }
+
+    void OnDestroy()
+    {
+        if (_backgroundTex != null)
+            Destroy(_backgroundTex);
+    }
+
+    #region Public API
+
+    public void Show() => _visible = true;
+    public void Hide() => _visible = false;
+    public void Toggle() => _visible = !_visible;
+    public bool IsVisible => _visible;
+
+    #endregion
+}
