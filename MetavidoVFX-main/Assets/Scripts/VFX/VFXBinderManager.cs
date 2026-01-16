@@ -70,6 +70,11 @@ namespace MetavidoVFX.VFX
         private List<VFXCategory> _categorizedVFX = new List<VFXCategory>();
         private List<VisualEffect> _uncategorizedVFX = new List<VisualEffect>();
 
+        // Cached arrays for zero-allocation iteration
+        private VFXCategory[] _categorizedArray;
+        private VisualEffect[] _uncategorizedArray;
+        private bool _vfxListDirty = true;
+
         // Depth rotation (ARKit depth orientation fix)
         [Header("Depth Processing")]
         [Tooltip("Rotate depth/stencil textures to match camera orientation")]
@@ -357,51 +362,11 @@ namespace MetavidoVFX.VFX
 
         void LogPeriodicStatus()
         {
-            string depthInfo = _lastDepthTexture != null ? $"✓{_lastDepthTexture.width}x{_lastDepthTexture.height}" : "✗NULL";
-            string stencilInfo = _lastStencilTexture != null ? $"✓{_lastStencilTexture.width}x{_lastStencilTexture.height}" : "✗NULL";
-            string colorInfo = _lastColorTexture != null ? $"✓{_lastColorTexture.width}x{_lastColorTexture.height}" : "✗NULL";
-            string posInfo = _positionMapRT != null ? $"✓{_positionMapRT.width}x{_positionMapRT.height}" : "✗NULL";
-            string velInfo = _velocityMapRT != null ? $"✓{_velocityMapRT.width}x{_velocityMapRT.height}" : "✗NULL";
-            string hueInfo = _hueDepthRT != null ? $"✓{_hueDepthRT.width}x{_hueDepthRT.height}" : "✗NULL";
+            // Minimal logging - only essential info
+            if (!verboseLogging) return;
 
-            // Count enabled VFX
-            _enabledVFXCount = 0;
-            int totalParticles = 0;
-            string enabledNames = "";
-            foreach (var vfx in _uncategorizedVFX)
-            {
-                if (vfx != null && vfx.enabled)
-                {
-                    _enabledVFXCount++;
-                    totalParticles += vfx.aliveParticleCount;
-                    if (enabledNames.Length > 0) enabledNames += ", ";
-                    enabledNames += vfx.name;
-                }
-            }
-
-            float elapsed = Time.realtimeSinceStartup - _startTime;
-            Debug.Log($"[VFXBinderManager] ─── Status @ {elapsed:F1}s (frame {_frameCount}) ───");
-            Debug.Log($"[VFXBinderManager] Textures: Depth={depthInfo} | Stencil={stencilInfo} | Color={colorInfo}");
-            Debug.Log($"[VFXBinderManager] Computed: Pos={posInfo} | Vel={velInfo} | Hue={hueInfo}");
-            Debug.Log($"[VFXBinderManager] VFX: {_enabledVFXCount}/{_uncategorizedVFX.Count} enabled | {totalParticles:N0} particles");
-            if (_enabledVFXCount > 0 && verboseLogging)
-            {
-                Debug.Log($"[VFXBinderManager] Enabled: {enabledNames}");
-            }
-
-            // Warnings
-            if (!_firstDepthReceived && elapsed > 5f)
-            {
-                Debug.LogWarning($"[VFXBinderManager] ⚠ No depth texture received after {elapsed:F1}s - AR may not be initialized");
-            }
-            if (_enabledVFXCount == 0)
-            {
-                Debug.LogWarning($"[VFXBinderManager] ⚠ No VFX enabled - check SimpleVFXUI or VFX container");
-            }
-            if (_enabledVFXCount > 0 && totalParticles == 0 && _firstDepthReceived)
-            {
-                Debug.LogWarning($"[VFXBinderManager] ⚠ VFX enabled but 0 particles - check Spawn property or VFX logic");
-            }
+            int vfxCount = _uncategorizedArray != null ? _uncategorizedArray.Length : 0;
+            Debug.Log($"[VFXBinderManager] Depth={(_lastDepthTexture != null ? "OK" : "NULL")} VFX={vfxCount}");
         }
 
         void LogSourceDetails()
@@ -864,33 +829,34 @@ namespace MetavidoVFX.VFX
             // Isolated test mode - only bind to specific VFX for debugging
             if (isolatedTestVFX != null)
             {
-                if (_frameCount == 1 || _frameCount % 180 == 0)
-                    Debug.Log($"[VFXBinderManager] ISOLATED MODE: Binding only to '{isolatedTestVFX.name}' enabled={isolatedTestVFX.enabled}");
-
                 if (isolatedTestVFX.enabled)
-                {
                     BindVFX(isolatedTestVFX, VFXBindingRequirements.All);
-                }
                 return;
             }
 
-            // Bind categorized VFX (copy list to avoid modification during iteration)
-            var categorizedCopy = new List<VFXCategory>(_categorizedVFX);
-            foreach (var vfxCategory in categorizedCopy)
+            // Rebuild cached arrays if list changed
+            if (_vfxListDirty)
             {
+                _categorizedArray = _categorizedVFX.ToArray();
+                _uncategorizedArray = _uncategorizedVFX.ToArray();
+                _vfxListDirty = false;
+            }
+
+            // Bind categorized VFX (zero allocation - use cached array)
+            for (int i = 0; i < _categorizedArray.Length; i++)
+            {
+                var vfxCategory = _categorizedArray[i];
                 if (vfxCategory == null || vfxCategory.VFX == null || !vfxCategory.VFX.enabled)
                     continue;
-
                 BindVFX(vfxCategory.VFX, vfxCategory.Bindings);
             }
 
-            // Bind uncategorized VFX (copy list to avoid modification during iteration)
-            var uncategorizedCopy = new List<VisualEffect>(_uncategorizedVFX);
-            foreach (var vfx in uncategorizedCopy)
+            // Bind uncategorized VFX (zero allocation - use cached array)
+            for (int i = 0; i < _uncategorizedArray.Length; i++)
             {
+                var vfx = _uncategorizedArray[i];
                 if (vfx == null || !vfx.enabled)
                     continue;
-
                 BindVFX(vfx, VFXBindingRequirements.All);
             }
         }
@@ -1239,7 +1205,8 @@ namespace MetavidoVFX.VFX
                 }
             }
 
-            // VFX list logged in Awake summary only
+            // Mark dirty so BindAllVFX rebuilds cached arrays
+            _vfxListDirty = true;
         }
 
         /// <summary>
