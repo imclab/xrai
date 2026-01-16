@@ -250,6 +250,23 @@ VFXBinderUtility.SetupVFX(myVFX, VFXBinderPreset.ARWithAudio);
 | Audio-reactive effects | EnhancedAudioProcessor |
 | AR mesh particles | MeshVFX |
 
+### VFX Binding Architecture
+```
+VFXLibraryManager.Start()
+    ↓ RebuildFromChildren() or CreateVFXFromResources()
+    ↓ Notifies VFXBinderManager.RefreshVFXList()
+    ↓
+VFXBinderManager.Update()
+    ↓ Binds AR data to ALL enabled VFX
+    ↓ DepthMap, StencilMap, ColorMap, PositionMap, etc.
+```
+
+**Key Points:**
+- VFXBinderManager binds globally to ALL VFX (no per-VFX binder needed)
+- VFXLibraryManager notifies VFXBinderManager after populating
+- VFX under ALL_VFX have: VisualEffect, VFXPropertyBinder, VFXARDataBinder, VFXCategory
+- maxActiveVFX limits simultaneous enabled VFX (default: 10)
+
 ---
 
 ## Common Fixes
