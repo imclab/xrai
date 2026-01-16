@@ -184,14 +184,50 @@ Editor utilities accessible via Unity menu bar:
 
 | Menu | Purpose |
 |------|---------|
+| **Hologram** | |
+| `H3M > Hologram > Setup Complete Hologram Rig` | Instantiate & wire full hologram rig prefab |
+| `H3M > Hologram > Add HologramSource Only` | Add source component |
+| `H3M > Hologram > Add HologramRenderer to Selected VFX` | Add renderer to existing VFX |
+| `H3M > Hologram > Verify Hologram Setup` | Check all wiring |
+| `H3M > Hologram > Re-Wire All References` | Fix broken references |
+| **HoloKit** | |
 | `H3M > HoloKit > Setup HoloKit Defines` | Add HOLOKIT_AVAILABLE define |
 | `H3M > HoloKit > Setup Complete HoloKit Rig` | Full HoloKit + hand tracking |
+| **General** | |
 | `H3M > Post-Processing > Setup Post-Processing` | Create/update Global Volume |
 | `H3M > EchoVision > Setup All EchoVision Components` | Full AR/Audio/VFX setup |
 | `H3M > VFX Performance > Add Auto Optimizer` | Add FPS-based quality control |
 | `H3M > VFX Performance > Profile All VFX` | Analyze VFX performance |
 | `H3M > VFX > Auto-Setup Binders` | Auto-add binders based on VFX properties |
 | `H3M > VFX > Add Binders to Selected` | Quick setup for selected VFX |
+| **Network** | |
+| `H3M > Network > Setup WebRTC Receiver` | Create WebRTC receiver for conferencing |
+| `H3M > Network > Add WebRTC Binder to Selected` | Add remote stream binder to VFX |
+| `H3M > Network > Verify Network Setup` | Check WebRTC configuration |
+| **Debug** | |
+| `H3M > Debug > Re-enable iOS Components` | Force re-enable HoloKit components after Play mode |
+
+## H3M Hologram Prefabs
+
+Located in `Assets/H3M/Prefabs/`:
+
+| Prefab | Components | Purpose |
+|--------|------------|---------|
+| `H3M_HologramSource` | HologramSource | Depth→PositionMap compute |
+| `H3M_HologramRenderer` | VisualEffect, HologramRenderer | Binds source to VFX |
+| `H3M_HologramAnchor` | ARRaycastManager, HologramAnchor | AR plane placement |
+| `H3M_HologramRig` | All above + HologramDebugUI | Complete hologram setup |
+
+**H3M_HologramRig Hierarchy:**
+```
+H3M_HologramRig
+├── Source          (HologramSource)
+├── Renderer        (VisualEffect + HologramRenderer)
+├── Anchor          (ARRaycastManager + HologramAnchor)
+└── DebugUI         (UIDocument + HologramDebugUI)
+```
+
+**Quick Setup**: `H3M > Hologram > Setup Complete Hologram Rig`
 
 ## Data Pipeline Architecture (Clean)
 
@@ -252,6 +288,33 @@ Runtime VFX management with Editor persistence and flexible UI Toolkit integrati
 - `Assets/Echovision/Scripts/MeshVFX.cs` - AR mesh → VFX GraphicsBuffers
 - `Assets/Scripts/VFX/HumanParticleVFX.cs` - AR depth → world positions via compute
 
+### NNCam (Keypoint VFX)
+- `Assets/NNCam/Scripts/NNCamKeypointBinder.cs` - Binds KeypointBuffer from BodyPartSegmenter
+- `Assets/NNCam/Scripts/NNCamVFXSwitcher.cs` - Keyboard/InputAction VFX switching
+- `Assets/NNCam/Scripts/Editor/NNCamSetup.cs` - Scene setup utilities
+- `Assets/VFX/NNCam2/*.vfx` - 9 ported NNCam2 VFX (Eyes, Joints, Electrify, etc.)
+
+**Setup**: `H3M > NNCam > Setup NNCam VFX Scene`
+
+### H3M Network (WebRTC Video Conferencing)
+- `Assets/H3M/Network/H3MSignalingClient.cs` - WebSocket signaling for peer discovery
+- `Assets/H3M/Network/H3MWebRTCReceiver.cs` - Receives hologram video streams
+- `Assets/H3M/Network/H3MWebRTCVFXBinder.cs` - Binds remote streams to VFX
+- `Assets/H3M/Network/H3MStreamMetadata.cs` - Camera position/projection metadata
+- `Assets/H3M/Network/Editor/H3MNetworkSetup.cs` - Editor setup utilities
+
+**Requires**: `com.unity.webrtc` package + `UNITY_WEBRTC_AVAILABLE` scripting define
+**Setup**: `H3M > Network > Setup WebRTC Receiver`
+
+**WebRTC Properties bound:**
+```
+ColorMap         Texture2D  Remote camera color
+DepthMap         Texture2D  Remote depth
+RayParams        Vector4    Inverse projection for rays
+InverseView      Matrix4x4  Remote camera transform
+DepthRange       Vector2    Near/far clipping
+```
+
 ### VFX Binders (Runtime VFX Support)
 - `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - AR data for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXAudioDataBinder.cs` - Audio bands for spawned VFX
@@ -303,19 +366,51 @@ GravityStrength  float      Gravity Y-axis (-20 to 20)
 GravityY         float      Alias for GravityStrength
 ```
 
+### Throttle/Intensity Properties (Optional)
+```
+Throttle         float      0-1 overall VFX intensity
+Intensity        float      Alias for Throttle
+Scale            float      Alias for Throttle
+```
+
+### Normal Map Properties (Optional)
+```
+NormalMap        Texture2D  Surface normals (computed from depth)
+Normal Map       Texture2D  Alias for NormalMap
+```
+
+### Keypoint Buffer (BodyPix)
+```
+KeypointBuffer   GraphicsBuffer  17 pose landmarks from BodyPartSegmenter
+```
+
 **Enable via VFXBinderManager Inspector:**
 - `Enable Velocity Binding` - toggles camera velocity input
 - `Velocity Scale` - multiplier (0.1-10)
 - `Enable Gravity Binding` - toggles gravity input
 - `Gravity Strength` - Y-axis value (-20 to 20)
 
+**Enable via VFXARDataBinder Inspector (per-VFX):**
+- `Bind Throttle` - toggles throttle/intensity input
+- `Bind Normal Map` - toggles surface normal computation
+- `Bind Velocity` - toggles camera velocity input
+- `Bind Gravity` - toggles gravity input
+- `Bind Audio` - toggles audio frequency band input
+
 **Runtime API:**
 ```csharp
+// VFXBinderManager (global)
 VFXBinderManager.SetVelocityBindingEnabled(bool)
 VFXBinderManager.SetGravityBindingEnabled(bool)
 VFXBinderManager.SetGravityStrength(float)
 VFXBinderManager.GetCameraVelocity()  // Vector3
 VFXBinderManager.GetCameraSpeed()     // float
+
+// VFXARDataBinder (per-VFX)
+vfxARDataBinder.SetThrottle(float)          // 0-1
+vfxARDataBinder.SetVelocityEnabled(bool)
+vfxARDataBinder.SetGravityEnabled(bool)
+vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 ```
 
 ## Documentation

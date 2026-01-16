@@ -55,6 +55,72 @@ namespace MetavidoVFX.Editor
             Debug.Log($"[VFXAutoBinderSetup] Added binders to {count} VFX");
         }
 
+        /// <summary>
+        /// One-click setup: Add binders to ALL VFX in scene that need them
+        /// No UI window required - runs immediately
+        /// </summary>
+        [MenuItem("H3M/VFX/Auto-Setup ALL VFX (One-Click)", false, 199)]
+        public static void AutoSetupAllVFX()
+        {
+            var allVFX = FindObjectsByType<VisualEffect>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            int setupCount = 0;
+            int skippedCount = 0;
+
+            Debug.Log($"[VFXAutoBinderSetup] Scanning {allVFX.Length} VFX in scene...");
+
+            foreach (var vfx in allVFX)
+            {
+                // Detect what bindings this VFX needs
+                var preset = VFXBinderUtility.DetectPreset(vfx);
+
+                if (preset == VFXBinderPreset.None)
+                {
+                    skippedCount++;
+                    continue;
+                }
+
+                // Check if already has required binders
+                bool needsSetup = false;
+                bool hasAR = vfx.GetComponent<VFXARDataBinder>() != null;
+                bool hasAudio = vfx.GetComponent<VFXAudioDataBinder>() != null;
+
+                switch (preset)
+                {
+                    case VFXBinderPreset.AROnly:
+                    case VFXBinderPreset.ARWithAudio:
+                    case VFXBinderPreset.ARWithHand:
+                    case VFXBinderPreset.Full:
+                        needsSetup = !hasAR;
+                        break;
+                    case VFXBinderPreset.AudioOnly:
+                        needsSetup = !hasAudio;
+                        break;
+                }
+
+                if (!needsSetup)
+                {
+                    skippedCount++;
+                    continue;
+                }
+
+                // Setup the VFX
+                Undo.RecordObject(vfx.gameObject, "Auto-Setup VFX Binders");
+                VFXBinderUtility.SetupVFXAuto(vfx);
+                EditorUtility.SetDirty(vfx.gameObject);
+                setupCount++;
+
+                Debug.Log($"  [{preset}] {vfx.gameObject.name}");
+            }
+
+            Debug.Log($"[VFXAutoBinderSetup] ✓ Setup {setupCount} VFX | Skipped {skippedCount} (no AR properties or already setup)");
+
+            if (setupCount > 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+                    UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+            }
+        }
+
         void OnGUI()
         {
             EditorGUILayout.LabelField("VFX Auto-Binder Setup", EditorStyles.boldLabel);

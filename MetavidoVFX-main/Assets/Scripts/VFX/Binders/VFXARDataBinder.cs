@@ -28,6 +28,36 @@ namespace MetavidoVFX.VFX.Binders
         public bool bindPositionMap = true;
         public bool bindCameraMatrices = true;
 
+        [Header("Throttle Binding (Optional)")]
+        [Tooltip("Enable throttle property binding - controls overall VFX intensity")]
+        public bool bindThrottle = false;
+        [Tooltip("Throttle value (0-1) - scales particle count, size, or emission")]
+        [Range(0f, 1f)]
+        public float throttleValue = 1f;
+
+        [Header("Normal Map Binding (Optional)")]
+        [Tooltip("Enable normal map binding - provides surface orientation data")]
+        public bool bindNormalMap = false;
+        [Tooltip("Custom normal map texture (computed from depth if null)")]
+        public Texture normalMapOverride;
+
+        [Header("Velocity Binding (Optional)")]
+        [Tooltip("Enable velocity-driven VFX binding - camera movement affects particles")]
+        public bool bindVelocity = false;
+        [Tooltip("Velocity scale multiplier")]
+        [Range(0.1f, 10f)]
+        public float velocityScale = 1f;
+        [Tooltip("Smooth velocity changes (0 = instant, 1 = very smooth)")]
+        [Range(0f, 0.99f)]
+        public float velocitySmoothing = 0.5f;
+
+        [Header("Gravity/Physics Binding (Optional)")]
+        [Tooltip("Enable gravity/physics binding")]
+        public bool bindGravity = false;
+        [Tooltip("Gravity strength (Y-axis, negative = down)")]
+        [Range(-20f, 20f)]
+        public float gravityStrength = -9.81f;
+
         [Header("Audio Binding (Optional)")]
         [Tooltip("Enable audio frequency band binding - useful for audio-reactive VFX")]
         public bool bindAudio = false;
@@ -61,6 +91,30 @@ namespace MetavidoVFX.VFX.Binders
         public ExposedProperty rayParamsProperty = "RayParams";
         [VFXPropertyBinding("UnityEngine.Vector2")]
         public ExposedProperty depthRangeProperty = "DepthRange";
+
+        [Header("Throttle Property Names")]
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty throttleProperty = "Throttle";
+
+        [Header("Normal Map Property Names")]
+        [VFXPropertyBinding("UnityEngine.Texture2D")]
+        public ExposedProperty normalMapProperty = "NormalMap";
+
+        [Header("Velocity Property Names")]
+        [VFXPropertyBinding("UnityEngine.Vector3")]
+        public ExposedProperty velocityProperty = "Velocity";
+        [VFXPropertyBinding("UnityEngine.Vector3")]
+        public ExposedProperty referenceVelocityProperty = "ReferenceVelocity";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty speedProperty = "Speed";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty cameraSpeedProperty = "CameraSpeed";
+
+        [Header("Gravity Property Names")]
+        [VFXPropertyBinding("UnityEngine.Vector3")]
+        public ExposedProperty gravityProperty = "Gravity";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty gravityStrengthProperty = "GravityStrength";
 
         [Header("Audio Property Names")]
         [VFXPropertyBinding("System.Single")]
@@ -119,6 +173,17 @@ namespace MetavidoVFX.VFX.Binders
         private RenderTexture _previousPositionMapRT;
         private int _velocityKernel = -1;
 
+        // Camera velocity tracking (for velocity binding)
+        private Vector3 _lastCameraPosition;
+        private Vector3 _smoothedVelocity;
+        private float _smoothedSpeed;
+        private bool _velocityInitialized;
+
+        // Normal map compute
+        private ComputeShader _normalMapCompute;
+        private RenderTexture _normalMapRT;
+        private int _normalMapKernel = -1;
+
         protected override void Awake()
         {
             base.Awake();
@@ -149,6 +214,25 @@ namespace MetavidoVFX.VFX.Binders
                     Debug.LogWarning("[VFXARDataBinder] DepthToWorld compute shader not found in Resources");
                 }
             }
+
+            // Load NormalMap compute shader (if available)
+            if (bindNormalMap)
+            {
+                _normalMapCompute = Resources.Load<ComputeShader>("DepthToNormal");
+                if (_normalMapCompute != null)
+                {
+                    try { _normalMapKernel = _normalMapCompute.FindKernel("DepthToNormal"); }
+                    catch { _normalMapKernel = -1; }
+                }
+                // Note: NormalMap compute is optional - can use override texture instead
+            }
+
+            // Initialize velocity tracking
+            if (bindVelocity && arCamera != null)
+            {
+                _lastCameraPosition = arCamera.transform.position;
+                _velocityInitialized = true;
+            }
         }
 
         void FindDataSources()
@@ -172,12 +256,26 @@ namespace MetavidoVFX.VFX.Binders
 
         public override bool IsValid(VisualEffect component)
         {
-            // Valid if at least one AR or audio property exists
+            // Valid if at least one AR or optional property exists
             bool hasARProperty = component.HasTexture(depthMapProperty) ||
                    component.HasTexture(stencilMapProperty) ||
                    component.HasTexture(colorMapProperty) ||
                    component.HasTexture(positionMapProperty) ||
                    component.HasMatrix4x4(inverseViewProperty);
+
+            bool hasThrottleProperty = bindThrottle && component.HasFloat(throttleProperty);
+
+            bool hasNormalMapProperty = bindNormalMap && component.HasTexture(normalMapProperty);
+
+            bool hasVelocityProperty = bindVelocity && (
+                   component.HasVector3(velocityProperty) ||
+                   component.HasVector3(referenceVelocityProperty) ||
+                   component.HasFloat(speedProperty) ||
+                   component.HasFloat(cameraSpeedProperty));
+
+            bool hasGravityProperty = bindGravity && (
+                   component.HasVector3(gravityProperty) ||
+                   component.HasFloat(gravityStrengthProperty));
 
             bool hasAudioProperty = bindAudio && (
                    component.HasFloat(audioVolumeProperty) ||
@@ -185,7 +283,8 @@ namespace MetavidoVFX.VFX.Binders
                    component.HasFloat(audioMidProperty) ||
                    component.HasFloat(audioTrebleProperty));
 
-            return hasARProperty || hasAudioProperty;
+            return hasARProperty || hasThrottleProperty || hasNormalMapProperty ||
+                   hasVelocityProperty || hasGravityProperty || hasAudioProperty;
         }
 
         public override void UpdateBinding(VisualEffect component)
@@ -548,6 +647,30 @@ namespace MetavidoVFX.VFX.Binders
                 Debug.LogWarning($"[VFXARDataBinder] Camera matrices NOT bound: bindCameraMatrices={bindCameraMatrices} arCamera={arCamera != null}");
             }
 
+            // Throttle Binding (optional - controls VFX intensity)
+            if (bindThrottle)
+            {
+                BindThrottle(component);
+            }
+
+            // Normal Map Binding (optional - provides surface orientation)
+            if (bindNormalMap)
+            {
+                BindNormalMap(component, depthTex);
+            }
+
+            // Velocity Binding (optional - camera movement affects particles)
+            if (bindVelocity)
+            {
+                BindVelocity(component);
+            }
+
+            // Gravity Binding (optional - physics simulation)
+            if (bindGravity)
+            {
+                BindGravity(component);
+            }
+
             // Audio Binding (optional - for audio-reactive VFX)
             if (bindAudio && audioProcessor != null)
             {
@@ -596,6 +719,130 @@ namespace MetavidoVFX.VFX.Binders
 
             if (verboseLogging && Time.frameCount % 180 == 0)
                 Debug.Log($"[VFXARDataBinder] Audio bound: vol={volume:F2} bass={bass:F2} mid={mid:F2} treble={treble:F2}");
+        }
+
+        void BindThrottle(VisualEffect component)
+        {
+            // Throttle - bind to multiple property names for compatibility
+            if (component.HasFloat(throttleProperty))
+                component.SetFloat(throttleProperty, throttleValue);
+            if (component.HasFloat("throttle"))
+                component.SetFloat("throttle", throttleValue);
+            if (component.HasFloat("Intensity"))
+                component.SetFloat("Intensity", throttleValue);
+            if (component.HasFloat("Scale"))
+                component.SetFloat("Scale", throttleValue);
+        }
+
+        void BindNormalMap(VisualEffect component, Texture depthTex)
+        {
+            // Use override texture if provided
+            if (normalMapOverride != null)
+            {
+                if (component.HasTexture(normalMapProperty))
+                    component.SetTexture(normalMapProperty, normalMapOverride);
+                if (component.HasTexture("Normal Map"))
+                    component.SetTexture("Normal Map", normalMapOverride);
+                return;
+            }
+
+            // Compute normal map from depth (if compute shader available)
+            if (_normalMapCompute != null && _normalMapKernel >= 0 && depthTex != null)
+            {
+                int w = depthTex.width;
+                int h = depthTex.height;
+
+                // Create/resize normal map RT
+                if (_normalMapRT == null || _normalMapRT.width != w || _normalMapRT.height != h)
+                {
+                    if (_normalMapRT != null) _normalMapRT.Release();
+                    _normalMapRT = new RenderTexture(w, h, 0, RenderTextureFormat.ARGBFloat);
+                    _normalMapRT.enableRandomWrite = true;
+                    _normalMapRT.filterMode = FilterMode.Bilinear;
+                    _normalMapRT.Create();
+                }
+
+                // Dispatch compute shader
+                if (Time.frameCount % updateInterval == 0)
+                {
+                    _normalMapCompute.SetTexture(_normalMapKernel, "_Depth", depthTex);
+                    _normalMapCompute.SetTexture(_normalMapKernel, "_NormalRT", _normalMapRT);
+
+                    int groupsX = Mathf.CeilToInt(w / 8f);
+                    int groupsY = Mathf.CeilToInt(h / 8f);
+                    _normalMapCompute.Dispatch(_normalMapKernel, groupsX, groupsY, 1);
+                }
+
+                // Bind
+                if (component.HasTexture(normalMapProperty))
+                    component.SetTexture(normalMapProperty, _normalMapRT);
+                if (component.HasTexture("Normal Map"))
+                    component.SetTexture("Normal Map", _normalMapRT);
+            }
+        }
+
+        void BindVelocity(VisualEffect component)
+        {
+            // Initialize velocity tracking if needed
+            if (!_velocityInitialized && arCamera != null)
+            {
+                _lastCameraPosition = arCamera.transform.position;
+                _velocityInitialized = true;
+            }
+
+            if (!_velocityInitialized || arCamera == null) return;
+
+            // Calculate camera velocity
+            Vector3 cameraDelta = arCamera.transform.position - _lastCameraPosition;
+            Vector3 rawVelocity = cameraDelta / Time.deltaTime * velocityScale;
+            _lastCameraPosition = arCamera.transform.position;
+
+            // Smooth velocity
+            float smoothFactor = 1f - velocitySmoothing;
+            _smoothedVelocity = Vector3.Lerp(_smoothedVelocity, rawVelocity, smoothFactor);
+            _smoothedSpeed = _smoothedVelocity.magnitude;
+
+            // Bind velocity to all possible property names
+            if (component.HasVector3(velocityProperty))
+                component.SetVector3(velocityProperty, _smoothedVelocity);
+            if (component.HasVector3(referenceVelocityProperty))
+                component.SetVector3(referenceVelocityProperty, _smoothedVelocity);
+            if (component.HasVector3("Initial Velocity"))
+                component.SetVector3("Initial Velocity", _smoothedVelocity);
+            if (component.HasVector3("CameraVelocity"))
+                component.SetVector3("CameraVelocity", _smoothedVelocity);
+
+            // Bind speed
+            if (component.HasFloat(speedProperty))
+                component.SetFloat(speedProperty, _smoothedSpeed);
+            if (component.HasFloat(cameraSpeedProperty))
+                component.SetFloat(cameraSpeedProperty, _smoothedSpeed);
+            if (component.HasFloat("VelocityMagnitude"))
+                component.SetFloat("VelocityMagnitude", _smoothedSpeed);
+
+            if (verboseLogging && Time.frameCount % 180 == 0)
+                Debug.Log($"[VFXARDataBinder] Velocity bound: {_smoothedVelocity:F2} speed={_smoothedSpeed:F2}");
+        }
+
+        void BindGravity(VisualEffect component)
+        {
+            // Calculate gravity vector
+            Vector3 gravityVector = new Vector3(0f, gravityStrength, 0f);
+
+            // Bind gravity to all possible property names
+            if (component.HasVector3(gravityProperty))
+                component.SetVector3(gravityProperty, gravityVector);
+            if (component.HasVector3("Gravity Vector"))
+                component.SetVector3("Gravity Vector", gravityVector);
+
+            // Bind gravity strength as scalar
+            if (component.HasFloat(gravityStrengthProperty))
+                component.SetFloat(gravityStrengthProperty, gravityStrength);
+            if (component.HasFloat("GravityY"))
+                component.SetFloat("GravityY", gravityStrength);
+
+            if (verboseLogging && Time.frameCount % 180 == 0)
+                Debug.Log($"[VFXARDataBinder] Gravity bound: {gravityVector:F2} strength={gravityStrength:F2}");
         }
 
         /// <summary>
@@ -731,12 +978,58 @@ namespace MetavidoVFX.VFX.Binders
                 _previousPositionMapRT.Release();
                 _previousPositionMapRT = null;
             }
+            if (_normalMapRT != null)
+            {
+                _normalMapRT.Release();
+                _normalMapRT = null;
+            }
         }
 
         public override string ToString()
         {
-            string audioStr = bindAudio ? " + Audio" : "";
-            return $"AR Data : {depthMapProperty}, {stencilMapProperty}, {colorMapProperty}{audioStr}";
+            var extras = new System.Collections.Generic.List<string>();
+            if (bindThrottle) extras.Add("Throttle");
+            if (bindNormalMap) extras.Add("NormalMap");
+            if (bindVelocity) extras.Add("Velocity");
+            if (bindGravity) extras.Add("Gravity");
+            if (bindAudio) extras.Add("Audio");
+
+            string extraStr = extras.Count > 0 ? $" + {string.Join(", ", extras)}" : "";
+            return $"AR Data : {depthMapProperty}, {stencilMapProperty}, {colorMapProperty}{extraStr}";
+        }
+
+        // ========== PUBLIC API ==========
+
+        /// <summary>
+        /// Set throttle value at runtime (0-1)
+        /// </summary>
+        public void SetThrottle(float value)
+        {
+            throttleValue = Mathf.Clamp01(value);
+        }
+
+        /// <summary>
+        /// Set velocity binding enabled state at runtime
+        /// </summary>
+        public void SetVelocityEnabled(bool enabled)
+        {
+            bindVelocity = enabled;
+        }
+
+        /// <summary>
+        /// Set gravity binding enabled state at runtime
+        /// </summary>
+        public void SetGravityEnabled(bool enabled)
+        {
+            bindGravity = enabled;
+        }
+
+        /// <summary>
+        /// Set gravity strength at runtime (-20 to 20)
+        /// </summary>
+        public void SetGravityStrength(float strength)
+        {
+            gravityStrength = Mathf.Clamp(strength, -20f, 20f);
         }
     }
 }

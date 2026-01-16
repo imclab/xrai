@@ -45,9 +45,38 @@
 - [x] Update Unity-XR-AI/CLAUDE.md
 - [x] Create specs/004-metavidovfx-systems/
 
+### Phase 8: VFX Library System (2026-01-16)
+- [x] Create VFXLibraryManager.cs with runtime VFX loading
+- [x] Create VFXToggleUI.cs with 4 UI modes (Auto/Standalone/Embedded/Programmatic)
+- [x] Create VFXLibrary.uxml and VFXLibrary.uss
+- [x] Create VFXLibrarySetup.cs editor utilities
+- [x] Add Editor persistence for VFX library
+
+### Phase 9: H3M Hologram Prefabs (2026-01-16)
+- [x] Create H3M_HologramSource.prefab
+- [x] Create H3M_HologramRenderer.prefab
+- [x] Create H3M_HologramAnchor.prefab
+- [x] Create H3M_HologramRig.prefab (complete rig)
+- [x] Create H3MHologramSetup.cs editor utilities
+- [x] Add H3M > Hologram menu items
+
+### Phase 10: VFX Runtime Binders (2026-01-16)
+- [x] Create VFXARDataBinder.cs with full AR binding
+- [x] Create VFXAudioDataBinder.cs for frequency bands
+- [x] Create VFXHandDataBinder.cs for hand tracking
+- [x] Create VFXPhysicsBinder.cs for velocity/gravity
+- [x] Create VFXBinderUtility.cs for preset-based setup
+- [x] Create VFXAutoBinderSetup.cs editor window
+- [x] Add H3M > VFX > Auto-Setup ALL VFX (One-Click) menu
+
+### Phase 11: Editor Improvements (2026-01-16)
+- [x] Fix EditorPlayModeHelper iOS component re-enable (EditorPrefs persistence)
+- [x] Add HoloKit gaze interaction to iOS-only component list
+- [x] Add H3M > Debug > Re-enable iOS Components menu
+
 ## Future Tasks
 
-### Phase 8: Testing
+### Phase 12: Testing
 - [ ] Test hand tracking on HoloKit device
 - [ ] Test audio reactivity with live microphone
 - [ ] Test AR mesh VFX on device

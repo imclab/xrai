@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 using System.Collections.Generic;
+using H3M.Core;
+using MetavidoVFX.VFX;
+using MetavidoVFX.Audio;
+using MetavidoVFX.HandTracking;
 
 namespace MetavidoVFX.Editor
 {
@@ -122,7 +126,7 @@ namespace MetavidoVFX.Editor
             Debug.Log("=== VFX Data Source Verification ===\n");
 
             // Check VFXBinderManager
-            var binderManager = Object.FindFirstObjectByType<VFX.VFXBinderManager>();
+            var binderManager = Object.FindFirstObjectByType<VFXBinderManager>();
             if (binderManager != null)
             {
                 Debug.Log($"✓ VFXBinderManager: FOUND on '{binderManager.gameObject.name}'");
@@ -135,7 +139,7 @@ namespace MetavidoVFX.Editor
             }
 
             // Check HologramSource (H3M pipeline)
-            var hologramSource = Object.FindFirstObjectByType<H3M.Core.HologramSource>(FindObjectsInactive.Include);
+            var hologramSource = Object.FindFirstObjectByType<HologramSource>(FindObjectsInactive.Include);
             if (hologramSource != null)
             {
                 Debug.Log($"✓ HologramSource (H3M): FOUND on '{hologramSource.gameObject.name}'");
@@ -147,14 +151,14 @@ namespace MetavidoVFX.Editor
             }
 
             // Check specialized controllers
-            var handController = Object.FindFirstObjectByType<HandTracking.HandVFXController>(FindObjectsInactive.Include);
+            var handController = Object.FindFirstObjectByType<HandVFXController>(FindObjectsInactive.Include);
             if (handController != null)
             {
                 Debug.Log($"✓ HandVFXController: FOUND on '{handController.gameObject.name}'");
                 Debug.Log($"  - Binds: HandPosition, HandVelocity, HandSpeed, BrushWidth, IsPinching");
             }
 
-            var audioProcessor = Object.FindFirstObjectByType<Audio.EnhancedAudioProcessor>(FindObjectsInactive.Include);
+            var audioProcessor = Object.FindFirstObjectByType<EnhancedAudioProcessor>(FindObjectsInactive.Include);
             if (audioProcessor != null)
             {
                 Debug.Log($"✓ EnhancedAudioProcessor: FOUND on '{audioProcessor.gameObject.name}'");

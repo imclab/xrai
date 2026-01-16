@@ -92,46 +92,47 @@ namespace H3M.Core
                 _vfx.SetBool("Spawn", _source.PositionMap != null);
         }
 
-        // Debug overlay for on-device troubleshooting
-        void OnGUI()
+        #region Public Debug API (for HologramDebugUI)
+
+        /// <summary>Get debug info for UI display.</summary>
+        public HologramDebugInfo GetDebugInfo()
         {
-            if (_source == null) return;
-
-            GUI.skin.label.fontSize = 32;
-            GUI.skin.button.fontSize = 28;
-            GUILayout.BeginArea(new Rect(30, 100, Screen.width - 60, Screen.height - 200));
-
-            GUILayout.Label("=== H3M Hologram Debug ===");
-
-            // VFX Status
-            if (_vfx == null)
-                GUILayout.Label("VFX: NULL");
-            else
+            return new HologramDebugInfo
             {
-                GUILayout.Label($"VFX Alive Particles: {_vfx.aliveParticleCount}");
-                GUILayout.Label($"PositionMap: {(_vfx.HasTexture("PositionMap") ? "YES" : "NO")}");
-                GUILayout.Label($"ColorMap: {(_vfx.HasTexture("ColorMap") ? "YES" : "NO")}");
-                GUILayout.Label($"Spawn Property: {(_vfx.HasBool("Spawn") ? "YES" : "NO")}");
-            }
-
-            // Source Status
-            if (_source != null)
-            {
-                var posMap = _source.PositionMap;
-                var stencilTex = _source.StencilTexture;
-                GUILayout.Label($"Source PosMap: {(posMap != null ? posMap.width + "x" + posMap.height : "NULL")}");
-                GUILayout.Label($"Source Stencil: {(stencilTex != null ? stencilTex.width + "x" + stencilTex.height : "NULL")}");
-            }
-
-            // Anchor Status
-            if (_anchor != null)
-                GUILayout.Label($"Anchor: {_anchor.position.ToString("F2")} | Scale: {_hologramScale:F2}");
-            else
-                GUILayout.Label("Anchor: NULL (Not Placed)");
-
-            GUILayout.Label($"Frame: {_frameCount}");
-
-            GUILayout.EndArea();
+                HasVFX = _vfx != null,
+                AliveParticles = _vfx != null ? _vfx.aliveParticleCount : 0,
+                HasPositionMap = _vfx != null && _vfx.HasTexture("PositionMap"),
+                HasColorMap = _vfx != null && _vfx.HasTexture("ColorMap"),
+                HasSpawnProperty = _vfx != null && _vfx.HasBool("Spawn"),
+                PositionMapSize = _source?.PositionMap != null
+                    ? $"{_source.PositionMap.width}x{_source.PositionMap.height}"
+                    : "NULL",
+                StencilSize = _source?.StencilTexture != null
+                    ? $"{_source.StencilTexture.width}x{_source.StencilTexture.height}"
+                    : "NULL",
+                AnchorPosition = _anchor != null ? _anchor.position : Vector3.zero,
+                HasAnchor = _anchor != null,
+                HologramScale = _hologramScale,
+                FrameCount = _frameCount
+            };
         }
+
+        #endregion
+    }
+
+    /// <summary>Debug info struct for hologram renderer state.</summary>
+    public struct HologramDebugInfo
+    {
+        public bool HasVFX;
+        public int AliveParticles;
+        public bool HasPositionMap;
+        public bool HasColorMap;
+        public bool HasSpawnProperty;
+        public string PositionMapSize;
+        public string StencilSize;
+        public Vector3 AnchorPosition;
+        public bool HasAnchor;
+        public float HologramScale;
+        public int FrameCount;
     }
 }
