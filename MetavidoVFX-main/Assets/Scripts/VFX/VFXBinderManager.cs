@@ -1250,8 +1250,10 @@ namespace MetavidoVFX.VFX
             if (propertyBinder == null) return;
 
             // Get all binders and disable Metavido ones
+            // Copy to array to avoid collection modification during iteration
             var binders = propertyBinder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
-            foreach (var binder in binders)
+            var bindersCopy = new List<UnityEngine.VFX.Utility.VFXBinderBase>(binders);
+            foreach (var binder in bindersCopy)
             {
                 if (binder == null) continue;
                 string typeName = binder.GetType().Name;
