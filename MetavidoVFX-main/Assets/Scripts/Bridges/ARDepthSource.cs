@@ -223,7 +223,7 @@ public class ARDepthSource : MonoBehaviour
             }
 
             RayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
-            InverseView = _arCamera.cameraToWorldMatrix;
+            InverseView = Matrix4x4.TRS(_arCamera.transform.position, _arCamera.transform.rotation, Vector3.one);
 
             Shader.SetGlobalVector("_ARRayParams", RayParams);
             Shader.SetGlobalMatrix("_ARInverseView", InverseView);
@@ -461,7 +461,8 @@ public class ARDepthSource : MonoBehaviour
         // Cache for binders (NOT global textures - they don't work for VFX!)
         DepthMap = depth;
         StencilMap = stencil ?? Texture2D.whiteTexture;
-        InverseView = _arCamera.cameraToWorldMatrix;
+        // Use TRS to match Keijiro's Metavido approach (not cameraToWorldMatrix)
+        InverseView = Matrix4x4.TRS(_arCamera.transform.position, _arCamera.transform.rotation, Vector3.one);
 
         // Vectors/matrices CAN be global (VFX reads via HLSL)
         Shader.SetGlobalVector("_ARRayParams", RayParams);
