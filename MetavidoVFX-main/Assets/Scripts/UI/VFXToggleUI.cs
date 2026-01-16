@@ -243,6 +243,7 @@ namespace MetavidoVFX.UI
             }
 
             _root = _document.rootVisualElement;
+            _root.pickingMode = PickingMode.Ignore; // Allow touches to pass through empty space
             _panel = _root.Q<VisualElement>("vfx-panel");
 
             if (_panel == null)
@@ -308,6 +309,7 @@ namespace MetavidoVFX.UI
             }
 
             _root = doc.rootVisualElement;
+            _root.pickingMode = PickingMode.Ignore; // Allow touches to pass through empty space
             _panel = CreatePanelElement();
             _root.Add(_panel);
             _createdProgrammatically = true;

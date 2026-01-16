@@ -168,6 +168,16 @@ namespace MetavidoVFX.VFX
 
             Debug.Log($"[VFXLibrary] Rebuilt {_allVFX.Count} VFX entries from existing children");
 
+            // Disable all VFX at start if configured
+            if (startAllDisabled)
+            {
+                foreach (var entry in _allVFX)
+                {
+                    SetVFXActive(entry, false);
+                }
+                Debug.Log($"[VFXLibrary] All VFX disabled at start (startAllDisabled=true)");
+            }
+
             // Notify VFXBinderManager to refresh its VFX list
             var binderManager = FindFirstObjectByType<VFXBinderManager>();
             if (binderManager != null)

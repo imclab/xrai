@@ -140,22 +140,23 @@ namespace H3M.Core
             }
 
             _root = new VisualElement();
-            _root.style.width = Length.Percent(100);
-            _root.style.height = Length.Percent(100);
+            _root.style.position = Position.Absolute;
+            _root.style.width = Length.Auto();
+            _root.style.height = Length.Auto();
+            _root.pickingMode = PickingMode.Ignore; // Don't block touches on empty space
 
             _panel = CreatePanel();
 
-            // Position panel
-            _panel.style.position = Position.Absolute;
+            // Position root container (panel will fill it)
             if (positionRight)
-                _panel.style.right = panelMargin;
+                _root.style.right = panelMargin;
             else
-                _panel.style.left = panelMargin;
+                _root.style.left = panelMargin;
 
             if (positionTop)
-                _panel.style.top = panelMargin;
+                _root.style.top = panelMargin;
             else
-                _panel.style.bottom = panelMargin;
+                _root.style.bottom = panelMargin;
 
             _root.Add(_panel);
 
