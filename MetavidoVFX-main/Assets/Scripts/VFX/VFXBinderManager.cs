@@ -49,6 +49,11 @@ namespace MetavidoVFX.VFX
         [SerializeField] private Vector2 depthRange = new Vector2(0.1f, 10f);
         [SerializeField] private bool computePositionMap = true;
 
+        [Header("VFX Parameters")]
+        [Tooltip("Global VFX intensity/throttle (0-1)")]
+        [Range(0f, 1f)]
+        [SerializeField] private float defaultThrottle = 1f;
+
         [Header("Physics (Optional)")]
         [Tooltip("Enable velocity-driven input binding to all VFX")]
         [SerializeField] private bool enableVelocityBinding = true;
@@ -159,6 +164,9 @@ namespace MetavidoVFX.VFX
         private float _cameraSpeed;
         private Vector3 _gravityVector;
 
+        // VFX parameters
+        private float _throttle = 1f;  // Global intensity control (0-1)
+
         // Warning spam prevention - only warn once per VFX
         private HashSet<int> _warnedVFXNoDepth = new HashSet<int>();
         private HashSet<int> _warnedVFXNoColor = new HashSet<int>();
@@ -169,6 +177,7 @@ namespace MetavidoVFX.VFX
         {
             _instance = this;
             _startTime = Time.realtimeSinceStartup;
+            _throttle = defaultThrottle;
 
             if (autoFindSources) FindDataSources();
             if (bindOnAwake) RefreshVFXList();
@@ -1028,7 +1037,45 @@ namespace MetavidoVFX.VFX
             // Physics bindings (velocity-driven input and gravity)
             BindPhysics(vfx);
 
+            // VFX-specific parameters (Throttle, HueShift, Spawn, etc.)
+            BindVFXParameters(vfx);
+
             // Hand tracking bindings are handled by HandVFXController directly
+        }
+
+        /// <summary>
+        /// Bind VFX-specific parameters that many Rcam/Metavido VFX expect
+        /// </summary>
+        void BindVFXParameters(VisualEffect vfx)
+        {
+            // Throttle/Intensity - controls overall VFX intensity (default 1.0 for full effect)
+            if (vfx.HasFloat("Throttle"))
+                vfx.SetFloat("Throttle", _throttle);
+            if (vfx.HasFloat("Intensity"))
+                vfx.SetFloat("Intensity", _throttle);
+
+            // Spawn - enables particle spawning (true when VFX is enabled)
+            if (vfx.HasBool("Spawn"))
+                vfx.SetBool("Spawn", true);
+
+            // FocusDistance - depth at which effect is strongest (default mid-range)
+            float focusDist = (depthRange.x + depthRange.y) * 0.5f;
+            if (vfx.HasFloat("FocusDistance"))
+                vfx.SetFloat("FocusDistance", focusDist);
+
+            // Dimensions - texture dimensions for UV calculations
+            if (_lastDepthTexture != null)
+            {
+                if (vfx.HasVector2("Dimensions"))
+                    vfx.SetVector2("Dimensions", new Vector2(_lastDepthTexture.width, _lastDepthTexture.height));
+            }
+
+            // ReferencePosition - camera position for warp effects
+            if (arCamera != null)
+            {
+                if (vfx.HasVector3("ReferencePosition"))
+                    vfx.SetVector3("ReferencePosition", arCamera.transform.position);
+            }
         }
 
         /// <summary>
@@ -1290,5 +1337,21 @@ namespace MetavidoVFX.VFX
         /// Get current gravity vector
         /// </summary>
         public Vector3 GetGravityVector() => _gravityVector;
+
+        // ========== VFX PARAMETERS API ==========
+
+        /// <summary>
+        /// Set global VFX throttle/intensity (0-1)
+        /// Controls Throttle and Intensity properties on all VFX
+        /// </summary>
+        public void SetThrottle(float value)
+        {
+            _throttle = Mathf.Clamp01(value);
+        }
+
+        /// <summary>
+        /// Get current throttle value
+        /// </summary>
+        public float GetThrottle() => _throttle;
     }
 }
