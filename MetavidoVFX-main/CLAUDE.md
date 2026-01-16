@@ -53,10 +53,12 @@ This gives us ~16ms latency, minimal CPU overhead, and excellent mobile performa
 | 10 | ~5ms | Scales well |
 | 20 | ~8ms | 60fps feasible |
 
-### Core AR → VFX Pipeline
+### Core AR → VFX Pipeline (Updated 2026-01-16)
+
+**IMPORTANT**: As of Jan 16, 2026, the pipeline shifted to per-VFX binding:
 
 ```
-AR Sensors (ARKit) → VFXBinderManager → All VFX
+AR Sensors (ARKit) → VFXARDataBinder (per-VFX) → Individual VFX
                               ↓
                    GPU Compute (DepthToWorld.compute)
                               ↓
@@ -64,7 +66,8 @@ AR Sensors (ARKit) → VFXBinderManager → All VFX
 ```
 
 **Key Components**:
-- `Assets/Scripts/VFX/VFXBinderManager.cs` - PRIMARY pipeline, binds all AR data to ALL VFX
+- `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - **PRIMARY** per-VFX AR data binding (353 FPS @ 10 VFX)
+- `Assets/Scripts/VFX/VFXBinderManager.cs` - Legacy centralized binder (disabled in scenes, kept for reference)
 - `Assets/H3M/Core/HologramSource.cs` - Hologram depth processing (computes PositionMap)
 - `Assets/H3M/Core/HologramRenderer.cs` - Binds HologramSource output to specific VFX
 - `Assets/Resources/DepthToWorld.compute` - GPU depth→world position conversion
@@ -229,25 +232,27 @@ H3M_HologramRig
 
 **Quick Setup**: `H3M > Hologram > Setup Complete Hologram Rig`
 
-## Data Pipeline Architecture (Clean)
+## Data Pipeline Architecture (Updated 2026-01-16)
 
-**Primary Pipeline**: VFXBinderManager (centralized, binds to ALL VFX)
+**Primary Pipeline**: VFXARDataBinder (per-VFX binding via VFXPropertyBinder)
 
 ```
-AR Session Origin → VFXBinderManager → All VFX (DepthMap, StencilMap, ColorMap)
+AR Session Origin → VFXARDataBinder (on each VFX) → Individual VFX
                           ↓
          Specialized Controllers (domain-specific data)
 ```
 
 | Pipeline | Status | Data Bound |
 |----------|--------|------------|
-| **VFXBinderManager** | ✅ PRIMARY | DepthMap, StencilMap, ColorMap, InverseView |
+| **VFXARDataBinder** | ✅ **PRIMARY** | DepthMap, StencilMap, ColorMap, PositionMap, RayParams |
+| **VFXBinderManager** | ⚠️ LEGACY | Centralized binder (disabled in scenes, code preserved) |
 | **HologramSource/Renderer** | ✅ H3M | PositionMap (computed), ColorTexture |
 | **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth |
 | **EnhancedAudioProcessor** | ✅ Audio | AudioVolume, AudioBass, AudioMid, AudioTreble |
-| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveRange, WaveAge |
+| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveRange, WaveAge (synced upstream Jan 16) |
+| **NNCamKeypointBinder** | ✅ Keypoints | KeypointBuffer (17 pose landmarks) |
 | **PeopleOcclusionVFXManager** | ❌ DISABLED | Redundant (creates own VFX) |
-| **ARKitMetavidoBinder** | ❌ REMOVED | Redundant (per-VFX binding) |
+| **ARKitMetavidoBinder** | ❌ LEGACY | Redundant per-VFX binder (use VFXARDataBinder) |
 
 **Cleanup**: `H3M > Pipeline Cleanup > Run Full Cleanup`
 
@@ -413,12 +418,39 @@ vfxARDataBinder.SetGravityEnabled(bool)
 vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 ```
 
+## Project Statistics (2026-01-16)
+
+| Metric | Count |
+|--------|-------|
+| C# Scripts | 458 |
+| VFX Assets | 88 |
+| Unity Version | 6000.2.14f1 |
+| iOS Minimum | 15.0 |
+| Performance | 353 FPS @ 10 VFX |
+
+**VFX by Category**:
+- Rcam2: 20 (HDRP→URP converted Jan 14)
+- Rcam4: 14
+- NNCam2: 9 (keypoint-driven, added Jan 16)
+- Rcam3: 8
+- Akvfx: 7
+- Resources/VFX: 14 (core Metavido)
+- Environment/SDF/Other: 16
+
+**Conditional Compilation**:
+- `HOLOKIT_AVAILABLE` - HoloKit hand tracking (15 uses)
+- `BODYPIX_AVAILABLE` - BodyPix 24-part segmentation (14 uses)
+- `UNITY_XR_HANDS` - XR Hands fallback (5 uses)
+
 ## Documentation
 
 In-project documentation:
 - `Assets/Documentation/README.md` - Complete system documentation
 - `Assets/Documentation/QUICK_REFERENCE.md` - Properties cheat sheet
 - `Assets/Documentation/PIPELINE_ARCHITECTURE.md` - All pipelines deep dive
+- `Assets/Documentation/SYSTEM_ARCHITECTURE.md` - 90% complete architecture docs
+- `Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` - Bug fixes and known issues
+- `Assets/Documentation/VFX_NAMING_CONVENTION.md` - VFX naming standards
 
 ## Knowledgebase
 

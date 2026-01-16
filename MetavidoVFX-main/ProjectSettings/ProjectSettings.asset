@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: ARCompanionMetavidoVFX
+  productName: MetavidoVFX
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -146,11 +146,6 @@ PlayerSettings:
   bundleVersion: 0.1
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 74056718cca954dc880963a87167312e, type: 3}
-  - {fileID: 4800000, guid: e7c77f6eaab324a819efdc13b8125a39, type: 3}
-  - {fileID: 4800000, guid: 6743a50a812740be8c0aa3fccc46fae9, type: 3}
-  - {fileID: 11400000, guid: fdf09ccf8b5c943de99fa80f8a6c3b24, type: 2}
-  - {fileID: -8538849779763666608, guid: 8d3a83508e1c245f68493a10c3d3a7a2, type: 2}
-  - {fileID: -8038245792085776553, guid: 56c39facffb2649f4857557e2994a9bb, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -173,7 +168,7 @@ PlayerSettings:
   androidMinAspectRatio: 1
   applicationIdentifier:
     Standalone: com.imclab.metavidovfx
-    iPhone: com.imclab.metavidovfxARCompanion
+    iPhone: com.imclab.metavidovfx
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -881,7 +876,7 @@ PlayerSettings:
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    iPhone: UNITY_XR_ARKIT_LOADER_ENABLED;UNITY_XR_ARKIT_FACE_TRACKING_ENABLED;USE_ROSLYN;HOLOKIT_AVAILABLE;UNITY_XR_HANDS;BODYPIX_AVAILABLE;AR_COMPANION
+    iPhone: UNITY_XR_ARKIT_LOADER_ENABLED;UNITY_XR_ARKIT_FACE_TRACKING_ENABLED;USE_ROSLYN;HOLOKIT_AVAILABLE;UNITY_XR_HANDS;BODYPIX_AVAILABLE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

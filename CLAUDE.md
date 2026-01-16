@@ -48,14 +48,15 @@ Unity-XR-AI/
 
 ## 📊 Statistics
 
-- **KnowledgeBase**: 75+ active MD files
+- **KnowledgeBase**: 1,043 markdown files (658MB after cleanup)
 - **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
 - **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
-- **Platform Coverage**: iOS, Android, Quest 3/Pro, WebGL, Vision Pro
-- **MetavidoVFX Scripts**: 73 custom C# scripts (core + H3M + Echovision)
-- **VFX Assets**: 65+ production VFX Graph effects
+- **Platform Coverage**: iOS 15+, Android, Quest 3/Pro, WebGL, Vision Pro
+- **MetavidoVFX Scripts**: 458 C# scripts (core + H3M + Echovision + NNCam)
+- **VFX Assets**: 88 production VFX Graph effects
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
+- **Performance**: 353 FPS @ 10 VFX (verified Jan 16, 2026)
 
 ---
 
@@ -81,29 +82,31 @@ AR Foundation VFX project with H3M Hologram system.
 **Build**: `./build_ios.sh`
 **Deploy**: `./deploy_ios.sh`
 
-### Core Architecture (2026-01)
+### Core Architecture (Updated 2026-01-16)
 
-**Central Hub**: `VFXBinderManager` - Single dispatch, binds ALL AR data to ALL VFX
-- One GPU compute dispatch for depth→world conversion
-- Auto-discovers VFX in scene, binds DepthMap/StencilMap/PositionMap/RayParams
-- Supports 24-part body segmentation (BodyPixSentis)
+**Primary Pipeline**: `VFXARDataBinder` - Per-VFX binding via VFXPropertyBinder
+- Each VFX has its own binder component for AR data
+- 353 FPS verified with 10 active VFX
+- Replaced centralized VFXBinderManager (now legacy/disabled)
 
 **Systems**:
-- **VFX Management**: VFXCategory, VFXBinderManager, VFXGalleryUI, VFXSelectorUI
+- **VFX Management**: VFXARDataBinder (PRIMARY), VFXLibraryManager, VFXToggleUI, VFXGalleryUI
 - **Hand Tracking**: HandVFXController (velocity-driven, pinch detection), HoloKit integration
-- **Audio**: EnhancedAudioProcessor (FFT frequency bands), SoundWaveEmitter
+- **Audio**: EnhancedAudioProcessor (FFT frequency bands), SoundWaveEmitter (synced upstream)
 - **Performance**: VFXAutoOptimizer (FPS-adaptive), VFXLODController, VFXProfiler
 - **EchoVision**: MeshVFX (AR mesh → GraphicsBuffers), HumanParticleVFX
 - **H3M Hologram**: HologramSource, HologramRenderer, HologramAnchor
+- **NNCam**: NNCamKeypointBinder, NNCamVFXSwitcher (9 keypoint-driven VFX)
+- **Body Segmentation**: BodyPartSegmenter (24-part BodyPixSentis)
 
 **Documentation**: `MetavidoVFX-main/Assets/Documentation/README.md`
 
-### Critical Bug Fixes Required
+### Bug Fixes Applied (Jan 2026)
 
 See `MetavidoVFX-main/Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` for details:
-1. **Thread Dispatch Mismatch** - OptimizedARVFXBridge uses `/8.0f` instead of `/32.0f`
-2. **Integer Division Truncation** - HumanParticleVFX missing `CeilToInt()`
-3. **Memory Leak** - HumanParticleVFX missing RenderTexture release in OnDestroy()
+1. ✅ **Thread Dispatch Mismatch** - Fixed: uses dynamic thread group size queries
+2. ✅ **Integer Division Truncation** - Fixed: HumanParticleVFX uses `CeilToInt()`
+3. ✅ **Memory Leak** - Fixed: RenderTexture release in OnDestroy()
 
 ---
 
@@ -148,4 +151,4 @@ MIT License - Knowledge bases and code snippets attributed to original repos.
 
 **Maintained by**: James Tunick
 
-**Last Updated**: 2026-01-15
+**Last Updated**: 2026-01-16

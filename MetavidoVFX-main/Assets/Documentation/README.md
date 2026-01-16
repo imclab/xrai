@@ -48,7 +48,7 @@ This document explains all systems and components in the MetavidoVFX project.
 
 ---
 
-## Data Pipeline Architecture (Clean)
+## Data Pipeline Architecture (Updated 2026-01-16)
 
 ### Recommended Architecture
 
@@ -63,37 +63,41 @@ This document explains all systems and components in the MetavidoVFX project.
             │                    │                     │
             v                    v                     v
 ┌───────────────────────────────────────────────────────────────────┐
-│                    VFXBinderManager (PRIMARY)                     │
-│  Binds: DepthMap, StencilMap, ColorMap, InverseView, DepthRange  │
-│  Target: ALL VFX in scene (auto-discovery)                        │
+│              VFXARDataBinder (PRIMARY - per VFX)                  │
+│  Binds: DepthMap, StencilMap, ColorMap, PositionMap, RayParams   │
+│  Target: Individual VFX (component on each VFX GameObject)        │
+│  Performance: 353 FPS @ 10 active VFX                             │
 └──────────────────────────────┬────────────────────────────────────┘
                                │
             ┌──────────────────┼──────────────────┐
             v                  v                  v
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│ SpawnControlVFX │  │ SpawnControlVFX │  │ SpawnControlVFX │
+│ VFX + Binder    │  │ VFX + Binder    │  │ VFX + Binder    │
 │    (VFX 1)      │  │    (VFX 2)      │  │    (VFX N)      │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
 
 ### Specialized Pipelines (Domain-Specific Data)
 
-| Pipeline | Purpose | Properties Bound |
-|----------|---------|------------------|
-| **VFXBinderManager** | Primary AR data to ALL VFX | DepthMap, StencilMap, ColorMap, InverseView |
-| **HologramSource/Renderer** | H3M "Mini Me" hologram | PositionMap (GPU computed), ColorTexture |
-| **HandVFXController** | Hand tracking | HandPosition, HandVelocity, BrushWidth, IsPinching |
-| **EnhancedAudioProcessor** | Audio frequency bands | AudioVolume, AudioBass, AudioMid, AudioTreble |
-| **SoundWaveEmitter** | Expanding sound waves | WaveOrigin, WaveDirection, WaveRange, WaveAge |
-| **MeshVFX** | AR mesh surfaces | MeshPointCache, MeshNormalCache, MeshPointCount |
+| Pipeline | Status | Properties Bound |
+|----------|--------|------------------|
+| **VFXARDataBinder** | ✅ PRIMARY | DepthMap, StencilMap, ColorMap, PositionMap, RayParams |
+| **VFXBinderManager** | ⚠️ LEGACY | Centralized binder (disabled in scenes, code preserved) |
+| **HologramSource/Renderer** | ✅ H3M | PositionMap (GPU computed), ColorTexture |
+| **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth, IsPinching |
+| **EnhancedAudioProcessor** | ✅ Audio | AudioVolume, AudioBass, AudioMid, AudioTreble |
+| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveDirection, WaveRange, WaveAge |
+| **MeshVFX** | ✅ Mesh | MeshPointCache, MeshNormalCache, MeshPointCount |
+| **NNCamKeypointBinder** | ✅ Keypoints | KeypointBuffer (17 pose landmarks) |
+| **BodyPartSegmenter** | ✅ Segmentation | BodyPartMask, segmented PositionMaps |
 
 ### Deprecated/Redundant (DO NOT USE)
 
 | Component | Reason | Alternative |
 |-----------|--------|-------------|
-| **PeopleOcclusionVFXManager** | Creates own VFX at runtime, conflicts | VFXBinderManager |
-| **ARKitMetavidoBinder** (per-VFX) | Redundant binding per VFX | VFXBinderManager (centralized) |
-| **OptimizedARVFXBridge** | Legacy, redundant | VFXBinderManager |
+| **PeopleOcclusionVFXManager** | Creates own VFX at runtime, conflicts | VFXARDataBinder |
+| **ARKitMetavidoBinder** (per-VFX) | Redundant legacy per-VFX binder | VFXARDataBinder |
+| **OptimizedARVFXBridge** | Legacy, redundant | VFXARDataBinder |
 
 ### Cleanup
 
