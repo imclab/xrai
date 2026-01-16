@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/VFXLibrary.uss?fileID=7433441132597879392&amp;guid=vfxlibrary-uss&amp;type=3#VFXLibrary" />
+    <engine:VisualElement name="vfx-panel" class="panel" style="position: absolute; right: 8px; top: 8px; width: 260px; max-height: 80%;">
+        <engine:VisualElement name="header" class="header">
+            <engine:Label text="VFX Library" name="title-label" class="title" />
+            <engine:Label text="0/0" name="count-label" class="count" />
+        </engine:VisualElement>
+        <engine:VisualElement name="stats-row" class="stats-row">
+            <engine:Label text="FPS: 60" name="fps-label" class="stat-label" />
+            <engine:Label text="Active: 0/3" name="active-label" class="stat-label" />
+        </engine:VisualElement>
+        <engine:VisualElement name="controls-row" class="controls-row">
+            <engine:Button text="All Off" name="all-off-btn" class="control-btn" />
+            <engine:Button text="Expand" name="expand-btn" class="control-btn" />
+            <engine:Button text="Collapse" name="collapse-btn" class="control-btn" />
+        </engine:VisualElement>
+        <engine:ScrollView name="category-scroll" class="category-scroll">
+            <engine:VisualElement name="categories-container" />
+        </engine:ScrollView>
+    </engine:VisualElement>
+</engine:UXML>

@@ -1,0 +1,144 @@
+/* VFX Selector UI - MetavidoVFX Style */
+/* Matches original Monitor.uss with Inconsolata font and dark theme */
+
+.vfx-panel {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    padding: 6px;
+    background-color: rgba(0, 0, 0, 0.74);
+    border-radius: 6px;
+}
+
+.vfx-title {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    color: rgb(255, 255, 255);
+    font-size: 12px;
+    margin-bottom: 4px;
+    -unity-text-align: middle-left;
+}
+
+.vfx-button-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 280px;
+}
+
+.vfx-button {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    color: rgb(255, 255, 255);
+    background-color: rgba(60, 60, 60, 0.8);
+    border-width: 0.5px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin: 2px;
+    font-size: 10px;
+    min-width: 60px;
+    -unity-text-align: middle-center;
+}
+
+.vfx-button:hover {
+    background-color: rgba(80, 120, 180, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.vfx-button:active {
+    background-color: rgba(60, 160, 100, 0.9);
+}
+
+.vfx-button.selected {
+    background-color: rgba(40, 140, 80, 0.9);
+    border-color: rgb(255, 255, 255);
+    border-width: 1px;
+}
+
+/* Info panel style matching Monitor.uss */
+.info-label {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0.74);
+    margin: 2px;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+/* Toggle matching original style */
+.vfx-toggle {
+    margin: 2px 0;
+}
+
+.vfx-toggle > .unity-toggle__input > .unity-toggle__checkmark {
+    width: 14px;
+    height: 14px;
+    border-width: 0.5px;
+    border-radius: 3px;
+    background-color: rgba(140, 140, 140, 0);
+    border-color: rgba(255, 255, 255, 0.7);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.vfx-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark {
+    background-color: rgba(40, 140, 80, 0.9);
+}
+
+.vfx-toggle > .unity-label {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    color: rgb(255, 255, 255);
+    font-size: 11px;
+    min-width: 0;
+}
+
+/* Radio button group for VFX selection */
+.vfx-radio-group {
+    margin: 4px 0;
+}
+
+.vfx-radio-group > .unity-radio-button {
+    margin: 0 2px;
+}
+
+.vfx-radio-group > .unity-radio-button > .unity-radio-button__checkmark-background {
+    width: 14px;
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgb(255, 255, 255);
+    border-width: 0.5px;
+    padding: 2px;
+}
+
+.vfx-radio-group > .unity-radio-button > .unity-radio-button__checkmark-background > .unity-radio-button__checkmark {
+    width: 8px;
+    height: 8px;
+    background-color: rgb(255, 255, 255);
+}
+
+.vfx-radio-group > .unity-radio-button > .unity-label {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    color: rgb(255, 255, 255);
+    font-size: 11px;
+}
+
+/* Stats display */
+.stats-panel {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
+.stats-row {
+    flex-direction: row;
+}
+
+/* Preview window */
+.preview-window {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 24%;
+    height: 24%;
+    border-radius: 4px;
+    background-color: rgba(75, 75, 75, 0.5);
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0.8);
+}

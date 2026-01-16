@@ -1,0 +1,314 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+MetavidoVFX is a Unity 6 AR/VFX demonstration project that visualizes volumetric videos captured with iPhone Pro LiDAR sensors. It combines AR Foundation, VFX Graph, and advanced particle systems for interactive AR experiences on iOS.
+
+**Unity Version**: 6000.2.14f1
+**Primary Target**: iOS (ARKit)
+**Render Pipeline**: URP 17.2.0
+
+## Build Commands
+
+### iOS Build (Primary)
+```bash
+./build_and_deploy.sh    # Full cycle: Unity build → Xcode → device install
+./build_ios.sh           # Unity build only (generates Xcode project)
+```
+
+Build output: `Builds/iOS/Unity-iPhone.xcodeproj`
+
+### Manual Unity Build
+```bash
+/Applications/Unity/Hub/Editor/6000.2.14f1/Unity.app/Contents/MacOS/Unity \
+  -batchmode -quit \
+  -projectPath "$(pwd)" \
+  -buildTarget iOS \
+  -executeMethod BuildScript.BuildiOS
+```
+
+### Device Debugging
+```bash
+./debug.sh               # Stream device logs (filters Unity/MetavidoVFX)
+idevicesyslog | grep Unity  # Manual fallback
+```
+
+## Architecture
+
+### CRITICAL: Live AR Pipeline (Our Approach)
+
+**Key Distinction**: Our pipeline extracts ALL data from live AR Foundation (local device), NOT from:
+- ❌ Rcam4: NDI network stream (remote device → PC)
+- ❌ MetavidoVFX Original: Encoded .metavido video files
+
+This gives us ~16ms latency, minimal CPU overhead, and excellent mobile performance.
+
+**Optimal for Multi-Hologram**: VFXBinderManager uses ONE compute dispatch for ALL VFX.
+
+| Holograms | GPU Time | Note |
+|-----------|----------|------|
+| 1 | ~2ms | Single dispatch |
+| 10 | ~5ms | Scales well |
+| 20 | ~8ms | 60fps feasible |
+
+### Core AR → VFX Pipeline
+
+```
+AR Sensors (ARKit) → VFXBinderManager → All VFX
+                              ↓
+                   GPU Compute (DepthToWorld.compute)
+                              ↓
+                   VFX Properties: DepthMap, StencilMap, PositionMap, RayParams
+```
+
+**Key Components**:
+- `Assets/Scripts/VFX/VFXBinderManager.cs` - PRIMARY pipeline, binds all AR data to ALL VFX
+- `Assets/H3M/Core/HologramSource.cs` - Hologram depth processing (computes PositionMap)
+- `Assets/H3M/Core/HologramRenderer.cs` - Binds HologramSource output to specific VFX
+- `Assets/Resources/DepthToWorld.compute` - GPU depth→world position conversion
+
+### H3M Hologram System
+
+Located in `Assets/H3M/`:
+- `Core/` - HologramSource, HologramRenderer, HologramAnchor
+- `Editor/` - Scene setup utilities
+- `Network/` - WebRTC for multiplayer holograms
+
+### VFX Properties (Standard Names)
+```
+DepthMap      - AR depth texture
+StencilMap    - Human body mask
+PositionMap   - World positions (GPU-computed)
+ColorMap      - Camera RGB texture
+InverseView   - Inverse view matrix
+InverseProj   - Inverse projection matrix
+RayParams     - (0, 0, tan(fov/2)*aspect, tan(fov/2)) for UV+depth→3D
+DepthRange    - Depth clipping (default 0.1-10m)
+```
+
+### Body Segmentation (BodyPixSentis 24-Part)
+
+**Requires**: `BODYPIX_AVAILABLE` scripting define (auto-added if package installed)
+**Setup**: `H3M > Body Segmentation > Setup BodyPix Defines`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `BodyPartMask` | Texture2D | 24-part segmentation (R channel = part index 0-23, 255=background) |
+| `BodyPositionMap` | Texture2D | Torso-only world positions |
+| `ArmsPositionMap` | Texture2D | Arms-only world positions |
+| `HandsPositionMap` | Texture2D | Hands-only world positions |
+| `LegsPositionMap` | Texture2D | Legs+feet world positions |
+| `FacePositionMap` | Texture2D | Face-only world positions |
+| `KeypointBuffer` | GraphicsBuffer | 17 pose landmarks |
+
+**Body Part Index Reference**:
+- 0-1: Face (L/R)
+- 2-9: Arms (upper/lower, front/back)
+- 10-11: Hands
+- 12-13: Torso (front/back)
+- 14-21: Legs (upper/lower, front/back)
+- 22-23: Feet
+- 255: Background
+
+**Key Files**:
+- `Assets/Scripts/Segmentation/BodyPartSegmenter.cs` - ML inference wrapper
+- `Assets/Resources/SegmentedDepthToWorld.compute` - GPU segmented position maps
+- `Assets/Scripts/Editor/BodyPixDefineSetup.cs` - Auto-setup scripting define
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `Assets/Scenes/HOLOGRAM_Mirror_MVP.unity` | Main build scene |
+| `Assets/Editor/BuildScript.cs` | Build automation entry point |
+| `Packages/manifest.json` | Package dependencies |
+| `Assets/URP/` | URP renderer configurations |
+
+## Dependencies
+
+### Critical Packages
+- `com.unity.xr.arfoundation`: 6.2.1
+- `com.unity.xr.arkit`: 6.2.1
+- `com.unity.visualeffectgraph`: 17.2.0
+- `jp.keijiro.metavido`: 5.1.1 (volumetric video)
+
+### Scoped Registry (Keijiro packages)
+Registry URL: `https://registry.npmjs.com`
+Scopes: `jp.keijiro`
+
+### External Dependencies
+- **AR Foundation Remote 2**: Asset Store package, not in version control. Install via `Assets/Plugins/ARFoundationRemoteInstaller/`
+- **Unity MCP**: `com.coplaydev.unity-mcp` (Git dependency)
+
+## Editor Testing
+
+Use AR Foundation Remote 2 for fast iteration:
+1. Build companion app from `Assets/Plugins/ARFoundationRemoteInstaller/Installer` scene
+2. Connect: `Window > AR Foundation Remote > Connection`
+3. Press Play - device camera/LiDAR streams to Editor
+
+## On-Device Debugging
+
+InGameDebugConsole is auto-injected during builds:
+- **Open**: Tap 3 fingers on screen
+- **Purpose**: Catch runtime errors that don't crash the app
+
+## Build Configuration
+
+- **Team ID**: Z8622973EB (auto-set in scripts)
+- **Device**: IMClab 15 (configured in build_and_deploy.sh)
+- **Xcode**: 16.4 (pinned via DEVELOPER_DIR)
+
+## Common Issues
+
+### DepthToWorld Kernel Not Found
+The compute shader `Assets/Shaders/DepthToWorld.compute` must contain a kernel named `DepthToWorld`. Check HologramSource.cs:90 for the FindKernel call.
+
+### Metal Pipeline Errors (ARKitBackgroundEditor)
+Depth attachment format mismatch in editor - typically safe to ignore during Editor play mode; resolves on device builds.
+
+### AR Foundation Remote Black Screen
+Ensure "Enable AR Remote" is checked in Project Settings and device/editor are on same network.
+
+### Compute Shader Thread Group Mismatch
+`DepthToWorld.compute` uses `[numthreads(32,32,1)]`. Dispatch must use `ceil(width/32)` groups, not `ceil(width/8)`. Fixed in VFXBinderManager.cs (2026-01-14).
+
+### HologramRenderer Binding Conflict
+HologramRenderer.cs must NOT bind PositionMap to DepthMap property. VFX expecting raw depth would receive computed positions, causing particles to fail. Fixed by removing fallback (2026-01-14).
+
+## H3M Menu Commands
+
+Editor utilities accessible via Unity menu bar:
+
+| Menu | Purpose |
+|------|---------|
+| `H3M > HoloKit > Setup HoloKit Defines` | Add HOLOKIT_AVAILABLE define |
+| `H3M > HoloKit > Setup Complete HoloKit Rig` | Full HoloKit + hand tracking |
+| `H3M > Post-Processing > Setup Post-Processing` | Create/update Global Volume |
+| `H3M > EchoVision > Setup All EchoVision Components` | Full AR/Audio/VFX setup |
+| `H3M > VFX Performance > Add Auto Optimizer` | Add FPS-based quality control |
+| `H3M > VFX Performance > Profile All VFX` | Analyze VFX performance |
+| `H3M > VFX > Auto-Setup Binders` | Auto-add binders based on VFX properties |
+| `H3M > VFX > Add Binders to Selected` | Quick setup for selected VFX |
+
+## Data Pipeline Architecture (Clean)
+
+**Primary Pipeline**: VFXBinderManager (centralized, binds to ALL VFX)
+
+```
+AR Session Origin → VFXBinderManager → All VFX (DepthMap, StencilMap, ColorMap)
+                          ↓
+         Specialized Controllers (domain-specific data)
+```
+
+| Pipeline | Status | Data Bound |
+|----------|--------|------------|
+| **VFXBinderManager** | ✅ PRIMARY | DepthMap, StencilMap, ColorMap, InverseView |
+| **HologramSource/Renderer** | ✅ H3M | PositionMap (computed), ColorTexture |
+| **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth |
+| **EnhancedAudioProcessor** | ✅ Audio | AudioVolume, AudioBass, AudioMid, AudioTreble |
+| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveRange, WaveAge |
+| **PeopleOcclusionVFXManager** | ❌ DISABLED | Redundant (creates own VFX) |
+| **ARKitMetavidoBinder** | ❌ REMOVED | Redundant (per-VFX binding) |
+
+**Cleanup**: `H3M > Pipeline Cleanup > Run Full Cleanup`
+
+## New Systems
+
+### VFX Library System (2026-01)
+Runtime VFX management with Editor persistence and flexible UI Toolkit integration:
+- `Assets/Scripts/VFX/VFXLibraryManager.cs` - Loads VFX from Resources, supports Editor persistence
+- `Assets/Scripts/UI/VFXToggleUI.cs` - UI Toolkit panel with 4 modes (Auto/Standalone/Embedded/Programmatic)
+- `Assets/Scripts/Editor/VFXLibrarySetup.cs` - Editor setup utilities (`H3M > VFX Library`)
+- `Assets/UI/VFXLibrary.uxml` - UI layout
+- `Assets/UI/VFXLibrary.uss` - UI styles
+
+**Setup**: `H3M > VFX Library > Setup Complete System`
+**Persistence**: Right-click VFXLibraryManager → "Populate Library (Editor - Persistent)"
+
+### VFX Management
+- `Assets/Scripts/VFX/VFXCategory.cs` - Categorizes VFX by binding requirements (with SetCategory method)
+- `Assets/Scripts/VFX/VFXBinderManager.cs` - Unified data binding for all VFX
+- `Assets/Scripts/UI/VFXGalleryUI.cs` - World-space gaze-and-dwell VFX selector
+- `Assets/Scripts/UI/VFXSelectorUI.cs` - UI Toolkit VFX selector (screen-space)
+
+### Hand Tracking
+- `Assets/Scripts/HandTracking/HandVFXController.cs` - Velocity-driven VFX with pinch detection
+- `Assets/Scripts/HandTracking/ARKitHandTracking.cs` - XR Hands fallback
+- `Assets/Scripts/Editor/HoloKitHandTrackingSetup.cs` - HoloKit rig setup
+
+### Audio System
+- `Assets/Scripts/Audio/EnhancedAudioProcessor.cs` - Frequency band analysis
+- `Assets/Echovision/Scripts/SoundWaveEmitter.cs` - Expanding sound waves for VFX
+
+### Performance
+- `Assets/Scripts/Performance/VFXAutoOptimizer.cs` - FPS tracking + auto quality
+- `Assets/Scripts/Performance/VFXLODController.cs` - Distance-based quality
+- `Assets/Scripts/Performance/VFXProfiler.cs` - VFX analysis and recommendations
+
+### EchoVision
+- `Assets/Echovision/Scripts/MeshVFX.cs` - AR mesh → VFX GraphicsBuffers
+- `Assets/Scripts/VFX/HumanParticleVFX.cs` - AR depth → world positions via compute
+
+### VFX Binders (Runtime VFX Support)
+- `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - AR data for spawned VFX
+- `Assets/Scripts/VFX/Binders/VFXAudioDataBinder.cs` - Audio bands for spawned VFX
+- `Assets/Scripts/VFX/Binders/VFXHandDataBinder.cs` - Hand tracking for spawned VFX
+- `Assets/Scripts/VFX/Binders/VFXBinderUtility.cs` - Auto-detect and setup helper
+- `Assets/Scripts/Editor/VFXAutoBinderSetup.cs` - Editor window for batch setup
+
+## VFX Properties Reference
+
+### Hand Tracking Properties
+```
+HandPosition     Vector3    World position of wrist
+HandVelocity     Vector3    Velocity vector
+HandSpeed        float      Velocity magnitude
+BrushWidth       float      Pinch-controlled width
+IsPinching       bool       True during pinch
+```
+
+### Audio Properties
+```
+AudioVolume      float      0-1 overall volume
+AudioBass        float      0-1 low frequency
+AudioMid         float      0-1 mid frequency
+AudioTreble      float      0-1 high frequency
+```
+
+### AR Depth Properties
+```
+DepthMap         Texture2D  Environment depth
+StencilMap       Texture2D  Human segmentation
+PositionMap      Texture2D  World positions (GPU-computed)
+ColorMap         Texture2D  Camera color
+InverseView      Matrix4x4  Inverse view matrix
+InverseProjection Matrix4x4 Inverse projection matrix
+RayParams        Vector4    (0, 0, tan(fov/2)*aspect, tan(fov/2))
+DepthRange       Vector2    Near/far clipping (default 0.1-10m)
+```
+
+## Documentation
+
+In-project documentation:
+- `Assets/Documentation/README.md` - Complete system documentation
+- `Assets/Documentation/QUICK_REFERENCE.md` - Properties cheat sheet
+- `Assets/Documentation/PIPELINE_ARCHITECTURE.md` - All pipelines deep dive
+
+## Knowledgebase
+
+Extended documentation in parent repo:
+- `../KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - AR/VFX code patterns
+- `../KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` - 520+ reference repos
+- `../KnowledgeBase/_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` - Hologram/portal patterns
+- `../KnowledgeBase/_HOLOGRAM_RECORDING_PLAYBACK.md` - Recording/playback specs
+- `../KnowledgeBase/_CLAUDE_CODE_UNITY_WORKFLOW.md` - Claude Code + Unity MCP workflow patterns
+
+## Specifications
+
+Project specifications in parent repo:
+- `../specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror)
+- `../specs/003-hologram-conferencing/` - Recording/playback/multiplayer
+- `../specs/004-metavidovfx-systems/` - VFX systems implementation status

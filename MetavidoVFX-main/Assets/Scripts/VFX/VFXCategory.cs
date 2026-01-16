@@ -63,6 +63,25 @@ namespace MetavidoVFX.VFX
         public int PerformanceTier => performanceTier;
         public bool MobileOptimized => mobileOptimized;
 
+        /// <summary>
+        /// Set the category (used by VFXLibraryManager during creation)
+        /// </summary>
+        public void SetCategory(VFXCategoryType newCategory)
+        {
+            category = newCategory;
+            // Auto-set default bindings based on category
+            bindings = newCategory switch
+            {
+                VFXCategoryType.People => VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap | VFXBindingRequirements.StencilMap,
+                VFXCategoryType.Face => VFXBindingRequirements.FaceTracking | VFXBindingRequirements.ColorMap,
+                VFXCategoryType.Hands => VFXBindingRequirements.HandTracking | VFXBindingRequirements.ColorMap,
+                VFXCategoryType.Environment => VFXBindingRequirements.None,
+                VFXCategoryType.Audio => VFXBindingRequirements.Audio,
+                VFXCategoryType.Hybrid => VFXBindingRequirements.All,
+                _ => VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap
+            };
+        }
+
         private VisualEffect _vfx;
         public VisualEffect VFX => _vfx ??= GetComponent<VisualEffect>();
 

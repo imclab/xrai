@@ -1,0 +1,148 @@
+/* VFXLibrary.uss - Matches Monitor.uss style (Inconsolata, dark theme) */
+
+.panel {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    padding: 6px;
+}
+
+.header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-radius: 4px;
+}
+
+.title {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.count {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.stats-row {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2px 4px;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.controls-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.control-btn {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 10px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(60, 60, 60, 0.8);
+    border-width: 0;
+    border-radius: 3px;
+    padding: 4px 8px;
+    flex-grow: 1;
+    margin: 0 2px;
+}
+
+.control-btn:hover {
+    background-color: rgba(80, 80, 80, 0.9);
+}
+
+.control-btn:active {
+    background-color: rgba(100, 140, 200, 0.8);
+}
+
+.category-scroll {
+    flex-grow: 1;
+    max-height: 400px;
+}
+
+.category-header {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 12px;
+    color: rgb(100, 160, 255);
+    -unity-font-style: bold;
+    background-color: rgba(30, 30, 30, 0.8);
+    padding: 6px 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    border-radius: 3px;
+}
+
+.category-header:hover {
+    background-color: rgba(50, 50, 50, 0.9);
+}
+
+.category-container {
+    margin-left: 8px;
+    margin-bottom: 4px;
+}
+
+.vfx-item {
+    flex-direction: row;
+    align-items: center;
+    padding: 3px 4px;
+    margin: 1px 0;
+    border-radius: 3px;
+}
+
+.vfx-item:hover {
+    background-color: rgba(50, 50, 50, 0.5);
+}
+
+.vfx-toggle {
+    width: 40px;
+    margin-right: 6px;
+}
+
+.vfx-toggle .unity-toggle__input {
+    flex-direction: row-reverse;
+}
+
+.vfx-toggle .unity-toggle__checkmark {
+    width: 32px;
+    height: 16px;
+    border-radius: 8px;
+    background-color: rgba(80, 80, 80, 0.8);
+    border-width: 0;
+}
+
+.vfx-toggle:checked .unity-toggle__checkmark {
+    background-color: rgba(80, 180, 100, 0.9);
+}
+
+.vfx-name {
+    -unity-font-definition: url("project://database/Assets/UI/Inconsolata/static/Inconsolata-Light.ttf?fileID=12800000&guid=eda7dab7ed8e042a688dd2301b6c76c7&type=3#Inconsolata-Light");
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vfx-name-active {
+    color: rgb(120, 220, 140);
+}
+
+.hidden {
+    display: none;
+}

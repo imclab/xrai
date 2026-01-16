@@ -1,0 +1,30 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:engine="UnityEngine.UIElements"
+             xmlns:editor="UnityEditor.UIElements"
+             noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+             editor-extension-mode="False">
+
+    <Style src="project://database/Assets/UI/VFXSelector.uss" />
+
+    <!-- VFX Selection Panel -->
+    <engine:VisualElement name="vfx-panel" class="vfx-panel">
+        <engine:Label text="VFX" class="vfx-title" />
+        <engine:RadioButtonGroup name="vfx-selector" class="vfx-radio-group" />
+        <engine:VisualElement name="spacer" style="height: 4px;" />
+        <engine:Toggle label="Auto Cycle" name="auto-cycle-toggle" class="vfx-toggle" />
+    </engine:VisualElement>
+
+    <!-- Stats Panel (FPS, Particles) -->
+    <engine:VisualElement name="stats-panel" class="stats-panel">
+        <engine:VisualElement class="stats-row">
+            <engine:Label text="FPS: 60" name="fps-label" class="info-label" />
+        </engine:VisualElement>
+        <engine:VisualElement class="stats-row">
+            <engine:Label text="Particles: 0" name="particle-label" class="info-label" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- Preview Window (like original video-view) -->
+    <engine:VisualElement name="preview-window" class="preview-window" />
+
+</engine:UXML>
