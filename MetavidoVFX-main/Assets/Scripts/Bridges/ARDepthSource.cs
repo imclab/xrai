@@ -20,6 +20,10 @@ public class ARDepthSource : MonoBehaviour
     [Tooltip("Prefer human depth (body segmentation) over environment depth (LiDAR). Best for people VFX.")]
     [SerializeField] bool _preferHumanDepth = true;
 
+    [Header("Depth Rotation (iOS Portrait)")]
+    [Tooltip("Rotate depth/stencil 90° CW for iOS portrait mode. Required for Metavido-style VFX.")]
+    [SerializeField] bool _rotateDepthTexture = true;
+
     [Header("Editor Testing")]
     [Tooltip("Use mock textures in Editor when no AR data available. Allows testing VFXARBinder without device.")]
     [SerializeField] bool _useMockDataInEditor = true;
@@ -34,6 +38,11 @@ public class ARDepthSource : MonoBehaviour
     Texture2D _mockStencilMap;
     RenderTexture _mockPositionMap;
     bool _usingMockData;
+
+    // Rotation resources
+    Material _rotateMaterial;
+    RenderTexture _rotatedDepthRT;
+    RenderTexture _rotatedStencilRT;
 
     // Cached camera textures from frameReceived
     Texture _lastCameraTexture;
@@ -298,6 +307,43 @@ public class ARDepthSource : MonoBehaviour
         _colorCaptured = false;
     }
 
+    /// <summary>
+    /// Rotates a texture 90° CW using the RotateUV90CW shader (swaps width/height)
+    /// </summary>
+    Texture RotateTexture(Texture source, ref RenderTexture rotatedRT)
+    {
+        if (source == null) return null;
+
+        // Initialize rotation material
+        if (_rotateMaterial == null)
+        {
+            var shader = Shader.Find("Hidden/RotateUV90CW");
+            if (shader == null)
+            {
+                if (_verboseLogging)
+                    Debug.LogWarning("[ARDepthSource] RotateUV90CW shader not found, using unrotated texture");
+                return source;
+            }
+            _rotateMaterial = new Material(shader);
+        }
+
+        // Rotated dimensions (swap width/height)
+        int rotW = source.height;
+        int rotH = source.width;
+
+        // Create or resize RT
+        if (rotatedRT == null || rotatedRT.width != rotW || rotatedRT.height != rotH)
+        {
+            if (rotatedRT != null) rotatedRT.Release();
+            rotatedRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.RFloat);
+            rotatedRT.filterMode = FilterMode.Point;
+            rotatedRT.Create();
+        }
+
+        Graphics.Blit(source, rotatedRT, _rotateMaterial);
+        return rotatedRT;
+    }
+
     void LateUpdate()
     {
         // Prefer human depth for body VFX, fall back to environment depth
@@ -306,6 +352,8 @@ public class ARDepthSource : MonoBehaviour
             depth = _occlusion?.humanDepthTexture ?? _occlusion?.environmentDepthTexture;
         else
             depth = _occlusion?.environmentDepthTexture ?? _occlusion?.humanDepthTexture;
+
+        Texture stencil = _occlusion?.humanStencilTexture;
 
         #if UNITY_EDITOR
         // Use mock data in Editor when no AR data available
@@ -326,13 +374,22 @@ public class ARDepthSource : MonoBehaviour
         }
 
         _usingMockData = false;
+
+        // Apply rotation if enabled (ARKit depth is landscape, VFX expects portrait)
+        if (_rotateDepthTexture)
+        {
+            depth = RotateTexture(depth, ref _rotatedDepthRT);
+            if (stencil != null)
+                stencil = RotateTexture(stencil, ref _rotatedStencilRT);
+        }
+
         if (_verboseLogging && Time.frameCount % 60 == 0)
-            Debug.Log($"[ARDepthSource] Using depth: {depth.width}x{depth.height} (human={_occlusion?.humanDepthTexture == depth})");
+            Debug.Log($"[ARDepthSource] Using depth: {depth.width}x{depth.height} (rotated={_rotateDepthTexture})");
 
         float startTime = Time.realtimeSinceStartup;
 
-        // Resize if needed
-        if (PositionMap == null || PositionMap.width != depth.width)
+        // Resize if needed (use rotated dimensions)
+        if (PositionMap == null || PositionMap.width != depth.width || PositionMap.height != depth.height)
         {
             // Use explicit null check - Unity's ?. doesn't respect destroyed objects
             if (PositionMap != null) PositionMap.Release();
@@ -353,16 +410,29 @@ public class ARDepthSource : MonoBehaviour
             }
         }
 
-        // Compute RayParams
+        // Compute RayParams - adjust for rotation
         float fov = _arCamera.fieldOfView * Mathf.Deg2Rad;
-        float h = Mathf.Tan(fov * 0.5f);
-        float w = h * _arCamera.aspect;
+        float tanV = Mathf.Tan(fov * 0.5f);
+        float tanH;
+
+        if (_rotateDepthTexture)
+        {
+            // Use depth texture aspect (after rotation) and negate tanH for correct orientation
+            float depthAspect = (float)depth.width / depth.height;
+            tanH = tanV * depthAspect;
+            RayParams = new Vector4(0, 0, -tanH, tanV); // Negate tanH for rotated depth
+        }
+        else
+        {
+            tanH = tanV * _arCamera.aspect;
+            RayParams = new Vector4(0, 0, tanH, tanV);
+        }
 
         // SINGLE dispatch for ALL VFX
         _depthToWorld.SetTexture(_kernel, "_Depth", depth);
         _depthToWorld.SetTexture(_kernel, "_PositionRT", PositionMap);
         _depthToWorld.SetMatrix("_InvVP", (_arCamera.projectionMatrix * _arCamera.worldToCameraMatrix).inverse);
-        
+
         int groupsX = Mathf.CeilToInt(depth.width / 32f);
         int groupsY = Mathf.CeilToInt(depth.height / 32f);
         _depthToWorld.Dispatch(_kernel, groupsX, groupsY, 1);
@@ -382,8 +452,7 @@ public class ARDepthSource : MonoBehaviour
 
         // Cache for binders (NOT global textures - they don't work for VFX!)
         DepthMap = depth;
-        StencilMap = _occlusion.humanStencilTexture ?? Texture2D.whiteTexture;
-        RayParams = new Vector4(0, 0, w, h);
+        StencilMap = stencil ?? Texture2D.whiteTexture;
         InverseView = _arCamera.cameraToWorldMatrix;
 
         // Vectors/matrices CAN be global (VFX reads via HLSL)
@@ -401,6 +470,15 @@ public class ARDepthSource : MonoBehaviour
         if (_velocityMap != null) _velocityMap.Release();
         if (ColorMap != null) ColorMap.Release();
 
+        // Rotation cleanup
+        if (_rotatedDepthRT != null) _rotatedDepthRT.Release();
+        if (_rotatedStencilRT != null) _rotatedStencilRT.Release();
+        if (_rotateMaterial != null)
+        {
+            if (Application.isPlaying) Destroy(_rotateMaterial);
+            else DestroyImmediate(_rotateMaterial);
+        }
+
         #if UNITY_EDITOR
         if (_mockDepthMap != null) Destroy(_mockDepthMap);
         if (_mockStencilMap != null) Destroy(_mockStencilMap);
@@ -415,6 +493,7 @@ public class ARDepthSource : MonoBehaviour
         Debug.Log($"IsReady: {IsReady}");
         Debug.Log($"UsingMockData: {_usingMockData}");
         Debug.Log($"PreferHumanDepth: {_preferHumanDepth}");
+        Debug.Log($"RotateDepthTexture: {_rotateDepthTexture}");
         Debug.Log($"HumanDepthTexture: {_occlusion?.humanDepthTexture} ({_occlusion?.humanDepthTexture?.width}x{_occlusion?.humanDepthTexture?.height})");
         Debug.Log($"EnvironmentDepthTexture: {_occlusion?.environmentDepthTexture} ({_occlusion?.environmentDepthTexture?.width}x{_occlusion?.environmentDepthTexture?.height})");
         Debug.Log($"DepthMap (selected): {DepthMap} ({DepthMap?.width}x{DepthMap?.height})");
