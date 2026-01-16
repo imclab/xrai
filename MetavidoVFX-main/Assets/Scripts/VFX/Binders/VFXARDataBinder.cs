@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 using UnityEngine.XR.ARFoundation;
+using MetavidoVFX.Audio;
 
 namespace MetavidoVFX.VFX.Binders
 {
@@ -26,6 +27,16 @@ namespace MetavidoVFX.VFX.Binders
         public bool bindColorMap = true;
         public bool bindPositionMap = true;
         public bool bindCameraMatrices = true;
+
+        [Header("Audio Binding (Optional)")]
+        [Tooltip("Enable audio frequency band binding - useful for audio-reactive VFX")]
+        public bool bindAudio = false;
+        [Tooltip("Audio processor (auto-found if null)")]
+        public EnhancedAudioProcessor audioProcessor;
+        [Range(0f, 2f)]
+        public float audioVolumeMultiplier = 1f;
+        [Range(0f, 2f)]
+        public float audioBandMultiplier = 1f;
 
         [Header("Depth Processing (ARKit)")]
         [Tooltip("Enable for Metavido VFX that sample DepthMap directly with UV→position conversion")]
@@ -50,6 +61,18 @@ namespace MetavidoVFX.VFX.Binders
         public ExposedProperty rayParamsProperty = "RayParams";
         [VFXPropertyBinding("UnityEngine.Vector2")]
         public ExposedProperty depthRangeProperty = "DepthRange";
+
+        [Header("Audio Property Names")]
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty audioVolumeProperty = "AudioVolume";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty audioBassProperty = "AudioBass";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty audioMidProperty = "AudioMid";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty audioTrebleProperty = "AudioTreble";
+        [VFXPropertyBinding("System.Single")]
+        public ExposedProperty audioSubBassProperty = "AudioSubBass";
 
         [Header("Settings")]
         public Vector2 depthRange = new Vector2(0.1f, 10f);
@@ -141,16 +164,28 @@ namespace MetavidoVFX.VFX.Binders
                 cameraBackground = FindFirstObjectByType<ARCameraBackground>();
             if (arCamera == null)
                 arCamera = Camera.main;
+
+            // Find audio processor if audio binding enabled
+            if (bindAudio && audioProcessor == null)
+                audioProcessor = FindFirstObjectByType<EnhancedAudioProcessor>();
         }
 
         public override bool IsValid(VisualEffect component)
         {
-            // Valid if at least one property exists
-            return component.HasTexture(depthMapProperty) ||
+            // Valid if at least one AR or audio property exists
+            bool hasARProperty = component.HasTexture(depthMapProperty) ||
                    component.HasTexture(stencilMapProperty) ||
                    component.HasTexture(colorMapProperty) ||
                    component.HasTexture(positionMapProperty) ||
                    component.HasMatrix4x4(inverseViewProperty);
+
+            bool hasAudioProperty = bindAudio && (
+                   component.HasFloat(audioVolumeProperty) ||
+                   component.HasFloat(audioBassProperty) ||
+                   component.HasFloat(audioMidProperty) ||
+                   component.HasFloat(audioTrebleProperty));
+
+            return hasARProperty || hasAudioProperty;
         }
 
         public override void UpdateBinding(VisualEffect component)
@@ -512,6 +547,55 @@ namespace MetavidoVFX.VFX.Binders
             {
                 Debug.LogWarning($"[VFXARDataBinder] Camera matrices NOT bound: bindCameraMatrices={bindCameraMatrices} arCamera={arCamera != null}");
             }
+
+            // Audio Binding (optional - for audio-reactive VFX)
+            if (bindAudio && audioProcessor != null)
+            {
+                BindAudio(component);
+            }
+        }
+
+        void BindAudio(VisualEffect component)
+        {
+            // Volume - bind to multiple property names for compatibility
+            float volume = audioProcessor.AudioVolume * audioVolumeMultiplier;
+            if (component.HasFloat(audioVolumeProperty))
+                component.SetFloat(audioVolumeProperty, volume);
+            if (component.HasFloat("Volume"))
+                component.SetFloat("Volume", volume);
+
+            // Bass
+            float bass = audioProcessor.AudioBass * audioBandMultiplier;
+            if (component.HasFloat(audioBassProperty))
+                component.SetFloat(audioBassProperty, bass);
+            if (component.HasFloat("Bass"))
+                component.SetFloat("Bass", bass);
+
+            // Mid
+            float mid = audioProcessor.AudioMid * audioBandMultiplier;
+            if (component.HasFloat(audioMidProperty))
+                component.SetFloat(audioMidProperty, mid);
+            if (component.HasFloat("Mid"))
+                component.SetFloat("Mid", mid);
+
+            // Treble
+            float treble = audioProcessor.AudioTreble * audioBandMultiplier;
+            if (component.HasFloat(audioTrebleProperty))
+                component.SetFloat(audioTrebleProperty, treble);
+            if (component.HasFloat("Treble"))
+                component.SetFloat("Treble", treble);
+            if (component.HasFloat("High"))
+                component.SetFloat("High", treble);
+
+            // SubBass
+            float subBass = audioProcessor.AudioSubBass * audioBandMultiplier;
+            if (component.HasFloat(audioSubBassProperty))
+                component.SetFloat(audioSubBassProperty, subBass);
+            if (component.HasFloat("SubBass"))
+                component.SetFloat("SubBass", subBass);
+
+            if (verboseLogging && Time.frameCount % 180 == 0)
+                Debug.Log($"[VFXARDataBinder] Audio bound: vol={volume:F2} bass={bass:F2} mid={mid:F2} treble={treble:F2}");
         }
 
         /// <summary>
@@ -651,7 +735,8 @@ namespace MetavidoVFX.VFX.Binders
 
         public override string ToString()
         {
-            return $"AR Data : {depthMapProperty}, {stencilMapProperty}, {colorMapProperty}";
+            string audioStr = bindAudio ? " + Audio" : "";
+            return $"AR Data : {depthMapProperty}, {stencilMapProperty}, {colorMapProperty}{audioStr}";
         }
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 using MetavidoVFX.VFX;
+using MetavidoVFX.Segmentation;
 
 #if HOLOKIT_AVAILABLE
 using HoloKit.iOS;
@@ -45,6 +46,13 @@ namespace MetavidoVFX.HandTracking
         [SerializeField] private float pinchEndDistance = 0.03f;
         [SerializeField] private float grabStartDistance = 0.04f;
         [SerializeField] private float grabEndDistance = 0.06f;
+
+        [Header("BodyPix Fallback")]
+        [Tooltip("Use BodyPartSegmenter wrist keypoints when HoloKit unavailable")]
+        [SerializeField] private bool useBodyPixFallback = true;
+        [SerializeField] private BodyPartSegmenter bodyPartSegmenter;
+        [Tooltip("Minimum confidence for keypoint tracking (0-1)")]
+        [SerializeField] private float keypointMinConfidence = 0.5f;
 
         [Header("Physics")]
         [SerializeField] private bool enablePhysicsCollision = true;
@@ -101,6 +109,12 @@ namespace MetavidoVFX.HandTracking
                 audioProcessor = FindFirstObjectByType<AudioProcessor>();
             }
 
+            // Find BodyPartSegmenter for fallback hand tracking
+            if (useBodyPixFallback && bodyPartSegmenter == null)
+            {
+                bodyPartSegmenter = FindFirstObjectByType<BodyPartSegmenter>();
+            }
+
             // Initialize hand positions
             if (leftHandRoot != null) leftHandPrevPos = leftHandRoot.position;
             if (rightHandRoot != null) rightHandPrevPos = rightHandRoot.position;
@@ -116,6 +130,8 @@ namespace MetavidoVFX.HandTracking
 
         void UpdateHandTracking()
         {
+            bool holoKitHandled = false;
+
 #if HOLOKIT_AVAILABLE && !UNITY_EDITOR
             if (useHoloKitHandTracking && handTrackingManager != null)
             {
@@ -133,6 +149,7 @@ namespace MetavidoVFX.HandTracking
                     Vector3 thumbTip = handTrackingManager.GetHandJointPosition(0, JointName.ThumbTip);
                     Vector3 indexTip = handTrackingManager.GetHandJointPosition(0, JointName.IndexTip);
                     leftPinchDistance = Vector3.Distance(thumbTip, indexTip);
+                    holoKitHandled = true;
                 }
 
                 if (handTrackingManager.HandCount > 1)
@@ -149,6 +166,45 @@ namespace MetavidoVFX.HandTracking
                 }
             }
 #endif
+
+            // BodyPix fallback when HoloKit isn't available or didn't find hands
+            if (!holoKitHandled && useBodyPixFallback && bodyPartSegmenter != null && bodyPartSegmenter.IsReady)
+            {
+                UpdateHandTrackingFromBodyPix();
+            }
+        }
+
+        void UpdateHandTrackingFromBodyPix()
+        {
+            // LeftWrist = keypoint index 9, RightWrist = keypoint index 10
+            float leftScore = bodyPartSegmenter.GetKeypointScore(KeypointIndex.LeftWrist);
+            float rightScore = bodyPartSegmenter.GetKeypointScore(KeypointIndex.RightWrist);
+
+            if (leftScore >= keypointMinConfidence)
+            {
+                Vector3 screenPos = bodyPartSegmenter.GetKeypointPosition(KeypointIndex.LeftWrist);
+                // Convert screen position to world position (simplified - at fixed depth)
+                if (leftHandRoot != null && Camera.main != null)
+                {
+                    Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 1f));
+                    leftHandRoot.position = worldPos;
+                }
+            }
+
+            if (rightScore >= keypointMinConfidence)
+            {
+                Vector3 screenPos = bodyPartSegmenter.GetKeypointPosition(KeypointIndex.RightWrist);
+                if (rightHandRoot != null && Camera.main != null)
+                {
+                    Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 1f));
+                    rightHandRoot.position = worldPos;
+                }
+            }
+
+            // BodyPix doesn't provide finger positions for pinch detection
+            // Use fixed large pinch distance (no pinch detected)
+            leftPinchDistance = 0.1f;
+            rightPinchDistance = 0.1f;
         }
 
         void UpdateVelocity()
