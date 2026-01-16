@@ -62,9 +62,6 @@ namespace MetavidoVFX.VFX
         private Texture _lastDepthTexture;
         private Texture _lastStencilTexture;
         private Texture _lastColorTexture;
-        private RenderTexture _rotatedDepthRT;
-        private RenderTexture _rotatedStencilRT;
-        private Material _rotateUVMaterial;
         private Matrix4x4 _inverseViewMatrix;
         private Matrix4x4 _inverseProjectionMatrix;
         private Vector4 _rayParams;  // Camera projection: (0, 0, tan(fov/2)*aspect, tan(fov/2))
@@ -408,61 +405,7 @@ namespace MetavidoVFX.VFX
                 // Stencil uses direct property (no TryGet method exists)
                 _lastStencilTexture = occlusionManager.humanStencilTexture;
                 #pragma warning restore CS0618
-
-                // Rotate depth/stencil textures 90° CW to match camera orientation
-                // ARKit depth is in landscape orientation, VFX expects portrait
-                if (rotateDepthTexture && _lastDepthTexture != null)
-                {
-                    // Create rotation material if needed
-                    if (_rotateUVMaterial == null)
-                    {
-                        var shader = Shader.Find("Hidden/RotateUV90CW");
-                        if (shader == null)
-                        {
-                            // Fallback: create shader from string
-                            Debug.LogWarning("[VFXBinderManager] RotateUV90CW shader not found, using unrotated depth");
-                        }
-                        else
-                        {
-                            _rotateUVMaterial = new Material(shader);
-                        }
-                    }
-
-                    if (_rotateUVMaterial != null)
-                    {
-                        // Rotated dimensions (swap width/height for 90° rotation)
-                        int rotW = _lastDepthTexture.height;
-                        int rotH = _lastDepthTexture.width;
-
-                        // Create/resize rotated depth RT
-                        if (_rotatedDepthRT == null || _rotatedDepthRT.width != rotW || _rotatedDepthRT.height != rotH)
-                        {
-                            if (_rotatedDepthRT != null) _rotatedDepthRT.Release();
-                            _rotatedDepthRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.RFloat);
-                            _rotatedDepthRT.filterMode = FilterMode.Bilinear;
-                            _rotatedDepthRT.Create();
-                            Debug.Log($"[VFXBinderManager] Created rotated depth RT: {rotW}x{rotH} (from {_lastDepthTexture.width}x{_lastDepthTexture.height})");
-                        }
-
-                        // Blit with UV rotation
-                        Graphics.Blit(_lastDepthTexture, _rotatedDepthRT, _rotateUVMaterial);
-                        _lastDepthTexture = _rotatedDepthRT;
-
-                        // Rotate stencil too if available
-                        if (_lastStencilTexture != null)
-                        {
-                            if (_rotatedStencilRT == null || _rotatedStencilRT.width != rotW || _rotatedStencilRT.height != rotH)
-                            {
-                                if (_rotatedStencilRT != null) _rotatedStencilRT.Release();
-                                _rotatedStencilRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.R8);
-                                _rotatedStencilRT.filterMode = FilterMode.Point;
-                                _rotatedStencilRT.Create();
-                            }
-                            Graphics.Blit(_lastStencilTexture, _rotatedStencilRT, _rotateUVMaterial);
-                            _lastStencilTexture = _rotatedStencilRT;
-                        }
-                    }
-                }
+                // Note: Depth rotation is now handled in compute shader via _RotateUV90CW parameter
             }
 
             // Get camera texture via ARCameraBackground blit
@@ -515,7 +458,7 @@ namespace MetavidoVFX.VFX
                 float tanH = tanV * arCamera.aspect;
 
                 // If depth is rotated 90°, flip horizontal to fix mirror, keep tanH/tanV order
-                if (rotateDepthTexture && _rotateUVMaterial != null)
+                if (rotateDepthTexture)
                 {
                     _rayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
                 }
@@ -527,27 +470,27 @@ namespace MetavidoVFX.VFX
                 // Debug: Log RayParams every 3 seconds
                 if (verboseLogging && Time.frameCount % 180 == 0)
                 {
-                    bool rotated = rotateDepthTexture && _rotateUVMaterial != null;
-                    Debug.Log($"[VFXBinderManager] RayParams: ({_rayParams.x:F3},{_rayParams.y:F3},{_rayParams.z:F3},{_rayParams.w:F3}) | rot={rotated} fov={arCamera.fieldOfView:F1}° aspect={arCamera.aspect:F3}");
+                    Debug.Log($"[VFXBinderManager] RayParams: ({_rayParams.x:F3},{_rayParams.y:F3},{_rayParams.z:F3},{_rayParams.w:F3}) | rot={rotateDepthTexture} fov={arCamera.fieldOfView:F1}° aspect={arCamera.aspect:F3}");
                 }
             }
 
             // Compute PositionMap (depth → world positions)
             if (computePositionMap && _depthToWorldCompute != null && _depthToWorldKernel >= 0 && _lastDepthTexture != null && arCamera != null)
             {
-                int width = _lastDepthTexture.width;
-                int height = _lastDepthTexture.height;
+                // Output dimensions - swap for portrait when rotation enabled
+                int outWidth = rotateDepthTexture ? _lastDepthTexture.height : _lastDepthTexture.width;
+                int outHeight = rotateDepthTexture ? _lastDepthTexture.width : _lastDepthTexture.height;
 
                 // Create/resize PositionMap RT
-                if (_positionMapRT == null || _positionMapRT.width != width || _positionMapRT.height != height)
+                if (_positionMapRT == null || _positionMapRT.width != outWidth || _positionMapRT.height != outHeight)
                 {
                     if (_positionMapRT != null) _positionMapRT.Release();
-                    _positionMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+                    _positionMapRT = new RenderTexture(outWidth, outHeight, 0, RenderTextureFormat.ARGBFloat);
                     _positionMapRT.enableRandomWrite = true;
                     _positionMapRT.filterMode = FilterMode.Bilinear;
                     _positionMapRT.wrapMode = TextureWrapMode.Clamp; // Prevent edge sampling artifacts
                     _positionMapRT.Create();
-                    Debug.Log($"[VFXBinderManager] Created PositionMap RT: {width}x{height}");
+                    Debug.Log($"[VFXBinderManager] Created PositionMap RT: {outWidth}x{outHeight} (depth: {_lastDepthTexture.width}x{_lastDepthTexture.height}, rotated={rotateDepthTexture})");
                 }
 
                 // Set compute shader parameters
@@ -561,32 +504,33 @@ namespace MetavidoVFX.VFX
                 _depthToWorldCompute.SetTexture(_depthToWorldKernel, "_Stencil", _lastStencilTexture != null ? _lastStencilTexture : Texture2D.whiteTexture);
                 _depthToWorldCompute.SetTexture(_depthToWorldKernel, "_PositionRT", _positionMapRT);
                 _depthToWorldCompute.SetInt("_UseStencil", _lastStencilTexture != null ? 1 : 0);
+                _depthToWorldCompute.SetInt("_RotateUV90CW", rotateDepthTexture ? 1 : 0);
 
                 // Dispatch (32x32 thread groups to match DepthToWorld.compute numthreads)
-                int groupsX = Mathf.CeilToInt(width / 32.0f);
-                int groupsY = Mathf.CeilToInt(height / 32.0f);
+                int groupsX = Mathf.CeilToInt(outWidth / 32.0f);
+                int groupsY = Mathf.CeilToInt(outHeight / 32.0f);
                 _depthToWorldCompute.Dispatch(_depthToWorldKernel, groupsX, groupsY, 1);
 
                 // Velocity computation (ported from PeopleOcclusionVFXManager)
                 if (_velocityKernel >= 0)
                 {
                     // Create/resize velocity RTs to match position map
-                    if (_velocityMapRT == null || _velocityMapRT.width != width || _velocityMapRT.height != height)
+                    if (_velocityMapRT == null || _velocityMapRT.width != outWidth || _velocityMapRT.height != outHeight)
                     {
                         if (_velocityMapRT != null) _velocityMapRT.Release();
-                        _velocityMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+                        _velocityMapRT = new RenderTexture(outWidth, outHeight, 0, RenderTextureFormat.ARGBFloat);
                         _velocityMapRT.enableRandomWrite = true;
                         _velocityMapRT.filterMode = FilterMode.Bilinear;
                         _velocityMapRT.wrapMode = TextureWrapMode.Clamp;
                         _velocityMapRT.Create();
 
                         if (_previousPositionMapRT != null) _previousPositionMapRT.Release();
-                        _previousPositionMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+                        _previousPositionMapRT = new RenderTexture(outWidth, outHeight, 0, RenderTextureFormat.ARGBFloat);
                         _previousPositionMapRT.filterMode = FilterMode.Bilinear;
                         _previousPositionMapRT.wrapMode = TextureWrapMode.Clamp;
                         _previousPositionMapRT.Create();
 
-                        Debug.Log($"[VFXBinderManager] Created VelocityMap RT: {width}x{height}");
+                        Debug.Log($"[VFXBinderManager] Created VelocityMap RT: {outWidth}x{outHeight}");
                     }
 
                     // Dispatch velocity kernel (position and previous already bound)
