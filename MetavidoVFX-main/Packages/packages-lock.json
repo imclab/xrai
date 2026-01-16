@@ -390,6 +390,19 @@
       },
       "url": "https://registry.npmjs.com"
     },
+    "jp.keijiro.duotone": {
+      "version": "2.2.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.fluo": {
+      "version": "file:jp.keijiro.fluo",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "jp.keijiro.kino.feedback.universal": {
       "version": "1.0.1",
       "depth": 0,
@@ -424,11 +437,58 @@
       },
       "url": "https://registry.npmjs.com"
     },
+    "jp.keijiro.klak.testtools": {
+      "version": "3.1.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.unitywebrequesttexture": "1.0.0",
+        "com.unity.modules.video": "1.0.0"
+      },
+      "url": "https://registry.npmjs.com"
+    },
     "jp.keijiro.klutter-tools": {
       "version": "2.4.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.lasp": {
+      "version": "2.1.8",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.4.4",
+        "jp.keijiro.libsoundio": "1.0.6"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.laspvfx": {
+      "version": "1.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "jp.keijiro.lasp": "2.1.7"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.libsoundio": {
+      "version": "1.0.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.metamesh": {
+      "version": "1.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1"
+      },
       "url": "https://registry.npmjs.com"
     },
     "jp.keijiro.metavido": {
@@ -461,6 +521,22 @@
       "dependencies": {},
       "url": "https://registry.npmjs.com"
     },
+    "jp.keijiro.osc-jack": {
+      "version": "2.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.pugrad": {
+      "version": "1.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.5.0-pre.3"
+      },
+      "url": "https://registry.npmjs.com"
+    },
     "jp.keijiro.shadergraphassets": {
       "version": "2.5.2",
       "depth": 1,
@@ -471,6 +547,14 @@
       },
       "url": "https://registry.npmjs.com"
     },
+    "jp.keijiro.urp-cameratextureutils": {
+      "version": "file:jp.keijiro.urp-cameratextureutils",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.render-pipelines.universal": "17.0.0"
+      }
+    },
     "jp.keijiro.vfxgraphassets": {
       "version": "3.10.1",
       "depth": 0,
@@ -478,6 +562,15 @@
       "dependencies": {
         "com.unity.visualeffectgraph": "17.0.0",
         "jp.keijiro.shadergraphassets": "2.5.2"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.vjuitk": {
+      "version": "1.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
       },
       "url": "https://registry.npmjs.com"
     },
@@ -583,6 +676,15 @@
       "depth": 1,
       "source": "builtin",
       "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequesttexture": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      }
     },
     "com.unity.modules.video": {
       "version": "1.0.0",

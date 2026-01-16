@@ -55,13 +55,6 @@ public class ARKitMetavidoSceneSetup
         // Texture Provider
         var textureProvider = cameraGO.AddComponent<ARCameraTextureProvider>();
 
-        // Optimized AR → VFX bridge (optional compute shader if found)
-        var bridge = cameraGO.AddComponent<OptimizedARVFXBridge>();
-        var bridgeSO = new SerializedObject(bridge);
-        bridgeSO.FindProperty("adaptiveResolution").boolValue = true;
-        bridgeSO.FindProperty("targetFPS").intValue = 60;
-        bridgeSO.FindProperty("baseResolution").vector2IntValue = new Vector2Int(512, 512);
-
         // 3. Metavido VFX
         GameObject vfxGO = new GameObject("Metavido VFX");
         var vfx = vfxGO.AddComponent<VisualEffect>();
@@ -90,16 +83,8 @@ public class ARKitMetavidoSceneSetup
         var controller = vfxGO.AddComponent<ARKitMetavidoController>();
         // Controller auto-finds references in Start(), so no need to assign manually if in same scene
 
-        // Link bridge to VFX and optional compute shader (DepthToWorld.compute if present)
-        bridgeSO.FindProperty("vfx").objectReferenceValue = vfx;
-        string[] computeGuids = AssetDatabase.FindAssets("DepthToWorld t:ComputeShader");
-        if (computeGuids.Length > 0)
-        {
-            string computePath = AssetDatabase.GUIDToAssetPath(computeGuids[0]);
-            var cs = AssetDatabase.LoadAssetAtPath<ComputeShader>(computePath);
-            bridgeSO.FindProperty("depthProcessor").objectReferenceValue = cs;
-        }
-        bridgeSO.ApplyModifiedProperties();
+        // 5. Setup Hybrid Bridge Pipeline (Recommended)
+        VFXPipelineMasterSetup.SetupCompletePipeline();
 
 
         // Try to find BodyPix model - DISABLED for MVP

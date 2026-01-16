@@ -17,7 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.RenderPipelines.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARFoundationRemote.Installer.Editor", "ARFoundationRemote.Installer.Editor.csproj", "{5a97078b-c408-e9a5-64ce-9d2de6a3374b}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraTextureUtils.Runtime", "CameraTextureUtils.Runtime.csproj", "{4960f9bf-3b5e-396c-2f72-ebb1319a6192}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metavido.Vfx", "Metavido.Vfx.csproj", "{e6587665-b3f1-105e-b54b-955eb1c69cb9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraTextureUtils.Editor", "CameraTextureUtils.Editor.csproj", "{c40862da-40d1-b197-4cd7-fc0b7b44694d}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VFXGraph.OutputEventHandlers.Editor", "VFXGraph.OutputEventHandlers.Editor.csproj", "{f0119f09-4b13-6fd6-662d-7d935c1de879}"
 EndProject
@@ -44,8 +48,12 @@ Global
 		{f655b09e-35b2-0bb0-0c92-d72b5495a543}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5a97078b-c408-e9a5-64ce-9d2de6a3374b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5a97078b-c408-e9a5-64ce-9d2de6a3374b}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4960f9bf-3b5e-396c-2f72-ebb1319a6192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4960f9bf-3b5e-396c-2f72-ebb1319a6192}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{e6587665-b3f1-105e-b54b-955eb1c69cb9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{e6587665-b3f1-105e-b54b-955eb1c69cb9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c40862da-40d1-b197-4cd7-fc0b7b44694d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c40862da-40d1-b197-4cd7-fc0b7b44694d}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{f0119f09-4b13-6fd6-662d-7d935c1de879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{f0119f09-4b13-6fd6-662d-7d935c1de879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06072ec4-f29b-7e29-9ef8-829830e3c2c3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

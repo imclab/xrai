@@ -94,35 +94,39 @@ namespace MetavidoVFX.NNCam
         {
             if (!useKeyboardShortcuts) return;
 
+            var keyboard = Keyboard.current;
+            if (keyboard == null) return;
+
             // Number keys 1-9 select VFX directly
-            for (int i = 0; i < 9 && i < _vfx.Count; i++)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                {
-                    SelectVFX(i);
-                    return;
-                }
-            }
+            if (_vfx.Count > 0 && keyboard.digit1Key.wasPressedThisFrame) { SelectVFX(0); return; }
+            if (_vfx.Count > 1 && keyboard.digit2Key.wasPressedThisFrame) { SelectVFX(1); return; }
+            if (_vfx.Count > 2 && keyboard.digit3Key.wasPressedThisFrame) { SelectVFX(2); return; }
+            if (_vfx.Count > 3 && keyboard.digit4Key.wasPressedThisFrame) { SelectVFX(3); return; }
+            if (_vfx.Count > 4 && keyboard.digit5Key.wasPressedThisFrame) { SelectVFX(4); return; }
+            if (_vfx.Count > 5 && keyboard.digit6Key.wasPressedThisFrame) { SelectVFX(5); return; }
+            if (_vfx.Count > 6 && keyboard.digit7Key.wasPressedThisFrame) { SelectVFX(6); return; }
+            if (_vfx.Count > 7 && keyboard.digit8Key.wasPressedThisFrame) { SelectVFX(7); return; }
+            if (_vfx.Count > 8 && keyboard.digit9Key.wasPressedThisFrame) { SelectVFX(8); return; }
 
             // Key 0 selects VFX 10 (index 9)
-            if (Input.GetKeyDown(KeyCode.Alpha0) && _vfx.Count >= 10)
+            if (_vfx.Count >= 10 && keyboard.digit0Key.wasPressedThisFrame)
             {
                 SelectVFX(9);
                 return;
             }
 
             // Arrow keys cycle
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (keyboard.rightArrowKey.wasPressedThisFrame)
             {
                 NextVFX();
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            else if (keyboard.leftArrowKey.wasPressedThisFrame)
             {
                 PrevVFX();
             }
 
             // Space toggles
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (keyboard.spaceKey.wasPressedThisFrame)
             {
                 ToggleVFX();
             }

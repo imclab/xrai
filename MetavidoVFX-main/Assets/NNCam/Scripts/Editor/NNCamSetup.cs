@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEditor;
 
+#if BODYPIX_AVAILABLE
+using MetavidoVFX.Segmentation;
+#endif
+
 namespace MetavidoVFX.NNCam.Editor
 {
     /// <summary>
@@ -15,6 +19,9 @@ namespace MetavidoVFX.NNCam.Editor
         [MenuItem("H3M/NNCam/Setup NNCam VFX Scene", priority = 100)]
         public static void SetupNNCamScene()
         {
+            // Ensure BodyPartSegmenter exists
+            EnsureBodyPartSegmenter();
+
             // Find or create NNCam parent
             GameObject nncamRoot = GameObject.Find("NNCam");
             if (nncamRoot == null)
@@ -32,12 +39,14 @@ namespace MetavidoVFX.NNCam.Editor
             var switcher = nncamRoot.AddComponent<NNCamVFXSwitcher>();
             Undo.RegisterCreatedObjectUndo(switcher, "Add NNCam VFX Switcher");
 
-            // Load NNCam2 VFX assets from Resources or specific path
+            // Load NNCam2 VFX assets - keypoint VFX first
             string[] vfxPaths = new string[]
             {
+                // Keypoint-based VFX (require KeypointBuffer)
                 "Assets/VFX/NNCam2/eyes_any_nncam2.vfx",
                 "Assets/VFX/NNCam2/joints_any_nncam2.vfx",
                 "Assets/VFX/NNCam2/electrify_any_nncam2.vfx",
+                // Throttle-only VFX
                 "Assets/VFX/NNCam2/mosaic_any_nncam2.vfx",
                 "Assets/VFX/NNCam2/spikes_any_nncam2.vfx",
                 "Assets/VFX/NNCam2/petals_any_nncam2.vfx",
@@ -45,6 +54,9 @@ namespace MetavidoVFX.NNCam.Editor
                 "Assets/VFX/NNCam2/particle_any_nncam2.vfx",
                 "Assets/VFX/NNCam2/symbols_any_nncam2.vfx"
             };
+
+            int keypointVFXCount = 0;
+            int throttleVFXCount = 0;
 
             // Create VFX GameObjects
             foreach (string path in vfxPaths)
@@ -64,11 +76,20 @@ namespace MetavidoVFX.NNCam.Editor
                 vfx.visualEffectAsset = vfxAsset;
                 vfx.enabled = false; // Start disabled
 
-                // Add VFXPropertyBinder for the keypoint binder
+                // Add VFXPropertyBinder for binders
                 var propertyBinder = vfxGO.AddComponent<UnityEngine.VFX.Utility.VFXPropertyBinder>();
 
-                // Add NNCam Keypoint Binder
+                // Add NNCam Keypoint Binder (handles both keypoint and throttle VFX)
                 var keypointBinder = vfxGO.AddComponent<NNCamKeypointBinder>();
+
+                // Also add VFXARBinder for AR data (DepthMap, StencilMap, PositionMap, ColorMap)
+                vfxGO.AddComponent<VFXARBinder>();
+
+                // Track VFX types
+                if (vfx.HasGraphicsBuffer("KeypointBuffer"))
+                    keypointVFXCount++;
+                else
+                    throttleVFXCount++;
 
                 // Register with switcher
                 switcher.AddVFX(vfx);
@@ -83,7 +104,51 @@ namespace MetavidoVFX.NNCam.Editor
             }
 
             Selection.activeGameObject = nncamRoot;
-            Debug.Log($"[NNCamSetup] Created NNCam scene with {switcher.VFXCount} VFX effects");
+            Debug.Log($"[NNCamSetup] Created NNCam scene with {switcher.VFXCount} VFX: {keypointVFXCount} keypoint-based, {throttleVFXCount} throttle-only");
+            Debug.Log("[NNCamSetup] Keyboard shortcuts: 1-9 select VFX, Space cycle, Arrows prev/next");
+        }
+
+        static void EnsureBodyPartSegmenter()
+        {
+#if BODYPIX_AVAILABLE
+            var segmenter = Object.FindFirstObjectByType<BodyPartSegmenter>();
+            if (segmenter == null)
+            {
+                // Create BodyPartSegmenter
+                GameObject segmenterGO = new GameObject("BodyPartSegmenter");
+                segmenter = segmenterGO.AddComponent<BodyPartSegmenter>();
+                Undo.RegisterCreatedObjectUndo(segmenterGO, "Create BodyPartSegmenter");
+
+                // Try to assign ResourceSet
+                var resourceSet = AssetDatabase.LoadAssetAtPath<BodyPix.ResourceSet>(
+                    "Packages/jp.keijiro.bodypix/Assets/MobileNetV1-x050-stride16.asset");
+
+                if (resourceSet != null)
+                {
+                    // Use SerializedObject to set private field
+                    var so = new SerializedObject(segmenter);
+                    var resourceSetProp = so.FindProperty("_resourceSet");
+                    if (resourceSetProp != null)
+                    {
+                        resourceSetProp.objectReferenceValue = resourceSet;
+                        so.ApplyModifiedProperties();
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("[NNCamSetup] BodyPix ResourceSet not found - assign manually to BodyPartSegmenter");
+                }
+
+                Debug.Log("[NNCamSetup] Created BodyPartSegmenter");
+            }
+            else
+            {
+                Debug.Log("[NNCamSetup] BodyPartSegmenter already exists");
+            }
+#else
+            Debug.LogWarning("[NNCamSetup] BODYPIX_AVAILABLE not defined - keypoint VFX won't work");
+            Debug.LogWarning("[NNCamSetup] Run: H3M > Body Segmentation > Setup BodyPix Defines");
+#endif
         }
 
         [MenuItem("H3M/NNCam/Add Keypoint Binder to Selected VFX", priority = 101)]

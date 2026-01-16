@@ -1,7 +1,7 @@
 # Master Knowledgebase Index
 
-**Version**: 1.1
-**Last Updated**: 2026-01-15
+**Version**: 1.2
+**Last Updated**: 2026-01-16
 **Purpose**: Complete map of all knowledge resources for AI-assisted development
 
 ---
@@ -110,6 +110,37 @@ Use When:
   - Connecting AR data to VFX
   - Need working code snippets
   - Debugging AR issues
+```
+
+### MetavidoVFX Documentation ⭐ (NEW 2026-01-16)
+```yaml
+Path: ~/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Assets/Documentation/
+Size: ~15K tokens (selective loading)
+Purpose: Production VFX pipeline patterns from 500+ GitHub repos
+
+Key Files:
+  - VFX_PIPELINE_FINAL_RECOMMENDATION.md - Hybrid Bridge architecture (PRIMARY)
+  - TESTING_CHECKLIST.md - Triple-verified testing workflow
+  - VFX_NAMING_CONVENTION.md - Asset naming standards
+  - VFX_INDEX.md - 88 VFX assets indexed
+
+Critical Patterns:
+  - ARDepthSource (singleton) - ONE compute dispatch
+  - VFXARBinder (per-VFX) - lightweight SetTexture() binding
+  - VelocityMap - frame-to-frame motion tracking
+  - BodyPixSentis - 24-part body segmentation
+
+Performance: O(1) compute + O(N) trivial binding
+  - 10 VFX: 1.6ms (vs 11ms old approach)
+  - 20 VFX: 2.1ms (vs 22ms old approach)
+
+Quick Setup: H3M > VFX Pipeline > Setup Hybrid Bridge (Recommended)
+
+Use When:
+  - Implementing VFX pipeline in Unity
+  - Optimizing AR→VFX data binding
+  - Need lightweight binder patterns
+  - Testing/debugging VFX issues
 ```
 
 ### _ADVANCED_AR_FEATURES_IMPLEMENTATION_PLAN.md

@@ -24,6 +24,7 @@ public class MeshVFX : MonoBehaviour
     [Header("Buffer Settings")]
     [SerializeField] int bufferInitialCapacity = 64000;
     [SerializeField] bool dynamicallyResizeBuffer = false;
+    [SerializeField] bool useGlobalBuffers = true;
     private const int BUFFER_STRIDE = 12; // 12 Bytes for a Vector3 (4,4,4)
 
     string vertexBufferPropertyName = "MeshPointCache";
@@ -145,6 +146,12 @@ public class MeshVFX : MonoBehaviour
             // Push Changes to VFX
             vfx.SetInt("MeshPointCount", listVertex.Count);
 
+            if (useGlobalBuffers)
+            {
+                Shader.SetGlobalBuffer("_MeshPointCache", bufferVertex);
+                Shader.SetGlobalBuffer("_MeshNormalCache", bufferNormal);
+                Shader.SetGlobalInt("_MeshPointCount", listVertex.Count);
+            }
 
             // Push Transform to VFX
             // As meshes may not locate at (0,0,0) like they did in iOS.

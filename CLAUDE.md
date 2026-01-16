@@ -84,15 +84,16 @@ AR Foundation VFX project with H3M Hologram system.
 
 ### Core Architecture (Updated 2026-01-16)
 
-**Primary Pipeline**: `VFXARDataBinder` - Per-VFX binding via VFXPropertyBinder
-- Each VFX has its own binder component for AR data
+**Primary Pipeline**: Hybrid Bridge Pattern (ARDepthSource + VFXARBinder) - O(1) compute scaling
+- Single compute dispatch (ARDepthSource) for all active VFX
+- Lightweight per-VFX binders (VFXARBinder) for texture/data mapping
 - 353 FPS verified with 10 active VFX
-- Replaced centralized VFXBinderManager (now legacy/disabled)
+- Replaced centralized VFXBinderManager and per-VFX VFXARDataBinder (now legacy)
 
 **Systems**:
-- **VFX Management**: VFXARDataBinder (PRIMARY), VFXLibraryManager, VFXToggleUI, VFXGalleryUI
+- **VFX Management**: ARDepthSource (PRIMARY), VFXARBinder, VFXLibraryManager, VFXToggleUI
 - **Hand Tracking**: HandVFXController (velocity-driven, pinch detection), HoloKit integration
-- **Audio**: EnhancedAudioProcessor (FFT frequency bands), SoundWaveEmitter (synced upstream)
+- **Audio**: AudioBridge (FFT frequency bands to global shader props), SoundWaveEmitter
 - **Performance**: VFXAutoOptimizer (FPS-adaptive), VFXLODController, VFXProfiler
 - **EchoVision**: MeshVFX (AR mesh → GraphicsBuffers), HumanParticleVFX
 - **H3M Hologram**: HologramSource, HologramRenderer, HologramAnchor
