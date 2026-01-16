@@ -159,13 +159,30 @@ Required Properties:
 - Limb-specific particle trails
 
 ### Property Name Variants
-| Standard | Alternate |
-|----------|-----------|
-| InverseView | InverseViewMatrix |
-| RayParams | ProjectionVector |
-| StencilMap | HumanStencil, Stencil Map |
-| PositionMap | Position Map |
-| VelocityMap | Velocity Map |
+| Standard | Alternate | Notes |
+|----------|-----------|-------|
+| InverseView | InverseViewMatrix | Camera inverse view |
+| InverseProjection | InvProjMatrix | Camera inverse projection |
+| RayParams | ProjectionVector | UV→ray conversion Vector4 |
+| StencilMap | HumanStencil, Stencil Map | Human segmentation |
+| PositionMap | Position Map | World positions |
+| VelocityMap | Velocity Map | Frame motion |
+| ColorMap | Color Map | Camera RGB |
+| DepthMap | DepthTexture | AR depth |
+
+### Depth Projection Methods (All Supported)
+| Method | Property | VFX Source | Description |
+|--------|----------|------------|-------------|
+| **RayParams** | `RayParams` (Vector4) | Metavido, Rcam4 | `(0, 0, tan(fov/2)*aspect, tan(fov/2))` |
+| **InverseProjection** | `InverseProjection` (Matrix4x4) | Rcam3, Rcam4 | Full inverse projection matrix |
+| **ProjectionVector** | `ProjectionVector` (Vector4) | Rcam2 | Same format as RayParams |
+| **PositionMap** | `PositionMap` (Texture2D) | Akvfx, H3M | Pre-computed world positions |
+
+**VFX Graph Audit Results (2026-01-16):**
+- 44 Depth VFX ✓ (all have valid projection)
+- 9 Stencil VFX ✓ (use PositionMap)
+- 23 Environment VFX ✓ (no AR inputs needed)
+- 9 NNCam VFX ✓ (use KeypointBuffer)
 
 ---
 
@@ -178,6 +195,7 @@ Required Properties:
 | Setup EchoVision | `H3M > EchoVision > Setup All EchoVision Components` |
 | Add VFX Optimizer | `H3M > VFX Performance > Add Auto Optimizer to Scene` |
 | Profile VFX | `H3M > VFX Performance > Profile All VFX` |
+| Auto-Setup ALL VFX | `H3M > VFX > Auto-Setup ALL VFX (One-Click)` |
 | Auto-Setup Binders | `H3M > VFX > Auto-Setup Binders` |
 | Add Binders to Selected | `H3M > VFX > Add Binders to Selected` |
 

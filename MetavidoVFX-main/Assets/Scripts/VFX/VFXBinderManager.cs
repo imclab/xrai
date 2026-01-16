@@ -833,7 +833,7 @@ namespace MetavidoVFX.VFX
             // Bind categorized VFX
             foreach (var vfxCategory in _categorizedVFX)
             {
-                if (vfxCategory == null || !vfxCategory.VFX.enabled)
+                if (vfxCategory == null || vfxCategory.VFX == null || !vfxCategory.VFX.enabled)
                     continue;
 
                 BindVFX(vfxCategory.VFX, vfxCategory.Bindings);
