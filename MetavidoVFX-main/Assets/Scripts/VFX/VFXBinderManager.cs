@@ -573,7 +573,34 @@ namespace MetavidoVFX.VFX
                     arCamera.transform.position,
                     arCamera.transform.rotation,
                     Vector3.one);
-                _inverseProjectionMatrix = arCamera.projectionMatrix.inverse;
+
+                // InverseProjection: Must account for depth texture rotation
+                // When depth is rotated 90° CW, UV space changes: (u,v) → (v, 1-u)
+                // We need to build a projection matrix that matches the rotated UVs
+                if (rotateDepthTexture && _lastDepthTexture != null)
+                {
+                    // Build a projection matrix for the rotated depth texture
+                    // Original projection maps camera space to clip space
+                    // For rotated depth, we need to swap X/Y and account for aspect change
+                    float depthAspect = (float)_lastDepthTexture.width / _lastDepthTexture.height;
+                    float fovV = arCamera.fieldOfView;
+                    float fovH = 2f * Mathf.Atan(Mathf.Tan(fovV * 0.5f * Mathf.Deg2Rad) * depthAspect) * Mathf.Rad2Deg;
+
+                    // Create projection for rotated depth (swap near/far aspect)
+                    Matrix4x4 rotatedProj = Matrix4x4.Perspective(fovH, 1f / depthAspect, arCamera.nearClipPlane, arCamera.farClipPlane);
+
+                    // Apply UV rotation: 90° CW means (u,v) → (v, 1-u), which in NDC is (x,y) → (y, -x)
+                    // This is a rotation around Z by -90° in clip space
+                    Matrix4x4 uvRotation = Matrix4x4.identity;
+                    uvRotation.m00 = 0;  uvRotation.m01 = 1;   // x' = y
+                    uvRotation.m10 = -1; uvRotation.m11 = 0;   // y' = -x
+
+                    _inverseProjectionMatrix = (uvRotation * rotatedProj).inverse;
+                }
+                else
+                {
+                    _inverseProjectionMatrix = arCamera.projectionMatrix.inverse;
+                }
 
                 // RayParams: (centerShift.x, centerShift.y, tan(fov/2) * aspect, tan(fov/2))
                 // Source: Library/PackageCache/jp.keijiro.metavido/Decoder/Scripts/RenderUtils.cs:10-15
