@@ -117,7 +117,7 @@ namespace MetavidoVFX.VFX
 
         // Debug
         [Header("Debug - This Manager")]
-        [SerializeField] private bool verboseLogging = true;
+        [SerializeField] private bool verboseLogging = false;
         [SerializeField] private float logInterval = 3f;
 
         [Header("Debug - Suppress Other Systems")]
