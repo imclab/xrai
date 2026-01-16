@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4c867f6b72b714dbb5fd1780afe208, type: 3}
-  m_Name: Joints
+  m_Name: joints_any_nncam2
   m_EditorClassIdentifier: 
   m_UIIgnoredErrors: []
   m_Parent: {fileID: 0}
@@ -267,7 +267,7 @@ VisualEffectResource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Joints
+  m_Name: joints_any_nncam2
   m_Graph: {fileID: 114350483966674976}
   m_Infos:
     m_RendererSettings:
@@ -323,17 +323,13 @@ MonoBehaviour:
   m_Tooltip: 
   m_Nodes:
   - m_Id: 1
-    linkedSlots:
-    - outputSlot: {fileID: 8926484042661616518}
-      inputSlot: {fileID: 0}
+    linkedSlots: []
     position: {x: -632, y: 2804.5}
     expandedSlots: []
     expanded: 0
     supecollapsed: 1
   - m_Id: 2
-    linkedSlots:
-    - outputSlot: {fileID: 8926484042661616518}
-      inputSlot: {fileID: 0}
+    linkedSlots: []
     position: {x: 1104.5, y: 2697}
     expandedSlots: []
     expanded: 0

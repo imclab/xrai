@@ -96,13 +96,13 @@ MonoBehaviour:
   stickyNoteInfos: []
   categories:
   - name: Rcam
-    collapsed: 1
+    collapsed: 0
   uiBounds:
     serializedVersion: 2
     x: 979
     y: -422
     width: 2274
-    height: 2458
+    height: 2454
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -212,8 +212,8 @@ MonoBehaviour:
     max: Infinity
     enumValues: []
     descendantCount: 0
-  - name: InverseProjection
-    path: InverseProjection
+  - name: RayParams
+    path: RayParams
     tooltip: 
     space: -1
     spaceable: 0
@@ -541,7 +541,7 @@ MonoBehaviour:
   m_InputSlots: []
   m_OutputSlots:
   - {fileID: 8926484042661614804}
-  m_ExposedName: InverseProjection
+  m_ExposedName: RayParams
   m_Exposed: 1
   m_Order: 2
   m_Category: Rcam

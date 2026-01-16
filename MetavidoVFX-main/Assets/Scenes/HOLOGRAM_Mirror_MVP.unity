@@ -2130,7 +2130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &133815466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2540,7 +2540,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &176497468
 Transform:
   m_ObjectHideFlags: 0
@@ -2590,7 +2590,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -2680,7 +2680,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176497467}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -2736,7 +2736,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -3579,7 +3579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &214135667
 Transform:
   m_ObjectHideFlags: 0
@@ -3629,7 +3629,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -3764,7 +3764,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 214135666}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 750fc403086144b0f90ce8be1df9014a, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -3774,7 +3774,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle2
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
       - m_Value: {x: 0.1, y: 10}
@@ -3820,9 +3823,12 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Spawn
         m_Overridden: 1
+      - m_Value: 0
+        m_Name: Throttle
+        m_Overridden: 0
 --- !u!1 &221693549
 GameObject:
   m_ObjectHideFlags: 0
@@ -4964,7 +4970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &294076202
 Transform:
   m_ObjectHideFlags: 0
@@ -5149,7 +5155,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294076201}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 6d8442d933298491f92a3cbfeaa7d360, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -5159,7 +5165,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -5552,7 +5561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &359080277
 Transform:
   m_ObjectHideFlags: 0
@@ -5602,7 +5611,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -5737,7 +5746,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 359080276}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 70ba780b6f1c04405bbce7b27050a003, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -5748,7 +5757,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -12530,7 +12539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &885857936
 Transform:
   m_ObjectHideFlags: 0
@@ -12580,7 +12589,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -12715,7 +12724,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 885857935}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 757c9ba293a4e419a926503ce02648a2, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -15912,7 +15921,7 @@ MonoBehaviour:
     m_Name: AudioTreble
   audioSubBassProperty:
     m_Name: AudioSubBass
-  depthRange: {x: 0.1, y: 10}
+  depthRange: {x: 0.1, y: 0.3}
   updateInterval: 1
   verboseLogging: 0
 --- !u!114 &1028051408
@@ -15939,7 +15948,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1028051404}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -15997,7 +16006,7 @@ VisualEffect:
       m_Array: []
     m_Vector2f:
       m_Array:
-      - m_Value: {x: 0.1, y: 10}
+      - m_Value: {x: 0.1, y: 0.3}
         m_Name: DepthRange
         m_Overridden: 1
     m_Vector3f:
@@ -16037,10 +16046,13 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 0}
+        m_Name: ColorMap
+        m_Overridden: 0
     m_Bool:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Spawn
         m_Overridden: 1
 --- !u!1 &1031461932
@@ -18263,7 +18275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1151116001
 Transform:
   m_ObjectHideFlags: 0
@@ -18313,7 +18325,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -18448,7 +18460,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151116000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: d2008f5b2b9c048fcb43f383203403e0, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -18459,8 +18471,11 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 0.6
+        m_Name: FocusDistance
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -21268,7 +21283,7 @@ MonoBehaviour:
   soundwaveAngle: {x: 90, y: 180}
   minWaveThickness: 1
   emitVolumeThreshold: 0.02
-  verboseLogging: 0
+  verboseLogging: 1
 --- !u!114 &1274338875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22289,7 +22304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1298299245
 Transform:
   m_ObjectHideFlags: 0
@@ -22339,7 +22354,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -22474,7 +22489,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298299244}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 3cf74136b469a4d21a61af8a8c06027d, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -22485,7 +22500,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -25328,7 +25343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1406337804
 Transform:
   m_ObjectHideFlags: 0
@@ -25378,7 +25393,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -25513,7 +25528,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406337803}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: a8709fcd6da1b4a50a697d306806491a, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -25524,8 +25539,11 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 0.6
+        m_Name: FocusDistance
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -27530,7 +27548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1551039865
 Transform:
   m_ObjectHideFlags: 0
@@ -27670,7 +27688,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1551039864}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -27726,7 +27744,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -28064,7 +28082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1580570558
 Transform:
   m_ObjectHideFlags: 0
@@ -28114,7 +28132,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -28249,7 +28267,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580570557}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 69c6a73b008134cf58e471e150e18d6d, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -28260,7 +28278,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -30809,7 +30827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1736433979
 Transform:
   m_ObjectHideFlags: 0
@@ -30859,7 +30877,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -30994,7 +31012,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736433978}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: a84c97276009d4686bcec86f44d731a2, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -31005,7 +31023,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
@@ -35751,7 +35769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2135789879
 Transform:
   m_ObjectHideFlags: 0
@@ -35801,7 +35819,7 @@ MonoBehaviour:
   occlusionManager: {fileID: 1283464404}
   cameraBackground: {fileID: 1283464406}
   arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
+  colorProvider: {fileID: 1283464410}
   bindDepthMap: 1
   bindStencilMap: 1
   bindColorMap: 1
@@ -35864,7 +35882,7 @@ MonoBehaviour:
     m_Name: AudioTreble
   audioSubBassProperty:
     m_Name: AudioSubBass
-  depthRange: {x: 0.1, y: 10}
+  depthRange: {x: 0.1, y: 0.3}
   updateInterval: 1
   verboseLogging: 0
 --- !u!114 &2135789882
@@ -35936,7 +35954,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135789878}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: ff3da91aa3b524674a3ae50001094b5f, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -35949,7 +35967,7 @@ VisualEffect:
       m_Array: []
     m_Vector2f:
       m_Array:
-      - m_Value: {x: 0.1, y: 10}
+      - m_Value: {x: 0.1, y: 0.3}
         m_Name: DepthRange
         m_Overridden: 1
     m_Vector3f:
@@ -35992,7 +36010,7 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array:
-      - m_Value: 0
+      - m_Value: 1
         m_Name: Spawn
         m_Overridden: 1
 --- !u!1001 &1018380027502157667
@@ -36009,7 +36027,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1639141045738353188, guid: e101be6ccc4ac4bafac1e73deedfe9d8, type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1639141045738353188, guid: e101be6ccc4ac4bafac1e73deedfe9d8, type: 3}
       propertyPath: m_MotionVectors
@@ -36018,7 +36036,7 @@ PrefabInstance:
     - target: {fileID: 2797578887240490730, guid: e101be6ccc4ac4bafac1e73deedfe9d8, type: 3}
       propertyPath: m_Asset
       value: 
-      objectReference: {fileID: 8926484042661614526, guid: f17a1c727f0f149048aac97d7fc40b97, type: 3}
+      objectReference: {fileID: 8926484042661614526, guid: e77f7974780114cddafc2b21c56b5197, type: 3}
     - target: {fileID: 2797578887240490730, guid: e101be6ccc4ac4bafac1e73deedfe9d8, type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.size
       value: 1
