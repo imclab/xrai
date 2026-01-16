@@ -4,13 +4,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
+using MetavidoVFX.VFX;
 
 /// <summary>
 /// Unified VFX Pipeline setup automation.
 /// One-click setup, legacy management, bulk operations.
 ///
+/// Pipeline: ARDepthSource (singleton compute) + VFXARBinder (lightweight per-VFX)
 /// Menu: H3M/VFX Pipeline Master/
-/// Goal: Auto setup, legacy marking, single-button operations
+/// Goal: Auto setup, legacy removal, single-button operations
 /// </summary>
 public static class VFXPipelineMasterSetup
 {
@@ -21,23 +23,25 @@ public static class VFXPipelineMasterSetup
     [MenuItem("H3M/VFX Pipeline Master/Setup Complete Pipeline (Recommended)", false, 0)]
     public static void SetupCompletePipeline()
     {
-        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Creating ARDepthSource...", 0.1f);
+        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Removing legacy components...", 0.1f);
 
-        // 1. Create ARDepthSource if missing
+        // 1. Remove legacy components first
+        int legacyRemoved = RemoveLegacyComponentsInternal();
+
+        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Creating ARDepthSource...", 0.2f);
+
+        // 2. Create ARDepthSource if missing
         var source = CreateARDepthSource();
 
-        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Adding VFXARBinder to all VFX...", 0.3f);
-
-        // 2. Add VFXARBinder to all VFX
-        int bindersAdded = AddVFXARBinderToAllVFX();
-
-        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Disabling legacy components...", 0.6f);
+        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Creating AudioBridge...", 0.3f);
 
         // 3. Create AudioBridge if missing
         CreateAudioBridge();
 
-        // 4. Disable legacy components
-        int legacyDisabled = DisableLegacyComponentsInternal();
+        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Adding VFXARBinder to all VFX...", 0.5f);
+
+        // 4. Add VFXARBinder to all VFX with auto-detect
+        int bindersAdded = AddVFXARBinderToAllVFX();
 
         EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Adding debug tools...", 0.8f);
 
@@ -53,12 +57,12 @@ public static class VFXPipelineMasterSetup
         var audio = Object.FindFirstObjectByType<AudioBridge>();
 
         EditorUtility.DisplayDialog("VFX Pipeline Setup Complete",
-            $"Pipeline setup complete:\n\n" +
+            $"Hybrid Bridge Pipeline ready:\n\n" +
             $"ARDepthSource: {(source != null ? "Active" : "Failed")}\n" +
             $"AudioBridge: {(audio != null ? "Active" : "Failed")}\n" +
             $"VFXARBinder: {bindersAdded} added ({binders.Length} total)\n" +
             $"VFX in scene: {allVFX.Length}\n" +
-            $"Legacy disabled: {legacyDisabled}\n" +
+            $"Legacy removed: {legacyRemoved}\n" +
             $"Dashboard: Added\n" +
             $"TestHarness: Added\n\n" +
             $"Press Tab to toggle dashboard.\n" +
@@ -66,7 +70,42 @@ public static class VFXPipelineMasterSetup
             "OK");
 
         Debug.Log($"[VFXPipelineMasterSetup] Complete pipeline setup finished. " +
-                  $"Source={source != null}, Binders={binders.Length}, Legacy={legacyDisabled}");
+                  $"Source={source != null}, Binders={binders.Length}, LegacyRemoved={legacyRemoved}");
+    }
+
+    static int RemoveLegacyComponentsInternal()
+    {
+        int removed = 0;
+        var legacyTypes = new[] { "VFXBinderManager", "VFXARDataBinder", "PeopleOcclusionVFXManager", "OptimizedARVFXBridge" };
+
+        foreach (var typeName in legacyTypes)
+        {
+            var components = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                .Where(m => m.GetType().Name == typeName).ToArray();
+
+            foreach (var c in components)
+            {
+                Undo.DestroyObjectImmediate(c);
+                removed++;
+            }
+        }
+
+        // Also remove empty VFXPropertyBinder
+        var propertyBinders = Object.FindObjectsByType<UnityEngine.VFX.Utility.VFXPropertyBinder>(FindObjectsSortMode.None);
+        foreach (var binder in propertyBinders)
+        {
+            var bindings = binder.GetPropertyBinders();
+            if (bindings == null || bindings.Count() == 0)
+            {
+                Undo.DestroyObjectImmediate(binder);
+                removed++;
+            }
+        }
+
+        if (removed > 0)
+            Debug.Log($"[VFXPipelineMasterSetup] Removed {removed} legacy components");
+
+        return removed;
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -111,15 +150,88 @@ public static class VFXPipelineMasterSetup
 
         foreach (var vfx in allVFX)
         {
-            if (vfx.GetComponent<VFXARBinder>() == null)
+            var binder = vfx.GetComponent<VFXARBinder>();
+            if (binder == null)
             {
-                Undo.AddComponent<VFXARBinder>(vfx.gameObject);
+                binder = Undo.AddComponent<VFXARBinder>(vfx.gameObject);
                 added++;
+            }
+            // Always auto-detect bindings
+            binder.AutoDetectBindings();
+        }
+
+        Debug.Log($"[VFXPipelineMasterSetup] Added VFXARBinder to {added} VFX, auto-detected bindings for {allVFX.Length}");
+        return added;
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/Pipeline Components/Auto-Detect All Bindings", false, 104)]
+    public static void AutoDetectAllBindings()
+    {
+        var binders = Object.FindObjectsByType<VFXARBinder>(FindObjectsSortMode.None);
+        foreach (var binder in binders)
+        {
+            binder.AutoDetectBindings();
+        }
+        Debug.Log($"[VFXPipelineMasterSetup] Auto-detected bindings for {binders.Length} VFX");
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/Pipeline Components/Remove All Legacy Components", false, 105)]
+    public static void RemoveAllLegacyComponents()
+    {
+        int removed = 0;
+
+        // Remove VFXBinderManager
+        var binderManagers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+            .Where(m => m.GetType().Name == "VFXBinderManager").ToArray();
+        foreach (var m in binderManagers)
+        {
+            Debug.Log($"[VFXPipelineMasterSetup] Removing VFXBinderManager from {m.gameObject.name}");
+            Undo.DestroyObjectImmediate(m);
+            removed++;
+        }
+
+        // Remove VFXARDataBinder
+        var dataBinders = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+            .Where(m => m.GetType().Name == "VFXARDataBinder").ToArray();
+        foreach (var b in dataBinders)
+        {
+            Debug.Log($"[VFXPipelineMasterSetup] Removing VFXARDataBinder from {b.gameObject.name}");
+            Undo.DestroyObjectImmediate(b);
+            removed++;
+        }
+
+        // Remove empty VFXPropertyBinder
+        var propertyBinders = Object.FindObjectsByType<UnityEngine.VFX.Utility.VFXPropertyBinder>(FindObjectsSortMode.None);
+        foreach (var binder in propertyBinders)
+        {
+            var bindings = binder.GetPropertyBinders();
+            if (bindings == null || bindings.Count() == 0)
+            {
+                Debug.Log($"[VFXPipelineMasterSetup] Removing empty VFXPropertyBinder from {binder.gameObject.name}");
+                Undo.DestroyObjectImmediate(binder);
+                removed++;
             }
         }
 
-        Debug.Log($"[VFXPipelineMasterSetup] Added VFXARBinder to {added} VFX (total: {allVFX.Length})");
-        return added;
+        // Remove PeopleOcclusionVFXManager
+        var peopleManagers = Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+            .Where(m => m.GetType().Name == "PeopleOcclusionVFXManager").ToArray();
+        foreach (var p in peopleManagers)
+        {
+            Debug.Log($"[VFXPipelineMasterSetup] Removing PeopleOcclusionVFXManager from {p.gameObject.name}");
+            Undo.DestroyObjectImmediate(p);
+            removed++;
+        }
+
+        Debug.Log($"[VFXPipelineMasterSetup] Removed {removed} legacy components");
+        EditorUtility.DisplayDialog("Legacy Components Removed",
+            $"Removed {removed} legacy components.\n\n" +
+            "Components removed:\n" +
+            "- VFXBinderManager\n" +
+            "- VFXARDataBinder\n" +
+            "- VFXPropertyBinder (empty)\n" +
+            "- PeopleOcclusionVFXManager",
+            "OK");
     }
 
     [MenuItem("H3M/VFX Pipeline Master/Pipeline Components/Add VFXARBinder to Selected", false, 102)]
@@ -401,7 +513,74 @@ public static class VFXPipelineMasterSetup
     // VFX LIBRARY
     // ═══════════════════════════════════════════════════════════════════════
 
-    [MenuItem("H3M/VFX Pipeline Master/VFX Library/List All VFX in Scene", false, 400)]
+    [MenuItem("H3M/VFX Pipeline Master/VFX Library/Create VFXLibraryManager", false, 400)]
+    public static void CreateVFXLibraryManager()
+    {
+        var existing = Object.FindFirstObjectByType<VFXLibraryManager>();
+        if (existing != null)
+        {
+            Debug.Log($"[VFXPipelineMasterSetup] VFXLibraryManager already exists on {existing.gameObject.name}");
+            Selection.activeGameObject = existing.gameObject;
+            return;
+        }
+
+        var go = new GameObject("VFXLibraryManager");
+        var manager = go.AddComponent<VFXLibraryManager>();
+        Undo.RegisterCreatedObjectUndo(go, "Create VFXLibraryManager");
+
+        Debug.Log("[VFXPipelineMasterSetup] Created VFXLibraryManager - use context menu to populate");
+        Selection.activeGameObject = go;
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/VFX Library/Setup VFXLibraryManager Pipeline", false, 401)]
+    public static void SetupVFXLibraryPipeline()
+    {
+        var manager = Object.FindFirstObjectByType<VFXLibraryManager>();
+        if (manager == null)
+        {
+            // Create new
+            var go = new GameObject("VFXLibraryManager");
+            manager = go.AddComponent<VFXLibraryManager>();
+            Undo.RegisterCreatedObjectUndo(go, "Create VFXLibraryManager");
+        }
+
+        manager.SetupCompletePipeline();
+        Selection.activeGameObject = manager.gameObject;
+
+        EditorUtility.DisplayDialog("VFX Library Pipeline Setup",
+            $"VFXLibraryManager pipeline setup complete.\n\n" +
+            $"Total VFX: {manager.TotalCount}\n" +
+            $"Pipeline Ready: {manager.IsPipelineReady}\n\n" +
+            "All VFX now have VFXARBinder with auto-detected bindings.",
+            "OK");
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/VFX Library/Populate from Resources", false, 402)]
+    public static void PopulateVFXFromResources()
+    {
+        var manager = Object.FindFirstObjectByType<VFXLibraryManager>();
+        if (manager == null)
+        {
+            Debug.LogWarning("[VFXPipelineMasterSetup] VFXLibraryManager not found. Create one first.");
+            return;
+        }
+
+        if (Application.isPlaying)
+        {
+            manager.PopulateLibraryRuntime();
+        }
+        else
+        {
+            // Call editor populate via reflection or direct method
+            var method = manager.GetType().GetMethod("PopulateLibraryEditor",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            method?.Invoke(manager, null);
+        }
+
+        Debug.Log($"[VFXPipelineMasterSetup] Populated VFX library with {manager.TotalCount} VFX");
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/VFX Library/List All VFX in Scene", false, 410)]
     public static void ListAllVFXInScene()
     {
         var allVFX = Object.FindObjectsByType<VisualEffect>(FindObjectsSortMode.None);
