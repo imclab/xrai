@@ -30,7 +30,8 @@ Unity-XR-AI/
 | `KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | 50+ production-ready code snippets |
 | `KnowledgeBase/_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` | Hologram, portal, depth patterns |
 | `KnowledgeBase/_COMPREHENSIVE_HOLOGRAM_PIPELINE_ARCHITECTURE.md` | 6-layer hologram architecture |
-| `KnowledgeBase/_LIVE_AR_PIPELINE_ARCHITECTURE.md` | VFXBinderManager centralized pipeline |
+| `KnowledgeBase/_LIVE_AR_PIPELINE_ARCHITECTURE.md` | ⚠️ LEGACY - See Hybrid Bridge Pattern |
+| `MetavidoVFX-main/Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md` | **PRIMARY** - Hybrid Bridge architecture |
 | `KnowledgeBase/_HAND_SENSING_CAPABILITIES.md` | 21-joint hand tracking patterns |
 | `KnowledgeBase/_HOLOGRAM_RECORDING_PLAYBACK.md` | Recording/playback specs (40K) |
 | `KnowledgeBase/_UNITY_SOURCE_REFERENCE.md` | Unity engine internals (AgentBench) |
@@ -54,7 +55,7 @@ Unity-XR-AI/
 - **Code Snippets**: 50+ production-ready patterns
 - **Platform Coverage**: iOS 15+, Android, Quest 3/Pro, WebGL, Vision Pro
 - **MetavidoVFX Scripts**: 458 C# scripts (core + H3M + Echovision + NNCam)
-- **VFX Assets**: 88 production VFX Graph effects
+- **VFX Assets**: 88 total (73 in Resources/VFX organized by category)
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
 - **Performance**: 353 FPS @ 10 VFX (verified Jan 16, 2026)
 
@@ -87,8 +88,10 @@ AR Foundation VFX project with H3M Hologram system.
 **Primary Pipeline**: Hybrid Bridge Pattern (ARDepthSource + VFXARBinder) - O(1) compute scaling
 - Single compute dispatch (ARDepthSource) for all active VFX
 - Lightweight per-VFX binders (VFXARBinder) for texture/data mapping
+- VFXLibraryManager (~920 LOC) for pipeline-aware VFX management
+- 73 VFX in Resources/VFX organized by category (People, Environment, NNCam2, Akvfx, Rcam2-4, SdfVfx)
 - 353 FPS verified with 10 active VFX
-- Replaced centralized VFXBinderManager and per-VFX VFXARDataBinder (now legacy)
+- Legacy components removed: VFXBinderManager, VFXARDataBinder (moved to _Legacy folder)
 
 **Systems**:
 - **VFX Management**: ARDepthSource (PRIMARY), VFXARBinder, VFXLibraryManager, VFXToggleUI

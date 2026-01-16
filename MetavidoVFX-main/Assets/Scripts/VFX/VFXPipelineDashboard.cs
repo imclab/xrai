@@ -18,6 +18,22 @@ public class VFXPipelineDashboard : MonoBehaviour
     [SerializeField] KeyCode _toggleKey = KeyCode.Tab;
     [SerializeField] float _updateInterval = 0.1f;
 
+    [Header("Size & Position")]
+    [SerializeField] DashboardPosition _position = DashboardPosition.TopRight;
+    [SerializeField] float _width = 380f;
+    [SerializeField] float _scale = 1.0f;
+    [SerializeField] Vector2 _customOffset = Vector2.zero;
+    [SerializeField] float _padding = 10f;
+
+    public enum DashboardPosition
+    {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight,
+        Custom
+    }
+
     [Header("Style")]
     [SerializeField] int _fontSize = 14;
     [SerializeField] Color _backgroundColor = new Color(0, 0, 0, 0.85f);
@@ -111,35 +127,76 @@ public class VFXPipelineDashboard : MonoBehaviour
 
         EnsureStyles();
 
-        // Responsive width - use min of 380 or 90% of screen width
-        float width = Mathf.Min(380, Screen.width * 0.9f);
-        float x = Screen.width - width - 10;
-        float y = 10;
+        // Apply scale
+        float scaledFontSize = Mathf.RoundToInt(_fontSize * _scale);
+        float scaledWidth = _width * _scale;
+        float scaledPadding = _padding * _scale;
+
+        // Responsive width - use min of configured width or 90% of screen width
+        float width = Mathf.Min(scaledWidth, Screen.width * 0.9f);
+        float height = GetPanelHeight() * _scale;
+
+        // Calculate position based on setting
+        float x, y;
+        switch (_position)
+        {
+            case DashboardPosition.TopLeft:
+                x = scaledPadding;
+                y = scaledPadding;
+                break;
+            case DashboardPosition.TopRight:
+                x = Screen.width - width - scaledPadding;
+                y = scaledPadding;
+                break;
+            case DashboardPosition.BottomLeft:
+                x = scaledPadding;
+                y = Screen.height - height - scaledPadding - 10;
+                break;
+            case DashboardPosition.BottomRight:
+                x = Screen.width - width - scaledPadding;
+                y = Screen.height - height - scaledPadding - 10;
+                break;
+            case DashboardPosition.Custom:
+            default:
+                x = _customOffset.x;
+                y = _customOffset.y;
+                break;
+        }
 
         // Ensure we're on screen
-        if (x < 5) x = 5;
+        x = Mathf.Clamp(x, 5, Screen.width - width - 5);
+        y = Mathf.Clamp(y, 5, Screen.height - height - 5);
+
+        // Apply GUI scale
+        Matrix4x4 oldMatrix = GUI.matrix;
+        GUI.matrix = Matrix4x4.TRS(new Vector3(x, y, 0), Quaternion.identity, new Vector3(_scale, _scale, 1));
+        x = 0;
+        y = 0;
 
         // Background
-        GUI.Box(new Rect(x - 5, y - 5, width + 10, GetPanelHeight() + 10), "", _boxStyle);
+        GUI.Box(new Rect(x - 5, y - 5, _width + 10, GetPanelHeight() + 10), "", _boxStyle);
 
         // Header
-        GUI.Label(new Rect(x, y, width, 24), "VFX Pipeline Dashboard", _headerStyle);
+        GUI.Label(new Rect(x, y, _width, 24), "VFX Pipeline Dashboard", _headerStyle);
         y += 28;
 
         // Quick Stats Row
-        DrawQuickStats(ref x, ref y, width);
+        DrawQuickStats(ref x, ref y, _width);
         y += 8;
 
         // Pipeline Flow Section
-        DrawPipelineFlow(ref x, ref y, width);
+        DrawPipelineFlow(ref x, ref y, _width);
         y += 8;
 
         // Performance Section
-        DrawPerformance(ref x, ref y, width);
+        DrawPerformance(ref x, ref y, _width);
         y += 8;
 
         // Active VFX Section
-        DrawActiveVFX(ref x, ref y, width);
+        DrawActiveVFX(ref x, ref y, _width);
+
+        // Restore GUI matrix
+        GUI.matrix = oldMatrix;
     }
 
     void DrawQuickStats(ref float x, ref float y, float width)
@@ -387,6 +444,26 @@ public class VFXPipelineDashboard : MonoBehaviour
     public void Hide() => _visible = false;
     public void Toggle() => _visible = !_visible;
     public bool IsVisible => _visible;
+
+    // Size & Position API
+    public float Width { get => _width; set => _width = Mathf.Max(200, value); }
+    public float Scale { get => _scale; set => _scale = Mathf.Clamp(value, 0.5f, 2f); }
+    public float Padding { get => _padding; set => _padding = Mathf.Max(0, value); }
+    public DashboardPosition Position { get => _position; set => _position = value; }
+    public Vector2 CustomOffset { get => _customOffset; set => _customOffset = value; }
+
+    public void SetPosition(DashboardPosition pos, Vector2? customOffset = null)
+    {
+        _position = pos;
+        if (customOffset.HasValue)
+            _customOffset = customOffset.Value;
+    }
+
+    public void SetSize(float width, float scale = 1f)
+    {
+        _width = Mathf.Max(200, width);
+        _scale = Mathf.Clamp(scale, 0.5f, 2f);
+    }
 
     #endregion
 }

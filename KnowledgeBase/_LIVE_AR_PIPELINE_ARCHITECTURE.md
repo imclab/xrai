@@ -1,12 +1,32 @@
 # Live AR Pipeline Architecture
 
 **Date**: 2026-01-15
-**Status**: Production Reference
+**Status**: ⚠️ LEGACY - See Hybrid Bridge Pattern below
 **Project**: MetavidoVFX (H3M Holograms)
 
 ---
 
-## Critical Architectural Distinction
+## ⚠️ DEPRECATION NOTICE (2026-01-16)
+
+**This architecture document describes the LEGACY VFXBinderManager approach.**
+
+**CURRENT RECOMMENDED ARCHITECTURE**: **Hybrid Bridge Pattern**
+- See: `MetavidoVFX-main/Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md`
+- See: `MetavidoVFX-main/CLAUDE.md` (Core AR → VFX Pipeline section)
+
+**Key Changes**:
+| Old (Legacy) | New (Hybrid Bridge) |
+|--------------|---------------------|
+| VFXBinderManager (centralized, 1,357 LOC) | ARDepthSource (singleton, 256 LOC) |
+| VFXARDataBinder (per-VFX, 972 LOC) | VFXARBinder (per-VFX, 160 LOC) |
+| O(N) compute dispatches | O(1) compute + O(N) SetTexture |
+| ~11ms @ 10 VFX | ~1.6ms @ 10 VFX (85% faster) |
+
+**Implementation Status**: COMPLETE (73 VFX in Resources, 353 FPS @ 10 VFX verified)
+
+---
+
+## Critical Architectural Distinction (Historical Reference)
 
 ### Our Adaptation vs Original Projects
 
