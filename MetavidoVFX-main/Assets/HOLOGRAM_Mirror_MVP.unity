@@ -185,6 +185,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -203,6 +208,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &552612
 MonoBehaviour:
@@ -506,6 +515,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -524,6 +538,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &12554864
 GameObject:
@@ -895,6 +913,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -913,6 +936,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &76661750
 GameObject:
@@ -1101,6 +1128,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -1119,6 +1151,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &80631380
 GameObject:
@@ -1304,6 +1340,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -1322,6 +1363,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &89570015
 GameObject:
@@ -1500,6 +1545,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -1518,6 +1568,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &92815089
 MonoBehaviour:
@@ -1703,6 +1757,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -1721,6 +1780,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &98721059
 MonoBehaviour:
@@ -1933,8 +1996,8 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 98931382}
-  m_Enabled: 0
-  m_CastShadows: 0
+  m_Enabled: 1
+  m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -2198,6 +2261,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -2216,6 +2284,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &113863861
 MonoBehaviour:
@@ -2401,6 +2473,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -2419,6 +2496,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &116640743
 MonoBehaviour:
@@ -2738,6 +2819,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -2756,6 +2842,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &133815465
 GameObject:
@@ -2815,6 +2905,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 909766831}
   - {fileID: 1830393064}
   - {fileID: 932609567}
   - {fileID: 1852780506}
@@ -2889,6 +2980,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -2907,6 +3003,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &137762452
 MonoBehaviour:
@@ -3235,6 +3335,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -3253,6 +3358,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &141068036
 GameObject:
@@ -3417,6 +3526,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -3435,6 +3549,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &156726359
 GameObject:
@@ -3502,6 +3620,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -3520,6 +3643,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &156726362
 MonoBehaviour:
@@ -3816,6 +3943,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -3834,6 +3966,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &168414266
 MonoBehaviour:
@@ -3999,7 +4135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 196780745}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4193,7 +4329,6 @@ GameObject:
   - component: {fileID: 201359458}
   - component: {fileID: 201359464}
   - component: {fileID: 201359463}
-  - component: {fileID: 201359462}
   - component: {fileID: 201359460}
   - component: {fileID: 201359459}
   m_Layer: 0
@@ -4241,13 +4376,18 @@ MonoBehaviour:
   _bindDepthRange: 1
   _bindInverseProj: 0
   _depthMin: 0.1
-  _depthMax: 10
+  _depthMax: 0.3
   _bindThrottle: 0
   _throttle: 1
   _throttleProperty: Throttle
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -4266,6 +4406,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &201359460
 MonoBehaviour:
@@ -4286,21 +4430,6 @@ MonoBehaviour:
   description: 
   performanceTier: 3
   mobileOptimized: 1
---- !u!114 &201359462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 201359457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings: []
-  m_VisualEffect: {fileID: 201359464}
 --- !u!73398921 &201359463
 VFXRenderer:
   serializedVersion: 1
@@ -4309,7 +4438,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201359457}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -4354,7 +4483,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201359457}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: bdb84af1693e849bfa594bdb01e0dc5e, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -4364,7 +4493,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -4567,6 +4699,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -4585,6 +4722,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &205434027 stripped
 GameObject:
@@ -4662,6 +4803,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -4680,6 +4826,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!4 &205434039 stripped
 Transform:
@@ -4863,6 +5013,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -4881,6 +5036,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &229749758
 MonoBehaviour:
@@ -5081,6 +5240,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -5099,6 +5263,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &232041404
 MonoBehaviour:
@@ -5427,6 +5595,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -5445,6 +5618,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &266010861
 GameObject:
@@ -5512,6 +5689,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -5530,6 +5712,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &266010864
 MonoBehaviour:
@@ -5774,6 +5960,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -5792,6 +5983,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &321559173
 MonoBehaviour:
@@ -6063,6 +6258,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -6081,6 +6281,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &327470437
 MonoBehaviour:
@@ -6358,6 +6562,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -6376,6 +6585,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &330042325
 MonoBehaviour:
@@ -6672,6 +6885,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -6690,6 +6908,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &341439418
 MonoBehaviour:
@@ -7002,6 +7224,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -7020,6 +7247,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &359026661
 MonoBehaviour:
@@ -7420,6 +7651,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -7438,6 +7674,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &370058832
 GameObject:
@@ -7556,6 +7796,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -7574,6 +7819,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &374560176
 MonoBehaviour:
@@ -7918,6 +8167,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -7936,6 +8190,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &387964416
 GameObject:
@@ -7964,7 +8222,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387964416}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -8073,12 +8331,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387964416}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1448177046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &387964422
 MonoBehaviour:
@@ -8110,6 +8368,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -8128,6 +8391,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &392224367
 GameObject:
@@ -8144,7 +8411,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &392224368
 Transform:
   m_ObjectHideFlags: 0
@@ -8166,6 +8433,8 @@ Transform:
   - {fileID: 816401338}
   - {fileID: 1798365922}
   - {fileID: 1260528338}
+  - {fileID: 1441681176}
+  - {fileID: 794834377}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &392570654
@@ -8234,6 +8503,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -8252,6 +8526,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &392570657
 MonoBehaviour:
@@ -8437,6 +8715,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -8455,6 +8738,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &397951439
 MonoBehaviour:
@@ -8758,6 +9045,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -8776,6 +9068,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &408476970
 GameObject:
@@ -9011,6 +9307,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -9029,6 +9330,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &437898389
 MonoBehaviour:
@@ -9317,6 +9622,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -9335,6 +9645,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &448218227
 GameObject:
@@ -9402,6 +9716,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -9420,6 +9739,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &448218230
 MonoBehaviour:
@@ -9605,6 +9928,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -9623,6 +9951,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &452285186
 MonoBehaviour:
@@ -9919,6 +10251,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -9937,6 +10274,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &456523549
 MonoBehaviour:
@@ -10122,6 +10463,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -10140,6 +10486,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &456885773
 MonoBehaviour:
@@ -10500,6 +10850,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -10518,6 +10873,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &463827423
 GameObject:
@@ -10645,6 +11004,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -10663,6 +11027,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &480676876
 MonoBehaviour:
@@ -10966,6 +11334,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -10984,6 +11357,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &508759686
 GameObject:
@@ -11051,6 +11428,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -11069,6 +11451,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &508759689
 MonoBehaviour:
@@ -11265,6 +11651,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -11283,6 +11674,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &512736028
 MonoBehaviour:
@@ -11524,8 +11919,6 @@ GameObject:
   - component: {fileID: 531224760}
   - component: {fileID: 531224759}
   - component: {fileID: 531224758}
-  - component: {fileID: 531224757}
-  - component: {fileID: 531224756}
   - component: {fileID: 531224761}
   m_Layer: 0
   m_Name: VoxelsTest
@@ -11533,104 +11926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &531224756
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531224755}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecba6aeee59694952979ab5e6fcc7e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.VFX.Binders.VFXARDataBinder
-  occlusionManager: {fileID: 1283464404}
-  cameraBackground: {fileID: 1283464406}
-  arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
-  bindDepthMap: 1
-  bindStencilMap: 1
-  bindColorMap: 1
-  bindPositionMap: 1
-  bindCameraMatrices: 1
-  bindThrottle: 0
-  throttleValue: 1
-  bindNormalMap: 0
-  normalMapOverride: {fileID: 0}
-  bindVelocity: 0
-  velocityScale: 1
-  velocitySmoothing: 0.5
-  bindGravity: 0
-  gravityStrength: -9.81
-  bindAudio: 0
-  audioProcessor: {fileID: 0}
-  audioVolumeMultiplier: 1
-  audioBandMultiplier: 1
-  rotateDepthTexture: 1
-  maskDepthWithStencil: 1
-  depthMapProperty:
-    m_Name: DepthMap
-  stencilMapProperty:
-    m_Name: StencilMap
-  colorMapProperty:
-    m_Name: ColorMap
-  positionMapProperty:
-    m_Name: PositionMap
-  inverseViewProperty:
-    m_Name: InverseView
-  inverseProjectionProperty:
-    m_Name: InverseProjection
-  rayParamsProperty:
-    m_Name: RayParams
-  depthRangeProperty:
-    m_Name: DepthRange
-  throttleProperty:
-    m_Name: Throttle
-  normalMapProperty:
-    m_Name: NormalMap
-  velocityProperty:
-    m_Name: Velocity
-  referenceVelocityProperty:
-    m_Name: ReferenceVelocity
-  speedProperty:
-    m_Name: Speed
-  cameraSpeedProperty:
-    m_Name: CameraSpeed
-  gravityProperty:
-    m_Name: Gravity
-  gravityStrengthProperty:
-    m_Name: GravityStrength
-  audioVolumeProperty:
-    m_Name: AudioVolume
-  audioBassProperty:
-    m_Name: AudioBass
-  audioMidProperty:
-    m_Name: AudioMid
-  audioTrebleProperty:
-    m_Name: AudioTreble
-  audioSubBassProperty:
-    m_Name: AudioSubBass
-  depthRange: {x: 0.1, y: 10}
-  updateInterval: 1
-  verboseLogging: 0
---- !u!114 &531224757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531224755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings:
-  - {fileID: 531224756}
-  m_VisualEffect: {fileID: 531224759}
+  m_IsActive: 1
 --- !u!73398921 &531224758
 VFXRenderer:
   serializedVersion: 1
@@ -11639,7 +11935,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531224755}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -11697,6 +11993,9 @@ VisualEffect:
       m_Array:
       - m_Value: 1
         m_Name: Throttle2
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Throttle
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -11791,9 +12090,14 @@ MonoBehaviour:
   _bindThrottle: 0
   _throttle: 1
   _throttleProperty: Throttle
-  _bindAudio: 0
+  _bindAudio: 1
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -11812,6 +12116,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &532349235
 GameObject:
@@ -11879,6 +12187,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -11897,6 +12210,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &532349238
 MonoBehaviour:
@@ -12104,6 +12421,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -12122,6 +12444,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &540831732
 MonoBehaviour:
@@ -12312,6 +12638,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -12330,6 +12661,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &552505849
 MonoBehaviour:
@@ -12515,6 +12850,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -12533,6 +12873,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &574880327
 MonoBehaviour:
@@ -12718,6 +13062,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -12736,6 +13085,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &576462809
 MonoBehaviour:
@@ -13067,6 +13420,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -13085,6 +13443,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &590855921
 GameObject:
@@ -13152,6 +13514,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -13170,6 +13537,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &590855924
 MonoBehaviour:
@@ -13535,6 +13906,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -13553,6 +13929,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &604715372
 MonoBehaviour:
@@ -13738,6 +14118,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -13756,6 +14141,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &620258534
 MonoBehaviour:
@@ -14062,6 +14451,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -14080,6 +14474,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &647604197
 MonoBehaviour:
@@ -14108,7 +14506,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647604194}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -14279,6 +14677,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -14297,6 +14700,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &660673042
 VFXRenderer:
@@ -14562,6 +14969,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -14580,6 +14992,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &695147425
 MonoBehaviour:
@@ -14904,6 +15320,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -14922,6 +15343,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &707727907
 MonoBehaviour:
@@ -15135,6 +15560,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -15153,6 +15583,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &722867627
 MonoBehaviour:
@@ -15447,6 +15881,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -15465,6 +15904,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &740620282
 VFXRenderer:
@@ -15662,6 +16105,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -15680,6 +16128,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &759334485
 MonoBehaviour:
@@ -15874,6 +16326,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -15892,6 +16349,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &784851894
 VFXRenderer:
@@ -16046,6 +16507,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -16064,6 +16530,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &791450528
 MonoBehaviour:
@@ -16215,7 +16685,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 392224368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &794834378
 MonoBehaviour:
@@ -16769,6 +17239,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -16787,6 +17262,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &840647535
 MonoBehaviour:
@@ -16972,6 +17451,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -16990,6 +17474,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &854245232
 MonoBehaviour:
@@ -17186,6 +17674,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -17204,6 +17697,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &857657419
 MonoBehaviour:
@@ -17389,6 +17886,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -17407,6 +17909,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &862627142
 MonoBehaviour:
@@ -17526,176 +18032,6 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
---- !u!1 &866719027
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 866719030}
-  - component: {fileID: 866719029}
-  - component: {fileID: 866719028}
-  - component: {fileID: 866719031}
-  m_Layer: 0
-  m_Name: NNCam2_Eyes_VFX
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!73398921 &866719028
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866719027}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &866719029
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866719027}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 732f8125590db45cb8618946f423c53a, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_AllowInstancing: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 0.5
-        m_Name: Threshold
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array: []
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array: []
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array: []
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array: []
-    m_Gradient:
-      m_Array: []
-    m_NamedObject:
-      m_Array: []
-    m_Bool:
-      m_Array: []
---- !u!4 &866719030
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866719027}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &866719031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866719027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56892d9bbe01b4e8599b7f6492a5b319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VFXARBinder
-  _source: {fileID: 0}
-  _bindDepthMap: 1
-  _bindStencilMap: 1
-  _bindPositionMap: 1
-  _bindColorMap: 1
-  _bindVelocityMap: 0
-  _bindRayParams: 1
-  _bindInverseView: 1
-  _bindDepthRange: 1
-  _bindInverseProj: 0
-  _depthMin: 0.1
-  _depthMax: 10
-  _bindThrottle: 0
-  _throttle: 1
-  _throttleProperty: Throttle
-  _bindAudio: 0
-  _audioVolumeProperty: AudioVolume
-  _audioBandsProperty: AudioBands
-  depthMapProperty:
-    m_Name: DepthMap
-  stencilMapProperty:
-    m_Name: StencilMap
-  positionMapProperty:
-    m_Name: PositionMap
-  colorMapProperty:
-    m_Name: ColorMap
-  velocityMapProperty:
-    m_Name: VelocityMap
-  rayParamsProperty:
-    m_Name: RayParams
-  inverseViewProperty:
-    m_Name: InverseView
-  inverseProjProperty:
-    m_Name: InverseProjection
-  depthRangeProperty:
-    m_Name: DepthRange
-  _verboseLogging: 0
 --- !u!1 &872368973
 GameObject:
   m_ObjectHideFlags: 0
@@ -17871,6 +18207,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -17889,6 +18230,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &876213594
 VFXRenderer:
@@ -18040,6 +18385,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -18058,6 +18408,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &885764175
 MonoBehaviour:
@@ -18345,6 +18699,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -18363,6 +18722,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &901708271
 GameObject:
@@ -18430,6 +18793,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -18448,6 +18816,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &901708274
 MonoBehaviour:
@@ -18581,7 +18953,6 @@ GameObject:
   - component: {fileID: 909766831}
   - component: {fileID: 909766837}
   - component: {fileID: 909766836}
-  - component: {fileID: 909766835}
   - component: {fileID: 909766833}
   - component: {fileID: 909766832}
   m_Layer: 0
@@ -18590,7 +18961,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &909766831
 Transform:
   m_ObjectHideFlags: 0
@@ -18604,7 +18975,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1830393064}
+  m_Father: {fileID: 133815467}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &909766832
 MonoBehaviour:
@@ -18636,6 +19007,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -18654,6 +19030,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &909766833
 MonoBehaviour:
@@ -18674,21 +19054,6 @@ MonoBehaviour:
   description: 
   performanceTier: 3
   mobileOptimized: 1
---- !u!114 &909766835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909766830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings: []
-  m_VisualEffect: {fileID: 909766837}
 --- !u!73398921 &909766836
 VFXRenderer:
   serializedVersion: 1
@@ -18742,7 +19107,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909766830}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: 12038624df5104a29b59ca75bf4fc2eb, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -18752,7 +19117,13 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Ripple
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -18792,7 +19163,10 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 0}
+        m_Name: ColorMap
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!1 &924228861
@@ -18951,6 +19325,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -18969,6 +19348,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &932761164
 MonoBehaviour:
@@ -19154,6 +19537,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -19172,6 +19560,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &942513825
 MonoBehaviour:
@@ -19321,7 +19713,6 @@ GameObject:
   - component: {fileID: 955868117}
   - component: {fileID: 955868123}
   - component: {fileID: 955868122}
-  - component: {fileID: 955868121}
   - component: {fileID: 955868119}
   - component: {fileID: 955868118}
   m_Layer: 0
@@ -19330,7 +19721,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &955868117
 Transform:
   m_ObjectHideFlags: 0
@@ -19376,6 +19767,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -19394,6 +19790,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &955868119
 MonoBehaviour:
@@ -19414,21 +19814,6 @@ MonoBehaviour:
   description: 
   performanceTier: 3
   mobileOptimized: 1
---- !u!114 &955868121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955868116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings: []
-  m_VisualEffect: {fileID: 955868123}
 --- !u!73398921 &955868122
 VFXRenderer:
   serializedVersion: 1
@@ -19482,7 +19867,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955868116}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: a8709fcd6da1b4a50a697d306806491a, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -19492,7 +19877,13 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: FocusDistance
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -20246,6 +20637,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -20264,6 +20660,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &984860468
 MonoBehaviour:
@@ -20543,6 +20943,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -20561,6 +20966,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1008155026
 GameObject:
@@ -20746,6 +21155,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -20764,6 +21178,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1010818632
 GameObject:
@@ -20949,6 +21367,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -20967,6 +21390,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1015296640
 GameObject:
@@ -21162,6 +21589,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -21180,6 +21612,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1028541169
 MonoBehaviour:
@@ -21350,6 +21786,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -21368,6 +21809,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1028784933
 MonoBehaviour:
@@ -21666,7 +22111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1043492225
 Transform:
   m_ObjectHideFlags: 0
@@ -21712,6 +22157,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -21730,6 +22180,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1043492227
 MonoBehaviour:
@@ -21940,6 +22394,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -21958,6 +22417,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1049926517
 MonoBehaviour:
@@ -22354,6 +22817,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -22372,6 +22840,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1066636184
 GameObject:
@@ -22439,6 +22911,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -22457,6 +22934,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1066636187
 MonoBehaviour:
@@ -22642,6 +23123,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -22660,6 +23146,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1067134362
 MonoBehaviour:
@@ -22956,6 +23446,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -22974,6 +23469,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1080195181
 MonoBehaviour:
@@ -23162,6 +23661,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -23180,6 +23684,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1091521812
 MonoBehaviour:
@@ -23459,6 +23967,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -23477,6 +23990,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1101806996
 GameObject:
@@ -23820,6 +24337,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -23838,6 +24360,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1108090762
 GameObject:
@@ -24016,6 +24542,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -24034,6 +24565,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1111181924
 MonoBehaviour:
@@ -24468,6 +25003,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -24486,6 +25026,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1134512227
 GameObject:
@@ -24553,6 +25097,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -24571,6 +25120,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1134512230
 MonoBehaviour:
@@ -24759,6 +25312,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -24777,6 +25335,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1149985132
 MonoBehaviour:
@@ -24984,6 +25546,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -25002,6 +25569,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1167079223
 MonoBehaviour:
@@ -25215,6 +25786,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -25233,6 +25809,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1180887437
 MonoBehaviour:
@@ -25528,6 +26108,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -25546,6 +26131,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1184548550
 MonoBehaviour:
@@ -25574,7 +26163,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184548547}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -25868,6 +26457,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -25886,6 +26480,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1193721514
 GameObject:
@@ -26047,7 +26645,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1197446205}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -26718,6 +27316,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -26736,6 +27339,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1235819460
 GameObject:
@@ -26900,6 +27507,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -26918,6 +27530,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1241023623
 GameObject:
@@ -27138,6 +27754,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -27156,6 +27777,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1241705991
 MonoBehaviour:
@@ -27459,6 +28084,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -27477,6 +28107,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1249524866
 GameObject:
@@ -27544,6 +28178,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -27562,6 +28201,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1249524869
 MonoBehaviour:
@@ -27758,6 +28401,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -27776,6 +28424,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1250699490
 MonoBehaviour:
@@ -28055,6 +28707,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -28073,6 +28730,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1261926407
 MonoBehaviour:
@@ -28258,6 +28919,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -28276,6 +28942,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1270263736
 MonoBehaviour:
@@ -28660,6 +29330,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -28678,6 +29353,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1281564330
 MonoBehaviour:
@@ -28838,7 +29517,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283028388}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -29296,7 +29975,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286437084}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -29472,6 +30151,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -29490,6 +30174,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1293280748
 MonoBehaviour:
@@ -29674,6 +30362,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -29692,6 +30385,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1294360148
 MonoBehaviour:
@@ -29960,6 +30657,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -29978,6 +30680,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1303440695
 MonoBehaviour:
@@ -30163,6 +30869,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -30181,6 +30892,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1308645531
 MonoBehaviour:
@@ -30300,58 +31015,6 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
---- !u!1 &1312250068
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1312250070}
-  - component: {fileID: 1312250069}
-  m_Layer: 0
-  m_Name: BodyPartSegmenter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1312250069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312250068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ed688011f56d49a096d16699e2c6aa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Segmentation.BodyPartSegmenter
-  _arCameraBackground: {fileID: 1283464406}
-  _arCamera: {fileID: 1283464408}
-  _resourceSet: {fileID: 11400000, guid: 2f407a69dfb2e1e48a0b559630c28676, type: 2}
-  _inferenceWidth: 512
-  _inferenceHeight: 384
-  _debugVisualization: 1
-  _runEveryFrame: 1
-  _skipFrames: 0
---- !u!4 &1312250070
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312250068}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1320594292 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6087544785993249035, guid: 16731f7cddfd444e8868e0cd433c2933, type: 3}
@@ -30500,6 +31163,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -30518,6 +31186,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1325587612
 GameObject:
@@ -30741,6 +31413,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -30759,6 +31436,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 1
 --- !u!1 &1326721846
 GameObject:
@@ -30826,6 +31507,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -30844,6 +31530,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1326721849
 MonoBehaviour:
@@ -30995,6 +31685,11 @@ MonoBehaviour:
   _visible: 1
   _toggleKey: 9
   _updateInterval: 0.1
+  _position: 1
+  _width: 380
+  _scale: 1
+  _customOffset: {x: 0, y: 0}
+  _padding: 10
   _fontSize: 14
   _backgroundColor: {r: 0, g: 0, b: 0, a: 0.85}
   _okColor: {r: 0.3, g: 0.9, b: 0.3, a: 1}
@@ -31428,6 +32123,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -31446,6 +32146,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1349233074
 GameObject:
@@ -31513,6 +32217,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -31531,6 +32240,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1349233077
 MonoBehaviour:
@@ -31744,6 +32457,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -31762,6 +32480,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1358202385
 MonoBehaviour:
@@ -31908,7 +32630,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375231512}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -32017,12 +32739,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375231512}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1448177046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1375231518
 MonoBehaviour:
@@ -32054,6 +32776,11 @@ MonoBehaviour:
   _bindAudio: 1
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -32072,6 +32799,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1380342497
 GameObject:
@@ -32227,6 +32958,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -32245,6 +32981,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!28 &1390044798
 Texture2D:
@@ -32358,6 +33098,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -32376,6 +33121,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1395946913
 MonoBehaviour:
@@ -32474,7 +33223,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0.3
+        m_Name: FocusDistance
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -32636,7 +33388,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397431555}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -32932,6 +33684,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -32950,6 +33707,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1421684346
 MonoBehaviour:
@@ -33217,7 +33978,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1441681176
 Transform:
   m_ObjectHideFlags: 0
@@ -33226,7 +33987,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1441681175}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33239,7 +34000,7 @@ Transform:
   - {fileID: 1283028389}
   - {fileID: 98931383}
   - {fileID: 1764639385}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 392224368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1446318774
 GameObject:
@@ -33307,6 +34068,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -33325,6 +34091,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1446318777
 MonoBehaviour:
@@ -33484,6 +34254,8 @@ Transform:
   - {fileID: 876213592}
   - {fileID: 660673040}
   - {fileID: 784851892}
+  - {fileID: 387964421}
+  - {fileID: 1375231517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1460455975
@@ -33569,7 +34341,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460455975}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -33734,6 +34506,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -33752,6 +34529,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &1464607495
 VFXRenderer:
@@ -33903,6 +34684,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -33921,6 +34707,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1469900795
 MonoBehaviour:
@@ -34162,6 +34952,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -34180,6 +34975,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1501914294
 MonoBehaviour:
@@ -34208,7 +35007,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501914291}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -34381,6 +35180,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -34399,6 +35203,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1502117208
 MonoBehaviour:
@@ -34584,6 +35392,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -34602,6 +35415,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1515783032
 MonoBehaviour:
@@ -34986,6 +35803,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -35004,6 +35826,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1531854173
 GameObject:
@@ -35016,7 +35842,6 @@ GameObject:
   - component: {fileID: 1531854174}
   - component: {fileID: 1531854179}
   - component: {fileID: 1531854178}
-  - component: {fileID: 1531854177}
   - component: {fileID: 1531854175}
   - component: {fileID: 1531854180}
   m_Layer: 0
@@ -35060,21 +35885,6 @@ MonoBehaviour:
   description: 
   performanceTier: 3
   mobileOptimized: 1
---- !u!114 &1531854177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531854173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
-  m_ExecuteInEditor: 1
-  m_Bindings: []
-  m_VisualEffect: {fileID: 1531854179}
 --- !u!73398921 &1531854178
 VFXRenderer:
   serializedVersion: 1
@@ -35128,7 +35938,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531854173}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Asset: {fileID: 8926484042661614526, guid: ebf046810f5ef451f8062e59ccba52b4, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -35186,9 +35996,14 @@ MonoBehaviour:
   _bindThrottle: 0
   _throttle: 1
   _throttleProperty: Throttle
-  _bindAudio: 0
+  _bindAudio: 1
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -35207,53 +36022,11 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
---- !u!1 &1543120168
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1543120170}
-  - component: {fileID: 1543120169}
-  m_Layer: 0
-  m_Name: AudioBridge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1543120169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1543120168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf837d441b32c490880c336ef988092d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioBridge
-  _source: {fileID: 0}
-  _sampleCount: 1024
---- !u!4 &1543120170
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1543120168}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1551351054
 GameObject:
   m_ObjectHideFlags: 0
@@ -35482,6 +36255,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -35500,6 +36278,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1554122108
 MonoBehaviour:
@@ -35799,6 +36581,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -35817,6 +36604,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1554724642
 MonoBehaviour:
@@ -36120,6 +36911,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -36138,6 +36934,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1568827891
 GameObject:
@@ -36205,6 +37005,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -36223,6 +37028,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1568827894
 MonoBehaviour:
@@ -36427,6 +37236,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -36445,6 +37259,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1592431266
 MonoBehaviour:
@@ -36744,6 +37562,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -36762,6 +37585,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1646468513
 MonoBehaviour:
@@ -36922,7 +37749,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646767762}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -37129,7 +37956,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673875996}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -37528,6 +38355,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -37546,6 +38378,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1682080061
 GameObject:
@@ -37613,6 +38449,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -37631,6 +38472,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1682080064
 MonoBehaviour:
@@ -37838,6 +38683,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -37856,6 +38706,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1688951937
 MonoBehaviour:
@@ -38004,10 +38858,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1990417729}
   - {fileID: 139385814}
   - {fileID: 583056902}
   - {fileID: 76661751}
-  - {fileID: 1990417729}
   - {fileID: 1531854174}
   - {fileID: 6603388}
   - {fileID: 1556467875}
@@ -38224,7 +39078,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710502877}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -38623,6 +39477,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -38641,6 +39500,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1724673140
 GameObject:
@@ -38708,6 +39571,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -38726,6 +39594,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1724673143
 MonoBehaviour:
@@ -38914,6 +39786,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -38932,6 +39809,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1736777729
 MonoBehaviour:
@@ -39235,6 +40116,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -39253,6 +40139,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!28 &1763330814
 Texture2D:
@@ -39663,6 +40553,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -39681,6 +40576,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &1767443331
 VFXRenderer:
@@ -40064,6 +40963,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -40082,6 +40986,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1777879573
 GameObject:
@@ -40148,6 +41056,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -40166,6 +41079,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1777879576
 MonoBehaviour:
@@ -40469,6 +41386,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -40487,6 +41409,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1787948852
 MonoBehaviour:
@@ -40791,6 +41717,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -40809,6 +41740,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1815639305
 MonoBehaviour:
@@ -40943,12 +41878,10 @@ GameObject:
   - component: {fileID: 1825912699}
   - component: {fileID: 1825912697}
   - component: {fileID: 1825912696}
-  - component: {fileID: 1825912700}
   - component: {fileID: 1825912702}
-  - component: {fileID: 1825912703}
   - component: {fileID: 1825912704}
   m_Layer: 0
-  m_Name: Rcam4 VFX
+  m_Name: Hologram-Rcam4 VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41067,7 +42000,7 @@ VisualEffect:
       - m_Value: {fileID: 983670923}
         m_Name: DepthMap
         m_Overridden: 1
-      - m_Value: {fileID: 8400000, guid: 4a865bebc5af64ebf8c48cb77415ef0d, type: 2}
+      - m_Value: {fileID: 0}
         m_Name: ColorMap
         m_Overridden: 1
     m_Bool:
@@ -41106,22 +42039,6 @@ MonoBehaviour:
   _anchor: {fileID: 545848305}
   _depthRange: {x: 0.1, y: 5}
   _hologramScale: 1
---- !u!114 &1825912700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825912695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdafc37f32b176349b1684c4455b98e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExecuteInEditor: 1
-  m_Bindings:
-  - {fileID: 1825912703}
-  m_VisualEffect: {fileID: 1825912697}
 --- !u!114 &1825912702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41135,87 +42052,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::H3M.Core.DiagnosticOverlay
   _spawnTestParticles: 0
---- !u!114 &1825912703
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825912695}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecba6aeee59694952979ab5e6fcc7e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.VFX.Binders.VFXARDataBinder
-  occlusionManager: {fileID: 1283464404}
-  cameraBackground: {fileID: 1283464406}
-  arCamera: {fileID: 1283464408}
-  colorProvider: {fileID: 0}
-  bindDepthMap: 1
-  bindStencilMap: 1
-  bindColorMap: 1
-  bindPositionMap: 1
-  bindCameraMatrices: 1
-  bindThrottle: 1
-  throttleValue: 0
-  bindNormalMap: 1
-  normalMapOverride: {fileID: 0}
-  bindVelocity: 1
-  velocityScale: 1
-  velocitySmoothing: 0.5
-  bindGravity: 0
-  gravityStrength: -9.81
-  bindAudio: 0
-  audioProcessor: {fileID: 2016840822}
-  audioVolumeMultiplier: 1
-  audioBandMultiplier: 1
-  rotateDepthTexture: 1
-  maskDepthWithStencil: 1
-  depthMapProperty:
-    m_Name: DepthMap
-  stencilMapProperty:
-    m_Name: StencilMap
-  colorMapProperty:
-    m_Name: ColorMap
-  positionMapProperty:
-    m_Name: PositionMap
-  inverseViewProperty:
-    m_Name: InverseView
-  inverseProjectionProperty:
-    m_Name: InverseProjection
-  rayParamsProperty:
-    m_Name: RayParams
-  depthRangeProperty:
-    m_Name: DepthRange
-  throttleProperty:
-    m_Name: Throttle
-  normalMapProperty:
-    m_Name: NormalMap
-  velocityProperty:
-    m_Name: Velocity
-  referenceVelocityProperty:
-    m_Name: ReferenceVelocity
-  speedProperty:
-    m_Name: Speed
-  cameraSpeedProperty:
-    m_Name: CameraSpeed
-  gravityProperty:
-    m_Name: Gravity
-  gravityStrengthProperty:
-    m_Name: GravityStrength
-  audioVolumeProperty:
-    m_Name: AudioVolume
-  audioBassProperty:
-    m_Name: AudioBass
-  audioMidProperty:
-    m_Name: AudioMid
-  audioTrebleProperty:
-    m_Name: AudioTreble
-  audioSubBassProperty:
-    m_Name: AudioSubBass
-  depthRange: {x: 0.1, y: 10}
-  updateInterval: 1
-  verboseLogging: 0
 --- !u!114 &1825912704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41246,6 +42082,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -41264,6 +42105,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1827617050
 GameObject:
@@ -41331,6 +42176,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -41349,6 +42199,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1827617053
 MonoBehaviour:
@@ -41505,7 +42359,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1830393064
 Transform:
   m_ObjectHideFlags: 0
@@ -41527,7 +42381,6 @@ Transform:
   - {fileID: 1028541167}
   - {fileID: 1294360146}
   - {fileID: 1043492225}
-  - {fileID: 909766831}
   - {fileID: 1395946911}
   - {fileID: 955868117}
   - {fileID: 201359458}
@@ -41720,6 +42573,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -41738,6 +42596,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1861073388
 MonoBehaviour:
@@ -41922,7 +42784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1871705187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42018,6 +42880,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -42036,6 +42903,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1882407670
 MonoBehaviour:
@@ -42276,6 +43147,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -42294,6 +43170,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1899495988
 MonoBehaviour:
@@ -42338,7 +43218,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899495985}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -42437,7 +43317,7 @@ MonoBehaviour:
     m_Name: ColorMap
   _throttleProperty:
     m_Name: Throttle
-  segmenter: {fileID: 1312250069}
+  segmenter: {fileID: 0}
   throttle: 1
   audioModulatedThrottle: 0
   bindMask: 1
@@ -42509,6 +43389,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -42527,6 +43412,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1921198773
 MonoBehaviour:
@@ -42830,6 +43719,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -42848,6 +43742,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &1928751208
 GameObject:
@@ -43026,6 +43924,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -43044,6 +43947,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1930216658
 MonoBehaviour:
@@ -43232,6 +44139,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -43250,6 +44162,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1939725900
 MonoBehaviour:
@@ -43438,6 +44354,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -43456,6 +44377,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &1940119968
 MonoBehaviour:
@@ -43587,6 +44512,7 @@ GameObject:
   - component: {fileID: 1949552024}
   - component: {fileID: 1949552023}
   - component: {fileID: 1949552022}
+  - component: {fileID: 1949552026}
   m_Layer: 0
   m_Name: HoloKit Camera Rig
   m_TagString: Untagged
@@ -43661,6 +44587,20 @@ Transform:
   - {fileID: 1554056980}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1949552026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949552021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098a024b7fdac4e93a1d88ec12651044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::H3M.Core.HologramAnchor
+  _hologramRoot: {fileID: 7151776811922266408}
+  _scaleWithPinch: 1
 --- !u!1 &1949555761
 GameObject:
   m_ObjectHideFlags: 0
@@ -43970,7 +44910,7 @@ MonoBehaviour:
   grabStartDistance: 0.04
   grabEndDistance: 0.06
   useBodyPixFallback: 1
-  bodyPartSegmenter: {fileID: 1312250069}
+  bodyPartSegmenter: {fileID: 0}
   keypointMinConfidence: 0.5
   enablePhysicsCollision: 1
   arMeshManager: {fileID: 1554056981}
@@ -44074,7 +45014,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990417728}
   m_Enabled: 0
-  m_CastShadows: 0
+  m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -44179,6 +45119,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -44197,6 +45142,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &2014488419
 GameObject:
@@ -44262,6 +45211,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -44280,6 +45234,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!73398921 &2014488422
 VFXRenderer:
@@ -44635,6 +45593,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -44653,6 +45616,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &2022799563
 MonoBehaviour:
@@ -44791,7 +45758,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2024564805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45062,6 +46029,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -45080,6 +46052,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &2030562392
 MonoBehaviour:
@@ -45566,6 +46542,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -45584,6 +46565,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &2102168469
 GameObject:
@@ -45651,6 +46636,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -45669,6 +46659,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &2102168472
 MonoBehaviour:
@@ -45983,6 +46977,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -46001,6 +47000,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!1 &2121015119
 GameObject:
@@ -46068,6 +47071,11 @@ MonoBehaviour:
   _bindAudio: 0
   _audioVolumeProperty: AudioVolume
   _audioBandsProperty: AudioBands
+  _bindAnchorPos: 0
+  _bindHologramScale: 0
+  _anchorTransform: {fileID: 0}
+  _hologramScale: 0.15
+  _useTransformMode: 1
   depthMapProperty:
     m_Name: DepthMap
   stencilMapProperty:
@@ -46086,6 +47094,10 @@ MonoBehaviour:
     m_Name: InverseProjection
   depthRangeProperty:
     m_Name: DepthRange
+  anchorPosProperty:
+    m_Name: AnchorPos
+  hologramScaleProperty:
+    m_Name: HologramScale
   _verboseLogging: 0
 --- !u!114 &2121015122
 MonoBehaviour:
@@ -46685,10 +47697,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 828859506001133410, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: m_Asset
-      value: 
-      objectReference: {fileID: 8926484042661614526, guid: 0aa28ce584eda4f2dbf3875e50934496, type: 3}
     - target: {fileID: 1312123924768318209, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -46733,12 +47741,8 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1283464408}
-    - target: {fileID: 3559062275314975007, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
+    - target: {fileID: 3314052791286193627, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3559062275314975007, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: m_CastShadows
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5328265504294277083, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
@@ -46746,17 +47750,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1283464408}
     - target: {fileID: 5328265504294277083, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: PositionMap
-      value: 
-      objectReference: {fileID: 8400000, guid: 109e3986180134d9ba33a8eb81a70db4, type: 2}
-    - target: {fileID: 5328265504294277083, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: _colorProvider
-      value: 
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5328265504294277083, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: _computeShader
+      propertyPath: PositionMap
       value: 
-      objectReference: {fileID: 7200000, guid: 25ae2328c483540b2839493583277f3f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5328265504294277083, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: _occlusionManager
       value: 
@@ -46764,35 +47764,15 @@ PrefabInstance:
     - target: {fileID: 6030464951453399767, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: _anchor
       value: 
-      objectReference: {fileID: 545848305}
+      objectReference: {fileID: 1949552025}
     - target: {fileID: 6030464951453399767, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: _source
-      value: 
-      objectReference: {fileID: 704094528}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6055371860914190349, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: m_Name
       value: H3M_HologramRig
       objectReference: {fileID: 0}
-    - target: {fileID: 6055371860914190349, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7311585905740680788, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: _hologramRoot
-      value: 
-      objectReference: {fileID: 7151776811922266408}
-    - target: {fileID: 8064211986379335112, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: panelWidth
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 8064211986379335112, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: positionTop
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8064211986379335112, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: hologramSource
-      value: 
-      objectReference: {fileID: 704094528}
     - target: {fileID: 8064211986379335112, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: externalDocument
       value: 
@@ -46801,14 +47781,6 @@ PrefabInstance:
       propertyPath: hologramRenderer
       value: 
       objectReference: {fileID: 1320594293}
-    - target: {fileID: 8531058951000578515, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: sourceAsset
-      value: 
-      objectReference: {fileID: 9197481963319205126, guid: 8f23b630fc36e4568aca24186fb377ff, type: 3}
-    - target: {fileID: 8531058951000578515, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
-      propertyPath: m_PanelSettings
-      value: 
-      objectReference: {fileID: 11400000, guid: 9bed8b8ffa2034871b6308bf50db29b1, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -46827,9 +47799,6 @@ SceneRoots:
   - {fileID: 245929914}
   - {fileID: 463827426}
   - {fileID: 1423410199}
-  - {fileID: 1825912698}
-  - {fileID: 1441681176}
-  - {fileID: 794834377}
   - {fileID: 392224368}
   - {fileID: 600369234}
   - {fileID: 1202408399}
@@ -46843,19 +47812,14 @@ SceneRoots:
   - {fileID: 2032256199}
   - {fileID: 813519091}
   - {fileID: 924228863}
-  - {fileID: 196780746}
   - {fileID: 330018025}
-  - {fileID: 1312250070}
-  - {fileID: 866719030}
   - {fileID: 1526401167}
   - {fileID: 531224760}
-  - {fileID: 133815467}
+  - {fileID: 1825912698}
   - {fileID: 1542839335731594014}
   - {fileID: 4512716135462884992}
   - {fileID: 7151776811922266407}
   - {fileID: 1133843281}
-  - {fileID: 387964421}
-  - {fileID: 1375231517}
   - {fileID: 1197446207}
   - {fileID: 1871705188}
   - {fileID: 1327034459}
@@ -46863,5 +47827,6 @@ SceneRoots:
   - {fileID: 377290828}
   - {fileID: 323880542}
   - {fileID: 1949555766}
-  - {fileID: 1543120170}
+  - {fileID: 196780746}
   - {fileID: 1448177046}
+  - {fileID: 133815467}

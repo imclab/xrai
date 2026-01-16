@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
+using H3M.Core;
 
 /// <summary>
 /// Lightweight binder - reads from ARDepthSource, binds to one VFX.
@@ -60,6 +61,19 @@ public class VFXARBinder : MonoBehaviour
     [Tooltip("Property name for audio bands (Vector4: bass, mid, treble, unused)")]
     [SerializeField] string _audioBandsProperty = "AudioBands";
 
+    [Header("Hologram (Mini-Me)")]
+    [Tooltip("Bind anchor position for hologram placement")]
+    [SerializeField] bool _bindAnchorPos = false;
+    [Tooltip("Bind hologram scale for mini-me effect")]
+    [SerializeField] bool _bindHologramScale = false;
+    [Tooltip("Transform to use as anchor point (e.g., HologramAnchor)")]
+    [SerializeField] Transform _anchorTransform;
+    [Tooltip("Scale factor for hologram (1.0 = life-size, 0.1 = 10% scale)")]
+    [Range(0.01f, 2f)]
+    [SerializeField] float _hologramScale = 0.15f;
+    [Tooltip("If true, directly transforms the VFX GameObject instead of using properties (works without VFX modification)")]
+    [SerializeField] bool _useTransformMode = true;
+
     [Header("Property Names (customize if VFX uses different names)")]
     [VFXPropertyBinding("UnityEngine.Texture2D")]
     public ExposedProperty depthMapProperty = "DepthMap";
@@ -79,6 +93,11 @@ public class VFXARBinder : MonoBehaviour
     public ExposedProperty inverseProjProperty = "InverseProjection";
     [VFXPropertyBinding("UnityEngine.Vector2")]
     public ExposedProperty depthRangeProperty = "DepthRange";
+
+    [VFXPropertyBinding("UnityEngine.Vector3")]
+    public ExposedProperty anchorPosProperty = "AnchorPos";
+    [VFXPropertyBinding("System.Single")]
+    public ExposedProperty hologramScaleProperty = "HologramScale";
 
     [Header("Debug")]
     [SerializeField] bool _verboseLogging = false;
@@ -101,6 +120,11 @@ public class VFXARBinder : MonoBehaviour
     public bool BindDepthRange { get => _bindDepthRange; set => _bindDepthRange = value; }
     public bool BindThrottle { get => _bindThrottle; set => _bindThrottle = value; }
     public bool BindAudio { get => _bindAudio; set => _bindAudio = value; }
+    public bool BindAnchorPos { get => _bindAnchorPos; set => _bindAnchorPos = value; }
+    public bool BindHologramScale { get => _bindHologramScale; set => _bindHologramScale = value; }
+    public Transform AnchorTransform { get => _anchorTransform; set => _anchorTransform = value; }
+    public float HologramScale { get => _hologramScale; set => _hologramScale = Mathf.Clamp(value, 0.01f, 2f); }
+    public bool UseTransformMode { get => _useTransformMode; set => _useTransformMode = value; }
 
     void Awake() => _vfx = GetComponent<VisualEffect>();
 
@@ -209,6 +233,40 @@ public class VFXARBinder : MonoBehaviour
             }
         }
 
+        // === Hologram (Mini-Me) ===
+        if (_bindAnchorPos || _bindHologramScale)
+        {
+            if (_useTransformMode)
+            {
+                // Direct transform mode - no VFX properties needed
+                if (_bindAnchorPos && _anchorTransform != null)
+                {
+                    transform.position = _anchorTransform.position;
+                    boundCount++;
+                }
+                if (_bindHologramScale)
+                {
+                    transform.localScale = Vector3.one * _hologramScale;
+                    boundCount++;
+                }
+            }
+            else
+            {
+                // Property binding mode - requires VFX to have AnchorPos/HologramScale properties
+                if (_bindAnchorPos && _vfx.HasVector3(anchorPosProperty))
+                {
+                    Vector3 pos = _anchorTransform != null ? _anchorTransform.position : Vector3.zero;
+                    _vfx.SetVector3(anchorPosProperty, pos);
+                    boundCount++;
+                }
+                if (_bindHologramScale && _vfx.HasFloat(hologramScaleProperty))
+                {
+                    _vfx.SetFloat(hologramScaleProperty, _hologramScale);
+                    boundCount++;
+                }
+            }
+        }
+
         BoundCount = boundCount;
         IsBound = boundCount > 0;
 
@@ -237,12 +295,15 @@ public class VFXARBinder : MonoBehaviour
         _bindDepthRange = vfx.HasVector2(depthRangeProperty);
         _bindThrottle = vfx.HasFloat(_throttleProperty) || vfx.HasFloat("Intensity") || vfx.HasFloat("Scale");
         _bindAudio = vfx.HasFloat(_audioVolumeProperty) || vfx.HasVector4(_audioBandsProperty);
+        _bindAnchorPos = vfx.HasVector3(anchorPosProperty);
+        _bindHologramScale = vfx.HasFloat(hologramScaleProperty);
 
         Debug.Log($"[VFXARBinder] Auto-detected bindings for {vfx.name}:\n" +
                   $"  DepthMap={_bindDepthMap}, StencilMap={_bindStencilMap}, PositionMap={_bindPositionMap}\n" +
                   $"  ColorMap={_bindColorMap}, VelocityMap={_bindVelocityMap}\n" +
                   $"  RayParams={_bindRayParams}, InverseView={_bindInverseView}, InverseProj={_bindInverseProj}\n" +
-                  $"  DepthRange={_bindDepthRange}, Throttle={_bindThrottle}, Audio={_bindAudio}");
+                  $"  DepthRange={_bindDepthRange}, Throttle={_bindThrottle}, Audio={_bindAudio}\n" +
+                  $"  AnchorPos={_bindAnchorPos}, HologramScale={_bindHologramScale}");
 
         #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(this);
@@ -266,6 +327,8 @@ public class VFXARBinder : MonoBehaviour
         _bindDepthRange = true;
         _bindThrottle = true;
         _bindAudio = true;
+        _bindAnchorPos = true;
+        _bindHologramScale = true;
 
         #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(this);
@@ -289,6 +352,8 @@ public class VFXARBinder : MonoBehaviour
         _bindDepthRange = false;
         _bindThrottle = false;
         _bindAudio = false;
+        _bindAnchorPos = false;
+        _bindHologramScale = false;
 
         #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(this);
@@ -314,6 +379,15 @@ public class VFXARBinder : MonoBehaviour
         Debug.Log($"  DepthRange: {_bindDepthRange} (Has: {vfx.HasVector2(depthRangeProperty)})");
         Debug.Log($"  Throttle: {_bindThrottle} (Value: {_throttle})");
         Debug.Log($"  Audio: {_bindAudio}");
+        Debug.Log($"  AnchorPos: {_bindAnchorPos} (Has: {vfx.HasVector3(anchorPosProperty)})");
+        Debug.Log($"  HologramScale: {_bindHologramScale} (Has: {vfx.HasFloat(hologramScaleProperty)})");
+        Debug.Log($"--- Hologram Status ---");
+        Debug.Log($"  UseTransformMode: {_useTransformMode}");
+        Debug.Log($"  AnchorTransform: {(_anchorTransform != null ? _anchorTransform.name : "null")}");
+        Debug.Log($"  AnchorPos: {(_anchorTransform != null ? _anchorTransform.position.ToString() : "N/A")}");
+        Debug.Log($"  HologramScale: {_hologramScale}");
+        Debug.Log($"  Current VFX Position: {transform.position}");
+        Debug.Log($"  Current VFX Scale: {transform.localScale}");
         Debug.Log($"--- Source Status ---");
         Debug.Log($"  Source: {(source != null ? source.name : "null")}");
         Debug.Log($"  IsReady: {source?.IsReady}");
@@ -329,6 +403,42 @@ public class VFXARBinder : MonoBehaviour
         Debug.Log($"  IsBound: {IsBound}");
         Debug.Log($"  BoundCount: {BoundCount}");
         Debug.Log($"  DepthRange: {_depthMin}m - {_depthMax}m");
+    }
+
+    /// <summary>
+    /// Configure as hologram with anchor transform and scale
+    /// </summary>
+    [ContextMenu("Enable Hologram Mode")]
+    public void EnableHologramMode()
+    {
+        _bindAnchorPos = true;
+        _bindHologramScale = true;
+
+        // If no anchor set, try to find one
+        if (_anchorTransform == null)
+        {
+            var anchor = FindAnyObjectByType<HologramAnchor>();
+            if (anchor != null)
+                _anchorTransform = anchor.transform;
+        }
+
+        Debug.Log($"[VFXARBinder] Hologram mode enabled for {gameObject.name}. " +
+                  $"Anchor: {(_anchorTransform != null ? _anchorTransform.name : "null")}, Scale: {_hologramScale}");
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+        #endif
+    }
+
+    /// <summary>
+    /// Set hologram transform at runtime
+    /// </summary>
+    public void SetHologramTransform(Transform anchor, float scale)
+    {
+        _anchorTransform = anchor;
+        _hologramScale = Mathf.Clamp(scale, 0.01f, 2f);
+        _bindAnchorPos = true;
+        _bindHologramScale = true;
     }
 
     [ContextMenu("Enable Verbose Logging")]
