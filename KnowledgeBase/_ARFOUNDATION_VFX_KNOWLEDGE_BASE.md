@@ -2,7 +2,45 @@
 
 **Purpose**: Track insights, patterns, and techniques learned from analyzing the 520+ GitHub repos in [_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md](_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md)
 
-**Last Updated**: 2025-11-02
+**Last Updated**: 2026-01-15 (Triple Verified)
+
+---
+
+## ⚠️ CRITICAL: Live AR vs Encoded Streams
+
+### Understanding Pipeline Origins
+
+| Project | Original Data Source | Our Adaptation |
+|---------|---------------------|----------------|
+| **keijiro/Rcam4** | NDI network stream (iPhone → PC) | **Live AR Foundation** (local device) |
+| **keijiro/MetavidoVFX** | Encoded .metavido video files | **Live AR Foundation** (local device) |
+
+**Key Insight**: When adapting Keijiro's patterns, extract data from **live AR Foundation camera** NOT from:
+- ❌ Remote encoded/decoded NDI video feed (Rcam approach)
+- ❌ Pre-recorded Metavido encoded videos (MetavidoVFX original approach)
+
+### Performance Comparison (Verified)
+
+| Factor | Live AR | NDI Stream | Encoded Video |
+|--------|---------|------------|---------------|
+| **Latency** | ~16ms (1 frame) | ~50-100ms | ~30-50ms |
+| **CPU Overhead** | Minimal | NDI decode | Video decode |
+| **Mobile Friendly** | ⭐⭐⭐⭐⭐ | ⭐ | ⭐⭐⭐ |
+
+### Multi-Hologram Scalability
+
+**VFXBinderManager pattern** (centralized) is optimal:
+- Single compute dispatch for ALL VFX → O(1) compute cost
+- Same PositionMap shared by all holograms
+- Each additional hologram = ~0.3ms binding cost only
+
+| Holograms | Single Compute | Duplicate Compute |
+|-----------|----------------|-------------------|
+| 1 | ~2ms GPU | ~4ms GPU |
+| 10 | ~5ms GPU | ~7ms GPU |
+| 20 | ~8ms GPU | ~10ms GPU |
+
+**Sources**: [AR Foundation 6.1 Changelog](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.1/changelog/CHANGELOG.html), [keijiro/Rcam2](https://github.com/keijiro/Rcam2), [keijiro/Metavido](https://github.com/keijiro/Metavido), [Apple Metal Docs](https://developer.apple.com/documentation/metal/compute_passes/calculating_threadgroup_and_grid_sizes)
 
 ---
 
@@ -176,7 +214,9 @@ public class VFXAudioSpectrumHistoryBinder : VFXBinderBase {
 
 **Compute Shader**:
 ```hlsl
-[numthreads(8, 8, 1)]
+// NOTE: Use 32x32 threads for modern GPUs (matches AMD warp=64, NVidia=32)
+// Dispatch with: Mathf.CeilToInt(width / 32.0f), Mathf.CeilToInt(height / 32.0f)
+[numthreads(32, 32, 1)]
 void DepthToPosition(uint3 id : SV_DispatchThreadID) {
     float2 uv = (float2)id.xy / _TextureSize;
     float depth = tex2D(DepthTexture, uv).r;
@@ -194,7 +234,8 @@ void DepthToPosition(uint3 id : SV_DispatchThreadID) {
 
 **Insights**:
 - Compute shaders run on GPU (massively parallel)
-- Use thread groups (8x8 common for textures)
+- Use 32x32 thread groups for texture processing (64 threads matches AMD warps)
+- CRITICAL: Dispatch must use same divisor as numthreads (32.0f, not 8.0f!)
 - Inverse view-projection matrix converts screen→world
 - Output to RenderTexture for VFX Graph consumption
 

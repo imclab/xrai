@@ -1,0 +1,22 @@
+<linker>
+    <!-- Preserve VFX Graph assemblies -->
+    <assembly fullname="Unity.VisualEffectGraph.Runtime" preserve="all"/>
+    <assembly fullname="Unity.RenderPipelines.Core.Runtime" preserve="all"/>
+    <assembly fullname="Unity.RenderPipelines.Universal.Runtime" preserve="all"/>
+
+    <!-- Preserve AR Foundation -->
+    <assembly fullname="Unity.XR.ARFoundation" preserve="all"/>
+    <assembly fullname="Unity.XR.ARKit" preserve="all"/>
+    <assembly fullname="Unity.XR.ARSubsystems" preserve="all"/>
+
+    <!-- Preserve core Unity types used by VFX -->
+    <assembly fullname="UnityEngine">
+        <type fullname="UnityEngine.VFX.*" preserve="all"/>
+        <type fullname="UnityEngine.Rendering.*" preserve="all"/>
+        <type fullname="UnityEngine.Experimental.VFX.*" preserve="all"/>
+    </assembly>
+
+    <!-- Preserve Burst for compute -->
+    <assembly fullname="Unity.Burst" preserve="all"/>
+    <assembly fullname="Unity.Mathematics" preserve="all"/>
+</linker>

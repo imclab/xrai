@@ -1,0 +1,40 @@
+#pragma kernel MaskDepth
+
+// Compute shader to create a masked depth texture (R=Depth) from AR Depth + Stencil
+// robust alternative to Graphics.Blit which can fail with RHalf on some devices.
+
+Texture2D<float> _Depth;
+Texture2D<float> _Stencil;
+RWTexture2D<float4> _Output; // RHalf or RFloat target, treated as float4 RW
+
+int _UseStencil;
+
+[numthreads(8,8,1)]
+void MaskDepth(uint3 id : SV_DispatchThreadID)
+{
+    uint width, height;
+    _Output.GetDimensions(width, height);
+    if (id.x >= width || id.y >= height) return;
+
+    float depth = _Depth[id.xy];
+
+    // Default to 'far' if invalid depth
+    if (depth <= 0) depth = 100.0;
+
+    float stencil = 1.0;
+    if (_UseStencil != 0)
+    {
+        // Sample stencil (usually R8, so single float channel is fine)
+        stencil = _Stencil[id.xy];
+    }
+
+    // Mask logic: If not body (stencil < 0.5), set depth to FAR (100)
+    if (stencil < 0.5)
+    {
+        depth = 100.0;
+    }
+
+    // Output depth in R channel.
+    // For RHalf/RFloat RenderTextures, writing float4 writes X to the single channel.
+    _Output[id.xy] = float4(depth, 0, 0, 1);
+}

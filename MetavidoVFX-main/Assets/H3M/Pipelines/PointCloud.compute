@@ -1,0 +1,110 @@
+#pragma kernel UpdatePointCloud
+#pragma kernel MaskDepth
+
+// Textures
+Texture2D<float> DepthTexture;
+Texture2D<float4> ColorTexture;
+Texture2D<float> StencilTexture; // Changed to float for Unorm compatibility
+
+// Output Buffer (Struct: Position (float3) + Color (uint))
+RWStructuredBuffer<float3> PositionBuffer;
+RWStructuredBuffer<float4> ColorBuffer;
+
+// Parameters
+uint Width;
+uint Height;
+float4 RayParams; // x: aspect, y: tan(vfov/2), z: near, w: far
+float4x4 InverseViewMatrix; // CameraToWorld
+
+// Stencil Settings
+bool UseStencil;
+
+[numthreads(8, 8, 1)]
+void UpdatePointCloud(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= Width || id.y >= Height) return;
+
+    // 1. Sample Depth
+    // ARFoundation Environment Depth is usually raw float.
+    float depth = DepthTexture[id.xy];
+
+    // Filter invalid depth
+    if (depth <= 0.001 || depth > 20.0) // 20m max
+    {
+        PositionBuffer[id.y * Width + id.x] = float3(0, -9999, 0); // Hide
+        return;
+    }
+
+    // 2. Sample Stencil (Segmentation)
+    if (UseStencil)
+    {
+        float stencilVal = StencilTexture[id.xy];
+        // ARKit Human Stencil is usually 1.0 (Human) or 0.0 (Background) in R8 Unorm
+        if (stencilVal < 0.1)
+        {
+             // Not a person. Discard.
+             PositionBuffer[id.y * Width + id.x] = float3(0, -9999, 0);
+             return;
+        }
+    }
+
+    // 3. Unproject (UV -> View Space)
+    // UV is (id.x / Width, id.y / Height)
+    // View Space reconstruction using RayParams:
+    // X = (u * 2 - 1) * aspect * tanHalfFov * depth
+    // Y = (v * 2 - 1) * tanHalfFov * depth
+    // Z = depth
+
+    // BUT ARFoundation/Rcam might have different coordinate conventions.
+    // Following Metavido/Rcam convention:
+    float2 uv = float2(id.x, id.y) / float2(Width, Height);
+
+    // Center UV at 0
+    float2 uvCentered = uv * 2.0 - 1.0;
+
+    // Ray direction in View Space (assuming Z+ is forward, Y+ up, X+ right)
+    // RayParams.x = Aspect
+    // RayParams.y = Tan(VFOV / 2)
+
+    float3 viewPos;
+    viewPos.z = depth;
+    viewPos.y = uvCentered.y * RayParams.y * depth;
+    viewPos.x = uvCentered.x * RayParams.y * RayParams.x * depth;
+
+    // 4. Transform to World Space
+    float4 worldPos = mul(InverseViewMatrix, float4(viewPos, 1.0));
+
+    // 5. Sample Color
+    float4 color = ColorTexture[id.xy];
+
+    // 6. Write Output
+    uint index = id.y * Width + id.x;
+    PositionBuffer[index] = worldPos.xyz;
+    ColorBuffer[index] = color;
+}
+
+// ARComp: Textures
+Texture2D<float> InputDepth;
+// Stencil is already defined as StencilTexture
+RWTexture2D<float> OutputDepth;
+
+[numthreads(8, 8, 1)]
+void MaskDepth(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= Width || id.y >= Height) return;
+
+    float depth = InputDepth[id.xy];
+
+    // Check Stencil
+    // If NOT human, set depth to 0 (or far plane)
+    if (UseStencil)
+    {
+        float stencil = StencilTexture[id.xy];
+        if (stencil < 0.1)
+        {
+            depth = 0.0;
+        }
+    }
+
+    OutputDepth[id.xy] = depth;
+}

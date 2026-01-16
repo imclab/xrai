@@ -1,0 +1,107 @@
+# GitHub Actions: iOS Build Pipeline
+# MetavidoVFX Unity Project
+#
+# This workflow builds the Unity iOS project and creates an Xcode project.
+# Device deployment requires a self-hosted macOS runner with provisioning.
+
+name: iOS Build
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'MetavidoVFX-main/Assets/**'
+      - 'MetavidoVFX-main/Packages/**'
+      - 'MetavidoVFX-main/ProjectSettings/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - release
+
+env:
+  UNITY_VERSION: 6000.2.14f1
+  PROJECT_PATH: MetavidoVFX-main
+  BUILD_PATH: MetavidoVFX-main/Builds/iOS
+
+jobs:
+  build:
+    name: Build iOS
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Unity
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: iOS
+          projectPath: ${{ env.PROJECT_PATH }}
+          buildMethod: BuildScript.BuildiOS
+          versioning: Semantic
+
+      - name: Upload Xcode Project
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-xcode-project
+          path: ${{ env.BUILD_PATH }}
+          retention-days: 7
+
+  sign-and-deploy:
+    name: Sign and Deploy
+    needs: build
+    runs-on: self-hosted
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Download Xcode Project
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-xcode-project
+          path: ${{ env.BUILD_PATH }}
+
+      - name: Build with Xcode
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          cd "$BUILD_PATH"
+          xcodebuild \
+            -project Unity-iPhone.xcodeproj \
+            -scheme Unity-iPhone \
+            -destination "generic/platform=iOS" \
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            build
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: build/ipa/*.ipa
+          retention-days: 30
+
+# Required Secrets:
+# - UNITY_LICENSE: Unity license file (base64 encoded)
+# - UNITY_EMAIL: Unity account email
+# - UNITY_PASSWORD: Unity account password
+# - APPLE_TEAM_ID: Apple Developer Team ID (for signing)
+#
+# Setup Guide:
+# 1. Get Unity license: https://game.ci/docs/github/activation
+# 2. Add secrets in repo Settings > Secrets
+# 3. For device deployment, set up self-hosted macOS runner

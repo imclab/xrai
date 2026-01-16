@@ -54,9 +54,11 @@ namespace MetavidoVFX.VFX
         private List<VisualEffect> _uncategorizedVFX = new List<VisualEffect>();
 
         // Depth rotation (ARKit depth orientation fix)
-        [Header("Depth Rotation")]
+        [Header("Depth Processing")]
         [Tooltip("Rotate depth/stencil textures to match camera orientation")]
         [SerializeField] private bool rotateDepthTexture = true;
+        [Tooltip("Mask depth with stencil for human-only particles (disable for full scene)")]
+        [SerializeField] private bool maskDepthWithStencil = true;
 
         // Cached data
         private Texture _lastDepthTexture;
@@ -86,6 +88,11 @@ namespace MetavidoVFX.VFX
         private ComputeShader _depthHueEncoderCompute;
         private RenderTexture _hueDepthRT;
         private int _depthHueEncoderKernel = -1;
+
+        // Masked Depth (depth * stencil for human-only)
+        private ComputeShader _maskDepthCompute;
+        private RenderTexture _maskedDepthRT;
+        private int _maskDepthKernel = -1;
 
         // Segmented PositionMap compute (24-part body segmentation)
         private ComputeShader _segmentedDepthToWorldCompute;
@@ -158,6 +165,12 @@ namespace MetavidoVFX.VFX
             if (_depthHueEncoderCompute != null)
                 try { _depthHueEncoderKernel = _depthHueEncoderCompute.FindKernel("EncodeDepthToHue"); }
                 catch { _depthHueEncoderKernel = -1; }
+
+            // Load mask depth compute (for human-only depth)
+            _maskDepthCompute = Resources.Load<ComputeShader>("MaskDepthWithStencil");
+            if (_maskDepthCompute != null)
+                try { _maskDepthKernel = _maskDepthCompute.FindKernel("MaskDepth"); }
+                catch { _maskDepthKernel = -1; }
 
             if (computeSegmentedPositionMaps)
             {
@@ -458,6 +471,36 @@ namespace MetavidoVFX.VFX
                         }
                     }
                 }
+            }
+
+            // Mask depth with stencil for human-only VFX (like pointcloud_depth_people_metavido)
+            if (maskDepthWithStencil && _maskDepthKernel >= 0 && _lastDepthTexture != null && _lastStencilTexture != null)
+            {
+                int w = _lastDepthTexture.width;
+                int h = _lastDepthTexture.height;
+
+                // Create/resize masked depth RT
+                if (_maskedDepthRT == null || _maskedDepthRT.width != w || _maskedDepthRT.height != h)
+                {
+                    if (_maskedDepthRT != null) _maskedDepthRT.Release();
+                    _maskedDepthRT = new RenderTexture(w, h, 0, RenderTextureFormat.RFloat);
+                    _maskedDepthRT.enableRandomWrite = true;
+                    _maskedDepthRT.filterMode = FilterMode.Point;
+                    _maskedDepthRT.Create();
+                }
+
+                // Run mask compute
+                _maskDepthCompute.SetTexture(_maskDepthKernel, "_Depth", _lastDepthTexture);
+                _maskDepthCompute.SetTexture(_maskDepthKernel, "_Stencil", _lastStencilTexture);
+                _maskDepthCompute.SetTexture(_maskDepthKernel, "_MaskedDepthRT", _maskedDepthRT);
+                _maskDepthCompute.SetFloat("_StencilThreshold", 0.5f);
+
+                int groupsX = Mathf.CeilToInt(w / 32f);
+                int groupsY = Mathf.CeilToInt(h / 32f);
+                _maskDepthCompute.Dispatch(_maskDepthKernel, groupsX, groupsY, 1);
+
+                // Use masked depth for VFX binding (human-only pixels)
+                _lastDepthTexture = _maskedDepthRT;
             }
 
             // Get camera texture via ARCameraBackground blit
@@ -837,6 +880,12 @@ namespace MetavidoVFX.VFX
                     vfx.SetTexture("PositionMap", _positionMapRT);
                 if (vfx.HasTexture("Position Map"))
                     vfx.SetTexture("Position Map", _positionMapRT);
+
+                // Map dimensions for Akvfx-style VFX
+                if (vfx.HasInt("MapWidth"))
+                    vfx.SetInt("MapWidth", _positionMapRT.width);
+                if (vfx.HasInt("MapHeight"))
+                    vfx.SetInt("MapHeight", _positionMapRT.height);
             }
 
             // Velocity Map (frame-to-frame motion - ported from PeopleVFX)
@@ -981,6 +1030,10 @@ namespace MetavidoVFX.VFX
 
             foreach (var vfx in allVFX)
             {
+                // Disable VFXMetavidoBinder to prevent it from overwriting our AR bindings
+                // VFXMetavidoBinder is designed for video playback, not live AR
+                DisableConflictingBinders(vfx.gameObject);
+
                 var category = vfx.GetComponent<VFXCategory>();
                 if (category != null)
                 {
@@ -993,6 +1046,34 @@ namespace MetavidoVFX.VFX
             }
 
             // VFX list logged in Awake summary only
+        }
+
+        /// <summary>
+        /// Disable binders that would conflict with VFXBinderManager's live AR bindings
+        /// </summary>
+        void DisableConflictingBinders(GameObject go)
+        {
+            // Find VFXMetavidoBinder by type name (avoids hard dependency on Metavido namespace)
+            var propertyBinder = go.GetComponent<UnityEngine.VFX.Utility.VFXPropertyBinder>();
+            if (propertyBinder == null) return;
+
+            // Get all binders and disable Metavido ones
+            var binders = propertyBinder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
+            foreach (var binder in binders)
+            {
+                if (binder == null) continue;
+                string typeName = binder.GetType().Name;
+                if (typeName == "VFXMetavidoBinder")
+                {
+                    // Disable the component so it doesn't overwrite our bindings
+                    var mb = binder as MonoBehaviour;
+                    if (mb != null && mb.enabled)
+                    {
+                        mb.enabled = false;
+                        Debug.Log($"[VFXBinderManager] Disabled {typeName} on '{go.name}' (live AR mode)");
+                    }
+                }
+            }
         }
 
         /// <summary>

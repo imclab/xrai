@@ -1,0 +1,178 @@
+// SegmentedDepthToWorld.compute
+// Combines BodyPix 24-part segmentation with depth texture
+// Outputs separate position maps for each body segment category
+
+#pragma kernel SegmentedDepthToWorld
+#pragma kernel ExtractBodyPart
+
+// Input textures
+Texture2D<float> _Depth;
+Texture2D<float4> _BodyPartMask;  // BodyPix output (R = part index)
+Texture2D<float> _Stencil;        // ARKit human stencil (optional)
+
+// Output textures (all ARGBFloat)
+RWTexture2D<float4> _PositionMap;        // Full body position map
+RWTexture2D<float4> _BodyPositionMap;    // Torso only
+RWTexture2D<float4> _ArmsPositionMap;    // Arms only
+RWTexture2D<float4> _HandsPositionMap;   // Hands only
+RWTexture2D<float4> _LegsPositionMap;    // Legs only
+RWTexture2D<float4> _FacePositionMap;    // Face only
+
+// Matrices
+float4x4 _InverseView;
+float4x4 _InverseProjection;
+
+// Parameters
+float2 _DepthRange;   // x=near, y=far
+int2 _OutputSize;
+int _UseStencil;      // 1 = use ARKit stencil, 0 = use BodyPix mask
+
+// Body part index ranges (from BodyPix)
+// 0-1: Face
+// 2-9: Arms
+// 10-11: Hands
+// 12-13: Torso
+// 14-21: Legs
+// 22-23: Feet
+
+static const int PART_FACE_START = 0;
+static const int PART_FACE_END = 1;
+static const int PART_ARMS_START = 2;
+static const int PART_ARMS_END = 9;
+static const int PART_HANDS_START = 10;
+static const int PART_HANDS_END = 11;
+static const int PART_TORSO_START = 12;
+static const int PART_TORSO_END = 13;
+static const int PART_LEGS_START = 14;
+static const int PART_LEGS_END = 21;
+static const int PART_FEET_START = 22;
+static const int PART_FEET_END = 23;
+
+bool IsInRange(int partIndex, int start, int end)
+{
+    return partIndex >= start && partIndex <= end;
+}
+
+float3 DepthToWorldPosition(float2 uv, float depth)
+{
+    // Convert UV to clip space
+    float4 clipPos = float4(uv * 2.0 - 1.0, 1.0, 1.0);
+
+    // Apply inverse projection to get view-space ray
+    float4 viewPos = mul(_InverseProjection, clipPos);
+    viewPos.xyz /= viewPos.w;
+
+    // Scale by depth
+    viewPos.xyz *= depth;
+    viewPos.w = 1.0;
+
+    // Transform to world space
+    float4 worldPos = mul(_InverseView, viewPos);
+
+    return worldPos.xyz;
+}
+
+[numthreads(32, 32, 1)]
+void SegmentedDepthToWorld(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= (uint)_OutputSize.x || id.y >= (uint)_OutputSize.y)
+        return;
+
+    // Get UV coordinates
+    float2 uv = float2(id.xy) / float2(_OutputSize);
+
+    // Sample depth
+    float depth = _Depth[id.xy].r;
+
+    // Depth range check
+    if (depth < _DepthRange.x || depth > _DepthRange.y)
+    {
+        _PositionMap[id.xy] = float4(0, 0, 0, 0);
+        _BodyPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _ArmsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _HandsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _LegsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _FacePositionMap[id.xy] = float4(0, 0, 0, 0);
+        return;
+    }
+
+    // Get body part index from BodyPix mask
+    // BodyPix outputs part index in red channel (0-23 for parts, 255 for background)
+    float4 maskSample = _BodyPartMask[id.xy];
+    int partIndex = (int)(maskSample.r * 255.0);
+
+    // Check human stencil if enabled
+    bool isHuman = true;
+    if (_UseStencil > 0)
+    {
+        float stencil = _Stencil[id.xy].r;
+        isHuman = stencil > 0.5;
+    }
+    else
+    {
+        isHuman = partIndex < 24;  // Background is 255
+    }
+
+    // Calculate world position
+    float3 worldPos = DepthToWorldPosition(uv, depth);
+    float4 outputPos = isHuman ? float4(worldPos, 1.0) : float4(0, 0, 0, 0);
+
+    // Write to full position map
+    _PositionMap[id.xy] = outputPos;
+
+    // Write to segmented maps based on body part
+    if (!isHuman || partIndex >= 24)
+    {
+        _BodyPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _ArmsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _HandsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _LegsPositionMap[id.xy] = float4(0, 0, 0, 0);
+        _FacePositionMap[id.xy] = float4(0, 0, 0, 0);
+        return;
+    }
+
+    // Face (parts 0-1)
+    _FacePositionMap[id.xy] = IsInRange(partIndex, PART_FACE_START, PART_FACE_END)
+        ? outputPos : float4(0, 0, 0, 0);
+
+    // Arms (parts 2-9)
+    _ArmsPositionMap[id.xy] = IsInRange(partIndex, PART_ARMS_START, PART_ARMS_END)
+        ? outputPos : float4(0, 0, 0, 0);
+
+    // Hands (parts 10-11)
+    _HandsPositionMap[id.xy] = IsInRange(partIndex, PART_HANDS_START, PART_HANDS_END)
+        ? outputPos : float4(0, 0, 0, 0);
+
+    // Torso (parts 12-13)
+    _BodyPositionMap[id.xy] = IsInRange(partIndex, PART_TORSO_START, PART_TORSO_END)
+        ? outputPos : float4(0, 0, 0, 0);
+
+    // Legs + Feet (parts 14-23)
+    bool isLeg = IsInRange(partIndex, PART_LEGS_START, PART_LEGS_END) ||
+                 IsInRange(partIndex, PART_FEET_START, PART_FEET_END);
+    _LegsPositionMap[id.xy] = isLeg ? outputPos : float4(0, 0, 0, 0);
+}
+
+// Second kernel for extracting specific body parts by index
+RWTexture2D<float4> _ExtractedPositionMap;
+int _TargetPartStart;
+int _TargetPartEnd;
+
+[numthreads(32, 32, 1)]
+void ExtractBodyPart(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= (uint)_OutputSize.x || id.y >= (uint)_OutputSize.y)
+        return;
+
+    float4 maskSample = _BodyPartMask[id.xy];
+    int partIndex = (int)(maskSample.r * 255.0);
+
+    if (IsInRange(partIndex, _TargetPartStart, _TargetPartEnd))
+    {
+        _ExtractedPositionMap[id.xy] = _PositionMap[id.xy];
+    }
+    else
+    {
+        _ExtractedPositionMap[id.xy] = float4(0, 0, 0, 0);
+    }
+}

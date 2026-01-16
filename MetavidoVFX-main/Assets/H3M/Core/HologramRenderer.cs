@@ -2,12 +2,15 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 using Metavido;
+using MetavidoVFX.VFX;
 
 namespace H3M.Core
 {
     [RequireComponent(typeof(VisualEffect))]
     public class HologramRenderer : MonoBehaviour
     {
+        void LogWarning(string msg) { if (!VFXBinderManager.SuppressHologramLogs) Debug.LogWarning(msg); }
+
         [Header("H3M References")]
         [SerializeField] HologramSource _source;
         [SerializeField] Transform _anchor;
@@ -41,7 +44,7 @@ namespace H3M.Core
             if (_vfx == null || _source == null)
             {
                 if (_frameCount % 300 == 0)
-                    Debug.LogWarning("[HologramRenderer] Missing Core Refs (VFX or Source)");
+                    LogWarning("[HologramRenderer] Missing Core Refs (VFX or Source)");
                 return;
             }
 

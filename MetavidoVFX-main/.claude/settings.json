@@ -1,0 +1,49 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jamestunick/.claude-mem/hooks/session-start.js",
+            "timeout": 180
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jamestunick/.claude-mem/hooks/stop.js",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jamestunick/.claude-mem/hooks/user-prompt-submit.js",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jamestunick/.claude-mem/hooks/post-tool-use.js",
+            "timeout": 180
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  }
+}

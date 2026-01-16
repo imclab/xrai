@@ -1,7 +1,7 @@
 # Master Knowledgebase Index
 
-**Version**: 1.0
-**Last Updated**: 2025-01-07
+**Version**: 1.1
+**Last Updated**: 2026-01-15
 **Purpose**: Complete map of all knowledge resources for AI-assisted development
 
 ---
@@ -11,13 +11,13 @@
 | Category | Files | Token Cost | Use When |
 |----------|-------|------------|----------|
 | [Setup & Config](#setup--configuration) | 2 files | ~5K | Setting up tools, troubleshooting |
-| [Unity Development](#unity-development) | 5 files | ~15K | Unity XR/AR/VR tasks |
+| [Unity Development](#unity-development) | 6 files | ~23K | Unity XR/AR/VR tasks |
 | [Web Development](#web-development) | 2 files | ~8K | WebGL/Three.js/React projects |
 | [Performance](#performance--optimization) | 1 file | ~4K | Optimization needed |
 | [GitHub Resources](#github-resources) | 1 file | ~10K | Finding repos/examples |
 | [Project Planning](#project-planning) | 3 files | ~12K | Roadmaps, priorities |
 
-**Total Knowledgebase**: 14 files, ~54K tokens (load selectively!)
+**Total Knowledgebase**: 15 files, ~62K tokens (load selectively!)
 
 ---
 
@@ -169,6 +169,51 @@ Use When:
   - Learning Claude Code for Unity
   - Setting up automated workflows
   - Using Unity MCP tools
+```
+
+### _UNITY_SOURCE_REFERENCE.md ⭐ COMPREHENSIVE
+```yaml
+Path: ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_UNITY_SOURCE_REFERENCE.md
+Size: ~8K tokens (637 lines)
+Purpose: Complete Unity engine internals extracted from AgentBench
+
+Contains:
+  VFX Graph Complete API:
+    - VisualEffect all property setters/getters (SetTexture, SetGraphicsBuffer, etc.)
+    - Playback control (Play, Stop, Reinit, SendEvent)
+    - System queries (GetParticleSystemNames, HasSystem, etc.)
+    - VFXEventAttribute creation
+
+  Shader Functions (extracted from UnityCG.cginc):
+    - Depth: Linear01Depth, LinearEyeDepth, DECODE_EYEDEPTH
+    - Color: GammaToLinearSpace, LinearToGammaSpace
+    - Transform: UnityWorldToClipPos, UnityObjectToViewPos, etc.
+    - Fog: UNITY_FOG_COORDS, UNITY_APPLY_FOG
+    - Shadows: SHADOW_COORDS, TRANSFER_SHADOW, UnitySampleShadowmap
+
+  Platform Detection (HLSLSupport.cginc):
+    - SHADER_API_METAL, SHADER_API_GLES3, SHADER_API_VULKAN
+    - UNITY_COMPILER_HLSL, UNITY_FAST_COHERENT_DYNAMIC_BRANCHING
+
+  iOS/Apple APIs:
+    - Device properties (hideHomeButton, systemVersion, generation)
+    - iCloud backup, low power mode, ad tracking
+
+  XR Mesh Subsystem:
+    - MeshId, MeshGenerationResult, MeshGenerationStatus
+
+  Complete Patterns:
+    - AR Depth → World Position compute shader (full example)
+    - Standard vertex structures (appdata_base, appdata_full)
+
+Use When:
+  - Implementing VFX property binding
+  - Writing compute/vertex/fragment shaders
+  - iOS/Metal-specific development
+  - Understanding Unity internals without reading source
+  - Copy-paste ready shader functions
+
+Source: AgentBench (keijiro/AgentBench) at Unity-XR-AI/AgentBench/
 ```
 
 ---

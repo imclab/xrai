@@ -1,0 +1,112 @@
+#pragma kernel GeneratePositionTexture
+#pragma kernel CalculateVelocity
+
+// Input textures
+Texture2D<float> DepthTexture;
+Texture2D<float> StencilTexture;  // Human stencil mask (255 = body, 0 = background)
+RWTexture2D<float4> PositionTexture; // Changed to float4 for ARGB format compatibility
+
+// Velocity calculation
+Texture2D<float4> PreviousPositionTexture;
+RWTexture2D<float4> VelocityTexture;
+float DeltaTime;
+
+// Matrices
+float4x4 InvVPMatrix;
+float4x4 ProjectionMatrix;
+
+// Depth range: x = minDepth, y = maxDepth
+// Stencil threshold: z = min stencil value (0-1 normalized, 0.5 = 127/255)
+float4 DepthRange;
+
+// Convert viewport position (UV + depth) to world position
+float3 ViewportToWorldPoint(float3 position)
+{
+    // Build clip-space position from viewport coordinates
+    float4 projW = mul(ProjectionMatrix, float4(0, 0, position.z, 1));
+    float4 pos4 = float4(1.0 - 2.0 * position.x, 1.0 - 2.0 * position.y, projW.z / projW.w, 1);
+    float4 res4 = mul(InvVPMatrix, pos4);
+    return res4.xyz / res4.w;
+}
+
+[numthreads(32,32,1)]
+void GeneratePositionTexture(uint3 id : SV_DispatchThreadID)
+{
+    // Get output dimensions
+    float outWidth, outHeight;
+    PositionTexture.GetDimensions(outWidth, outHeight);
+
+    // Bounds check
+    if (id.x >= (uint)outWidth || id.y >= (uint)outHeight)
+        return;
+
+    // Calculate UV coordinates
+    float2 uv = float2(float(id.x) / outWidth, float(id.y) / outHeight);
+
+    // Get depth texture dimensions
+    float depthWidth, depthHeight;
+    DepthTexture.GetDimensions(depthWidth, depthHeight);
+
+    // Sample depth texture (ARKit environment depth is in meters)
+    // Y-flip for correct orientation
+    uint2 depthCoord = uint2(uv.x * depthWidth, (1.0 - uv.y) * depthHeight);
+    float depth = DepthTexture[depthCoord];
+
+    // Sample stencil texture at same coordinates
+    float stencilWidth, stencilHeight;
+    StencilTexture.GetDimensions(stencilWidth, stencilHeight);
+    uint2 stencilCoord = uint2(uv.x * stencilWidth, (1.0 - uv.y) * stencilHeight);
+    float stencil = StencilTexture[stencilCoord];
+
+    // Clamp depth to valid range
+    float minDepth = DepthRange.x;
+    float maxDepth = DepthRange.y;
+    float stencilThreshold = DepthRange.z > 0 ? DepthRange.z : 0.5; // Default 0.5 (127/255)
+
+    // Check for invalid pixels: depth out of range OR not a body pixel (stencil below threshold)
+    if (depth < minDepth || depth > maxDepth || depth == 0 || stencil < stencilThreshold)
+    {
+        // Write far-away position for invalid pixels so they're not visible
+        // Using (0, -1000, 0) places particles far below the scene
+        PositionTexture[id.xy] = float4(0, -1000.0, 0, 0);
+        return;
+    }
+
+    // Convert to world position
+    float3 viewportPos = float3(uv.x, uv.y, depth);
+    float3 worldPos = ViewportToWorldPoint(viewportPos);
+
+    // Write position with alpha = 1 for valid points
+    PositionTexture[id.xy] = float4(worldPos, 1.0);
+}
+
+// Calculate velocity from frame-to-frame position changes
+[numthreads(32,32,1)]
+void CalculateVelocity(uint3 id : SV_DispatchThreadID)
+{
+    // Get output dimensions
+    float outWidth, outHeight;
+    VelocityTexture.GetDimensions(outWidth, outHeight);
+
+    // Bounds check
+    if (id.x >= (uint)outWidth || id.y >= (uint)outHeight)
+        return;
+
+    // Get current and previous positions
+    float4 currentPos = PositionTexture[id.xy];
+    float4 previousPos = PreviousPositionTexture[id.xy];
+
+    float3 velocity = float3(0, 0, 0);
+
+    // Calculate velocity only if both positions are valid (w > 0)
+    if (currentPos.w > 0 && previousPos.w > 0 && DeltaTime > 0.001)
+    {
+        velocity = (currentPos.xyz - previousPos.xyz) / DeltaTime;
+
+        // Clamp velocity to reasonable values (±10 m/s)
+        velocity = clamp(velocity, -10.0, 10.0);
+    }
+
+    // Write velocity (xyz) and speed (w)
+    VelocityTexture[id.xy] = float4(velocity, length(velocity));
+}

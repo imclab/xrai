@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VFXGraph.OutputEventHandlers", "VFXGraph.OutputEventHandlers.csproj", "{3ecb0c91-cc24-4696-efba-c80e8f75dcb4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{9149b267-53e2-3475-9700-946f248e8dd4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAssembly", "SampleAssembly.csproj", "{295822eb-b127-d576-d7c4-fd6d136025ba}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{cb68e4ce-0a00-dd6a-49d3-6e3745bf685b}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.RenderPipelines.Core.Samples.Runtime", "Unity.RenderPipelines.Core.Samples.Runtime.csproj", "{c02579bb-5d46-be0d-8ce9-02cfcf2fca01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARFoundationRemote.Runtime.Examples", "ARFoundationRemote.Runtime.Examples.csproj", "{7355de6e-57aa-fbb7-28af-bc184b7738e0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.RenderPipelines.Core.Samples.Editor", "Unity.RenderPipelines.Core.Samples.Editor.csproj", "{f655b09e-35b2-0bb0-0c92-d72b5495a543}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARFoundationRemote.Installer.Editor", "ARFoundationRemote.Installer.Editor.csproj", "{5a97078b-c408-e9a5-64ce-9d2de6a3374b}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metavido.Vfx", "Metavido.Vfx.csproj", "{e6587665-b3f1-105e-b54b-955eb1c69cb9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VFXGraph.OutputEventHandlers.Editor", "VFXGraph.OutputEventHandlers.Editor.csproj", "{f0119f09-4b13-6fd6-662d-7d935c1de879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{06072ec4-f29b-7e29-9ef8-829830e3c2c3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3ecb0c91-cc24-4696-efba-c80e8f75dcb4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ecb0c91-cc24-4696-efba-c80e8f75dcb4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9149b267-53e2-3475-9700-946f248e8dd4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9149b267-53e2-3475-9700-946f248e8dd4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295822eb-b127-d576-d7c4-fd6d136025ba}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295822eb-b127-d576-d7c4-fd6d136025ba}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{cb68e4ce-0a00-dd6a-49d3-6e3745bf685b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{cb68e4ce-0a00-dd6a-49d3-6e3745bf685b}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c02579bb-5d46-be0d-8ce9-02cfcf2fca01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c02579bb-5d46-be0d-8ce9-02cfcf2fca01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7355de6e-57aa-fbb7-28af-bc184b7738e0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7355de6e-57aa-fbb7-28af-bc184b7738e0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f655b09e-35b2-0bb0-0c92-d72b5495a543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f655b09e-35b2-0bb0-0c92-d72b5495a543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5a97078b-c408-e9a5-64ce-9d2de6a3374b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5a97078b-c408-e9a5-64ce-9d2de6a3374b}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{e6587665-b3f1-105e-b54b-955eb1c69cb9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{e6587665-b3f1-105e-b54b-955eb1c69cb9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f0119f09-4b13-6fd6-662d-7d935c1de879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f0119f09-4b13-6fd6-662d-7d935c1de879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06072ec4-f29b-7e29-9ef8-829830e3c2c3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06072ec4-f29b-7e29-9ef8-829830e3c2c3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
