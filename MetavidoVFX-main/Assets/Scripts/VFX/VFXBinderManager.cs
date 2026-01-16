@@ -583,8 +583,8 @@ namespace MetavidoVFX.VFX
                     // Original projection maps camera space to clip space
                     // For rotated depth, we need to swap X/Y and account for aspect change
                     float depthAspect = (float)_lastDepthTexture.width / _lastDepthTexture.height;
-                    float fovV = arCamera.fieldOfView;
-                    float fovH = 2f * Mathf.Atan(Mathf.Tan(fovV * 0.5f * Mathf.Deg2Rad) * depthAspect) * Mathf.Rad2Deg;
+                    float rotFovV = arCamera.fieldOfView;
+                    float fovH = 2f * Mathf.Atan(Mathf.Tan(rotFovV * 0.5f * Mathf.Deg2Rad) * depthAspect) * Mathf.Rad2Deg;
 
                     // Create projection for rotated depth (swap near/far aspect)
                     Matrix4x4 rotatedProj = Matrix4x4.Perspective(fovH, 1f / depthAspect, arCamera.nearClipPlane, arCamera.farClipPlane);
@@ -872,8 +872,9 @@ namespace MetavidoVFX.VFX
                 return;
             }
 
-            // Bind categorized VFX
-            foreach (var vfxCategory in _categorizedVFX)
+            // Bind categorized VFX (copy list to avoid modification during iteration)
+            var categorizedCopy = new List<VFXCategory>(_categorizedVFX);
+            foreach (var vfxCategory in categorizedCopy)
             {
                 if (vfxCategory == null || vfxCategory.VFX == null || !vfxCategory.VFX.enabled)
                     continue;
@@ -881,8 +882,9 @@ namespace MetavidoVFX.VFX
                 BindVFX(vfxCategory.VFX, vfxCategory.Bindings);
             }
 
-            // Bind uncategorized VFX (assume full bindings)
-            foreach (var vfx in _uncategorizedVFX)
+            // Bind uncategorized VFX (copy list to avoid modification during iteration)
+            var uncategorizedCopy = new List<VisualEffect>(_uncategorizedVFX);
+            foreach (var vfx in uncategorizedCopy)
             {
                 if (vfx == null || !vfx.enabled)
                     continue;
