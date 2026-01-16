@@ -49,6 +49,18 @@ namespace MetavidoVFX.VFX
         [SerializeField] private Vector2 depthRange = new Vector2(0.1f, 10f);
         [SerializeField] private bool computePositionMap = true;
 
+        [Header("Physics (Optional)")]
+        [Tooltip("Enable velocity-driven input binding to all VFX")]
+        [SerializeField] private bool enableVelocityBinding = true;
+        [Tooltip("Velocity scale multiplier")]
+        [Range(0.1f, 10f)]
+        [SerializeField] private float velocityScale = 1f;
+        [Tooltip("Enable gravity binding to all VFX")]
+        [SerializeField] private bool enableGravityBinding = false;
+        [Tooltip("Gravity strength (Y-axis, negative = down)")]
+        [Range(-20f, 20f)]
+        [SerializeField] private float gravityStrength = -9.81f;
+
         // Tracked VFX
         private List<VFXCategory> _categorizedVFX = new List<VFXCategory>();
         private List<VisualEffect> _uncategorizedVFX = new List<VisualEffect>();
@@ -139,6 +151,13 @@ namespace MetavidoVFX.VFX
         private float _startTime;
         private int _frameCount = 0;
         private int _enabledVFXCount = 0;
+
+        // Physics tracking
+        private Vector3 _lastCameraPosition;
+        private Vector3 _cameraVelocity;
+        private Vector3 _smoothedVelocity;
+        private float _cameraSpeed;
+        private Vector3 _gravityVector;
 
         void Awake()
         {
@@ -283,6 +302,7 @@ namespace MetavidoVFX.VFX
 
             _frameCount++;
             UpdateCachedData();
+            UpdatePhysicsData();
             BindAllVFX();
 
             // Track first-time data received
@@ -681,6 +701,40 @@ namespace MetavidoVFX.VFX
             DispatchSegmentedCompute();
         }
 
+        /// <summary>
+        /// Update physics data (velocity from camera movement, gravity vector)
+        /// </summary>
+        void UpdatePhysicsData()
+        {
+            // Track camera velocity
+            if (enableVelocityBinding && arCamera != null)
+            {
+                // Initialize on first frame
+                if (_lastCameraPosition == Vector3.zero)
+                {
+                    _lastCameraPosition = arCamera.transform.position;
+                }
+
+                // Calculate camera velocity from position delta
+                Vector3 cameraDelta = arCamera.transform.position - _lastCameraPosition;
+                _cameraVelocity = cameraDelta / Mathf.Max(Time.deltaTime, 0.001f);
+                _lastCameraPosition = arCamera.transform.position;
+
+                // Apply scale
+                _cameraVelocity *= velocityScale;
+
+                // Smooth velocity (lerp factor ~0.15 for smooth but responsive)
+                _smoothedVelocity = Vector3.Lerp(_smoothedVelocity, _cameraVelocity, 0.15f);
+                _cameraSpeed = _smoothedVelocity.magnitude;
+            }
+
+            // Calculate gravity vector
+            if (enableGravityBinding)
+            {
+                _gravityVector = new Vector3(0f, gravityStrength, 0f);
+            }
+        }
+
         void DispatchSegmentedCompute()
         {
 #if BODYPIX_AVAILABLE
@@ -958,7 +1012,56 @@ namespace MetavidoVFX.VFX
                 }
             }
 
+            // Physics bindings (velocity-driven input and gravity)
+            BindPhysics(vfx);
+
             // Hand tracking bindings are handled by HandVFXController directly
+        }
+
+        /// <summary>
+        /// Bind optional physics data (velocity and gravity) to VFX
+        /// </summary>
+        void BindPhysics(VisualEffect vfx)
+        {
+            // Velocity-driven input
+            if (enableVelocityBinding)
+            {
+                // Bind velocity vector to multiple property names
+                if (vfx.HasVector3("Velocity"))
+                    vfx.SetVector3("Velocity", _smoothedVelocity);
+                if (vfx.HasVector3("ReferenceVelocity"))
+                    vfx.SetVector3("ReferenceVelocity", _smoothedVelocity);
+                if (vfx.HasVector3("Initial Velocity"))
+                    vfx.SetVector3("Initial Velocity", _smoothedVelocity);
+                if (vfx.HasVector3("CameraVelocity"))
+                    vfx.SetVector3("CameraVelocity", _smoothedVelocity);
+
+                // Bind speed (velocity magnitude)
+                if (vfx.HasFloat("Speed"))
+                    vfx.SetFloat("Speed", _cameraSpeed);
+                if (vfx.HasFloat("VelocityMagnitude"))
+                    vfx.SetFloat("VelocityMagnitude", _cameraSpeed);
+                if (vfx.HasFloat("CameraSpeed"))
+                    vfx.SetFloat("CameraSpeed", _cameraSpeed);
+            }
+
+            // Gravity binding
+            if (enableGravityBinding)
+            {
+                // Bind gravity vector to multiple property names
+                if (vfx.HasVector3("Gravity"))
+                    vfx.SetVector3("Gravity", _gravityVector);
+                if (vfx.HasVector3("Gravity Vector"))
+                    vfx.SetVector3("Gravity Vector", _gravityVector);
+                if (vfx.HasVector3("GravityVector"))
+                    vfx.SetVector3("GravityVector", _gravityVector);
+
+                // Bind gravity strength as scalar
+                if (vfx.HasFloat("GravityStrength"))
+                    vfx.SetFloat("GravityStrength", gravityStrength);
+                if (vfx.HasFloat("GravityY"))
+                    vfx.SetFloat("GravityY", gravityStrength);
+            }
         }
 
         /// <summary>
@@ -1122,5 +1225,57 @@ namespace MetavidoVFX.VFX
 
             Debug.Log($"[VFXBinderManager] Filtered to performance tier <= {maxTier}");
         }
+
+        // ========== PHYSICS API ==========
+
+        /// <summary>
+        /// Enable or disable velocity-driven input binding to all VFX
+        /// </summary>
+        public void SetVelocityBindingEnabled(bool enabled)
+        {
+            enableVelocityBinding = enabled;
+            Debug.Log($"[VFXBinderManager] Velocity binding: {(enabled ? "ENABLED" : "DISABLED")}");
+        }
+
+        /// <summary>
+        /// Set velocity scale multiplier (0.1 to 10)
+        /// </summary>
+        public void SetVelocityScale(float scale)
+        {
+            velocityScale = Mathf.Clamp(scale, 0.1f, 10f);
+        }
+
+        /// <summary>
+        /// Enable or disable gravity binding to all VFX
+        /// </summary>
+        public void SetGravityBindingEnabled(bool enabled)
+        {
+            enableGravityBinding = enabled;
+            Debug.Log($"[VFXBinderManager] Gravity binding: {(enabled ? "ENABLED" : "DISABLED")}");
+        }
+
+        /// <summary>
+        /// Set gravity strength (-20 to 20, negative = down)
+        /// </summary>
+        public void SetGravityStrength(float strength)
+        {
+            gravityStrength = Mathf.Clamp(strength, -20f, 20f);
+            _gravityVector = new Vector3(0f, gravityStrength, 0f);
+        }
+
+        /// <summary>
+        /// Get current camera velocity (smoothed)
+        /// </summary>
+        public Vector3 GetCameraVelocity() => _smoothedVelocity;
+
+        /// <summary>
+        /// Get current camera speed (velocity magnitude)
+        /// </summary>
+        public float GetCameraSpeed() => _cameraSpeed;
+
+        /// <summary>
+        /// Get current gravity vector
+        /// </summary>
+        public Vector3 GetGravityVector() => _gravityVector;
     }
 }

@@ -256,6 +256,7 @@ Runtime VFX management with Editor persistence and flexible UI Toolkit integrati
 - `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - AR data for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXAudioDataBinder.cs` - Audio bands for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXHandDataBinder.cs` - Hand tracking for spawned VFX
+- `Assets/Scripts/VFX/Binders/VFXPhysicsBinder.cs` - Optional velocity & gravity for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXBinderUtility.cs` - Auto-detect and setup helper
 - `Assets/Scripts/Editor/VFXAutoBinderSetup.cs` - Editor window for batch setup
 
@@ -288,6 +289,33 @@ InverseView      Matrix4x4  Inverse view matrix
 InverseProjection Matrix4x4 Inverse projection matrix
 RayParams        Vector4    (0, 0, tan(fov/2)*aspect, tan(fov/2))
 DepthRange       Vector2    Near/far clipping (default 0.1-10m)
+```
+
+### Physics Properties (Optional)
+```
+Velocity         Vector3    Camera velocity (smoothed)
+ReferenceVelocity Vector3   Alias for Velocity (warp VFX)
+Speed            float      Velocity magnitude
+CameraSpeed      float      Alias for Speed
+Gravity          Vector3    Gravity vector (default 0,-9.81,0)
+Gravity Vector   Vector3    Alias for Gravity (Sparks VFX style)
+GravityStrength  float      Gravity Y-axis (-20 to 20)
+GravityY         float      Alias for GravityStrength
+```
+
+**Enable via VFXBinderManager Inspector:**
+- `Enable Velocity Binding` - toggles camera velocity input
+- `Velocity Scale` - multiplier (0.1-10)
+- `Enable Gravity Binding` - toggles gravity input
+- `Gravity Strength` - Y-axis value (-20 to 20)
+
+**Runtime API:**
+```csharp
+VFXBinderManager.SetVelocityBindingEnabled(bool)
+VFXBinderManager.SetGravityBindingEnabled(bool)
+VFXBinderManager.SetGravityStrength(float)
+VFXBinderManager.GetCameraVelocity()  // Vector3
+VFXBinderManager.GetCameraSpeed()     // float
 ```
 
 ## Documentation
