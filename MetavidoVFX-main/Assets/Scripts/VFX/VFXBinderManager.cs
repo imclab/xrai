@@ -507,15 +507,18 @@ namespace MetavidoVFX.VFX
                 // Keijiro uses fieldOfView/2 which is in RADIANS in metadata, but Unity's camera.fieldOfView is DEGREES
                 float fovV = arCamera.fieldOfView * Mathf.Deg2Rad;
                 float tanV = Mathf.Tan(fovV * 0.5f);
-                float tanH = tanV * arCamera.aspect;
 
-                // If depth is rotated 90°, flip horizontal to fix mirror, keep tanH/tanV order
-                if (rotateDepthTexture)
+                // Use depth texture aspect when rotated (depth FOV differs from camera FOV)
+                float tanH;
+                if (rotateDepthTexture && _lastDepthTexture != null)
                 {
+                    float depthAspect = (float)_lastDepthTexture.width / _lastDepthTexture.height;
+                    tanH = tanV * depthAspect;
                     _rayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
                 }
                 else
                 {
+                    tanH = tanV * arCamera.aspect;
                     _rayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
                 }
 
