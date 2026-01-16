@@ -94,8 +94,8 @@ public static class VFXPipelineMasterSetup
         var propertyBinders = Object.FindObjectsByType<UnityEngine.VFX.Utility.VFXPropertyBinder>(FindObjectsSortMode.None);
         foreach (var binder in propertyBinders)
         {
-            var bindings = binder.GetPropertyBinders();
-            if (bindings == null || bindings.Count() == 0)
+            var bindings = binder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
+            if (bindings == null || !bindings.Any())
             {
                 Undo.DestroyObjectImmediate(binder);
                 removed++;
@@ -204,8 +204,8 @@ public static class VFXPipelineMasterSetup
         var propertyBinders = Object.FindObjectsByType<UnityEngine.VFX.Utility.VFXPropertyBinder>(FindObjectsSortMode.None);
         foreach (var binder in propertyBinders)
         {
-            var bindings = binder.GetPropertyBinders();
-            if (bindings == null || bindings.Count() == 0)
+            var bindings = binder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
+            if (bindings == null || !bindings.Any())
             {
                 Debug.Log($"[VFXPipelineMasterSetup] Removing empty VFXPropertyBinder from {binder.gameObject.name}");
                 Undo.DestroyObjectImmediate(binder);

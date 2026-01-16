@@ -225,8 +225,8 @@ namespace MetavidoVFX.VFX
             foreach (var binder in propertyBinders)
             {
                 // Only remove if it has no active bindings
-                var bindings = binder.GetPropertyBinders();
-                if (bindings == null || bindings.Count() == 0)
+                var bindings = binder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
+                if (bindings == null || !bindings.Any())
                 {
                     Debug.Log($"[VFXLibrary] Removing empty VFXPropertyBinder from {binder.gameObject.name}");
                     RemoveComponent(binder);
@@ -256,8 +256,8 @@ namespace MetavidoVFX.VFX
             var propertyBinder = go.GetComponent<UnityEngine.VFX.Utility.VFXPropertyBinder>();
             if (propertyBinder != null)
             {
-                var bindings = propertyBinder.GetPropertyBinders();
-                if (bindings == null || bindings.Count() == 0)
+                var bindings = propertyBinder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
+                if (bindings == null || !bindings.Any())
                 {
                     Debug.Log($"[VFXLibrary] Removing empty VFXPropertyBinder from {go.name}");
                     RemoveComponent(propertyBinder);
