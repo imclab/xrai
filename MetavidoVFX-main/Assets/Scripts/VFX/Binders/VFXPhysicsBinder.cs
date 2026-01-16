@@ -204,7 +204,9 @@ namespace MetavidoVFX.VFX.Binders
                 }
             }
 
-            if (_velocityMapRT == null)
+            // Validate velocity texture exists and is usable
+            if (_velocityMapRT == null || !_velocityMapRT.IsCreated() ||
+                _velocityMapRT.width <= 0 || _velocityMapRT.height <= 0)
             {
                 return Vector3.zero;
             }
@@ -215,9 +217,15 @@ namespace MetavidoVFX.VFX.Binders
                 _readbackTexture = new Texture2D(1, 1, TextureFormat.RGBAFloat, false);
             }
 
-            // Sample center of velocity map
-            int sampleX = _velocityMapRT.width / 2;
-            int sampleY = _velocityMapRT.height / 2;
+            // Sample center of velocity map with bounds validation
+            int sampleX = Mathf.Clamp(_velocityMapRT.width / 2, 0, _velocityMapRT.width - 1);
+            int sampleY = Mathf.Clamp(_velocityMapRT.height / 2, 0, _velocityMapRT.height - 1);
+
+            // Double-check bounds before ReadPixels
+            if (sampleX < 0 || sampleY < 0 || sampleX >= _velocityMapRT.width || sampleY >= _velocityMapRT.height)
+            {
+                return Vector3.zero;
+            }
 
             RenderTexture.active = _velocityMapRT;
             _readbackTexture.ReadPixels(new Rect(sampleX, sampleY, 1, 1), 0, 0, false);

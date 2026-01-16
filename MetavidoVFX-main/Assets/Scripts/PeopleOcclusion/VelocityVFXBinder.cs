@@ -69,12 +69,19 @@ namespace MetavidoVFX
 
         public override void UpdateBinding(VisualEffect component)
         {
-            if (velocityTexture == null || readbackTexture == null)
+            // Validate textures exist and are usable
+            if (velocityTexture == null || !velocityTexture.IsCreated() ||
+                velocityTexture.width <= 0 || velocityTexture.height <= 0 ||
+                readbackTexture == null)
                 return;
 
-            // Calculate sample coordinates
+            // Calculate sample coordinates with bounds validation
             sampleX = Mathf.Clamp((int)(samplePosition.x * velocityTexture.width), 0, velocityTexture.width - 1);
             sampleY = Mathf.Clamp((int)(samplePosition.y * velocityTexture.height), 0, velocityTexture.height - 1);
+
+            // Double-check bounds before ReadPixels
+            if (sampleX < 0 || sampleY < 0 || sampleX >= velocityTexture.width || sampleY >= velocityTexture.height)
+                return;
 
             // Read single pixel from GPU (expensive - use sparingly)
             RenderTexture.active = velocityTexture;
