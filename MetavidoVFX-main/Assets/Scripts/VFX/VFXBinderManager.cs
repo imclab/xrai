@@ -159,6 +159,12 @@ namespace MetavidoVFX.VFX
         private float _cameraSpeed;
         private Vector3 _gravityVector;
 
+        // Warning spam prevention - only warn once per VFX
+        private HashSet<int> _warnedVFXNoDepth = new HashSet<int>();
+        private HashSet<int> _warnedVFXNoColor = new HashSet<int>();
+        private HashSet<int> _warnedVFXNullDepth = new HashSet<int>();
+        private bool _warnedDepthNull = false;
+
         void Awake()
         {
             _instance = this;
@@ -874,14 +880,22 @@ namespace MetavidoVFX.VFX
                     vfx.SetTexture("DepthTexture", _lastDepthTexture);
                     boundDepth = true;
                 }
-                if (verboseLogging && !boundDepth)
+                // Warn once if VFX has no depth property
+                int vfxId = vfx.GetInstanceID();
+                if (verboseLogging && !boundDepth && !_warnedVFXNoDepth.Contains(vfxId))
                 {
-                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no DepthMap or DepthTexture property!");
+                    _warnedVFXNoDepth.Add(vfxId);
+                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no DepthMap or DepthTexture property (this warning shows once)");
                 }
             }
-            else if (verboseLogging && depthRequired && !hasDepthTex)
+            else if (depthRequired && !hasDepthTex)
             {
-                Debug.LogWarning($"[VFXBinderManager] Cannot bind depth to '{vfx.name}' - _lastDepthTexture is NULL");
+                // Only warn once when depth texture is null
+                if (!_warnedDepthNull)
+                {
+                    _warnedDepthNull = true;
+                    Debug.LogWarning($"[VFXBinderManager] AR depth not available yet - VFX depth binding delayed");
+                }
             }
 
             // Color Map
@@ -906,14 +920,13 @@ namespace MetavidoVFX.VFX
                     vfx.SetTexture("Color Map", _lastColorTexture);
                     boundColor = true;
                 }
-                if (verboseLogging && !boundColor)
+                // Warn once if VFX has no color property
+                int vfxId = vfx.GetInstanceID();
+                if (verboseLogging && !boundColor && !_warnedVFXNoColor.Contains(vfxId))
                 {
-                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no ColorMap, ColorTexture, or Color Map property!");
+                    _warnedVFXNoColor.Add(vfxId);
+                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no ColorMap property (this warning shows once)");
                 }
-            }
-            else if (verboseLogging && colorRequired && !hasColorTex)
-            {
-                Debug.LogWarning($"[VFXBinderManager] Cannot bind color to '{vfx.name}' - _lastColorTexture is NULL");
             }
 
             // Stencil Map
