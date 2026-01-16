@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
+#if BODYPIX_AVAILABLE
+using MetavidoVFX.Segmentation;
+#endif
+
 namespace MetavidoVFX.VFX
 {
     /// <summary>
@@ -27,7 +31,19 @@ namespace MetavidoVFX.VFX
         [Header("Hand Tracking")]
         [SerializeField] private HandTracking.HandVFXController handController;
 
+        [Header("Body Segmentation")]
+#if BODYPIX_AVAILABLE
+        [SerializeField] private BodyPartSegmenter bodySegmenter;
+#endif
+        [SerializeField] private bool useBodySegmentation = true;
+        [Tooltip("Compute separate position maps for each body segment (face, arms, hands, legs)")]
+        [SerializeField] private bool computeSegmentedPositionMaps = true;
+
         [Header("Settings")]
+        [Tooltip("Master toggle - disable all VFX bindings for debugging")]
+        [SerializeField] private bool disableAllBindings = false;
+        [Tooltip("Test only this VFX (leave null to bind all)")]
+        [SerializeField] private VisualEffect isolatedTestVFX = null;
         [SerializeField] private bool autoFindSources = true;
         [SerializeField] private bool bindOnAwake = true;
         [SerializeField] private Vector2 depthRange = new Vector2(0.1f, 10f);
@@ -37,10 +53,18 @@ namespace MetavidoVFX.VFX
         private List<VFXCategory> _categorizedVFX = new List<VFXCategory>();
         private List<VisualEffect> _uncategorizedVFX = new List<VisualEffect>();
 
+        // Depth rotation (ARKit depth orientation fix)
+        [Header("Depth Rotation")]
+        [Tooltip("Rotate depth/stencil textures to match camera orientation")]
+        [SerializeField] private bool rotateDepthTexture = true;
+
         // Cached data
         private Texture _lastDepthTexture;
         private Texture _lastStencilTexture;
         private Texture _lastColorTexture;
+        private RenderTexture _rotatedDepthRT;
+        private RenderTexture _rotatedStencilRT;
+        private Material _rotateUVMaterial;
         private Matrix4x4 _inverseViewMatrix;
         private Matrix4x4 _inverseProjectionMatrix;
         private Vector4 _rayParams;  // Camera projection: (0, 0, tan(fov/2)*aspect, tan(fov/2))
@@ -53,44 +77,104 @@ namespace MetavidoVFX.VFX
         private RenderTexture _positionMapRT;
         private int _depthToWorldKernel = -1;
 
+        // VelocityMap compute (frame-to-frame motion)
+        private RenderTexture _velocityMapRT;
+        private RenderTexture _previousPositionMapRT;
+        private int _velocityKernel = -1;
+
+        // Depth Hue Encoder (raw depth → Metavido hue-encoded RGB)
+        private ComputeShader _depthHueEncoderCompute;
+        private RenderTexture _hueDepthRT;
+        private int _depthHueEncoderKernel = -1;
+
+        // Segmented PositionMap compute (24-part body segmentation)
+        private ComputeShader _segmentedDepthToWorldCompute;
+        private int _segmentedKernel = -1;
+        private RenderTexture _bodyPositionMapRT;
+        private RenderTexture _armsPositionMapRT;
+        private RenderTexture _handsPositionMapRT;
+        private RenderTexture _legsPositionMapRT;
+        private RenderTexture _facePositionMapRT;
+
         // Debug
+        [Header("Debug - This Manager")]
+        [SerializeField] private bool verboseLogging = true;
+        [SerializeField] private float logInterval = 3f;
+
+        [Header("Debug - Suppress Other Systems")]
+        [SerializeField] private bool suppressARKitBinder = true;
+        [SerializeField] private bool suppressPeopleVFX = true;
+        [SerializeField] private bool suppressHologram = true;
+        [SerializeField] private bool suppressHandTracking = true;
+        [SerializeField] private bool suppressAudio = true;
+        [SerializeField] private bool suppressMeshVFX = true;
+        [SerializeField] private bool suppressBodySegmenter = true;
+        [SerializeField] private bool suppressDepthDebug = true;
+        [SerializeField] private bool suppressUI = true;
+
+        // Static accessors for other systems
+        public static bool SuppressARKitBinderLogs => _instance != null && _instance.suppressARKitBinder;
+        public static bool SuppressPeopleVFXLogs => _instance != null && _instance.suppressPeopleVFX;
+        public static bool SuppressHologramLogs => _instance != null && _instance.suppressHologram;
+        public static bool SuppressHandTrackingLogs => _instance != null && _instance.suppressHandTracking;
+        public static bool SuppressAudioLogs => _instance != null && _instance.suppressAudio;
+        public static bool SuppressMeshVFXLogs => _instance != null && _instance.suppressMeshVFX;
+        public static bool SuppressBodySegmenterLogs => _instance != null && _instance.suppressBodySegmenter;
+        public static bool SuppressDepthDebugLogs => _instance != null && _instance.suppressDepthDebug;
+        public static bool SuppressUILogs => _instance != null && _instance.suppressUI;
+        private static VFXBinderManager _instance;
+
         private float _lastLogTime;
         private int _boundCount;
+        private bool _firstDepthReceived = false;
+        private bool _firstStencilReceived = false;
+        private bool _firstColorReceived = false;
+        private float _startTime;
+        private int _frameCount = 0;
+        private int _enabledVFXCount = 0;
 
         void Awake()
         {
-            if (autoFindSources)
-            {
-                FindDataSources();
-            }
+            _instance = this;
+            _startTime = Time.realtimeSinceStartup;
 
-            if (bindOnAwake)
-            {
-                RefreshVFXList();
-            }
+            if (autoFindSources) FindDataSources();
+            if (bindOnAwake) RefreshVFXList();
 
-            // Load DepthToWorld compute shader for PositionMap
+            // Load compute shaders silently
             if (computePositionMap)
             {
                 _depthToWorldCompute = Resources.Load<ComputeShader>("DepthToWorld");
                 if (_depthToWorldCompute != null)
                 {
-                    try
-                    {
-                        _depthToWorldKernel = _depthToWorldCompute.FindKernel("DepthToWorld");
-                        Debug.Log("[VFXBinderManager] ✓ DepthToWorld compute shader loaded");
-                    }
-                    catch (System.ArgumentException)
-                    {
-                        _depthToWorldKernel = -1;
-                        Debug.LogWarning("[VFXBinderManager] DepthToWorld kernel not found - PositionMap disabled");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("[VFXBinderManager] DepthToWorld.compute not found in Resources - PositionMap disabled");
+                    try { _depthToWorldKernel = _depthToWorldCompute.FindKernel("DepthToWorld"); }
+                    catch { _depthToWorldKernel = -1; }
+                    try { _velocityKernel = _depthToWorldCompute.FindKernel("CalculateVelocity"); }
+                    catch { _velocityKernel = -1; }
                 }
             }
+
+            _depthHueEncoderCompute = Resources.Load<ComputeShader>("DepthHueEncoder");
+            if (_depthHueEncoderCompute != null)
+                try { _depthHueEncoderKernel = _depthHueEncoderCompute.FindKernel("EncodeDepthToHue"); }
+                catch { _depthHueEncoderKernel = -1; }
+
+            if (computeSegmentedPositionMaps)
+            {
+                _segmentedDepthToWorldCompute = Resources.Load<ComputeShader>("SegmentedDepthToWorld");
+                if (_segmentedDepthToWorldCompute != null)
+                    try { _segmentedKernel = _segmentedDepthToWorldCompute.FindKernel("SegmentedDepthToWorld"); }
+                    catch { _segmentedKernel = -1; }
+            }
+
+            // Single startup log - use explicit null check for Unity serialized fields
+            string isolatedName = (isolatedTestVFX != null) ? isolatedTestVFX.name : "none";
+            Debug.Log($"[VFXBinderManager] Ready | VFX={_uncategorizedVFX.Count} Isolated={isolatedName}");
+        }
+
+        void Start()
+        {
+            // Startup logging removed - use verboseLogging for debug info
         }
 
         void OnDestroy()
@@ -107,6 +191,36 @@ namespace MetavidoVFX.VFX
                 Destroy(_positionMapRT);
                 _positionMapRT = null;
             }
+            if (_velocityMapRT != null)
+            {
+                _velocityMapRT.Release();
+                Destroy(_velocityMapRT);
+                _velocityMapRT = null;
+            }
+            if (_previousPositionMapRT != null)
+            {
+                _previousPositionMapRT.Release();
+                Destroy(_previousPositionMapRT);
+                _previousPositionMapRT = null;
+            }
+            if (_hueDepthRT != null)
+            {
+                _hueDepthRT.Release();
+                Destroy(_hueDepthRT);
+                _hueDepthRT = null;
+            }
+
+            // Cleanup segmented position maps
+            ReleaseSegmentedRTs();
+        }
+
+        void ReleaseSegmentedRTs()
+        {
+            if (_bodyPositionMapRT != null) { _bodyPositionMapRT.Release(); Destroy(_bodyPositionMapRT); _bodyPositionMapRT = null; }
+            if (_armsPositionMapRT != null) { _armsPositionMapRT.Release(); Destroy(_armsPositionMapRT); _armsPositionMapRT = null; }
+            if (_handsPositionMapRT != null) { _handsPositionMapRT.Release(); Destroy(_handsPositionMapRT); _handsPositionMapRT = null; }
+            if (_legsPositionMapRT != null) { _legsPositionMapRT.Release(); Destroy(_legsPositionMapRT); _legsPositionMapRT = null; }
+            if (_facePositionMapRT != null) { _facePositionMapRT.Release(); Destroy(_facePositionMapRT); _facePositionMapRT = null; }
         }
 
         void FindDataSources()
@@ -133,32 +247,149 @@ namespace MetavidoVFX.VFX
             if (handController == null)
                 handController = FindFirstObjectByType<HandTracking.HandVFXController>();
 
+#if BODYPIX_AVAILABLE
+            if (useBodySegmentation && bodySegmenter == null)
+                bodySegmenter = FindFirstObjectByType<BodyPartSegmenter>();
+#endif
+
             // Debug logging for found sources
             bool hasAudio = audioProcessor != null || legacyAudioProcessor != null;
             string audioType = audioProcessor != null ? "Enhanced" : (legacyAudioProcessor != null ? "Legacy" : "None");
-            Debug.Log($"[VFXBinderManager] Sources found: " +
-                $"OcclusionMgr={occlusionManager != null}, " +
-                $"CameraMgr={cameraManager != null}, " +
-                $"CameraBG={cameraBackground != null}, " +
-                $"Camera={arCamera != null}, " +
-                $"Audio={hasAudio} ({audioType}), " +
-                $"Hand={handController != null}");
+#if BODYPIX_AVAILABLE
+            bool hasBodySeg = bodySegmenter != null;
+#else
+            bool hasBodySeg = false;
+#endif
+            // Startup log removed - sources logged only on errors
         }
 
         void Update()
         {
+            // Master disable toggle for debugging
+            if (disableAllBindings) return;
+
+            _frameCount++;
             UpdateCachedData();
             BindAllVFX();
 
+            // Track first-time data received
+            TrackFirstDataReceived();
+
             // Periodic status logging
-            if (Time.time - _lastLogTime > 3f)
+            if (Time.time - _lastLogTime > logInterval)
             {
                 _lastLogTime = Time.time;
-                string depthInfo = _lastDepthTexture != null ? $"{_lastDepthTexture.width}x{_lastDepthTexture.height}" : "NULL";
-                string stencilInfo = _lastStencilTexture != null ? $"{_lastStencilTexture.width}x{_lastStencilTexture.height}" : "NULL";
-                string colorInfo = _lastColorTexture != null ? $"{_lastColorTexture.width}x{_lastColorTexture.height}" : "NULL";
-                string posInfo = _positionMapRT != null ? $"{_positionMapRT.width}x{_positionMapRT.height}" : "NULL";
-                Debug.Log($"[VFXBinderManager] Binding {_uncategorizedVFX.Count} VFX | Depth: {depthInfo} | Stencil: {stencilInfo} | Color: {colorInfo} | PositionMap: {posInfo}");
+                LogPeriodicStatus();
+            }
+        }
+
+        void TrackFirstDataReceived()
+        {
+            if (!_firstDepthReceived && _lastDepthTexture != null)
+            {
+                _firstDepthReceived = true;
+                float elapsed = Time.realtimeSinceStartup - _startTime;
+                Debug.Log($"[VFXBinderManager] ✓ FIRST DEPTH RECEIVED at frame {_frameCount} ({elapsed:F2}s) - {_lastDepthTexture.width}x{_lastDepthTexture.height}");
+            }
+
+            if (!_firstStencilReceived && _lastStencilTexture != null)
+            {
+                _firstStencilReceived = true;
+                float elapsed = Time.realtimeSinceStartup - _startTime;
+                Debug.Log($"[VFXBinderManager] ✓ FIRST STENCIL RECEIVED at frame {_frameCount} ({elapsed:F2}s) - {_lastStencilTexture.width}x{_lastStencilTexture.height}");
+            }
+
+            if (!_firstColorReceived && _lastColorTexture != null)
+            {
+                _firstColorReceived = true;
+                float elapsed = Time.realtimeSinceStartup - _startTime;
+                Debug.Log($"[VFXBinderManager] ✓ FIRST COLOR RECEIVED at frame {_frameCount} ({elapsed:F2}s) - {_lastColorTexture.width}x{_lastColorTexture.height}");
+            }
+        }
+
+        void LogPeriodicStatus()
+        {
+            string depthInfo = _lastDepthTexture != null ? $"✓{_lastDepthTexture.width}x{_lastDepthTexture.height}" : "✗NULL";
+            string stencilInfo = _lastStencilTexture != null ? $"✓{_lastStencilTexture.width}x{_lastStencilTexture.height}" : "✗NULL";
+            string colorInfo = _lastColorTexture != null ? $"✓{_lastColorTexture.width}x{_lastColorTexture.height}" : "✗NULL";
+            string posInfo = _positionMapRT != null ? $"✓{_positionMapRT.width}x{_positionMapRT.height}" : "✗NULL";
+            string velInfo = _velocityMapRT != null ? $"✓{_velocityMapRT.width}x{_velocityMapRT.height}" : "✗NULL";
+            string hueInfo = _hueDepthRT != null ? $"✓{_hueDepthRT.width}x{_hueDepthRT.height}" : "✗NULL";
+
+            // Count enabled VFX
+            _enabledVFXCount = 0;
+            int totalParticles = 0;
+            string enabledNames = "";
+            foreach (var vfx in _uncategorizedVFX)
+            {
+                if (vfx != null && vfx.enabled)
+                {
+                    _enabledVFXCount++;
+                    totalParticles += vfx.aliveParticleCount;
+                    if (enabledNames.Length > 0) enabledNames += ", ";
+                    enabledNames += vfx.name;
+                }
+            }
+
+            float elapsed = Time.realtimeSinceStartup - _startTime;
+            Debug.Log($"[VFXBinderManager] ─── Status @ {elapsed:F1}s (frame {_frameCount}) ───");
+            Debug.Log($"[VFXBinderManager] Textures: Depth={depthInfo} | Stencil={stencilInfo} | Color={colorInfo}");
+            Debug.Log($"[VFXBinderManager] Computed: Pos={posInfo} | Vel={velInfo} | Hue={hueInfo}");
+            Debug.Log($"[VFXBinderManager] VFX: {_enabledVFXCount}/{_uncategorizedVFX.Count} enabled | {totalParticles:N0} particles");
+            if (_enabledVFXCount > 0 && verboseLogging)
+            {
+                Debug.Log($"[VFXBinderManager] Enabled: {enabledNames}");
+            }
+
+            // Warnings
+            if (!_firstDepthReceived && elapsed > 5f)
+            {
+                Debug.LogWarning($"[VFXBinderManager] ⚠ No depth texture received after {elapsed:F1}s - AR may not be initialized");
+            }
+            if (_enabledVFXCount == 0)
+            {
+                Debug.LogWarning($"[VFXBinderManager] ⚠ No VFX enabled - check SimpleVFXUI or VFX container");
+            }
+            if (_enabledVFXCount > 0 && totalParticles == 0 && _firstDepthReceived)
+            {
+                Debug.LogWarning($"[VFXBinderManager] ⚠ VFX enabled but 0 particles - check Spawn property or VFX logic");
+            }
+        }
+
+        void LogSourceDetails()
+        {
+            Debug.Log($"[VFXBinderManager] ─── Data Sources ───");
+            Debug.Log($"[VFXBinderManager] OcclusionManager: {(occlusionManager != null ? occlusionManager.gameObject.name : "NULL")}");
+            Debug.Log($"[VFXBinderManager] CameraManager: {(cameraManager != null ? cameraManager.gameObject.name : "NULL")}");
+            Debug.Log($"[VFXBinderManager] CameraBackground: {(cameraBackground != null ? cameraBackground.gameObject.name : "NULL")}");
+            Debug.Log($"[VFXBinderManager] ARCamera: {(arCamera != null ? arCamera.name : "NULL")}");
+            Debug.Log($"[VFXBinderManager] AudioProcessor: {(audioProcessor != null ? "Enhanced" : (legacyAudioProcessor != null ? "Legacy" : "NULL"))}");
+            Debug.Log($"[VFXBinderManager] HandController: {(handController != null ? handController.gameObject.name : "NULL")}");
+
+            if (occlusionManager != null)
+            {
+                Debug.Log($"[VFXBinderManager] Occlusion modes: env={occlusionManager.currentEnvironmentDepthMode}, stencil={occlusionManager.currentHumanStencilMode}");
+            }
+        }
+
+        void LogVFXList()
+        {
+            Debug.Log($"[VFXBinderManager] ─── VFX List ({_uncategorizedVFX.Count} total) ───");
+            for (int i = 0; i < Mathf.Min(_uncategorizedVFX.Count, 20); i++)
+            {
+                var vfx = _uncategorizedVFX[i];
+                if (vfx != null)
+                {
+                    string assetName = vfx.visualEffectAsset != null ? vfx.visualEffectAsset.name : "NO ASSET";
+                    bool hasDepth = vfx.HasTexture("DepthMap") || vfx.HasTexture("DepthTexture");
+                    bool hasPos = vfx.HasTexture("PositionMap");
+                    bool hasSpawn = vfx.HasBool("Spawn");
+                    Debug.Log($"[VFXBinderManager]   [{i}] {vfx.name} ({assetName}) enabled={vfx.enabled} | Depth={hasDepth} Pos={hasPos} Spawn={hasSpawn}");
+                }
+            }
+            if (_uncategorizedVFX.Count > 20)
+            {
+                Debug.Log($"[VFXBinderManager]   ... and {_uncategorizedVFX.Count - 20} more");
             }
         }
 
@@ -177,35 +408,128 @@ namespace MetavidoVFX.VFX
                 // Stencil uses direct property (no TryGet method exists)
                 _lastStencilTexture = occlusionManager.humanStencilTexture;
                 #pragma warning restore CS0618
+
+                // Rotate depth/stencil textures 90° CW to match camera orientation
+                // ARKit depth is in landscape orientation, VFX expects portrait
+                if (rotateDepthTexture && _lastDepthTexture != null)
+                {
+                    // Create rotation material if needed
+                    if (_rotateUVMaterial == null)
+                    {
+                        var shader = Shader.Find("Hidden/RotateUV90CW");
+                        if (shader == null)
+                        {
+                            // Fallback: create shader from string
+                            Debug.LogWarning("[VFXBinderManager] RotateUV90CW shader not found, using unrotated depth");
+                        }
+                        else
+                        {
+                            _rotateUVMaterial = new Material(shader);
+                        }
+                    }
+
+                    if (_rotateUVMaterial != null)
+                    {
+                        // Rotated dimensions (swap width/height for 90° rotation)
+                        int rotW = _lastDepthTexture.height;
+                        int rotH = _lastDepthTexture.width;
+
+                        // Create/resize rotated depth RT
+                        if (_rotatedDepthRT == null || _rotatedDepthRT.width != rotW || _rotatedDepthRT.height != rotH)
+                        {
+                            if (_rotatedDepthRT != null) _rotatedDepthRT.Release();
+                            _rotatedDepthRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.RFloat);
+                            _rotatedDepthRT.filterMode = FilterMode.Bilinear;
+                            _rotatedDepthRT.Create();
+                            Debug.Log($"[VFXBinderManager] Created rotated depth RT: {rotW}x{rotH} (from {_lastDepthTexture.width}x{_lastDepthTexture.height})");
+                        }
+
+                        // Blit with UV rotation
+                        Graphics.Blit(_lastDepthTexture, _rotatedDepthRT, _rotateUVMaterial);
+                        _lastDepthTexture = _rotatedDepthRT;
+
+                        // Rotate stencil too if available
+                        if (_lastStencilTexture != null)
+                        {
+                            if (_rotatedStencilRT == null || _rotatedStencilRT.width != rotW || _rotatedStencilRT.height != rotH)
+                            {
+                                if (_rotatedStencilRT != null) _rotatedStencilRT.Release();
+                                _rotatedStencilRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.R8);
+                                _rotatedStencilRT.filterMode = FilterMode.Point;
+                                _rotatedStencilRT.Create();
+                            }
+                            Graphics.Blit(_lastStencilTexture, _rotatedStencilRT, _rotateUVMaterial);
+                            _lastStencilTexture = _rotatedStencilRT;
+                        }
+                    }
+                }
             }
 
             // Get camera texture via ARCameraBackground blit
             if (cameraBackground != null && cameraBackground.material != null)
             {
+                // Clamp color RT size to avoid exceeding GPU texture limits (2048 on some devices)
+                // Full screen resolution isn't needed for VFX color sampling
+                const int maxColorRTSize = 1920;
+                int colorWidth = Mathf.Min(Screen.width, maxColorRTSize);
+                int colorHeight = Mathf.Min(Screen.height, maxColorRTSize);
+
                 // Create/resize color RT if needed
-                if (_colorRT == null || _colorRT.width != Screen.width || _colorRT.height != Screen.height)
+                if (_colorRT == null || _colorRT.width != colorWidth || _colorRT.height != colorHeight)
                 {
                     if (_colorRT != null) _colorRT.Release();
-                    _colorRT = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.ARGB32);
+                    _colorRT = new RenderTexture(colorWidth, colorHeight, 0, RenderTextureFormat.ARGB32);
                     _colorRT.Create();
+                    Debug.Log($"[VFXBinderManager] Created ColorRT: {colorWidth}x{colorHeight} (screen: {Screen.width}x{Screen.height})");
                 }
                 // Blit AR background (YCbCr→RGB conversion via material)
                 Graphics.Blit(null, _colorRT, cameraBackground.material);
                 _lastColorTexture = _colorRT;
             }
+            else if (verboseLogging && Time.frameCount % 300 == 0)
+            {
+                Debug.LogWarning($"[VFXBinderManager] ColorMap not available: cameraBackground={cameraBackground != null}, material={cameraBackground?.material != null}");
+            }
 
             // Calculate inverse view matrix, inverse projection, and ray parameters
             if (arCamera != null)
             {
-                _inverseViewMatrix = arCamera.cameraToWorldMatrix;
+                // InverseView: Use TRS exactly like Keijiro's Metavido RenderUtils.cs
+                // Source: Library/PackageCache/jp.keijiro.metavido/Decoder/Scripts/RenderUtils.cs:22
+                _inverseViewMatrix = Matrix4x4.TRS(
+                    arCamera.transform.position,
+                    arCamera.transform.rotation,
+                    Vector3.one);
                 _inverseProjectionMatrix = arCamera.projectionMatrix.inverse;
 
-                // RayParams: (offsetX, offsetY, tan(fov/2)*aspect, tan(fov/2))
-                // Used by VFX to convert UV+depth to 3D ray direction
+                // RayParams: (centerShift.x, centerShift.y, tan(fov/2) * aspect, tan(fov/2))
+                // Source: Library/PackageCache/jp.keijiro.metavido/Decoder/Scripts/RenderUtils.cs:10-15
+                // For live AR, use actual camera aspect (not Metavido's hardcoded 16:9)
+                var proj = arCamera.projectionMatrix;
+                float centerShiftX = proj.m02;  // Principal point offset X (usually 0 or small)
+                float centerShiftY = proj.m12;  // Principal point offset Y (usually 0 or small)
+
+                // Keijiro uses fieldOfView/2 which is in RADIANS in metadata, but Unity's camera.fieldOfView is DEGREES
                 float fovV = arCamera.fieldOfView * Mathf.Deg2Rad;
                 float tanV = Mathf.Tan(fovV * 0.5f);
                 float tanH = tanV * arCamera.aspect;
-                _rayParams = new Vector4(0f, 0f, tanH, tanV);
+
+                // If depth is rotated 90°, flip horizontal to fix mirror, keep tanH/tanV order
+                if (rotateDepthTexture && _rotateUVMaterial != null)
+                {
+                    _rayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
+                }
+                else
+                {
+                    _rayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
+                }
+
+                // Debug: Log RayParams every 3 seconds
+                if (verboseLogging && Time.frameCount % 180 == 0)
+                {
+                    bool rotated = rotateDepthTexture && _rotateUVMaterial != null;
+                    Debug.Log($"[VFXBinderManager] RayParams: ({_rayParams.x:F3},{_rayParams.y:F3},{_rayParams.z:F3},{_rayParams.w:F3}) | rot={rotated} fov={arCamera.fieldOfView:F1}° aspect={arCamera.aspect:F3}");
+                }
             }
 
             // Compute PositionMap (depth → world positions)
@@ -221,6 +545,7 @@ namespace MetavidoVFX.VFX
                     _positionMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
                     _positionMapRT.enableRandomWrite = true;
                     _positionMapRT.filterMode = FilterMode.Bilinear;
+                    _positionMapRT.wrapMode = TextureWrapMode.Clamp; // Prevent edge sampling artifacts
                     _positionMapRT.Create();
                     Debug.Log($"[VFXBinderManager] Created PositionMap RT: {width}x{height}");
                 }
@@ -241,11 +566,173 @@ namespace MetavidoVFX.VFX
                 int groupsX = Mathf.CeilToInt(width / 32.0f);
                 int groupsY = Mathf.CeilToInt(height / 32.0f);
                 _depthToWorldCompute.Dispatch(_depthToWorldKernel, groupsX, groupsY, 1);
+
+                // Velocity computation (ported from PeopleOcclusionVFXManager)
+                if (_velocityKernel >= 0)
+                {
+                    // Create/resize velocity RTs to match position map
+                    if (_velocityMapRT == null || _velocityMapRT.width != width || _velocityMapRT.height != height)
+                    {
+                        if (_velocityMapRT != null) _velocityMapRT.Release();
+                        _velocityMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+                        _velocityMapRT.enableRandomWrite = true;
+                        _velocityMapRT.filterMode = FilterMode.Bilinear;
+                        _velocityMapRT.wrapMode = TextureWrapMode.Clamp;
+                        _velocityMapRT.Create();
+
+                        if (_previousPositionMapRT != null) _previousPositionMapRT.Release();
+                        _previousPositionMapRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+                        _previousPositionMapRT.filterMode = FilterMode.Bilinear;
+                        _previousPositionMapRT.wrapMode = TextureWrapMode.Clamp;
+                        _previousPositionMapRT.Create();
+
+                        Debug.Log($"[VFXBinderManager] Created VelocityMap RT: {width}x{height}");
+                    }
+
+                    // Dispatch velocity kernel (position and previous already bound)
+                    _depthToWorldCompute.SetTexture(_velocityKernel, "_PositionRT", _positionMapRT);
+                    _depthToWorldCompute.SetTexture(_velocityKernel, "_PreviousPositionRT", _previousPositionMapRT);
+                    _depthToWorldCompute.SetTexture(_velocityKernel, "_VelocityRT", _velocityMapRT);
+                    _depthToWorldCompute.SetFloat("_DeltaTime", Time.deltaTime);
+                    _depthToWorldCompute.Dispatch(_velocityKernel, groupsX, groupsY, 1);
+
+                    // Copy current position to previous for next frame
+                    Graphics.Blit(_positionMapRT, _previousPositionMapRT);
+                }
             }
+
+            // Compute Hue-Encoded Depth (raw ARKit depth → Metavido RGB hue format)
+            // This allows Metavido VFX (BodyParticles, etc.) to decode depth correctly
+            if (_depthHueEncoderCompute != null && _depthHueEncoderKernel >= 0 && _lastDepthTexture != null)
+            {
+                int width = _lastDepthTexture.width;
+                int height = _lastDepthTexture.height;
+
+                // Create/resize HueDepth RT
+                if (_hueDepthRT == null || _hueDepthRT.width != width || _hueDepthRT.height != height)
+                {
+                    if (_hueDepthRT != null) _hueDepthRT.Release();
+                    _hueDepthRT = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
+                    _hueDepthRT.enableRandomWrite = true;
+                    _hueDepthRT.filterMode = FilterMode.Bilinear;
+                    _hueDepthRT.wrapMode = TextureWrapMode.Clamp;
+                    _hueDepthRT.Create();
+                    Debug.Log($"[VFXBinderManager] Created HueDepth RT: {width}x{height}");
+                }
+
+                // Set compute shader parameters
+                _depthHueEncoderCompute.SetTexture(_depthHueEncoderKernel, "_Depth", _lastDepthTexture);
+                _depthHueEncoderCompute.SetTexture(_depthHueEncoderKernel, "_Stencil",
+                    _lastStencilTexture != null ? _lastStencilTexture : Texture2D.whiteTexture);
+                _depthHueEncoderCompute.SetTexture(_depthHueEncoderKernel, "_HueDepthRT", _hueDepthRT);
+                _depthHueEncoderCompute.SetVector("_DepthRange", new Vector4(depthRange.x, depthRange.y, 0.5f, 0));
+                _depthHueEncoderCompute.SetInt("_UseStencil", _lastStencilTexture != null ? 1 : 0);
+
+                // Dispatch (32x32 thread groups to match DepthHueEncoder.compute numthreads)
+                int groupsX = Mathf.CeilToInt(width / 32.0f);
+                int groupsY = Mathf.CeilToInt(height / 32.0f);
+                _depthHueEncoderCompute.Dispatch(_depthHueEncoderKernel, groupsX, groupsY, 1);
+            }
+
+            // Compute segmented position maps (body parts → separate world position maps)
+            DispatchSegmentedCompute();
+        }
+
+        void DispatchSegmentedCompute()
+        {
+#if BODYPIX_AVAILABLE
+            // Only dispatch if we have BodyPix segmentation data
+            if (!computeSegmentedPositionMaps || _segmentedDepthToWorldCompute == null || _segmentedKernel < 0)
+                return;
+
+            if (_lastDepthTexture == null || arCamera == null)
+                return;
+
+            if (bodySegmenter == null || !bodySegmenter.IsReady || bodySegmenter.MaskTexture == null)
+                return;
+
+            int width = _lastDepthTexture.width;
+            int height = _lastDepthTexture.height;
+
+            // Create/resize all segmented position map RTs
+            EnsureSegmentedRTs(width, height);
+
+            // Set compute shader parameters (shared across all outputs)
+            var invView = arCamera.cameraToWorldMatrix;
+            var invProj = arCamera.projectionMatrix.inverse;
+
+            _segmentedDepthToWorldCompute.SetMatrix("_InverseView", invView);
+            _segmentedDepthToWorldCompute.SetMatrix("_InverseProjection", invProj);
+            _segmentedDepthToWorldCompute.SetVector("_DepthRange", new Vector4(depthRange.x, depthRange.y, 0, 0));
+            _segmentedDepthToWorldCompute.SetInts("_OutputSize", width, height);
+            _segmentedDepthToWorldCompute.SetInt("_UseStencil", _lastStencilTexture != null ? 1 : 0);
+
+            // Input textures
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_Depth", _lastDepthTexture);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_BodyPartMask", bodySegmenter.MaskTexture);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_Stencil",
+                _lastStencilTexture != null ? _lastStencilTexture : Texture2D.whiteTexture);
+
+            // Output textures (6 separate position maps)
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_PositionMap", _positionMapRT);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_BodyPositionMap", _bodyPositionMapRT);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_ArmsPositionMap", _armsPositionMapRT);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_HandsPositionMap", _handsPositionMapRT);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_LegsPositionMap", _legsPositionMapRT);
+            _segmentedDepthToWorldCompute.SetTexture(_segmentedKernel, "_FacePositionMap", _facePositionMapRT);
+
+            // Dispatch (32x32 thread groups)
+            int groupsX = Mathf.CeilToInt(width / 32.0f);
+            int groupsY = Mathf.CeilToInt(height / 32.0f);
+            _segmentedDepthToWorldCompute.Dispatch(_segmentedKernel, groupsX, groupsY, 1);
+#endif
+        }
+
+        void EnsureSegmentedRTs(int width, int height)
+        {
+            // Check if resize needed
+            if (_bodyPositionMapRT != null && _bodyPositionMapRT.width == width && _bodyPositionMapRT.height == height)
+                return;
+
+            // Release existing RTs
+            ReleaseSegmentedRTs();
+
+            // Create all segmented position map RTs with same format
+            _bodyPositionMapRT = CreateSegmentedRT(width, height, "BodyPositionMap");
+            _armsPositionMapRT = CreateSegmentedRT(width, height, "ArmsPositionMap");
+            _handsPositionMapRT = CreateSegmentedRT(width, height, "HandsPositionMap");
+            _legsPositionMapRT = CreateSegmentedRT(width, height, "LegsPositionMap");
+            _facePositionMapRT = CreateSegmentedRT(width, height, "FacePositionMap");
+
+            Debug.Log($"[VFXBinderManager] Created segmented position maps: {width}x{height}");
+        }
+
+        RenderTexture CreateSegmentedRT(int width, int height, string name)
+        {
+            var rt = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat);
+            rt.name = name;
+            rt.enableRandomWrite = true;
+            rt.filterMode = FilterMode.Bilinear;
+            rt.wrapMode = TextureWrapMode.Clamp;
+            rt.Create();
+            return rt;
         }
 
         void BindAllVFX()
         {
+            // Isolated test mode - only bind to specific VFX for debugging
+            if (isolatedTestVFX != null)
+            {
+                if (_frameCount == 1 || _frameCount % 180 == 0)
+                    Debug.Log($"[VFXBinderManager] ISOLATED MODE: Binding only to '{isolatedTestVFX.name}' enabled={isolatedTestVFX.enabled}");
+
+                if (isolatedTestVFX.enabled)
+                {
+                    BindVFX(isolatedTestVFX, VFXBindingRequirements.All);
+                }
+                return;
+            }
+
             // Bind categorized VFX
             foreach (var vfxCategory in _categorizedVFX)
             {
@@ -267,22 +754,69 @@ namespace MetavidoVFX.VFX
 
         void BindVFX(VisualEffect vfx, VFXBindingRequirements requirements)
         {
-            // Depth Map
-            if ((requirements & VFXBindingRequirements.DepthMap) != 0 && _lastDepthTexture != null)
+            if (verboseLogging && _frameCount % 180 == 1)
             {
+                Debug.Log($"[VFXBinderManager] BindVFX: '{vfx.name}' | Depth={_lastDepthTexture != null} Stencil={_lastStencilTexture != null} Color={_lastColorTexture != null}");
+            }
+
+            // Depth Map - Metavido VFX expect RAW FLOAT depth (demuxer pre-decodes)
+            // The TextureDemuxer.cs decodes hue→float BEFORE sending to VFX
+            // For live AR, we provide raw depth directly (already float from ARKit)
+            bool depthRequired = (requirements & VFXBindingRequirements.DepthMap) != 0;
+            bool hasDepthTex = _lastDepthTexture != null;
+            if (depthRequired && hasDepthTex)
+            {
+                bool boundDepth = false;
                 if (vfx.HasTexture("DepthMap"))
+                {
                     vfx.SetTexture("DepthMap", _lastDepthTexture);
+                    boundDepth = true;
+                }
                 if (vfx.HasTexture("DepthTexture"))
+                {
                     vfx.SetTexture("DepthTexture", _lastDepthTexture);
+                    boundDepth = true;
+                }
+                if (verboseLogging && !boundDepth)
+                {
+                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no DepthMap or DepthTexture property!");
+                }
+            }
+            else if (verboseLogging && depthRequired && !hasDepthTex)
+            {
+                Debug.LogWarning($"[VFXBinderManager] Cannot bind depth to '{vfx.name}' - _lastDepthTexture is NULL");
             }
 
             // Color Map
-            if ((requirements & VFXBindingRequirements.ColorMap) != 0 && _lastColorTexture != null)
+            bool colorRequired = (requirements & VFXBindingRequirements.ColorMap) != 0;
+            bool hasColorTex = _lastColorTexture != null;
+            if (colorRequired && hasColorTex)
             {
+                bool boundColor = false;
                 if (vfx.HasTexture("ColorMap"))
+                {
                     vfx.SetTexture("ColorMap", _lastColorTexture);
+                    boundColor = true;
+                }
                 if (vfx.HasTexture("ColorTexture"))
+                {
                     vfx.SetTexture("ColorTexture", _lastColorTexture);
+                    boundColor = true;
+                }
+                // H3M/PeopleVFX style naming (with space)
+                if (vfx.HasTexture("Color Map"))
+                {
+                    vfx.SetTexture("Color Map", _lastColorTexture);
+                    boundColor = true;
+                }
+                if (verboseLogging && !boundColor)
+                {
+                    Debug.LogWarning($"[VFXBinderManager] VFX '{vfx.name}' has no ColorMap, ColorTexture, or Color Map property!");
+                }
+            }
+            else if (verboseLogging && colorRequired && !hasColorTex)
+            {
+                Debug.LogWarning($"[VFXBinderManager] Cannot bind color to '{vfx.name}' - _lastColorTexture is NULL");
             }
 
             // Stencil Map
@@ -305,13 +839,34 @@ namespace MetavidoVFX.VFX
                     vfx.SetTexture("Position Map", _positionMapRT);
             }
 
+            // Velocity Map (frame-to-frame motion - ported from PeopleVFX)
+            if (_velocityMapRT != null)
+            {
+                if (vfx.HasTexture("VelocityMap"))
+                    vfx.SetTexture("VelocityMap", _velocityMapRT);
+                // H3M/PeopleVFX style naming (with space)
+                if (vfx.HasTexture("Velocity Map"))
+                    vfx.SetTexture("Velocity Map", _velocityMapRT);
+            }
+
+            // Body Part Segmentation (24-part BodyPix mask + segmented position maps)
+            BindBodySegmentation(vfx);
+
             // Camera matrices and projection parameters
             if (arCamera != null)
             {
+                bool boundInvView = false, boundRayParams = false;
+
                 if (vfx.HasMatrix4x4("InverseView"))
+                {
                     vfx.SetMatrix4x4("InverseView", _inverseViewMatrix);
+                    boundInvView = true;
+                }
                 if (vfx.HasMatrix4x4("InverseViewMatrix"))
+                {
                     vfx.SetMatrix4x4("InverseViewMatrix", _inverseViewMatrix);
+                    boundInvView = true;
+                }
                 if (vfx.HasMatrix4x4("InverseProjection"))
                     vfx.SetMatrix4x4("InverseProjection", _inverseProjectionMatrix);
 
@@ -320,9 +875,20 @@ namespace MetavidoVFX.VFX
 
                 // RayParams: Required for Metavido/Rcam VFX to convert UV+depth to 3D positions
                 if (vfx.HasVector4("RayParams"))
+                {
                     vfx.SetVector4("RayParams", _rayParams);
+                    boundRayParams = true;
+                }
                 if (vfx.HasVector4("ProjectionVector"))
+                {
                     vfx.SetVector4("ProjectionVector", _rayParams);
+                    boundRayParams = true;
+                }
+
+                if (verboseLogging && _frameCount % 180 == 1)
+                {
+                    Debug.Log($"[VFXBinderManager] Camera params for '{vfx.name}': InvView={boundInvView} RayParams={boundRayParams} | Ray=({_rayParams.x:F3},{_rayParams.y:F3},{_rayParams.z:F3},{_rayParams.w:F3})");
+                }
             }
 
             // Audio bindings
@@ -344,6 +910,63 @@ namespace MetavidoVFX.VFX
             }
 
             // Hand tracking bindings are handled by HandVFXController directly
+        }
+
+        /// <summary>
+        /// Bind body segmentation data (24-part mask + segmented position maps + keypoints)
+        /// </summary>
+        void BindBodySegmentation(VisualEffect vfx)
+        {
+#if BODYPIX_AVAILABLE
+            // BodyPix 24-part segmentation mask
+            if (bodySegmenter != null && bodySegmenter.IsReady && bodySegmenter.MaskTexture != null)
+            {
+                if (vfx.HasTexture("BodyPartMask"))
+                    vfx.SetTexture("BodyPartMask", bodySegmenter.MaskTexture);
+                if (vfx.HasTexture("SegmentationMask"))
+                    vfx.SetTexture("SegmentationMask", bodySegmenter.MaskTexture);
+
+                // Keypoint buffer (17 pose landmarks)
+                if (bodySegmenter.KeypointBuffer != null && vfx.HasGraphicsBuffer("KeypointBuffer"))
+                    vfx.SetGraphicsBuffer("KeypointBuffer", bodySegmenter.KeypointBuffer);
+
+                // Also push individual keypoints as Vector3 properties
+                bodySegmenter.PushToVFX(vfx);
+            }
+#endif
+
+            // Segmented position maps (computed by SegmentedDepthToWorld.compute)
+            if (_bodyPositionMapRT != null)
+            {
+                if (vfx.HasTexture("BodyPositionMap"))
+                    vfx.SetTexture("BodyPositionMap", _bodyPositionMapRT);
+                if (vfx.HasTexture("TorsoPositionMap"))
+                    vfx.SetTexture("TorsoPositionMap", _bodyPositionMapRT);
+            }
+
+            if (_armsPositionMapRT != null)
+            {
+                if (vfx.HasTexture("ArmsPositionMap"))
+                    vfx.SetTexture("ArmsPositionMap", _armsPositionMapRT);
+            }
+
+            if (_handsPositionMapRT != null)
+            {
+                if (vfx.HasTexture("HandsPositionMap"))
+                    vfx.SetTexture("HandsPositionMap", _handsPositionMapRT);
+            }
+
+            if (_legsPositionMapRT != null)
+            {
+                if (vfx.HasTexture("LegsPositionMap"))
+                    vfx.SetTexture("LegsPositionMap", _legsPositionMapRT);
+            }
+
+            if (_facePositionMapRT != null)
+            {
+                if (vfx.HasTexture("FacePositionMap"))
+                    vfx.SetTexture("FacePositionMap", _facePositionMapRT);
+            }
         }
 
         /// <summary>
@@ -369,7 +992,7 @@ namespace MetavidoVFX.VFX
                 }
             }
 
-            Debug.Log($"[VFXBinderManager] Found {_categorizedVFX.Count} categorized, {_uncategorizedVFX.Count} uncategorized VFX");
+            // VFX list logged in Awake summary only
         }
 
         /// <summary>
