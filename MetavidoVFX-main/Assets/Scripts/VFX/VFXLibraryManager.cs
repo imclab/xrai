@@ -167,6 +167,15 @@ namespace MetavidoVFX.VFX
             }
 
             Debug.Log($"[VFXLibrary] Rebuilt {_allVFX.Count} VFX entries from existing children");
+
+            // Notify VFXBinderManager to refresh its VFX list
+            var binderManager = FindFirstObjectByType<VFXBinderManager>();
+            if (binderManager != null)
+            {
+                binderManager.RefreshVFXList();
+                Debug.Log($"[VFXLibrary] Notified VFXBinderManager to refresh");
+            }
+
             OnLibraryPopulated?.Invoke();
         }
 
@@ -414,6 +423,15 @@ namespace MetavidoVFX.VFX
 
             string modeStr = persistent ? "persistent" : "runtime";
             Debug.Log($"[VFXLibrary] Created {_allVFX.Count} VFX instances ({modeStr}) across {_vfxByCategory.Count(kvp => kvp.Value.Count > 0)} categories");
+
+            // Notify VFXBinderManager to refresh its VFX list
+            var binderManager = FindFirstObjectByType<VFXBinderManager>();
+            if (binderManager != null)
+            {
+                binderManager.RefreshVFXList();
+                Debug.Log($"[VFXLibrary] Notified VFXBinderManager to refresh");
+            }
+
             OnLibraryPopulated?.Invoke();
         }
 

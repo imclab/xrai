@@ -151,8 +151,6 @@ namespace MetavidoVFX.VFX
         private float _startTime;
         private int _frameCount = 0;
         private int _enabledVFXCount = 0;
-        private int _lastVFXCheckFrame = 0;
-        private const int VFX_REFRESH_INTERVAL = 60; // Check for new VFX every 60 frames
 
         // Physics tracking
         private Vector3 _lastCameraPosition;
@@ -309,14 +307,6 @@ namespace MetavidoVFX.VFX
             if (disableAllBindings) return;
 
             _frameCount++;
-
-            // Periodically check for new VFX (handles dynamic spawning)
-            if (_frameCount - _lastVFXCheckFrame >= VFX_REFRESH_INTERVAL)
-            {
-                _lastVFXCheckFrame = _frameCount;
-                RefreshVFXListIfChanged();
-            }
-
             UpdateCachedData();
             UpdatePhysicsData();
             BindAllVFX();
@@ -1145,22 +1135,7 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
-        /// Check if VFX count changed and refresh if needed
-        /// </summary>
-        private void RefreshVFXListIfChanged()
-        {
-            var allVFX = FindObjectsByType<VisualEffect>(FindObjectsSortMode.None);
-            int totalKnown = _categorizedVFX.Count + _uncategorizedVFX.Count;
-
-            if (allVFX.Length != totalKnown)
-            {
-                Debug.Log($"[VFXBinderManager] VFX count changed: {totalKnown} → {allVFX.Length}, refreshing list");
-                RefreshVFXList();
-            }
-        }
-
-        /// <summary>
-        /// Refresh list of VFX to bind
+        /// Refresh list of VFX to bind. Call this after spawning new VFX.
         /// </summary>
         public void RefreshVFXList()
         {
