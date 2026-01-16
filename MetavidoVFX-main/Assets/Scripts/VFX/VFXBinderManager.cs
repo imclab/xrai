@@ -62,6 +62,9 @@ namespace MetavidoVFX.VFX
         private Texture _lastDepthTexture;
         private Texture _lastStencilTexture;
         private Texture _lastColorTexture;
+        private RenderTexture _rotatedDepthRT;
+        private RenderTexture _rotatedStencilRT;
+        private Material _rotateUVMaterial;
         private Matrix4x4 _inverseViewMatrix;
         private Matrix4x4 _inverseProjectionMatrix;
         private Vector4 _rayParams;  // Camera projection: (0, 0, tan(fov/2)*aspect, tan(fov/2))
@@ -405,7 +408,56 @@ namespace MetavidoVFX.VFX
                 // Stencil uses direct property (no TryGet method exists)
                 _lastStencilTexture = occlusionManager.humanStencilTexture;
                 #pragma warning restore CS0618
-                // Note: Depth rotation is now handled in compute shader via _RotateUV90CW parameter
+
+                // Rotate depth/stencil textures 90° CW for Metavido VFX
+                // These VFX sample DepthMap directly with their own UV→position conversion
+                // ARKit depth is landscape-oriented, VFX expects portrait
+                if (rotateDepthTexture && _lastDepthTexture != null)
+                {
+                    // Create rotation material if needed
+                    if (_rotateUVMaterial == null)
+                    {
+                        var shader = Shader.Find("Hidden/RotateUV90CW");
+                        if (shader != null)
+                            _rotateUVMaterial = new Material(shader);
+                        else
+                            Debug.LogWarning("[VFXBinderManager] RotateUV90CW shader not found");
+                    }
+
+                    if (_rotateUVMaterial != null)
+                    {
+                        // Rotated dimensions (swap width/height for 90° rotation)
+                        int rotW = _lastDepthTexture.height;
+                        int rotH = _lastDepthTexture.width;
+
+                        // Create/resize rotated depth RT
+                        if (_rotatedDepthRT == null || _rotatedDepthRT.width != rotW || _rotatedDepthRT.height != rotH)
+                        {
+                            if (_rotatedDepthRT != null) _rotatedDepthRT.Release();
+                            _rotatedDepthRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.RFloat);
+                            _rotatedDepthRT.filterMode = FilterMode.Bilinear;
+                            _rotatedDepthRT.Create();
+                        }
+
+                        // Blit with UV rotation
+                        Graphics.Blit(_lastDepthTexture, _rotatedDepthRT, _rotateUVMaterial);
+                        _lastDepthTexture = _rotatedDepthRT;
+
+                        // Rotate stencil too if available
+                        if (_lastStencilTexture != null)
+                        {
+                            if (_rotatedStencilRT == null || _rotatedStencilRT.width != rotW || _rotatedStencilRT.height != rotH)
+                            {
+                                if (_rotatedStencilRT != null) _rotatedStencilRT.Release();
+                                _rotatedStencilRT = new RenderTexture(rotW, rotH, 0, RenderTextureFormat.R8);
+                                _rotatedStencilRT.filterMode = FilterMode.Point;
+                                _rotatedStencilRT.Create();
+                            }
+                            Graphics.Blit(_lastStencilTexture, _rotatedStencilRT, _rotateUVMaterial);
+                            _lastStencilTexture = _rotatedStencilRT;
+                        }
+                    }
+                }
             }
 
             // Get camera texture via ARCameraBackground blit
@@ -475,11 +527,11 @@ namespace MetavidoVFX.VFX
             }
 
             // Compute PositionMap (depth → world positions)
+            // Note: _lastDepthTexture is already rotated by blit above, so use its dimensions directly
             if (computePositionMap && _depthToWorldCompute != null && _depthToWorldKernel >= 0 && _lastDepthTexture != null && arCamera != null)
             {
-                // Output dimensions - swap for portrait when rotation enabled
-                int outWidth = rotateDepthTexture ? _lastDepthTexture.height : _lastDepthTexture.width;
-                int outHeight = rotateDepthTexture ? _lastDepthTexture.width : _lastDepthTexture.height;
+                int outWidth = _lastDepthTexture.width;
+                int outHeight = _lastDepthTexture.height;
 
                 // Create/resize PositionMap RT
                 if (_positionMapRT == null || _positionMapRT.width != outWidth || _positionMapRT.height != outHeight)
@@ -504,7 +556,8 @@ namespace MetavidoVFX.VFX
                 _depthToWorldCompute.SetTexture(_depthToWorldKernel, "_Stencil", _lastStencilTexture != null ? _lastStencilTexture : Texture2D.whiteTexture);
                 _depthToWorldCompute.SetTexture(_depthToWorldKernel, "_PositionRT", _positionMapRT);
                 _depthToWorldCompute.SetInt("_UseStencil", _lastStencilTexture != null ? 1 : 0);
-                _depthToWorldCompute.SetInt("_RotateUV90CW", rotateDepthTexture ? 1 : 0);
+                // Depth texture is already rotated by blit, no need for compute shader rotation
+                _depthToWorldCompute.SetInt("_RotateUV90CW", 0);
 
                 // Dispatch (32x32 thread groups to match DepthToWorld.compute numthreads)
                 int groupsX = Mathf.CeilToInt(outWidth / 32.0f);
