@@ -1,6 +1,9 @@
 # MetavidoVFX Pipeline Architecture
 
-> Last Updated: 2026-01-16 (Depth Rotation Fix Added)
+> ⚠️ **SUPERSEDED**: See **[VFX_PIPELINE_FINAL_RECOMMENDATION.md](VFX_PIPELINE_FINAL_RECOMMENDATION.md)** for the latest Hybrid Bridge architecture.
+> This document is kept for historical reference. The new recommendation reduces code by 84% and uses O(1) compute scaling.
+
+> Last Updated: 2026-01-16 (Superseded by VFX_PIPELINE_FINAL_RECOMMENDATION.md)
 
 ## Overview
 

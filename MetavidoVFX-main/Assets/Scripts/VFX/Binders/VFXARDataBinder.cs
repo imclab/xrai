@@ -1,7 +1,15 @@
-// VFXARDataBinder - Binds AR depth, stencil, color, position data to VFX
-// Attach to any VFX GameObject along with VFXPropertyBinder
-// Works with runtime-spawned VFX - no registration needed
-// Includes depth rotation and aspect fixes for Metavido-style VFX
+// ┌────────────────────────────────────────────────────────────────────────────┐
+// │ DEPRECATED - Use VFXARBinder + ARDepthSource instead                       │
+// │                                                                            │
+// │ This 972-line binder runs compute EVERY FRAME per-VFX (O(N) dispatches).   │
+// │ The new Hybrid Bridge Pattern uses:                                        │
+// │   • ARDepthSource (singleton) - ONE compute dispatch for ALL VFX           │
+// │   • VFXARBinder (per-VFX) - lightweight SetTexture() calls only            │
+// │                                                                            │
+// │ Migration: Remove this component + VFXPropertyBinder, add VFXARBinder      │
+// │ Setup: H3M > VFX Pipeline Master > Setup Complete Pipeline                 │
+// │ Date deprecated: 2026-01-16                                                │
+// └────────────────────────────────────────────────────────────────────────────┘
 
 using UnityEngine;
 using UnityEngine.VFX;
@@ -11,7 +19,8 @@ using MetavidoVFX.Audio;
 
 namespace MetavidoVFX.VFX.Binders
 {
-    [VFXBinder("AR/AR Data")]
+    [VFXBinder("AR/AR Data (DEPRECATED)")]
+    [System.Obsolete("Use VFXARBinder + ARDepthSource instead. This binder runs compute per-VFX (O(N)), the new system runs O(1) compute.")]
     public class VFXARDataBinder : VFXBinderBase
     {
         [Header("Data Sources (auto-found if null)")]
@@ -383,73 +392,9 @@ namespace MetavidoVFX.VFX.Binders
                     component.SetTexture("Stencil Map", stencilTex);
             }
 
-            // Bind Color Map - blit through ARCameraBackground material for YCbCr→RGB conversion
-            // Check multiple property names (matches VFXBinderManager)
-            bool hasColorProp = bindColorMap && (
-                component.HasTexture(colorMapProperty) ||
-                component.HasTexture("ColorTexture") ||
-                component.HasTexture("Color Map"));
-
-            if (hasColorProp)
-            {
-                try
-                {
-                    if (cameraBackground != null && cameraBackground.enabled && cameraBackground.material != null)
-                    {
-                        // Match VFXBinderManager approach: blit null through ARCameraBackground material
-                        // This renders the AR background shader which converts YCbCr to RGB
-                        const int maxColorRTSize = 1920; // Mobile-friendly size
-                        int colorWidth = Mathf.Min(Screen.width, maxColorRTSize);
-                        int colorHeight = Mathf.Min(Screen.height, maxColorRTSize);
-
-                        // Create/resize color RT if needed
-                        if (_colorRT == null || _colorRT.width != colorWidth || _colorRT.height != colorHeight)
-                        {
-                            if (_colorRT != null) _colorRT.Release();
-                            _colorRT = new RenderTexture(colorWidth, colorHeight, 0, RenderTextureFormat.ARGB32);
-                            _colorRT.Create();
-                            if (verboseLogging && !_loggedColorRT) { Debug.Log($"[VFXARDataBinder] Created ColorRT: {colorWidth}x{colorHeight}"); _loggedColorRT = true; }
-                        }
-
-                        // Blit AR background (YCbCr→RGB conversion via material) - same as VFXBinderManager
-                        if (Time.frameCount % updateInterval == 0)
-                        {
-                            Graphics.Blit(null, _colorRT, cameraBackground.material);
-                            if (verboseLogging && Time.frameCount % 60 == 0)
-                                Debug.Log($"[VFXARDataBinder] ColorMap BLITTED to {_colorRT.width}x{_colorRT.height}");
-                        }
-
-                        // Bind to all possible property names
-                        bool boundColor = false;
-                        if (component.HasTexture(colorMapProperty))
-                        {
-                            component.SetTexture(colorMapProperty, _colorRT);
-                            boundColor = true;
-                        }
-                        if (component.HasTexture("ColorTexture"))
-                        {
-                            component.SetTexture("ColorTexture", _colorRT);
-                            boundColor = true;
-                        }
-                        if (component.HasTexture("Color Map"))
-                        {
-                            component.SetTexture("Color Map", _colorRT);
-                            boundColor = true;
-                        }
-
-                        if (verboseLogging && Time.frameCount % 180 == 0)
-                            Debug.Log($"[VFXARDataBinder] ColorMap bound={boundColor} to '{component.name}' ({_colorRT.width}x{_colorRT.height})");
-                    }
-                    else if (Time.frameCount % 180 == 0)
-                    {
-                        Debug.LogWarning($"[VFXARDataBinder] ColorMap not available: bg={cameraBackground != null} enabled={cameraBackground?.enabled} mat={cameraBackground?.material != null}");
-                    }
-                }
-                catch (System.NullReferenceException)
-                {
-                    // ARCameraBackground.material can throw internally before AR session is ready
-                }
-            }
+            // ColorMap binding: Skip custom binding, let VFXPropertyBinder handle it via registered binders
+            // The ARCameraTextureProvider component on AR Camera already handles YCbCr→RGB conversion
+            // and provides proper texture updates via Metavido.ARCameraTextureProvider.Texture property
 
             // Compute PositionMap (depth → world positions) - only if VFX needs it
             // Auto-detect: check if VFX has PositionMap, VelocityMap, or MapWidth/Height properties

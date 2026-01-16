@@ -19,42 +19,58 @@ This document explains all systems and components in the MetavidoVFX project.
 
 ### In Unity Editor:
 
-1. **Setup HoloKit** (if using hand tracking):
+1. **Setup VFX Pipeline** (REQUIRED - one-click setup):
+   ```
+   H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)
+   ```
+   This creates ARDepthSource, adds VFXARBinder to all VFX, adds Dashboard and Test Harness.
+
+2. **Debug/Test VFX** (Keyboard shortcuts in Play mode):
+   - `Tab` - Toggle Pipeline Dashboard
+   - `1-9` - Select VFX by index
+   - `Space` - Cycle to next VFX
+   - `C` - Cycle categories
+   - `A` - Toggle all VFX on/off
+   - `P` - Auto-cycle profiling mode
+
+3. **Setup HoloKit** (if using hand tracking):
    ```
    H3M > HoloKit > Setup HoloKit Defines
    H3M > HoloKit > Setup Complete HoloKit Rig
    ```
 
-2. **Setup Post-Processing**:
+4. **Setup Post-Processing**:
    ```
    H3M > Post-Processing > Setup Post-Processing
    ```
 
-3. **Setup EchoVision** (AR mesh + audio VFX):
+5. **Validate**:
    ```
-   H3M > EchoVision > Setup All EchoVision Components
-   ```
-
-4. **Validate**:
-   ```
-   H3M > EchoVision > Validate Setup
+   H3M > VFX Pipeline Master > Testing > Validate All Bindings
    H3M > Post-Processing > Validate Setup
    ```
 
-5. **Pipeline Cleanup** (remove redundant systems):
-   ```
-   H3M > Pipeline Cleanup > Run Full Cleanup
-   ```
+### Key Documentation
+
+| Document | Purpose |
+|----------|---------|
+| **[VFX_PIPELINE_FINAL_RECOMMENDATION.md](VFX_PIPELINE_FINAL_RECOMMENDATION.md)** | **Primary** - Hybrid Bridge architecture |
+| [TESTING_CHECKLIST.md](TESTING_CHECKLIST.md) | Triple-verified testing workflow |
+| [QUICK_REFERENCE.md](QUICK_REFERENCE.md) | VFX properties cheat sheet |
+| [VFX_NAMING_CONVENTION.md](VFX_NAMING_CONVENTION.md) | Asset naming standards |
+| [VFX_INDEX.md](VFX_INDEX.md) | All 88 VFX assets indexed |
 
 ---
 
 ## Data Pipeline Architecture (Updated 2026-01-16)
 
-### Recommended Architecture
+### Recommended Architecture: Hybrid Bridge Pattern
+
+**O(1) compute + O(N) lightweight binding** - Optimal for multi-VFX scenes
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     AR Session Origin                            │
+│                     AR Foundation                                │
 │  ┌─────────────────┐  ┌──────────────────┐  ┌────────────────┐  │
 │  │ ARCameraManager │  │ AROcclusionMgr   │  │ARCameraBackground│ │
 │  └────────┬────────┘  └────────┬─────────┘  └───────┬────────┘  │
@@ -63,48 +79,54 @@ This document explains all systems and components in the MetavidoVFX project.
             │                    │                     │
             v                    v                     v
 ┌───────────────────────────────────────────────────────────────────┐
-│              VFXARDataBinder (PRIMARY - per VFX)                  │
-│  Binds: DepthMap, StencilMap, ColorMap, PositionMap, RayParams   │
-│  Target: Individual VFX (component on each VFX GameObject)        │
-│  Performance: 353 FPS @ 10 active VFX                             │
+│              ARDepthSource (SINGLETON - one compute dispatch)     │
+│  ONE GPU compute → PositionMap, VelocityMap                       │
+│  Public: DepthMap, StencilMap, PositionMap, VelocityMap, RayParams│
 └──────────────────────────────┬────────────────────────────────────┘
                                │
             ┌──────────────────┼──────────────────┐
             v                  v                  v
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│ VFX + Binder    │  │ VFX + Binder    │  │ VFX + Binder    │
+│VFXARBinder      │  │VFXARBinder      │  │VFXARBinder      │
+│+ VisualEffect   │  │+ VisualEffect   │  │+ VisualEffect   │
+│ SetTexture only │  │ SetTexture only │  │ SetTexture only │
 │    (VFX 1)      │  │    (VFX 2)      │  │    (VFX N)      │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
 
-### Specialized Pipelines (Domain-Specific Data)
+**Scaling**: 1 VFX = ~2ms, 10 VFX = ~5ms, 20 VFX = ~8ms (60fps feasible)
+
+### Pipeline Status
 
 | Pipeline | Status | Properties Bound |
 |----------|--------|------------------|
-| **VFXARDataBinder** | ✅ PRIMARY | DepthMap, StencilMap, ColorMap, PositionMap, RayParams |
-| **VFXBinderManager** | ⚠️ LEGACY | Centralized binder (disabled in scenes, code preserved) |
-| **HologramSource/Renderer** | ✅ H3M | PositionMap (GPU computed), ColorTexture |
+| **ARDepthSource + VFXARBinder** | ✅ **PRIMARY** | DepthMap, StencilMap, PositionMap, VelocityMap, RayParams |
+| **AudioBridge** | ✅ Audio | _AudioBands (global Vector4), _AudioVolume (global float) |
+| **HologramSource/Renderer** | ✅ H3M | Use for anchor/scale features |
 | **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth, IsPinching |
-| **EnhancedAudioProcessor** | ✅ Audio | AudioVolume, AudioBass, AudioMid, AudioTreble |
-| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveDirection, WaveRange, WaveAge |
-| **MeshVFX** | ✅ Mesh | MeshPointCache, MeshNormalCache, MeshPointCount |
 | **NNCamKeypointBinder** | ✅ Keypoints | KeypointBuffer (17 pose landmarks) |
 | **BodyPartSegmenter** | ✅ Segmentation | BodyPartMask, segmented PositionMaps |
+| **VFXBinderManager** | ❌ LEGACY | Replaced by ARDepthSource |
+| **VFXARDataBinder** | ❌ LEGACY | Replaced by VFXARBinder |
+| **EnhancedAudioProcessor** | ❌ LEGACY | Replaced by AudioBridge |
 
 ### Deprecated/Redundant (DO NOT USE)
 
 | Component | Reason | Alternative |
 |-----------|--------|-------------|
-| **PeopleOcclusionVFXManager** | Creates own VFX at runtime, conflicts | VFXARDataBinder |
-| **ARKitMetavidoBinder** (per-VFX) | Redundant legacy per-VFX binder | VFXARDataBinder |
-| **OptimizedARVFXBridge** | Legacy, redundant | VFXARDataBinder |
+| **VFXBinderManager** | Heavy centralized compute | ARDepthSource |
+| **VFXARDataBinder** | Redundant per-VFX binder | VFXARBinder |
+| **PeopleOcclusionVFXManager** | Creates own VFX at runtime | VFXARBinder |
+| **EnhancedAudioProcessor** | Complex audio binding | AudioBridge |
 
-### Cleanup
+### Pipeline Setup
 
-Run `H3M > Pipeline Cleanup > Run Full Cleanup` to:
-1. Disable PeopleOcclusionVFXManager
-2. Find/remove per-VFX ARKitMetavidoBinder
-3. Verify data sources
+**One-click**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
+
+**Individual options**:
+- `H3M > VFX Pipeline Master > Pipeline Components > Create ARDepthSource`
+- `H3M > VFX Pipeline Master > Pipeline Components > Add VFXARBinder to All VFX`
+- `H3M > VFX Pipeline Master > Legacy Management > Mark All Legacy (Disable)`
 
 ---
 

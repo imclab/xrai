@@ -55,22 +55,31 @@ This gives us ~16ms latency, minimal CPU overhead, and excellent mobile performa
 
 ### Core AR → VFX Pipeline (Updated 2026-01-16)
 
-**IMPORTANT**: As of Jan 16, 2026, the pipeline shifted to per-VFX binding:
+**RECOMMENDED**: Hybrid Bridge Pattern - O(1) compute + O(N) lightweight binding
 
 ```
-AR Sensors (ARKit) → VFXARDataBinder (per-VFX) → Individual VFX
-                              ↓
-                   GPU Compute (DepthToWorld.compute)
-                              ↓
-                   VFX Properties: DepthMap, StencilMap, PositionMap, RayParams
+AR Foundation → ARDepthSource (singleton) → VFXARBinder (per-VFX) → VFX
+                      ↓                           ↓
+           ONE compute dispatch          SetTexture() calls only
+                      ↓
+           PositionMap, VelocityMap (shared)
 ```
 
 **Key Components**:
-- `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - **PRIMARY** per-VFX AR data binding (353 FPS @ 10 VFX)
-- `Assets/Scripts/VFX/VFXBinderManager.cs` - Legacy centralized binder (disabled in scenes, kept for reference)
-- `Assets/H3M/Core/HologramSource.cs` - Hologram depth processing (computes PositionMap)
-- `Assets/H3M/Core/HologramRenderer.cs` - Binds HologramSource output to specific VFX
+- `Assets/Scripts/Bridges/ARDepthSource.cs` - **PRIMARY** singleton, ONE compute dispatch (~200 LOC)
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - Lightweight per-VFX binding (~160 LOC)
+- `Assets/Scripts/Bridges/AudioBridge.cs` - FFT audio bands to global shader props (~130 LOC)
+- `Assets/Scripts/VFX/VFXPipelineDashboard.cs` - Real-time debug UI (~350 LOC)
+- `Assets/Scripts/VFX/VFXTestHarness.cs` - Keyboard shortcuts for testing (~250 LOC)
+- `Assets/Scripts/Editor/VFXPipelineMasterSetup.cs` - Editor automation (~400 LOC)
+- `Assets/H3M/Core/HologramSource.cs` - Hologram depth (use for anchor/scale features)
 - `Assets/Resources/DepthToWorld.compute` - GPU depth→world position conversion
+
+**Legacy (Disabled)**:
+- `VFXBinderManager.cs` - Replaced by ARDepthSource
+- `VFXARDataBinder.cs` - Replaced by VFXARBinder
+
+**Quick Setup**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
 
 ### H3M Hologram System
 
@@ -203,6 +212,19 @@ Editor utilities accessible via Unity menu bar:
 | `H3M > VFX Performance > Profile All VFX` | Analyze VFX performance |
 | `H3M > VFX > Auto-Setup Binders` | Auto-add binders based on VFX properties |
 | `H3M > VFX > Add Binders to Selected` | Quick setup for selected VFX |
+| **VFX Pipeline Master** | |
+| `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)` | **One-click**: ARDepthSource + VFXARBinder + Dashboard + Test Harness |
+| `H3M > VFX Pipeline Master > Pipeline Components > Create ARDepthSource` | Add singleton compute source |
+| `H3M > VFX Pipeline Master > Pipeline Components > Add VFXARBinder to All VFX` | Batch add binders |
+| `H3M > VFX Pipeline Master > Pipeline Components > Add VFXARBinder to Selected` | Selected VFX only |
+| `H3M > VFX Pipeline Master > Legacy Management > Mark All Legacy (Disable)` | Disable VFXBinderManager, VFXARDataBinder |
+| `H3M > VFX Pipeline Master > Legacy Management > Mark All Legacy (Delete)` | Remove legacy components |
+| `H3M > VFX Pipeline Master > Legacy Management > Restore Legacy (Re-enable)` | Undo disable |
+| `H3M > VFX Pipeline Master > Testing > Add Test Harness` | Keyboard shortcuts (1-9, Space, C, A, P) |
+| `H3M > VFX Pipeline Master > Testing > Add Pipeline Dashboard` | Real-time debug UI (Tab toggle) |
+| `H3M > VFX Pipeline Master > Testing > Validate All Bindings` | Health check report |
+| `H3M > VFX Pipeline Master > VFX Library > Populate All VFX` | Find & categorize all VFX |
+| `H3M > VFX Pipeline Master > Create Master Prefab` | Save setup as prefab |
 | **Network** | |
 | `H3M > Network > Setup WebRTC Receiver` | Create WebRTC receiver for conferencing |
 | `H3M > Network > Add WebRTC Binder to Selected` | Add remote stream binder to VFX |
@@ -234,29 +256,79 @@ H3M_HologramRig
 
 ## Data Pipeline Architecture (Updated 2026-01-16)
 
-**Primary Pipeline**: VFXARDataBinder (per-VFX binding via VFXPropertyBinder)
+**Primary Pipeline**: Hybrid Bridge (ARDepthSource + VFXARBinder)
 
 ```
-AR Session Origin → VFXARDataBinder (on each VFX) → Individual VFX
-                          ↓
-         Specialized Controllers (domain-specific data)
+┌─────────────────────────────────────────────────────────────────┐
+│                   AR Foundation                                  │
+│      AROcclusionManager → DepthMap, StencilMap                  │
+└─────────────────────┬───────────────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              ARDepthSource (singleton)                          │
+│    ONE compute dispatch → PositionMap, VelocityMap              │
+│    Public properties: DepthMap, StencilMap, PositionMap,        │
+│                       VelocityMap, RayParams, InverseView       │
+└─────────────────────┬───────────────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────────────┐
+│            VFXARBinder (per-VFX, lightweight)                   │
+│    Just SetTexture() calls - NO compute                         │
+│    Auto-detects which properties VFX needs                      │
+└─────────────────────┬───────────────────────────────────────────┘
+                      ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                    VFX Graph                                     │
+│    DepthMap, StencilMap, PositionMap, VelocityMap, ColorMap    │
+│    RayParams, InverseView (via HLSL global access)             │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 | Pipeline | Status | Data Bound |
 |----------|--------|------------|
-| **VFXARDataBinder** | ✅ **PRIMARY** | DepthMap, StencilMap, ColorMap, PositionMap, RayParams |
-| **VFXBinderManager** | ⚠️ LEGACY | Centralized binder (disabled in scenes, code preserved) |
-| **HologramSource/Renderer** | ✅ H3M | PositionMap (computed), ColorTexture |
+| **ARDepthSource + VFXARBinder** | ✅ **PRIMARY** | DepthMap, StencilMap, PositionMap, VelocityMap, RayParams |
+| **AudioBridge** | ✅ Audio | _AudioBands (global Vector4), _AudioVolume (global float) |
+| **HologramSource/Renderer** | ✅ H3M | Use for anchor/scale features |
 | **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth |
-| **EnhancedAudioProcessor** | ✅ Audio | AudioVolume, AudioBass, AudioMid, AudioTreble |
-| **SoundWaveEmitter** | ✅ Waves | WaveOrigin, WaveRange, WaveAge (synced upstream Jan 16) |
 | **NNCamKeypointBinder** | ✅ Keypoints | KeypointBuffer (17 pose landmarks) |
-| **PeopleOcclusionVFXManager** | ❌ DISABLED | Redundant (creates own VFX) |
-| **ARKitMetavidoBinder** | ❌ LEGACY | Redundant per-VFX binder (use VFXARDataBinder) |
+| **VFXBinderManager** | ❌ LEGACY | Replaced by ARDepthSource |
+| **VFXARDataBinder** | ❌ LEGACY | Replaced by VFXARBinder |
+| **EnhancedAudioProcessor** | ❌ LEGACY | Replaced by AudioBridge |
 
-**Cleanup**: `H3M > Pipeline Cleanup > Run Full Cleanup`
+**Setup**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
+**Verify**: `H3M > VFX Pipeline Master > Testing > Validate All Bindings`
 
 ## New Systems
+
+### VFX Pipeline Tools (2026-01-16)
+
+**One-click automation** for VFX pipeline setup, testing, and debugging.
+
+**Components**:
+- `Assets/Scripts/Bridges/ARDepthSource.cs` - Singleton compute source (O(1) dispatches)
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - Lightweight per-VFX binding (O(N) SetTexture)
+- `Assets/Scripts/Bridges/AudioBridge.cs` - FFT audio → global shader vectors
+- `Assets/Scripts/VFX/VFXPipelineDashboard.cs` - Real-time IMGUI debug overlay
+- `Assets/Scripts/VFX/VFXTestHarness.cs` - Keyboard shortcuts for rapid testing
+- `Assets/Scripts/Editor/VFXPipelineMasterSetup.cs` - All editor automation
+
+**Dashboard Features** (Toggle: Tab key):
+- FPS graph (60-frame history, min/avg/max)
+- Pipeline flow visualization (ARDepthSource → VFXARBinder → VFX)
+- Binding status (green/red indicators)
+- Memory usage (RenderTexture allocations)
+- Active VFX list with particle counts
+
+**Test Harness Keyboard Shortcuts**:
+- `1-9`: Select VFX by index (or favorites)
+- `Space`: Cycle to next VFX
+- `C`: Cycle categories (People, Hands, Audio, Environment)
+- `A`: Toggle all VFX on/off
+- `P`: Toggle auto-cycle (profiling mode)
+- `R`: Refresh VFX list
+- `Tab`: Toggle Dashboard
+
+**Setup**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
 
 ### VFX Library System (2026-01)
 Runtime VFX management with Editor persistence and flexible UI Toolkit integration:
@@ -451,6 +523,7 @@ In-project documentation:
 - `Assets/Documentation/SYSTEM_ARCHITECTURE.md` - 90% complete architecture docs
 - `Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` - Bug fixes and known issues
 - `Assets/Documentation/VFX_NAMING_CONVENTION.md` - VFX naming standards
+- `Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md` - Hybrid Bridge architecture
 
 ## Knowledgebase
 

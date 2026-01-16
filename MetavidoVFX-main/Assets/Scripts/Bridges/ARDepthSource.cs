@@ -165,7 +165,8 @@ public class ARDepthSource : MonoBehaviour
 
         if (depth == null)
         {
-            if (_verboseLogging)
+            // Throttle warning to once per second (not every frame)
+            if (_verboseLogging && Time.frameCount % 60 == 0)
                 Debug.LogWarning($"[ARDepthSource] No depth available. HumanDepth={_occlusion?.humanDepthTexture != null}, EnvDepth={_occlusion?.environmentDepthTexture != null}");
             return;
         }
