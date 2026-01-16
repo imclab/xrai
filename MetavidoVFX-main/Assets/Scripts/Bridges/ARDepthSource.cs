@@ -83,7 +83,13 @@ public class ARDepthSource : MonoBehaviour
         _occlusion ??= FindFirstObjectByType<AROcclusionManager>();
         _cameraManager ??= FindFirstObjectByType<ARCameraManager>();
         _arCamera ??= Camera.main;
-        _depthToWorld ??= Resources.Load<ComputeShader>("DepthToWorld");
+        // Load from Shaders folder (not Resources)
+        if (_depthToWorld == null)
+        {
+            #if UNITY_EDITOR
+            _depthToWorld = UnityEditor.AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/Shaders/DepthToWorld.compute");
+            #endif
+        }
         _colorProvider ??= FindFirstObjectByType<Metavido.ARCameraTextureProvider>();
 
         if (_depthToWorld != null)
@@ -438,6 +444,8 @@ public class ARDepthSource : MonoBehaviour
 
         // SINGLE dispatch for ALL VFX
         _depthToWorld.SetTexture(_kernel, "_Depth", depth);
+        _depthToWorld.SetTexture(_kernel, "_Stencil", stencil != null ? stencil : Texture2D.whiteTexture);
+        _depthToWorld.SetInt("_UseStencil", stencil != null ? 1 : 0);
         _depthToWorld.SetTexture(_kernel, "_PositionRT", PositionMap);
         _depthToWorld.SetMatrix("_InvVP", (_arCamera.projectionMatrix * _arCamera.worldToCameraMatrix).inverse);
 
