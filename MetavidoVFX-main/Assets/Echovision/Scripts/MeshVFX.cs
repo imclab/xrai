@@ -13,12 +13,9 @@ using HoloKit;
 #endif
 using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
 
 public class MeshVFX : MonoBehaviour
 {
-    void Log(string msg) { if (!VFXBinderManager.SuppressMeshVFXLogs) Debug.Log(msg); }
-
     [Header("Reference")]
     [SerializeField] ARMeshManager meshManager;
     [SerializeField] TrackedPoseDriver trackedPoseDriver;
@@ -29,16 +26,10 @@ public class MeshVFX : MonoBehaviour
     [SerializeField] bool dynamicallyResizeBuffer = false;
     private const int BUFFER_STRIDE = 12; // 12 Bytes for a Vector3 (4,4,4)
 
-    [Header("Debug")]
-    [SerializeField] bool verboseLogging = false;
-    private float _lastLogTime;
-    private int _frameCount;
-    private bool _initialized;
-
     string vertexBufferPropertyName = "MeshPointCache";
     List<Vector3> listVertex;
     GraphicsBuffer bufferVertex;
-    
+
     string normalBufferPropertyName = "MeshNormalCache";
     List<Vector3> listNormal;
     GraphicsBuffer bufferNormal;
@@ -48,9 +39,7 @@ public class MeshVFX : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!_initialized) return;
-
-        _frameCount++;
+        //ShowDebugInfo();
 
         IList<MeshFilter> mesh_list = meshManager.meshes;
 
@@ -59,7 +48,7 @@ public class MeshVFX : MonoBehaviour
             listVertex.Clear();
             listNormal.Clear();
 
-            int mesh_count = mesh_list.Count; 
+            int mesh_count = mesh_list.Count;
             int vertex_count = 0;
             int triangle_count = 0;
             Vector3 head_pos = trackedPoseDriver.transform.position;
@@ -156,12 +145,6 @@ public class MeshVFX : MonoBehaviour
             // Push Changes to VFX
             vfx.SetInt("MeshPointCount", listVertex.Count);
 
-            // Periodic logging (every 3 seconds)
-            if (verboseLogging && Time.time - _lastLogTime > 3f)
-            {
-                _lastLogTime = Time.time;
-                Log($"[MeshVFX] Frame {_frameCount} | Meshes: {mesh_list.Count} | Vertices: {listVertex.Count}/{bufferInitialCapacity} | Buffer usage: {(listVertex.Count * 100f / bufferInitialCapacity):F1}%");
-            }
 
             // Push Transform to VFX
             // As meshes may not locate at (0,0,0) like they did in iOS.
@@ -184,20 +167,15 @@ public class MeshVFX : MonoBehaviour
     private void EnsureBufferCapacity(ref GraphicsBuffer buffer, int capacity, int stride, VisualEffect _vfx, string vfxProperty)
     {
         // Reallocate new buffer only when null or capacity is not sufficient
-        if (buffer == null || (dynamicallyResizeBuffer && buffer.count < capacity))
+        if (buffer == null || (dynamicallyResizeBuffer && buffer.count < capacity)) // remove dynamic allocating function
         {
-            int oldCount = buffer?.count ?? 0;
+            //Debug.Log("Graphic Buffer reallocated!");
             // Buffer memory must be released
             buffer?.Release();
             // Vfx Graph uses structured buffer
             buffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, capacity, stride);
-            // Update buffer reference
+            // Update buffer referenece
             _vfx.SetGraphicsBuffer(vfxProperty, buffer);
-
-            if (verboseLogging || oldCount > 0) // Always log resizes, initial only if verbose
-            {
-                Log($"[MeshVFX] GraphicsBuffer '{vfxProperty}' reallocated: {oldCount} → {capacity}");
-            }
         }
     }
 
@@ -212,23 +190,6 @@ public class MeshVFX : MonoBehaviour
     // https://forum.unity.com/threads/vfx-graph-siggraph-2021-video.1198156/
     void Awake()
     {
-        // Validate required references
-        if (meshManager == null)
-        {
-            Debug.LogError("[MeshVFX] ARMeshManager reference is missing!");
-            enabled = false;
-            return;
-        }
-        if (trackedPoseDriver == null)
-        {
-            Debug.LogWarning("[MeshVFX] TrackedPoseDriver reference is missing - using Camera.main fallback");
-        }
-        if (vfx == null)
-        {
-            Debug.LogError("[MeshVFX] VisualEffect reference is missing!");
-            enabled = false;
-            return;
-        }
 
         // Create initial graphics buffer
         listVertex = new List<Vector3>(bufferInitialCapacity);
@@ -236,9 +197,6 @@ public class MeshVFX : MonoBehaviour
 
         listNormal = new List<Vector3>(bufferInitialCapacity);
         EnsureBufferCapacity(ref bufferNormal, bufferInitialCapacity, BUFFER_STRIDE, vfx, normalBufferPropertyName);
-
-        _initialized = true;
-        Log($"[MeshVFX] ✓ Initialized | Buffer capacity: {bufferInitialCapacity} | Dynamic resize: {dynamicallyResizeBuffer}");
     }
 
     void ShowDebugInfo()

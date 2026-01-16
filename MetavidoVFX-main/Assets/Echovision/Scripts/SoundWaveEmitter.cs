@@ -4,7 +4,6 @@
 
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
 
 #if UNITY_IOS
 using HoloKit;
@@ -43,8 +42,6 @@ public class SoundWave
 
 public class SoundWaveEmitter : MonoBehaviour
 {
-    void Log(string msg) { if (!VFXBinderManager.SuppressAudioLogs) Debug.Log(msg); }
-
     [Header("References")]
     [SerializeField] TrackedPoseDriver trackedPoseDriver;
     [SerializeField] AudioProcessor audioProcessor;
@@ -60,12 +57,6 @@ public class SoundWaveEmitter : MonoBehaviour
     [SerializeField] Vector2 soundwaveAngle = new Vector2(90, 180);
     [SerializeField] float minWaveThickness = 1;
     [SerializeField] float emitVolumeThreshold = 0.02f;
-
-    [Header("Debug")]
-    [SerializeField] bool verboseLogging = false;
-    private float _lastLogTime;
-    private int _waveEmitCount;
-    private bool _initialized;
 
 
     const int MAX_SOUND_WAVE_COUNT = 3;
@@ -86,30 +77,8 @@ public class SoundWaveEmitter : MonoBehaviour
 
     void Start()
     {
-        // Validate required references
-        if (trackedPoseDriver == null)
-        {
-            Debug.LogWarning("[SoundWaveEmitter] TrackedPoseDriver reference is missing!");
-        }
-        if (audioProcessor == null)
-        {
-            Debug.LogError("[SoundWaveEmitter] AudioProcessor reference is missing!");
-            enabled = false;
-            return;
-        }
-        if (vfx == null)
-        {
-            Debug.LogError("[SoundWaveEmitter] VisualEffect reference is missing!");
-            enabled = false;
-            return;
-        }
-        if (matMeshing == null)
-        {
-            Debug.LogWarning("[SoundWaveEmitter] Material reference is missing - wave effects may not render on mesh");
-        }
-
         // Init Soundwave and Attractors
-        for (int i = 0; i < soundwaves.Length; i++)
+        for (int i= 0; i < soundwaves.Length; i++)
         {
             soundwaves[i] = new SoundWave();
             DeactivateSoundWave(i);
@@ -122,15 +91,10 @@ public class SoundWaveEmitter : MonoBehaviour
         rippleRangeList = new float[MAX_SOUND_WAVE_COUNT];
         rippleAngleList = new float[MAX_SOUND_WAVE_COUNT];
         rippleThicknessList = new float[MAX_SOUND_WAVE_COUNT];
-
-        _initialized = true;
-        Log($"[SoundWaveEmitter] ✓ Initialized | Max waves: {MAX_SOUND_WAVE_COUNT} | Volume threshold: {emitVolumeThreshold}");
     }
 
     void Update()
     {
-        if (!_initialized) return;
-
         // Smoothed Sound
         float temp_vel = 0;
         smoothedSoundVolume = Mathf.SmoothDamp(smoothedSoundVolume, audioProcessor.AudioVolume, ref temp_vel, 0.05f);
@@ -151,23 +115,11 @@ public class SoundWaveEmitter : MonoBehaviour
 
         // Push changes to VFX and Mat
         PushIteratedChanges();
-
-        // Periodic logging (every 3 seconds)
-        if (verboseLogging && Time.time - _lastLogTime > 3f)
-        {
-            _lastLogTime = Time.time;
-            int activeWaves = 0;
-            for (int i = 0; i < soundwaves.Length; i++)
-            {
-                if (soundwaves[i].alive == 1) activeWaves++;
-            }
-            Log($"[SoundWaveEmitter] Volume: {smoothedSoundVolume:F3} | Pitch: {smoothedSoundPitch:F3} | Active waves: {activeWaves}/{MAX_SOUND_WAVE_COUNT} | Total emitted: {_waveEmitCount}");
-        }
     }
 
 #region Emit/Stop/Update SoundWave
     void EmitSoundWave()
-    {        
+    {
         int cur_emit_index = GetCurrentWaveIndex();
         SoundWave wave = soundwaves[cur_emit_index];
 
@@ -185,7 +137,7 @@ public class SoundWaveEmitter : MonoBehaviour
         new_wave.origin = pos;
         new_wave.direction = dir;
 
-        new_wave.speed = Random.Range(soundwaveSpeed.x, soundwaveSpeed.y);// * pitch; 
+        new_wave.speed = Random.Range(soundwaveSpeed.x, soundwaveSpeed.y);// * pitch;
         new_wave.life = Random.Range(soundwaveLife.x, soundwaveLife.y) * Utilities.Remap(smoothedSoundPitch, 0f, 1f, 1f, 1.5f); // relative to pitch
         new_wave.angle = Utilities.Remap(smoothedSoundVolume, 0, 1, soundwaveAngle.x, soundwaveAngle.y); // relative to volume
 
@@ -194,12 +146,6 @@ public class SoundWaveEmitter : MonoBehaviour
         PushInitialChanges(next_emit_index);
 
         MoveWaveIndex();
-
-        _waveEmitCount++;
-        if (verboseLogging)
-        {
-            Log($"[SoundWaveEmitter] Wave emitted #{_waveEmitCount} | Index: {next_emit_index} | Speed: {new_wave.speed:F2} | Life: {new_wave.life:F2}s | Angle: {new_wave.angle:F0}°");
-        }
     }
 
     void StopAllSoundWaves()
@@ -323,7 +269,7 @@ public class SoundWaveEmitter : MonoBehaviour
                 string prefix = "WaveParameter" + i.ToString();
                 vfx.SetVector3(prefix + "_scale", new Vector3(wave.range, wave.angle, wave.age_in_percentage));
             }
-        }        
+        }
 
         // VFX, Update Depth Image
         if (depthImageProcessor != null)
