@@ -589,11 +589,13 @@ namespace MetavidoVFX.VFX
                     // Create projection for rotated depth (swap near/far aspect)
                     Matrix4x4 rotatedProj = Matrix4x4.Perspective(fovH, 1f / depthAspect, arCamera.nearClipPlane, arCamera.farClipPlane);
 
-                    // Apply UV rotation: 90° CW means (u,v) → (v, 1-u), which in NDC is (x,y) → (y, -x)
-                    // This is a rotation around Z by -90° in clip space
+                    // Apply UV rotation: 90° CW means portrait (u,v) maps to landscape (v, 1-u)
+                    // In NDC: portrait (x,y) → landscape (y, -x)
+                    // Since (A*B)^-1 = B^-1 * A^-1, we set uvRotation such that its inverse gives [0,1;-1,0]
+                    // So uvRotation = [0,-1;1,0] (which inverts to [0,1;-1,0])
                     Matrix4x4 uvRotation = Matrix4x4.identity;
-                    uvRotation.m00 = 0;  uvRotation.m01 = 1;   // x' = y
-                    uvRotation.m10 = -1; uvRotation.m11 = 0;   // y' = -x
+                    uvRotation.m00 = 0;  uvRotation.m01 = -1;  // x' = -y (inverts to: x' = y)
+                    uvRotation.m10 = 1;  uvRotation.m11 = 0;   // y' = x  (inverts to: y' = -x)
 
                     _inverseProjectionMatrix = (uvRotation * rotatedProj).inverse;
                 }
