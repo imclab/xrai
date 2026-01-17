@@ -1,6 +1,12 @@
 // H3MSignalingClient - WebRTC signaling for hologram conferencing
 // Handles offer/answer/ICE candidate exchange between peers
 //
+// DEPRECATED: This client is no longer needed when using WebRtcVideoChat (Byn.Awrtc)
+// which has built-in signaling via wss://s.y-not.app/conferenceapp
+//
+// Use HologramConferenceManager instead - it uses WebRtcVideoChat directly.
+// This file is kept for reference or custom self-hosted signaling scenarios.
+//
 // Based on Rcam3-WebRTC SimpleSignalingClient
 
 using UnityEngine;

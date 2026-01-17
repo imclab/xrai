@@ -1,14 +1,14 @@
 // HologramConferenceManager - High-level manager for hologram video conferencing
-// Coordinates signaling, WebRTC connections, and hologram rendering for multiple peers
+// Uses Byn.Awrtc (WebRtcVideoChat) for WebRTC conferencing with built-in signaling
 
 using UnityEngine;
 using UnityEngine.VFX;
 using System;
 using System.Collections.Generic;
-
-#if UNITY_WEBRTC_AVAILABLE
-using Unity.WebRTC;
-#endif
+using Byn.Awrtc;
+using Byn.Awrtc.Unity;
+using Byn.Unity.Examples;
+using H3M.Network;
 
 namespace MetavidoVFX.H3M.Network
 {
@@ -16,14 +16,17 @@ namespace MetavidoVFX.H3M.Network
     /// High-level manager for hologram video conferencing.
     /// Handles multi-user connections where each remote peer appears as a hologram.
     ///
+    /// Uses WebRtcVideoChat (Byn.Awrtc) for WebRTC with built-in signaling.
+    /// No separate signaling server needed - uses wss://s.y-not.app/conferenceapp
+    ///
     /// Features:
-    /// - Automatic peer discovery via signaling
+    /// - Automatic peer discovery via built-in signaling
     /// - One hologram VFX per remote peer
     /// - Local capture via ARCameraWebRTCCapture
-    /// - Metadata sync (camera pose, depth range)
+    /// - Metadata sync via data channel
     ///
     /// Usage:
-    /// 1. Add to scene with H3MSignalingClient and ARCameraWebRTCCapture
+    /// 1. Add to scene with ARCameraWebRTCCapture
     /// 2. Assign hologram VFX prefab
     /// 3. Call JoinRoom(roomName) to start conferencing
     /// </summary>
@@ -31,10 +34,11 @@ namespace MetavidoVFX.H3M.Network
     {
         #region Serialized Fields
 
-        [Header("Signaling")]
-        [SerializeField] private H3MSignalingClient _signalingClient;
-        [SerializeField] private string _roomName = "h3m-room";
+        [Header("Conference Settings")]
+        [SerializeField] private string _roomName = "h3m-hologram";
         [SerializeField] private bool _autoJoinOnStart = false;
+        [SerializeField] private bool _enableVideo = true;
+        [SerializeField] private bool _enableAudio = false;
 
         [Header("Local Capture")]
         [SerializeField] private ARCameraWebRTCCapture _localCapture;
@@ -47,10 +51,6 @@ namespace MetavidoVFX.H3M.Network
         [SerializeField] private float _hologramScale = 0.15f;
         [SerializeField] private float _hologramSpacing = 1.5f;
 
-        [Header("WebRTC Settings")]
-        [SerializeField] private bool _useStunServer = true;
-        [SerializeField] private string _stunServerUrl = "stun:stun.l.google.com:19302";
-
         [Header("Debug")]
         [SerializeField] private bool _logDebugInfo = true;
         [SerializeField] private bool _showDebugGUI = false;
@@ -59,8 +59,8 @@ namespace MetavidoVFX.H3M.Network
 
         #region Public Properties
 
-        /// <summary>True when connected to signaling and room joined.</summary>
-        public bool IsInRoom => _signalingClient?.IsConnected ?? false;
+        /// <summary>True when call is active and connected to room.</summary>
+        public bool IsInRoom => _call != null;
 
         /// <summary>Current room name.</summary>
         public string CurrentRoom => _roomName;
@@ -71,12 +71,15 @@ namespace MetavidoVFX.H3M.Network
         /// <summary>Local peer ID.</summary>
         public string LocalPeerId => _localPeerId;
 
+        /// <summary>Connection count (remote peers).</summary>
+        public int ConnectionCount => _remoteHolograms.Count;
+
         #endregion
 
         #region Events
 
-        public event Action<string> OnPeerJoined;
-        public event Action<string> OnPeerLeft;
+        public event Action<ConnectionId> OnPeerJoined;
+        public event Action<ConnectionId> OnPeerLeft;
         public event Action OnRoomJoined;
         public event Action OnRoomLeft;
 
@@ -85,19 +88,22 @@ namespace MetavidoVFX.H3M.Network
         #region Private Members
 
         private string _localPeerId;
-        private Dictionary<string, RemoteHologram> _remoteHolograms = new Dictionary<string, RemoteHologram>();
+        private ICall _call;
+        private NetworkConfig _networkConfig;
+        private MediaConfig _mediaConfig;
+        private bool _isInitialized = false;
 
-        #if UNITY_WEBRTC_AVAILABLE
-        private Dictionary<string, RTCPeerConnection> _peerConnections = new Dictionary<string, RTCPeerConnection>();
-        #endif
+        private Dictionary<ConnectionId, RemoteHologram> _remoteHolograms =
+            new Dictionary<ConnectionId, RemoteHologram>();
 
         // Remote hologram data
         private class RemoteHologram
         {
-            public string peerId;
+            public ConnectionId connectionId;
             public GameObject gameObject;
             public VisualEffect vfx;
             public H3MWebRTCVFXBinder binder;
+            public Texture2D videoTexture;
             public RenderTexture colorTexture;
             public RenderTexture depthTexture;
             public H3MStreamMetadata metadata;
@@ -112,20 +118,22 @@ namespace MetavidoVFX.H3M.Network
             // Generate unique peer ID
             _localPeerId = $"peer-{System.Guid.NewGuid().ToString().Substring(0, 8)}";
 
-            if (_signalingClient == null)
-                _signalingClient = GetComponent<H3MSignalingClient>();
-
             if (_hologramContainer == null)
                 _hologramContainer = transform;
         }
 
         private void Start()
         {
-            SetupSignalingCallbacks();
+            // Initialize WebRTC factory
+            UnityCallFactory.EnsureInit(OnCallFactoryReady, OnCallFactoryFailed);
+        }
 
-            if (_autoJoinOnStart)
+        private void Update()
+        {
+            // Update call to process WebRTC events on main thread
+            if (_call != null)
             {
-                JoinRoom(_roomName);
+                _call.Update();
             }
         }
 
@@ -137,6 +145,48 @@ namespace MetavidoVFX.H3M.Network
 
         #endregion
 
+        #region Initialization
+
+        private void OnCallFactoryReady()
+        {
+            Log("WebRTC factory initialized");
+            UnityCallFactory.Instance.RequestLogLevel(UnityCallFactory.LogLevel.Info);
+
+            // Setup network config for conference mode
+            _networkConfig = new NetworkConfig();
+            _networkConfig.SignalingUrl = ExampleGlobals.SignalingConference; // wss://s.y-not.app/conferenceapp
+            _networkConfig.IsConference = true;
+            _networkConfig.KeepSignalingAlive = true;
+            _networkConfig.MaxIceRestart = 5;
+            _networkConfig.IceServers.Add(ExampleGlobals.DefaultIceServer);
+
+            // Setup media config
+            _mediaConfig = new MediaConfig();
+            _mediaConfig.Video = _enableVideo;
+            _mediaConfig.Audio = _enableAudio;
+
+            // Use default camera if video enabled
+            if (_enableVideo)
+            {
+                _mediaConfig.VideoDeviceName = UnityCallFactory.Instance.GetDefaultVideoDevice();
+            }
+
+            _isInitialized = true;
+            Log($"Conference mode ready. Signaling: {_networkConfig.SignalingUrl}");
+
+            if (_autoJoinOnStart)
+            {
+                JoinRoom(_roomName);
+            }
+        }
+
+        private void OnCallFactoryFailed(string error)
+        {
+            LogError($"WebRTC factory failed: {error}");
+        }
+
+        #endregion
+
         #region Public API
 
         /// <summary>
@@ -144,15 +194,39 @@ namespace MetavidoVFX.H3M.Network
         /// </summary>
         public void JoinRoom(string roomName)
         {
+            if (!_isInitialized)
+            {
+                LogError("WebRTC not initialized yet");
+                return;
+            }
+
             if (string.IsNullOrEmpty(roomName))
             {
                 LogError("Room name cannot be empty");
                 return;
             }
 
+            if (_call != null)
+            {
+                Log("Already in a room, leaving first...");
+                LeaveRoom();
+            }
+
             _roomName = roomName;
             Log($"Joining room: {roomName} as {_localPeerId}");
-            _signalingClient.Connect(roomName);
+
+            // Create the call
+            _call = UnityCallFactory.Instance.Create(_networkConfig);
+            if (_call == null)
+            {
+                LogError("Failed to create call");
+                return;
+            }
+
+            _call.CallEvent += OnCallEvent;
+
+            // Configure media
+            _call.Configure(_mediaConfig);
         }
 
         /// <summary>
@@ -160,272 +234,153 @@ namespace MetavidoVFX.H3M.Network
         /// </summary>
         public void LeaveRoom()
         {
-            Log("Leaving room");
-            _signalingClient.Disconnect();
+            if (_call != null)
+            {
+                Log("Leaving room");
+                _call.Dispose();
+                _call = null;
+            }
+
             CleanupAllHolograms();
             OnRoomLeft?.Invoke();
         }
 
         /// <summary>
-        /// Get remote hologram by peer ID.
+        /// Get remote hologram by connection ID.
         /// </summary>
-        public GameObject GetRemoteHologram(string peerId)
+        public GameObject GetRemoteHologram(ConnectionId connectionId)
         {
-            return _remoteHolograms.TryGetValue(peerId, out var hologram) ? hologram.gameObject : null;
+            return _remoteHolograms.TryGetValue(connectionId, out var hologram)
+                ? hologram.gameObject : null;
+        }
+
+        /// <summary>
+        /// Send a text message to all peers.
+        /// </summary>
+        public void SendMessage(string message)
+        {
+            if (_call != null && !string.IsNullOrEmpty(message))
+            {
+                _call.Send(message);
+            }
         }
 
         #endregion
 
-        #region Signaling Callbacks
+        #region Call Events
 
-        private void SetupSignalingCallbacks()
+        private void OnCallEvent(object sender, CallEventArgs e)
         {
-            _signalingClient.OnConnected += OnSignalingConnected;
-            _signalingClient.OnDisconnected += OnSignalingDisconnected;
-            _signalingClient.OnPeerConnected += OnRemotePeerJoined;
-            _signalingClient.OnPeerDisconnected += OnRemotePeerLeft;
-            _signalingClient.OnSignalingOffer += OnSignalingOffer;
-            _signalingClient.OnSignalingAnswer += OnSignalingAnswer;
+            switch (e.Type)
+            {
+                case CallEventType.ConfigurationComplete:
+                    OnConfigurationComplete();
+                    break;
 
-            #if UNITY_WEBRTC_AVAILABLE
-            _signalingClient.OnSignalingCandidate += OnSignalingCandidate;
-            #endif
+                case CallEventType.ConfigurationFailed:
+                    OnConfigurationFailed(e as ErrorEventArgs);
+                    break;
+
+                case CallEventType.WaitForIncomingCall:
+                    OnWaitingForCall(e as WaitForIncomingCallEventArgs);
+                    break;
+
+                case CallEventType.CallAccepted:
+                    OnNewConnection(e as CallAcceptedEventArgs);
+                    break;
+
+                case CallEventType.CallEnded:
+                    OnConnectionEnded(e as CallEndedEventArgs);
+                    break;
+
+                case CallEventType.FrameUpdate:
+                    OnFrameUpdate(e as FrameUpdateEventArgs);
+                    break;
+
+                case CallEventType.Message:
+                    OnMessageReceived(e as MessageEventArgs);
+                    break;
+
+                case CallEventType.ListeningFailed:
+                case CallEventType.ConnectionFailed:
+                    OnError(e as ErrorEventArgs);
+                    break;
+            }
         }
 
-        private void OnSignalingConnected()
+        private void OnConfigurationComplete()
         {
-            Log("Connected to signaling server");
+            Log("Configuration complete, listening on room: " + _roomName);
+
+            // Start listening for connections on this room address
+            _call.Listen(_roomName);
+        }
+
+        private void OnConfigurationFailed(ErrorEventArgs args)
+        {
+            LogError($"Configuration failed: {args?.Info?.ToString() ?? "Unknown error"}");
+            LeaveRoom();
+        }
+
+        private void OnWaitingForCall(WaitForIncomingCallEventArgs args)
+        {
+            Log($"Waiting for connections on: {args.Address}");
             OnRoomJoined?.Invoke();
         }
 
-        private void OnSignalingDisconnected()
+        private void OnNewConnection(CallAcceptedEventArgs args)
         {
-            Log("Disconnected from signaling server");
-        }
-
-        private void OnRemotePeerJoined(string peerId)
-        {
-            Log($"Remote peer joined: {peerId}");
+            Log($"New peer connected: {args.ConnectionId}");
 
             // Create hologram for this peer
-            CreateRemoteHologram(peerId);
+            CreateRemoteHologram(args.ConnectionId);
 
-            // Initiate WebRTC connection (we're the offerer)
-            #if UNITY_WEBRTC_AVAILABLE
-            StartCoroutine(InitiateConnection(peerId));
-            #endif
+            // Send our peer ID as first message
+            _call.Send(_localPeerId);
 
-            OnPeerJoined?.Invoke(peerId);
+            OnPeerJoined?.Invoke(args.ConnectionId);
         }
 
-        private void OnRemotePeerLeft(string peerId)
+        private void OnConnectionEnded(CallEndedEventArgs args)
         {
-            Log($"Remote peer left: {peerId}");
-            DestroyRemoteHologram(peerId);
-            OnPeerLeft?.Invoke(peerId);
+            Log($"Peer disconnected: {args.ConnectionId}");
+            DestroyRemoteHologram(args.ConnectionId);
+            OnPeerLeft?.Invoke(args.ConnectionId);
         }
 
-        private void OnSignalingOffer(string peerId, string sdp)
+        private void OnFrameUpdate(FrameUpdateEventArgs args)
         {
-            Log($"Received offer from {peerId}");
-            #if UNITY_WEBRTC_AVAILABLE
-            StartCoroutine(HandleOffer(peerId, sdp));
-            #endif
+            // Skip local frames
+            if (!args.IsRemote) return;
+
+            if (_remoteHolograms.TryGetValue(args.ConnectionId, out var hologram))
+            {
+                UpdateHologramFrame(hologram, args.Frame);
+            }
         }
 
-        private void OnSignalingAnswer(string peerId, string sdp)
+        private void OnMessageReceived(MessageEventArgs args)
         {
-            Log($"Received answer from {peerId}");
-            #if UNITY_WEBRTC_AVAILABLE
-            StartCoroutine(HandleAnswer(peerId, sdp));
-            #endif
+            Log($"Message from {args.ConnectionId}: {args.Content}");
+
+            // First message from peer is their ID
+            // Could use this to store username mapping
         }
 
-        #if UNITY_WEBRTC_AVAILABLE
-        private void OnSignalingCandidate(string peerId, RTCIceCandidateInit candidateInit)
+        private void OnError(ErrorEventArgs args)
         {
-            if (_peerConnections.TryGetValue(peerId, out var pc))
-            {
-                pc.AddIceCandidate(new RTCIceCandidate(candidateInit));
-            }
+            LogError($"Connection error: {args?.Info?.ToString() ?? "Unknown error"}");
         }
-        #endif
-
-        #endregion
-
-        #region WebRTC Connection
-
-        #if UNITY_WEBRTC_AVAILABLE
-        private System.Collections.IEnumerator InitiateConnection(string peerId)
-        {
-            // Create peer connection
-            var pc = CreatePeerConnection(peerId);
-            _peerConnections[peerId] = pc;
-
-            // Add local video track
-            if (_localCapture != null && _localCapture.LastColorTexture != null)
-            {
-                // TODO: Create video track from local capture
-                // var videoTrack = new VideoStreamTrack(_localCapture.LastColorTexture);
-                // pc.AddTrack(videoTrack);
-            }
-
-            // Create data channel for metadata
-            var dataChannel = pc.CreateDataChannel("metadata");
-
-            // Create offer
-            var offerOp = pc.CreateOffer();
-            yield return offerOp;
-
-            if (offerOp.IsError)
-            {
-                LogError($"Failed to create offer: {offerOp.Error.message}");
-                yield break;
-            }
-
-            // Set local description
-            var offer = offerOp.Desc;
-            var setLocalOp = pc.SetLocalDescription(ref offer);
-            yield return setLocalOp;
-
-            if (setLocalOp.IsError)
-            {
-                LogError($"Failed to set local description: {setLocalOp.Error.message}");
-                yield break;
-            }
-
-            // Send offer via signaling
-            _signalingClient.SendOffer(peerId, offer.sdp);
-        }
-
-        private System.Collections.IEnumerator HandleOffer(string peerId, string sdp)
-        {
-            // Create peer connection if needed
-            if (!_peerConnections.TryGetValue(peerId, out var pc))
-            {
-                pc = CreatePeerConnection(peerId);
-                _peerConnections[peerId] = pc;
-
-                // Create hologram if not exists
-                if (!_remoteHolograms.ContainsKey(peerId))
-                {
-                    CreateRemoteHologram(peerId);
-                }
-            }
-
-            // Set remote description
-            var offer = new RTCSessionDescription { type = RTCSdpType.Offer, sdp = sdp };
-            var setRemoteOp = pc.SetRemoteDescription(ref offer);
-            yield return setRemoteOp;
-
-            if (setRemoteOp.IsError)
-            {
-                LogError($"Failed to set remote description: {setRemoteOp.Error.message}");
-                yield break;
-            }
-
-            // Create answer
-            var answerOp = pc.CreateAnswer();
-            yield return answerOp;
-
-            if (answerOp.IsError)
-            {
-                LogError($"Failed to create answer: {answerOp.Error.message}");
-                yield break;
-            }
-
-            // Set local description
-            var answer = answerOp.Desc;
-            var setLocalOp = pc.SetLocalDescription(ref answer);
-            yield return setLocalOp;
-
-            if (setLocalOp.IsError)
-            {
-                LogError($"Failed to set local description: {setLocalOp.Error.message}");
-                yield break;
-            }
-
-            // Send answer via signaling
-            _signalingClient.SendAnswer(peerId, answer.sdp);
-        }
-
-        private System.Collections.IEnumerator HandleAnswer(string peerId, string sdp)
-        {
-            if (!_peerConnections.TryGetValue(peerId, out var pc))
-            {
-                LogError($"No peer connection for {peerId}");
-                yield break;
-            }
-
-            var answer = new RTCSessionDescription { type = RTCSdpType.Answer, sdp = sdp };
-            var op = pc.SetRemoteDescription(ref answer);
-            yield return op;
-
-            if (op.IsError)
-            {
-                LogError($"Failed to set remote answer: {op.Error.message}");
-            }
-        }
-
-        private RTCPeerConnection CreatePeerConnection(string peerId)
-        {
-            var config = default(RTCConfiguration);
-            if (_useStunServer)
-            {
-                config.iceServers = new RTCIceServer[]
-                {
-                    new RTCIceServer { urls = new string[] { _stunServerUrl } }
-                };
-            }
-
-            var pc = new RTCPeerConnection(ref config);
-
-            pc.OnIceCandidate = candidate =>
-            {
-                _signalingClient.SendCandidate(peerId, candidate);
-            };
-
-            pc.OnConnectionStateChange = state =>
-            {
-                Log($"Connection to {peerId}: {state}");
-            };
-
-            pc.OnTrack = e =>
-            {
-                if (e.Track is VideoStreamTrack videoTrack)
-                {
-                    Log($"Received video track from {peerId}");
-                    if (_remoteHolograms.TryGetValue(peerId, out var hologram))
-                    {
-                        videoTrack.OnVideoReceived += tex => OnRemoteVideoReceived(peerId, tex);
-                    }
-                }
-            };
-
-            return pc;
-        }
-
-        private void OnRemoteVideoReceived(string peerId, Texture texture)
-        {
-            if (!_remoteHolograms.TryGetValue(peerId, out var hologram)) return;
-
-            // Copy to hologram's render texture
-            if (hologram.colorTexture != null)
-            {
-                Graphics.CopyTexture(texture, hologram.colorTexture);
-            }
-        }
-        #endif
 
         #endregion
 
         #region Hologram Management
 
-        private void CreateRemoteHologram(string peerId)
+        private void CreateRemoteHologram(ConnectionId connectionId)
         {
-            if (_remoteHolograms.ContainsKey(peerId))
+            if (_remoteHolograms.ContainsKey(connectionId))
             {
-                Log($"Hologram already exists for {peerId}");
+                Log($"Hologram already exists for {connectionId}");
                 return;
             }
 
@@ -441,14 +396,14 @@ namespace MetavidoVFX.H3M.Network
 
             // Instantiate hologram
             var go = Instantiate(_hologramPrefab, position, Quaternion.identity, _hologramContainer);
-            go.name = $"RemoteHologram_{peerId}";
+            go.name = $"RemoteHologram_{connectionId}";
             go.transform.localScale = Vector3.one * _hologramScale;
 
             // Get components
             var vfx = go.GetComponent<VisualEffect>();
             var binder = go.GetComponent<H3MWebRTCVFXBinder>();
 
-            // Create textures
+            // Create textures for VFX binding
             var colorTex = new RenderTexture(1280, 720, 0, RenderTextureFormat.ARGB32);
             var depthTex = new RenderTexture(640, 360, 0, RenderTextureFormat.RHalf);
             colorTex.Create();
@@ -457,37 +412,49 @@ namespace MetavidoVFX.H3M.Network
             // Store hologram data
             var hologram = new RemoteHologram
             {
-                peerId = peerId,
+                connectionId = connectionId,
                 gameObject = go,
                 vfx = vfx,
                 binder = binder,
+                videoTexture = null, // Created on first frame
                 colorTexture = colorTex,
                 depthTexture = depthTex,
                 metadata = H3MStreamMetadata.Default
             };
-            _remoteHolograms[peerId] = hologram;
+            _remoteHolograms[connectionId] = hologram;
 
-            // Bind textures to VFX
-            if (binder != null)
+            // Bind textures directly to VFX (binder gets reference from receiver)
+            if (vfx != null)
             {
-                binder.SetTextures(colorTex, depthTex);
+                vfx.SetTexture("ColorMap", colorTex);
+                vfx.SetTexture("DepthMap", depthTex);
             }
 
-            Log($"Created hologram for {peerId}");
+            Log($"Created hologram for {connectionId}");
         }
 
-        private void DestroyRemoteHologram(string peerId)
+        private void UpdateHologramFrame(RemoteHologram hologram, IFrame frame)
         {
-            if (!_remoteHolograms.TryGetValue(peerId, out var hologram)) return;
+            if (frame == null || hologram.colorTexture == null) return;
 
-            // Cleanup WebRTC
-            #if UNITY_WEBRTC_AVAILABLE
-            if (_peerConnections.TryGetValue(peerId, out var pc))
+            // Use UnityMediaHelper.UpdateTexture to convert frame to Texture2D
+            // This handles the frame format conversion (ABGR/I420p)
+            if (hologram.vfx != null)
             {
-                pc.Close();
-                _peerConnections.Remove(peerId);
+                // UpdateTexture manages texture creation/resizing
+                UnityMediaHelper.UpdateTexture(frame, ref hologram.videoTexture);
+
+                // Copy to render texture for VFX binding
+                if (hologram.videoTexture != null)
+                {
+                    Graphics.Blit(hologram.videoTexture, hologram.colorTexture);
+                }
             }
-            #endif
+        }
+
+        private void DestroyRemoteHologram(ConnectionId connectionId)
+        {
+            if (!_remoteHolograms.TryGetValue(connectionId, out var hologram)) return;
 
             // Cleanup textures
             if (hologram.colorTexture != null)
@@ -500,6 +467,10 @@ namespace MetavidoVFX.H3M.Network
                 hologram.depthTexture.Release();
                 Destroy(hologram.depthTexture);
             }
+            if (hologram.videoTexture != null)
+            {
+                Destroy(hologram.videoTexture);
+            }
 
             // Destroy GameObject
             if (hologram.gameObject != null)
@@ -507,16 +478,16 @@ namespace MetavidoVFX.H3M.Network
                 Destroy(hologram.gameObject);
             }
 
-            _remoteHolograms.Remove(peerId);
-            Log($"Destroyed hologram for {peerId}");
+            _remoteHolograms.Remove(connectionId);
+            Log($"Destroyed hologram for {connectionId}");
         }
 
         private void CleanupAllHolograms()
         {
-            var peerIds = new List<string>(_remoteHolograms.Keys);
-            foreach (var peerId in peerIds)
+            var connectionIds = new List<ConnectionId>(_remoteHolograms.Keys);
+            foreach (var id in connectionIds)
             {
-                DestroyRemoteHologram(peerId);
+                DestroyRemoteHologram(id);
             }
         }
 
@@ -531,16 +502,18 @@ namespace MetavidoVFX.H3M.Network
             GUILayout.BeginArea(new Rect(10, 10, 300, 400));
             GUILayout.BeginVertical("box");
 
-            GUILayout.Label("<b>Hologram Conference Manager</b>");
+            GUILayout.Label("<b>Hologram Conference (WebRtcVideoChat)</b>");
             GUILayout.Label($"Local Peer: {_localPeerId}");
             GUILayout.Label($"Room: {_roomName}");
             GUILayout.Label($"Connected: {IsInRoom}");
+            GUILayout.Label($"Initialized: {_isInitialized}");
             GUILayout.Label($"Remote Peers: {_remoteHolograms.Count}");
 
             GUILayout.Space(10);
 
             if (!IsInRoom)
             {
+                _roomName = GUILayout.TextField(_roomName);
                 if (GUILayout.Button("Join Room"))
                 {
                     JoinRoom(_roomName);
@@ -573,12 +546,12 @@ namespace MetavidoVFX.H3M.Network
         private void Log(string message)
         {
             if (_logDebugInfo)
-                Debug.Log($"[HologramConferenceManager] {message}");
+                Debug.Log($"[HologramConference] {message}");
         }
 
         private void LogError(string message)
         {
-            Debug.LogError($"[HologramConferenceManager] {message}");
+            Debug.LogError($"[HologramConference] {message}");
         }
 
         #endregion

@@ -288,17 +288,37 @@ VideoPlayer → MetadataDecoder → TextureDemuxer → HologramController → VF
 
 ### 4.6 H3M Network (WebRTC Conferencing)
 
-**Location**: `Assets/H3M/Network/`
+**Location**: `Assets/H3M/Network/`, `Assets/WebRtcVideoChat/`
+
+**Implementation**: Uses WebRtcVideoChat (Byn.Awrtc) commercial library with built-in signaling.
 
 | Component | Purpose |
 |-----------|---------|
-| H3MSignalingClient | WebSocket signaling for peer discovery |
-| H3MWebRTCReceiver | Receives color+depth video streams |
+| HologramConferenceManager | **PRIMARY** - High-level multi-peer hologram conferencing |
 | H3MWebRTCVFXBinder | Binds remote streams to VFX |
 | H3MStreamMetadata | Camera matrices for remote hologram rendering |
 | ARCameraWebRTCCapture | Captures AR camera + LiDAR depth for streaming |
+| H3MSignalingClient | **DEPRECATED** - Custom signaling (WebRtcVideoChat has built-in) |
 
-**Capture Modes**:
+**WebRtcVideoChat Features**:
+- Built-in signaling server at `wss://s.y-not.app/conferenceapp`
+- TURN server support for NAT traversal
+- Full mesh N-to-N topology via `NetworkConfig.IsConference = true`
+- Cross-platform: iOS, Android, Windows, WebGL
+- No server setup required for basic usage
+
+**Usage**:
+```csharp
+// HologramConferenceManager auto-initializes on Start()
+var conference = GetComponent<HologramConferenceManager>();
+conference.JoinRoom("my-hologram-room");
+// Peers auto-connect, holograms auto-spawn
+```
+
+**Self-Hosting** (Optional):
+See `SignalingServer/README.md` for self-hosted signaling if needed.
+
+**Capture Modes** (ARCameraWebRTCCapture):
 - `CPUImage` - AR Foundation CPU image (most efficient)
 - `ARCameraBackground` - Blit from background material
 - `MainCameraRenderTexture` - From camera target texture
