@@ -1,14 +1,20 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.Video;
 using UnityEngine.XR.ARFoundation;
 using UnityEditor;
+using System.Linq;
+using Metavido.Decoder;
+using Metavido.Encoder;
 
 /// <summary>
-/// Editor utilities for setting up the unified hologram system
+/// Editor utilities for setting up the unified hologram system.
+/// Includes recording (FrameEncoder) and playback (TextureDemuxer/MetadataDecoder).
 /// </summary>
 public static class HologramSetup
 {
     const string HOLOGRAM_VFX_PATH = "Assets/H3M/VFX/hologram_depth_people_metavido.vfx";
+    const string METAVIDO_DEFINE = "METAVIDO_HAS_ARFOUNDATION";
 
     [MenuItem("H3M/Hologram/Create Complete Hologram (with Placer)", false, 99)]
     static void CreateCompleteHologram()
@@ -270,4 +276,211 @@ public static class HologramSetup
             Debug.Log($"  IsPlaying: {c.IsPlaying}");
         }
     }
+
+    #region Metavido Defines
+
+    [MenuItem("H3M/Metavido/Setup Metavido Defines", false, 200)]
+    static void SetupMetavidoDefines()
+    {
+        var target = EditorUserBuildSettings.selectedBuildTargetGroup;
+        var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(target);
+
+        if (!defines.Contains(METAVIDO_DEFINE))
+        {
+            defines = string.IsNullOrEmpty(defines) ? METAVIDO_DEFINE : defines + ";" + METAVIDO_DEFINE;
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(target, defines);
+            Debug.Log($"[HologramSetup] Added {METAVIDO_DEFINE} scripting define. Unity will recompile.");
+        }
+        else
+        {
+            Debug.Log($"[HologramSetup] {METAVIDO_DEFINE} already defined.");
+        }
+    }
+
+    [MenuItem("H3M/Metavido/Verify Metavido Setup", false, 201)]
+    static void VerifyMetavidoSetup()
+    {
+        var target = EditorUserBuildSettings.selectedBuildTargetGroup;
+        var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(target);
+        bool hasDefine = defines.Contains(METAVIDO_DEFINE);
+
+        var encoder = Object.FindAnyObjectByType<FrameEncoder>();
+        var decoder = Object.FindAnyObjectByType<MetadataDecoder>();
+        var demuxer = Object.FindAnyObjectByType<TextureDemuxer>();
+        var xrData = Object.FindAnyObjectByType<XRDataProvider>();
+
+        Debug.Log("=== Metavido Setup Verification ===");
+        Debug.Log($"METAVIDO_HAS_ARFOUNDATION: {(hasDefine ? "✓ Defined" : "✗ MISSING - Run Setup Metavido Defines")}");
+        Debug.Log($"XRDataProvider: {(xrData != null ? $"✓ {xrData.gameObject.name}" : "✗ Missing")}");
+        Debug.Log($"FrameEncoder: {(encoder != null ? $"✓ {encoder.gameObject.name}" : "✗ Missing")}");
+        Debug.Log($"MetadataDecoder: {(decoder != null ? $"✓ {decoder.gameObject.name}" : "✗ Missing")}");
+        Debug.Log($"TextureDemuxer: {(demuxer != null ? $"✓ {demuxer.gameObject.name}" : "✗ Missing")}");
+    }
+
+    #endregion
+
+    #region Recording Setup
+
+    [MenuItem("H3M/Metavido/Setup Recording (FrameEncoder)", false, 210)]
+    static void SetupRecording()
+    {
+        // Ensure define is set
+        SetupMetavidoDefines();
+
+        // Find AR Camera
+        var camMgr = Object.FindAnyObjectByType<ARCameraManager>();
+        var occMgr = Object.FindAnyObjectByType<AROcclusionManager>();
+
+        if (camMgr == null || occMgr == null)
+        {
+            EditorUtility.DisplayDialog("AR Components Missing",
+                "ARCameraManager and AROcclusionManager required for Metavido recording.", "OK");
+            return;
+        }
+
+        // Create recorder GameObject
+        var recorderGO = new GameObject("MetavidoRecorder");
+        Undo.RegisterCreatedObjectUndo(recorderGO, "Create Metavido Recorder");
+
+        // Add XRDataProvider
+        var xrData = recorderGO.AddComponent<XRDataProvider>();
+        var xrDataSO = new SerializedObject(xrData);
+        xrDataSO.FindProperty("_cameraManager").objectReferenceValue = camMgr;
+        xrDataSO.FindProperty("_occlusionManager").objectReferenceValue = occMgr;
+        xrDataSO.ApplyModifiedProperties();
+
+        // Add FrameEncoder
+        var encoder = recorderGO.AddComponent<FrameEncoder>();
+        var encoderSO = new SerializedObject(encoder);
+        encoderSO.FindProperty("_xrSource").objectReferenceValue = xrData;
+        encoderSO.ApplyModifiedProperties();
+
+        Selection.activeGameObject = recorderGO;
+        Debug.Log("[HologramSetup] Created MetavidoRecorder with XRDataProvider + FrameEncoder.\n" +
+                  "Next: Add recording UI to start/stop and save to Camera Roll.");
+    }
+
+    #endregion
+
+    #region Playback Setup
+
+    [MenuItem("H3M/Metavido/Setup Playback on Selected", false, 220)]
+    static void SetupPlaybackOnSelected()
+    {
+        var go = Selection.activeGameObject;
+        if (go == null)
+        {
+            EditorUtility.DisplayDialog("No Selection",
+                "Select the Hologram GameObject with HologramController.", "OK");
+            return;
+        }
+
+        var controller = go.GetComponent<HologramController>();
+        if (controller == null)
+        {
+            controller = Undo.AddComponent<HologramController>(go);
+        }
+
+        // Add VideoPlayer
+        var videoPlayer = go.GetComponent<VideoPlayer>();
+        if (videoPlayer == null)
+        {
+            videoPlayer = Undo.AddComponent<VideoPlayer>(go);
+            videoPlayer.playOnAwake = false;
+            videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        }
+
+        // Add MetadataDecoder
+        var decoder = go.GetComponent<MetadataDecoder>();
+        if (decoder == null)
+        {
+            decoder = Undo.AddComponent<MetadataDecoder>(go);
+        }
+
+        // Add TextureDemuxer
+        var demuxer = go.GetComponent<TextureDemuxer>();
+        if (demuxer == null)
+        {
+            demuxer = Undo.AddComponent<TextureDemuxer>(go);
+        }
+
+        // Wire up HologramController
+        var so = new SerializedObject(controller);
+        so.FindProperty("_videoPlayer").objectReferenceValue = videoPlayer;
+        so.FindProperty("_metadataDecoder").objectReferenceValue = decoder;
+        so.FindProperty("_demuxer").objectReferenceValue = demuxer;
+        so.FindProperty("_mode").enumValueIndex = 1; // MetavidoVideo
+        so.ApplyModifiedProperties();
+
+        EditorUtility.SetDirty(controller);
+
+        Debug.Log($"[HologramSetup] Added playback components to {go.name}:\n" +
+                  "  - VideoPlayer (renderMode=APIOnly)\n" +
+                  "  - MetadataDecoder\n" +
+                  "  - TextureDemuxer\n" +
+                  "Use HologramController.PlayVideo(path) to start playback.");
+    }
+
+    [MenuItem("H3M/Metavido/Create Playback Hologram", false, 221)]
+    static void CreatePlaybackHologram()
+    {
+        // Create rig
+        var rig = new GameObject("PlaybackHologram");
+        Undo.RegisterCreatedObjectUndo(rig, "Create Playback Hologram");
+
+        // Create VFX child
+        var vfxGO = new GameObject("HologramVFX");
+        vfxGO.transform.SetParent(rig.transform);
+        vfxGO.transform.localScale = Vector3.one * 0.15f;
+
+        // Add VisualEffect
+        var vfx = vfxGO.AddComponent<VisualEffect>();
+        var vfxAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>(HOLOGRAM_VFX_PATH);
+        if (vfxAsset == null)
+            vfxAsset = Resources.Load<VisualEffectAsset>("VFX/People/voxels_depth_people_metavido");
+        if (vfxAsset != null)
+            vfx.visualEffectAsset = vfxAsset;
+
+        // Add VFXARBinder (disabled - we'll use manual binding in HologramController)
+        var binder = vfxGO.AddComponent<VFXARBinder>();
+        binder.enabled = false;
+
+        // Add HologramController
+        var controller = rig.AddComponent<HologramController>();
+
+        // Add playback components
+        var videoPlayer = rig.AddComponent<VideoPlayer>();
+        videoPlayer.playOnAwake = false;
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+
+        var decoder = rig.AddComponent<MetadataDecoder>();
+        var demuxer = rig.AddComponent<TextureDemuxer>();
+
+        // Wire up
+        var so = new SerializedObject(controller);
+        so.FindProperty("_anchor").objectReferenceValue = vfxGO.transform;
+        so.FindProperty("_vfx").objectReferenceValue = vfx;
+        so.FindProperty("_binder").objectReferenceValue = binder;
+        so.FindProperty("_videoPlayer").objectReferenceValue = videoPlayer;
+        so.FindProperty("_metadataDecoder").objectReferenceValue = decoder;
+        so.FindProperty("_demuxer").objectReferenceValue = demuxer;
+        so.FindProperty("_mode").enumValueIndex = 1; // MetavidoVideo
+        so.ApplyModifiedProperties();
+
+        // Add HologramAnchor for placement
+        var anchor = rig.AddComponent<H3M.Core.HologramAnchor>();
+        var anchorSO = new SerializedObject(anchor);
+        anchorSO.FindProperty("_hologramRoot").objectReferenceValue = vfxGO.transform;
+        anchorSO.ApplyModifiedProperties();
+
+        Selection.activeGameObject = rig;
+        Debug.Log("[HologramSetup] Created PlaybackHologram with:\n" +
+                  "  - HologramController (Metavido mode)\n" +
+                  "  - VideoPlayer + MetadataDecoder + TextureDemuxer\n" +
+                  "  - HologramAnchor (tap to place, pinch to scale)\n" +
+                  "  - HologramVFX\n" +
+                  "Drag a .metavido video to VideoPlayer or use PlayVideo(path).");
+    }
+
+    #endregion
 }

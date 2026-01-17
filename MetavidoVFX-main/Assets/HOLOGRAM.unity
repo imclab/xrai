@@ -528,6 +528,9 @@ GameObject:
   - component: {fileID: 12502412}
   - component: {fileID: 12502411}
   - component: {fileID: 12502410}
+  - component: {fileID: 12502415}
+  - component: {fileID: 12502414}
+  - component: {fileID: 12502413}
   m_Layer: 0
   m_Name: Hologram
   m_TagString: Untagged
@@ -552,9 +555,9 @@ MonoBehaviour:
   _scale: 0.15
   _vfx: {fileID: 765500515}
   _binder: {fileID: 765500513}
-  _videoPlayer: {fileID: 0}
-  _demuxer: {fileID: 0}
-  _metadataDecoder: {fileID: 0}
+  _videoPlayer: {fileID: 12502415}
+  _demuxer: {fileID: 12502413}
+  _metadataDecoder: {fileID: 12502414}
   _showDebugGUI: 0
 --- !u!114 &12502411
 MonoBehaviour:
@@ -594,6 +597,69 @@ Transform:
   - {fileID: 765500516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &12502413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12502409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94509387823624a3db4b2fb0c365adb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Metavido.Decoder::Metavido.Decoder.TextureDemuxer
+  _margin: 1
+  _shader: {fileID: 4800000, guid: add5a8d52e2e749119e249f0a762eb85, type: 3}
+--- !u!114 &12502414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12502409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa41795cc9074639ac9f9bd16fd57ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Metavido.Decoder::Metavido.Decoder.MetadataDecoder
+  _shader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
+--- !u!328 &12502415
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12502409}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 0}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 0
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1 &12554864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1984,7 +2050,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 98931382}
   m_Enabled: 0
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -8532,7 +8598,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 437898389}
   m_VisualEffect: {fileID: 437898387}
 --- !u!73398921 &437898391
 VFXRenderer:
@@ -10153,7 +10220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 508759689}
   m_VisualEffect: {fileID: 508759692}
 --- !u!73398921 &508759691
 VFXRenderer:
@@ -12718,7 +12786,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 620258534}
   m_VisualEffect: {fileID: 620258537}
 --- !u!73398921 &620258536
 VFXRenderer:
@@ -13568,7 +13637,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 695147425}
   m_VisualEffect: {fileID: 695147428}
 --- !u!73398921 &695147427
 VFXRenderer:
@@ -14671,7 +14741,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 759334485}
   m_VisualEffect: {fileID: 759334488}
 --- !u!73398921 &759334487
 VFXRenderer:
@@ -16160,7 +16231,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 854245232}
   m_VisualEffect: {fileID: 854245235}
 --- !u!73398921 &854245234
 VFXRenderer:
@@ -17035,7 +17107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 885764179}
   m_VisualEffect: {fileID: 885764178}
 --- !u!73398921 &885764177
 VFXRenderer:
@@ -26304,7 +26377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 1249524869}
   m_VisualEffect: {fileID: 1249524872}
 --- !u!73398921 &1249524871
 VFXRenderer:
@@ -39624,6 +39698,69 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 8a0f1f4880a324250a7aeada654070af, type: 2}
+--- !u!1 &1867297943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1867297946}
+  - component: {fileID: 1867297945}
+  - component: {fileID: 1867297944}
+  m_Layer: 0
+  m_Name: MetavidoRecorder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1867297944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867297943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a783d6cd443845f480e68d807a6ebc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Metavido.Encoder::Metavido.Encoder.FrameEncoder
+  _xrSource: {fileID: 1867297945}
+  _minDepth: 0.025
+  _maxDepth: 5
+  _shader: {fileID: 4800000, guid: 948b9b391aa114ce1be11a827d6a6d13, type: 3}
+--- !u!114 &1867297945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867297943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1190405df618e4ab19897a8183b46e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Metavido.Encoder::Metavido.Encoder.XRDataProvider
+  _cameraManager: {fileID: 1283464407}
+  _occlusionManager: {fileID: 1283464404}
+--- !u!4 &1867297946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867297943}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1871705186
 GameObject:
   m_ObjectHideFlags: 0
@@ -41126,7 +41263,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::H3M.Core.HologramAnchor
   _hologramRoot: {fileID: 7151776811922266408}
+  _enablePlacement: 1
+  _tapOnlyPlacement: 0
   _scaleWithPinch: 1
+  _minScale: 0.1
+  _maxScale: 5
+  _scaleSpeed: 1
+  _rotateWithTwist: 1
+  _rotationSpeed: 1
+  _debugLog: 0
 --- !u!1 &1955066926
 GameObject:
   m_ObjectHideFlags: 0
@@ -41341,7 +41486,7 @@ VFXRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990417728}
   m_Enabled: 0
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -42988,7 +43133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VisualEffectGraph.Runtime::UnityEngine.VFX.Utility.VFXPropertyBinder
   m_ExecuteInEditor: 1
-  m_Bindings: []
+  m_Bindings:
+  - {fileID: 2102168472}
   m_VisualEffect: {fileID: 2102168475}
 --- !u!73398921 &2102168474
 VFXRenderer:
@@ -43475,6 +43621,58 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
+--- !u!1 &2122378962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2122378964}
+  - component: {fileID: 2122378963}
+  m_Layer: 0
+  m_Name: BodyPartSegmenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2122378963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122378962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ed688011f56d49a096d16699e2c6aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Segmentation.BodyPartSegmenter
+  _arCameraBackground: {fileID: 0}
+  _arCamera: {fileID: 0}
+  _resourceSet: {fileID: 0}
+  _inferenceWidth: 512
+  _inferenceHeight: 384
+  _debugVisualization: 1
+  _runEveryFrame: 1
+  _skipFrames: 0
+--- !u!4 &2122378964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122378962}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1018380027502157667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44101,3 +44299,5 @@ SceneRoots:
   - {fileID: 1448177046}
   - {fileID: 133815467}
   - {fileID: 12502412}
+  - {fileID: 2122378964}
+  - {fileID: 1867297946}

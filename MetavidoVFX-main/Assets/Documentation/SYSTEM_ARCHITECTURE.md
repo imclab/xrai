@@ -242,7 +242,71 @@ VFXARBinder.SetTexture("PositionMap", PositionMap)
 |-----------|---------|
 | HologramSource | Compute shader wrapper, exports PositionMap |
 | HologramRenderer | Volumetric rendering, VFX binding |
-| HologramAnchor | AR plane-based placement |
+| HologramAnchor | AR plane-based placement, pinch scaling, twist rotation |
+| HologramController | Mode switching (LiveAR / Metavido playback) |
+| HologramPlacer | Touch gesture placement (tap, drag, pinch) |
+
+### 4.5 Metavido Recording & Playback
+
+**Recording Pipeline** (`Assets/H3M/Network/` + Metavido package):
+```
+ARKit LiDAR → XRDataProvider → FrameEncoder → EncodedTexture (1920×1080)
+                 ↓                   ↓
+         [Depth+Stencil]    [Metavido Frame: Color|Depth|Metadata]
+```
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| XRDataProvider | Metavido.Encoder | Collects AR textures (Y/CbCr, depth, stencil) |
+| FrameEncoder | Metavido.Encoder | Multiplexes to single 1920×1080 frame |
+| ARCameraWebRTCCapture | H3M.Network | WebRTC streaming of depth + color |
+
+**Playback Pipeline**:
+```
+VideoPlayer → MetadataDecoder → TextureDemuxer → HologramController → VFX
+                   ↓                  ↓
+           [Camera Pose]      [ColorTexture, DepthTexture]
+```
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| VideoPlayer | Unity | Plays Metavido .mp4 files |
+| MetadataDecoder | Metavido.Decoder | Extracts pose, FOV, depth range |
+| TextureDemuxer | Metavido.Decoder | Splits frame to color + depth |
+| HologramController | Assets/Scripts/Hologram | Binds to VFX, handles mode switching |
+| VFXMetavidoBinder | Metavido VFXGraph | Automatic VFX property binding |
+
+**Scene Setup**:
+- `Hologram` GameObject: HologramController + VideoPlayer + MetadataDecoder + TextureDemuxer
+- `MetavidoRecorder` GameObject: XRDataProvider + FrameEncoder
+
+**Menu Commands**:
+- `H3M > Metavido > Setup Metavido Defines` - Add METAVIDO_HAS_ARFOUNDATION define
+- `H3M > Metavido > Setup Recording (FrameEncoder)` - Create recorder
+- `H3M > Metavido > Setup Playback on Selected` - Add decoder components
+- `H3M > Metavido > Create Playback Hologram` - Create complete playback rig
+
+### 4.6 H3M Network (WebRTC Conferencing)
+
+**Location**: `Assets/H3M/Network/`
+
+| Component | Purpose |
+|-----------|---------|
+| H3MSignalingClient | WebSocket signaling for peer discovery |
+| H3MWebRTCReceiver | Receives color+depth video streams |
+| H3MWebRTCVFXBinder | Binds remote streams to VFX |
+| H3MStreamMetadata | Camera matrices for remote hologram rendering |
+| ARCameraWebRTCCapture | Captures AR camera + LiDAR depth for streaming |
+
+**Capture Modes**:
+- `CPUImage` - AR Foundation CPU image (most efficient)
+- `ARCameraBackground` - Blit from background material
+- `MainCameraRenderTexture` - From camera target texture
+
+**Depth Modes**:
+- `None` - Color only
+- `Multiplexed` - Color + Depth side-by-side in single frame
+- `SeparateCallback` - Depth via separate callback
 
 ---
 
