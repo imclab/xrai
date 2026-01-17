@@ -1,0 +1,19 @@
+{
+  "name": "h3m-signaling-server",
+  "version": "1.0.0",
+  "description": "WebRTC signaling server for H3M hologram conferencing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "keywords": ["webrtc", "signaling", "hologram", "h3m"],
+  "author": "H3M Project",
+  "license": "MIT"
+}
