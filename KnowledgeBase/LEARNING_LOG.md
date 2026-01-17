@@ -2906,3 +2906,128 @@ AR Foundation → ARDepthSource (singleton) → VFXARBinder (per-VFX) → VFX
 - See: Previous entry for architecture design details
 
 ---
+
+## 2026-01-16 (Later) - Claude Code - ARDepthSource Mock Textures for Editor Testing
+
+**Discovery**: Added mock texture support to ARDepthSource for Editor testing without AR device/AR Foundation Remote
+
+**Context**: VFXARBinder was showing `IsBound=false, BoundCount=0` in Editor because ARDepthSource had no depth data without AR Remote connection
+
+**Problem Solved**:
+1. **ExposedProperty vs const string**: VFX Graph requires `ExposedProperty` type for proper property ID resolution, not `const string`
+2. **Editor testing**: No way to test VFX bindings without device or AR Foundation Remote
+3. **ReadPixels bounds errors**: VelocityVFXBinder and VFXPhysicsBinder crashed on destroyed RenderTextures
+
+**Implementation**:
+
+1. **VFXARBinder.cs** - Changed from `const string` to `ExposedProperty`:
+```csharp
+[VFXPropertyBinding("UnityEngine.Texture2D")]
+public ExposedProperty depthMapProperty = "DepthMap";
+// ... similar for all properties
+```
+
+2. **ARDepthSource.cs** - Added mock texture support:
+```csharp
+#if UNITY_EDITOR
+[Header("Editor Testing")]
+[SerializeField] bool _useMockDataInEditor = true;
+[SerializeField] Vector2Int _mockResolution = new Vector2Int(256, 192);
+
+void CreateMockTextures()
+{
+    // Circular depth gradient (0.5m center → 3m edge)
+    // Center "human" stencil blob
+    // Blue-ish color gradient for visual feedback
+}
+
+void UseMockData()
+{
+    // Apply mock textures when no AR data available
+    // Runs compute shader on mock depth for PositionMap
+}
+#endif
+```
+
+3. **VFXPhysicsBinder.cs / VelocityVFXBinder.cs** - Added validation:
+```csharp
+if (_velocityMapRT == null || !_velocityMapRT.IsCreated() ||
+    _velocityMapRT.width <= 0 || _velocityMapRT.height <= 0)
+    return Vector3.zero;
+```
+
+**Key Insight**: Preprocessor directives must wrap BOTH definition AND call site:
+```csharp
+#if UNITY_EDITOR
+void UseMockData() { ... }  // Definition
+#endif
+
+void LateUpdate()
+{
+    #if UNITY_EDITOR
+    if (noARData) UseMockData();  // Call site also wrapped
+    #endif
+}
+```
+
+**Impact**:
+- ✅ VFX bindings testable in Editor without device
+- ✅ Mock data provides visual feedback (circular depth pattern, center human blob)
+- ✅ No more "Reading pixels out of bounds" errors
+- ✅ ExposedProperty properly resolves VFX Graph property IDs
+
+**Files Modified**:
+- `Assets/Scripts/Bridges/ARDepthSource.cs` - Mock texture support (~60 LOC added)
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - ExposedProperty types
+- `Assets/Scripts/VFX/Binders/VFXPhysicsBinder.cs` - IsCreated() validation
+- `Assets/Scripts/PeopleOcclusion/VelocityVFXBinder.cs` - IsCreated() validation
+
+**Related**:
+- See: `MetavidoVFX-main/Assets/Scripts/Bridges/ARDepthSource.cs`
+- See: Previous entry for Hybrid Bridge Pipeline architecture
+
+---
+
+## 2026-01-16 (Later) - Claude Code - Unity .gitignore & Project Cleanup
+
+**Discovery**: Added comprehensive Unity .gitignore patterns and reorganized project structure
+
+**Changes**:
+1. **Unity .gitignore** - Added patterns for:
+   - Generated folders: Library/, Temp/, Obj/, Builds/, Logs/, UserSettings/
+   - IDE files: *.csproj, *.sln, .vs/, .idea/
+   - Build artifacts: *.apk, *.aab, *.unitypackage
+   - Debug symbols: *.pdb, *.mdb
+   - Xcode builds, Addressables, macOS metadata
+
+2. **Shader Reorganization**:
+   - Moved compute shaders from `Resources/` to `Assets/Shaders/`
+   - DepthToWorld, DepthProcessor, HumanDepthMapper, SegmentedDepthToWorld, etc.
+
+3. **VFX Organization**:
+   - Organized 73 VFX into `Resources/VFX/` subfolders by category
+   - Categories: People, Environment, NNCam2, Akvfx, Rcam2, Rcam3, Rcam4, SdfVfx
+
+4. **Added Fluo Packages**:
+   - `Fluo-GHURT-main/` - Keijiro's Fluo controller/receiver system
+   - `jp.keijiro.fluo` and `jp.keijiro.urp-cameratextureutils` packages
+
+**Impact**:
+- ✅ Cleaner git status (removed 23 tracked generated files)
+- ✅ Better shader organization in dedicated folder
+- ✅ VFX categorized for easy browsing and management
+- ✅ Fluo audio integration available for AR experiences
+
+**Git Cleanup Commands**:
+```bash
+git rm -r --cached MetavidoVFX-main/obj/
+git rm --cached MetavidoVFX-main/*.csproj
+git rm --cached MetavidoVFX-main/*.sln
+```
+
+**Related**:
+- See: `.gitignore` for full Unity patterns
+- See: `MetavidoVFX-main/Assets/Shaders/` for compute shaders
+- See: `MetavidoVFX-main/Assets/Resources/VFX/` for organized VFX
+
+---

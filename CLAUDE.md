@@ -14,6 +14,7 @@ Unity-XR-AI/
 ├── AgentBench/              # Unity research workbench (source code access)
 ├── Vis/                     # 10 3D visualization frontends
 ├── MetavidoVFX-main/        # Unity VFX project (AR Foundation + H3M)
+├── Fluo-GHURT-main/         # Keijiro's Fluo controller/receiver system
 ├── mcp-server/              # MCP KB Server (TypeScript)
 ├── Scripts/                 # Utility scripts
 ├── specs/                   # Spec-Kit specifications
@@ -111,6 +112,9 @@ See `MetavidoVFX-main/Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` for det
 1. ✅ **Thread Dispatch Mismatch** - Fixed: uses dynamic thread group size queries
 2. ✅ **Integer Division Truncation** - Fixed: HumanParticleVFX uses `CeilToInt()`
 3. ✅ **Memory Leak** - Fixed: RenderTexture release in OnDestroy()
+4. ✅ **VFXARBinder ExposedProperty** - Fixed: uses `ExposedProperty` instead of `const string` for proper VFX Graph property resolution
+5. ✅ **ReadPixels Bounds Errors** - Fixed: VFXPhysicsBinder/VelocityVFXBinder validate `IsCreated()` before ReadPixels
+6. ✅ **Editor Mock Textures** - Added: ARDepthSource provides mock textures for Editor testing without AR device
 
 ---
 
