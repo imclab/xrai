@@ -6,6 +6,48 @@
 
 ---
 
+## 2026-01-17 (Session 2) - Claude Code - VFX Pattern Documentation & Bug Fixes
+
+**Discovery**: Created comprehensive KB pattern files documenting VFX patterns from new projects, fixed OpenXR sample installer bugs, and upgraded FaceTrackingVFX to AR Foundation 6.
+
+**KB Pattern Files Created**:
+
+| File | Content |
+|------|---------|
+| `_HAND_VFX_PATTERNS.md` | 52 VFX effects (Buddha 22 + HoloKit 30), hand input properties, implementation patterns |
+| `_GAUSSIAN_SPLATTING_VFX_PATTERNS.md` | SplatData architecture, VFXBinder pattern, .splat file format |
+| `_AI_CHARACTER_PATTERNS.md` | LLMUnity integration, RAG system, function calling, multi-character |
+
+**FaceTrackingVFX Upgrade**:
+- Created `ARFoundationFaceMeshBaker.cs` - Modern AR Foundation 6.x replacement
+- Key API migration: `UnityEngine.XR.iOS` → `UnityEngine.XR.ARFoundation`
+- Pattern: `Mesh.AcquireReadOnlyMeshData()` for efficient vertex access
+
+**Bugs Fixed**:
+1. **OpenXR Sample Installers** - Added null checks for `OpenXRSettings.GetSettingsForBuildTargetGroup()`
+   - Fix: `if (settings != null)` before iterating features
+   - Affected: InterceptFeatureInstaller.cs, MeshingFeatureInstaller.cs
+
+**Key Pattern (VFX Property Binder)**:
+```csharp
+// Use ExposedProperty for type-safe VFX Graph binding
+[VFXPropertyBinding("UnityEngine.GraphicsBuffer"), SerializeField]
+ExposedProperty _bufferProperty = "BufferName";
+
+public override void UpdateBinding(VisualEffect component)
+{
+    component.SetGraphicsBuffer(_bufferProperty, myBuffer);
+}
+```
+
+**Cross-References**:
+- `KnowledgeBase/_HAND_VFX_PATTERNS.md`
+- `KnowledgeBase/_GAUSSIAN_SPLATTING_VFX_PATTERNS.md`
+- `KnowledgeBase/_AI_CHARACTER_PATTERNS.md`
+- `FaceTrackingVFX/Assets/FaceTracking-VFX/Scripts/ARFoundationFaceMeshBaker.cs`
+
+---
+
 ## 2026-01-17 - Claude Code - MAJOR: Project Migration & Knowledgebase Expansion
 
 **Discovery**: Migrated 7 complete Unity projects from various sources into the Unity-XR-AI repository, significantly expanding available reference implementations.
