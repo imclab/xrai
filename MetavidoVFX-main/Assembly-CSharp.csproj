@@ -374,6 +374,7 @@
     <None Include="Assets/Shaders/VFXProxClear.compute" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets/Packages/System.Reflection.Metadata.9.0.0/lib/netstandard2.0/System.Reflection.Metadata.xml" />
+    <None Include="Assets/Resources/PerformanceTestRunSettings.json" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Isoline/Shader/ClassicNoise3D.cginc" />
     <None Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP RenderGraph Samples/Compute/ComputeShaderExample.compute" />
     <None Include="Assets/UI/Inconsolata/README.txt" />
@@ -481,6 +482,7 @@
     <None Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/SharedAssets/Shaders/3DText.shader" />
     <None Include="Assets/Samples/Visual Effect Graph/17.2.0/Learning Templates/Scenes/Scene Resources/LearningTemplateDescriptions.json" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Shader/DigitalGlitch.shader" />
+    <None Include="Assets/Resources/PerformanceTestRunInfo.json" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Shader/AnalogGlitch.shader" />
     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Isoline/Shader/Isoline.shader" />
@@ -1383,9 +1385,6 @@
     <Reference Include="Unity.InferenceEngine.ONNX.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.ONNX.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="SoundIO.Runtime">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/SoundIO.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.XR.ARFoundation.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARFoundation.Editor.dll</HintPath>
     </Reference>
@@ -1418,9 +1417,6 @@
     </Reference>
     <Reference Include="Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.Analytics.Hooks.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="LaspVfx.Runtime">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/LaspVfx.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InferenceEngine.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
@@ -1530,9 +1526,6 @@
     <Reference Include="glTFast.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/glTFast.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Lasp.Runtime">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Lasp.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.XR.Hands.Analytics.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.Analytics.Editor.dll</HintPath>
     </Reference>
@@ -1580,9 +1573,6 @@
     </Reference>
     <Reference Include="Unity.XR.OpenXR.Features.RuntimeDebugger.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.OpenXR.Features.RuntimeDebugger.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Lasp.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Lasp.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Metamesh.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Metamesh.Editor.dll</HintPath>
