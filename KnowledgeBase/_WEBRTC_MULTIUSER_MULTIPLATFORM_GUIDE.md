@@ -160,6 +160,8 @@ Unity → coherence/Photon → WebRTC transport → Browser
 | [Unity-Technologies/UnityRenderStreaming](https://github.com/Unity-Technologies/UnityRenderStreaming) | Streaming server for Unity |
 | [ossrs/srs-unity](https://github.com/ossrs/srs-unity) | WebRTC samples with SRS SFU server |
 | [edgegap/mirror-webgl](https://github.com/edgegap/mirror-webgl) | Mirror networking for WebGL |
+| [danbuckland/aframe-socket-io](https://github.com/danbuckland/aframe-socket-io) | A-Frame + Socket.IO + WebRTC multiplayer |
+| [networked-aframe/networked-aframe](https://github.com/networked-aframe/networked-aframe) | Multi-user A-Frame (alternative) |
 
 ---
 
@@ -206,6 +208,103 @@ React Native → @azesmway/react-native-unity → Unity
 1. Use **Photon Fusion** with XRShared addon
 2. Use **PolySpatial** helpers for bounded/unbounded state sync
 3. Handle indirect pinch compatibility for grabbing
+
+---
+
+## AR Foundation + WebRTC Integration
+
+### Capturing AR Camera for WebRTC Streaming
+
+**Problem**: AR Foundation's camera background uses external textures (YCbCr/NV12) that can't be directly sent via WebRTC.
+
+**Solution**: Use `Graphics.Blit` with AR background material at `endCameraRendering` callback.
+
+```csharp
+public class ARCameraWebRTCCapture : MonoBehaviour
+{
+    [SerializeField] private ARCameraBackground m_ARCameraBackground;
+    [SerializeField] private RenderTexture targetRenderTexture;
+
+    private Texture2D m_LastCameraTexture;
+
+#if !UNITY_EDITOR
+    void OnEnable()
+    {
+        // URP: Use RenderPipelineManager callback (not OnPostRender)
+        RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+    }
+
+    void OnDisable()
+    {
+        RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
+    }
+
+    private void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
+    {
+        CaptureARFrameForWebRTC();
+    }
+#endif
+
+    private void CaptureARFrameForWebRTC()
+    {
+        // Blit AR background (converts YCbCr → RGBA)
+        Graphics.Blit(null, targetRenderTexture, m_ARCameraBackground.material);
+
+        var activeRT = RenderTexture.active;
+        RenderTexture.active = targetRenderTexture;
+
+        // WebRTC requires RGBA32 format
+        if (m_LastCameraTexture == null)
+            m_LastCameraTexture = new Texture2D(
+                targetRenderTexture.width,
+                targetRenderTexture.height,
+                TextureFormat.RGBA32,
+                mipChain: false);
+
+        m_LastCameraTexture.ReadPixels(
+            new Rect(0, 0, targetRenderTexture.width, targetRenderTexture.height), 0, 0);
+        m_LastCameraTexture.Apply();
+        RenderTexture.active = activeRT;
+
+        // Send to WebRTC
+        byte[] rawData = m_LastCameraTexture.GetRawTextureData();
+        // videoInput.UpdateFrame(deviceName, rawData, width, height, ImageFormat.kABGR);
+    }
+
+    void OnDestroy()
+    {
+        if (m_LastCameraTexture != null)
+            Destroy(m_LastCameraTexture);
+    }
+}
+```
+
+### Key Considerations
+
+| Issue | Solution |
+|-------|----------|
+| Memory leak (CPU image API) | Use GPU path via `Graphics.Blit` |
+| URP timing | Use `RenderPipelineManager.endCameraRendering` not `OnPostRender` |
+| Format mismatch | Convert to RGBA32 for WebRTC |
+| Editor testing | Wrap device code in `#if !UNITY_EDITOR` |
+| Performance | Consider async GPU readback for high FPS |
+
+### Alternative: AsyncGPUReadback (Recommended for Performance)
+
+```csharp
+AsyncGPUReadback.Request(targetRenderTexture, 0, TextureFormat.RGBA32, OnGPUReadback);
+
+void OnGPUReadback(AsyncGPUReadbackRequest request)
+{
+    if (!request.hasError)
+    {
+        NativeArray<byte> data = request.GetData<byte>();
+        // Send to WebRTC without blocking main thread
+    }
+}
+```
+
+**Reference**: [AR Foundation Issue #973](https://github.com/Unity-Technologies/arfoundation-samples/issues/973)
 
 ---
 
