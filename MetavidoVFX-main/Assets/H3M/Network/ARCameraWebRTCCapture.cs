@@ -9,14 +9,19 @@ using UnityEngine.UI;
 namespace H3M.Network
 {
     /// <summary>
-    /// Captures AR camera frames and sends them to WebRTC for video streaming.
+    /// Captures AR camera frames and depth data for WebRTC hologram streaming.
     /// Uses URP's RenderPipelineManager.endCameraRendering for proper frame timing.
     ///
     /// Usage:
     /// 1. Add to a GameObject with ARCameraBackground reference
-    /// 2. Assign the ARCameraBackground component
+    /// 2. Assign the ARCameraBackground and AROcclusionManager components
     /// 3. Optionally assign a RawImage for debug preview
     /// 4. Call Initialize() with WebRTC video input and device name
+    ///
+    /// Depth Streaming:
+    /// - Enable "Include Depth" to capture LiDAR depth alongside color
+    /// - Multiplexed mode packs color (left) + depth (right) into one frame
+    /// - Remote receiver demultiplexes for hologram rendering
     /// </summary>
     public class ARCameraWebRTCCapture : MonoBehaviour
     {
@@ -27,12 +32,21 @@ namespace H3M.Network
             CPUImage                // AR Foundation CPU image (most efficient, no GPU readback)
         }
 
+        public enum DepthMode
+        {
+            None,                   // Color only (original behavior)
+            Multiplexed,            // Color + Depth side-by-side in single frame
+            SeparateCallback        // Send depth via separate callback
+        }
+
         [Header("Capture Mode")]
         [SerializeField] private CaptureMode captureMode = CaptureMode.CPUImage;
+        [SerializeField] private DepthMode depthMode = DepthMode.None;
 
         [Header("AR Camera")]
         [SerializeField] private ARCameraManager m_ARCameraManager;
         [SerializeField] private ARCameraBackground m_ARCameraBackground;
+        [SerializeField] private AROcclusionManager m_AROcclusionManager;
         [SerializeField] private Camera mainCamera;
         [SerializeField] private RenderTexture mainCameraRenderTexture;
 
@@ -43,25 +57,58 @@ namespace H3M.Network
         [Header("Capture Settings")]
         [SerializeField] private int captureWidth = 1920;
         [SerializeField] private int captureHeight = 1080;
+        [SerializeField] private int depthWidth = 256;
+        [SerializeField] private int depthHeight = 192;
 
         [Header("Debug")]
         [SerializeField] private RawImage ARTexture;
+        [SerializeField] private RawImage DepthTexture;
 
         private RenderTexture targetRenderTexture;
+        private RenderTexture depthRenderTexture;
+        private RenderTexture multiplexedRenderTexture;
         private Texture2D m_LastCameraTexture;
+        private Texture2D m_LastDepthTexture;
+        private Texture2D m_MultiplexedTexture;
         private string mUsedDeviceName;
 
         // WebRTC video input - set via Initialize()
         private object mVideoInput; // WebRtcCSharp.IVideoInput
         private System.Action<string, byte[], int, int> mUpdateFrameCallback;
+        private System.Action<string, byte[], int, int> mDepthCallback;
 
         private bool isInitialized;
 
+        /// <summary>
+        /// Public access to the current depth texture for external binding.
+        /// </summary>
+        public Texture2D LastDepthTexture => m_LastDepthTexture;
+
+        /// <summary>
+        /// Public access to the current color texture for external binding.
+        /// </summary>
+        public Texture2D LastColorTexture => m_LastCameraTexture;
+
         private void Awake()
         {
-            // Create render texture for capture
+            // Create render texture for color capture
             targetRenderTexture = new RenderTexture(captureWidth, captureHeight, 0, RenderTextureFormat.ARGB32);
             targetRenderTexture.Create();
+
+            // Create depth render texture if depth mode enabled
+            if (depthMode != DepthMode.None)
+            {
+                depthRenderTexture = new RenderTexture(depthWidth, depthHeight, 0, RenderTextureFormat.RHalf);
+                depthRenderTexture.Create();
+
+                // For multiplexed mode, create combined texture (color left, depth right)
+                if (depthMode == DepthMode.Multiplexed)
+                {
+                    int totalWidth = captureWidth + depthWidth;
+                    multiplexedRenderTexture = new RenderTexture(totalWidth, Mathf.Max(captureHeight, depthHeight), 0, RenderTextureFormat.ARGB32);
+                    multiplexedRenderTexture.Create();
+                }
+            }
         }
 
 #if !UNITY_EDITOR
@@ -132,10 +179,21 @@ namespace H3M.Network
                     break;
             }
 
+            // Capture depth if enabled
+            if (depthMode != DepthMode.None)
+            {
+                CaptureDepth();
+            }
+
             // Debug preview
             if (ARTexture != null && m_LastCameraTexture != null)
             {
                 ARTexture.texture = m_LastCameraTexture;
+            }
+
+            if (DepthTexture != null && m_LastDepthTexture != null)
+            {
+                DepthTexture.texture = m_LastDepthTexture;
             }
 
             // Send to WebRTC
@@ -143,6 +201,44 @@ namespace H3M.Network
             {
                 SendToWebRTC(DeviceName);
             }
+        }
+
+        /// <summary>
+        /// Capture depth from AROcclusionManager.
+        /// </summary>
+        private void CaptureDepth()
+        {
+            if (m_AROcclusionManager == null)
+            {
+                Debug.LogWarning("[ARCameraWebRTCCapture] AROcclusionManager is null - cannot capture depth");
+                return;
+            }
+
+            // Get environment depth texture from AR Foundation
+            Texture2D envDepth = m_AROcclusionManager.environmentDepthTexture;
+            if (envDepth == null)
+            {
+                return; // No depth available this frame
+            }
+
+            // Copy depth to our texture
+            if (m_LastDepthTexture == null ||
+                m_LastDepthTexture.width != envDepth.width ||
+                m_LastDepthTexture.height != envDepth.height)
+            {
+                if (m_LastDepthTexture != null)
+                    Destroy(m_LastDepthTexture);
+
+                m_LastDepthTexture = new Texture2D(
+                    envDepth.width,
+                    envDepth.height,
+                    TextureFormat.RFloat,
+                    false
+                );
+            }
+
+            // Copy pixels
+            Graphics.CopyTexture(envDepth, m_LastDepthTexture);
         }
 
         /// <summary>
@@ -322,9 +418,31 @@ namespace H3M.Network
                 Destroy(targetRenderTexture);
             }
 
+            if (depthRenderTexture != null)
+            {
+                depthRenderTexture.Release();
+                Destroy(depthRenderTexture);
+            }
+
+            if (multiplexedRenderTexture != null)
+            {
+                multiplexedRenderTexture.Release();
+                Destroy(multiplexedRenderTexture);
+            }
+
             if (m_LastCameraTexture != null)
             {
                 Destroy(m_LastCameraTexture);
+            }
+
+            if (m_LastDepthTexture != null)
+            {
+                Destroy(m_LastDepthTexture);
+            }
+
+            if (m_MultiplexedTexture != null)
+            {
+                Destroy(m_MultiplexedTexture);
             }
         }
 
