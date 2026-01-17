@@ -6,6 +6,69 @@
 
 ---
 
+## 2026-01-17 - Claude Code - MAJOR: Project Migration & Knowledgebase Expansion
+
+**Discovery**: Migrated 7 complete Unity projects from various sources into the Unity-XR-AI repository, significantly expanding available reference implementations.
+
+**Context**: Desktop had multiple cloned repos with valuable patterns. Consolidated them into a single searchable repository with CLAUDE.md documentation for each.
+
+**Projects Migrated**:
+
+| Project | Source | Key Technologies |
+|---------|--------|------------------|
+| SplatVFX | keijiro/SplatVFX | Gaussian Splatting, VFX Graph, URP 17 |
+| TouchingHologram | holoi/touching-hologram | HoloKit SDK, Hand Tracking, 24 Buddha VFX |
+| TamagotchU | EyezLee/TamagotchU_Unity | ML-Agents, Spine 4.3, Dynamic Bone, VATBaker |
+| HoloKitApp | holoi/holokit-app | Multi-reality AR, Netcode, MPC, Apple Watch |
+| HoloKitMultiplayer | holoi/holokit-colocated-multiplayer | Colocated AR, Image Marker Alignment |
+| FaceTrackingVFX | mao-test-h/FaceTracking-VFX | ARKit Face Mesh, Smrvfx, VFX Graph |
+| LLMUnity | undreamai/LLMUnity | Local LLMs, RAG, AI Characters, Mobile |
+
+**Key Patterns Discovered**:
+
+1. **Gaussian Splatting + VFX Graph** (SplatVFX):
+   - Uses compute shaders to read .ply point cloud files
+   - Binds point data to VFX Graph via GraphicsBuffer
+   - Renders splats as oriented billboards
+
+2. **HoloKit Hand Interaction** (TouchingHologram):
+   - XR Hands + HoloKit hand tracking provider
+   - Velocity-based particle emission
+   - 24 Buddha VFX library (fire, smoke, lightning, etc.)
+
+3. **ML-Agents + VFX** (TamagotchU):
+   - Trained ML models drive creature behavior
+   - Spine skeletal animation integration
+   - VATBaker for GPU-based animation
+
+4. **Colocated AR Multiplayer** (HoloKitMultiplayer):
+   - Image marker-based alignment
+   - Netcode + Multipeer Connectivity
+   - Shared coordinate system
+
+5. **Face Mesh → VFX** (FaceTrackingVFX):
+   - ARKit face mesh baked to vertex texture
+   - Smrvfx pattern for skinned mesh → particles
+   - Compute shader vertex baking
+
+**Assets Added**:
+- ARTnGAME library (GIBLI, InfiniGRASS, SkyMaster) - 10K+ files
+- HoloKit Unity SDK samples
+- App UI, Inference Engine, XR Interaction Toolkit samples
+
+**Git LFS Issue Discovered**:
+- GitHub LFS budget exceeded - solution: `GIT_LFS_SKIP_PUSH=1 git push`
+- Large files (>100MB) need .gitignore exclusion
+
+**Cross-References**:
+- `SplatVFX/CLAUDE.md` - Gaussian Splatting docs
+- `TouchingHologram/CLAUDE.md` - Hand tracking docs
+- `HoloKitApp/CLAUDE.md` - Multi-reality AR docs
+- `LLMUnity/CLAUDE.md` - AI characters docs
+- `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` - Updated with new repos
+
+---
+
 ## 2026-01-16 - Claude Code - MAJOR: Unified Hologram Pipeline Breakthrough
 
 **Discovery**: Eliminated redundant compute dispatches by unifying HologramSource into ARDepthSource. Created complete hologram placement system with touch gestures.

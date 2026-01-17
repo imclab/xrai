@@ -90,6 +90,7 @@
 | Project | Description | Techniques | iOS Support |
 |---------|-------------|------------|-------------|
 | [YoHana19/HumanParticleEffect](https://github.com/YoHana19/HumanParticleEffect) | Direct human particle effects | ARKit human segmentation | ✅ |
+| [mao-test-h/FaceTracking-VFX](https://github.com/mao-test-h/FaceTracking-VFX) | ARKit face mesh to VFX Graph | Smrvfx vertex baking | ✅ |
 | [keijiro/Rcam2](https://github.com/keijiro/Rcam2) | Remote depth streaming | LiDAR, depth streaming | ✅ |
 | [keijiro/Rcam3](https://github.com/keijiro/Rcam3) | Remote depth streaming v3 | LiDAR, depth streaming | ✅ |
 | [keijiro/Rcam4](https://github.com/keijiro/Rcam4) | Remote depth streaming v4 | LiDAR, depth streaming | ✅ |
@@ -262,6 +263,7 @@
 | [holokit/holokit-image-tracking-relocalization](https://github.com/holokit/holokit-image-tracking-relocalization) | Image tracking for coordinate system alignment | iOS |
 | [holokit/apple-multipeer-connectivity-unity-plugin](https://github.com/holokit/apple-multipeer-connectivity-unity-plugin) | Multipeer connectivity for co-located AR | iOS |
 | [holokit/netcode-transport-multipeer-connectivity](https://github.com/holokit/netcode-transport-multipeer-connectivity) | Netcode transport layer for local multiplayer | iOS, macOS, visionOS |
+| [holoi/holokit-colocated-multiplayer-boilerplate](https://github.com/holoi/holokit-colocated-multiplayer-boilerplate) | Colocated multiplayer template with image marker alignment | iOS |
 
 ### Reality Labs / Meta Quest Projects
 | Project | Description | Platform Support |
@@ -491,6 +493,8 @@
 
 ### AI/ML Frameworks & LLM Tools
 
+- [undreamai/LLMUnity](https://github.com/undreamai/LLMUnity) - Local LLMs in Unity with RAG, runs on iOS/Android/Desktop ⭐
+- [EyezLee/TamagotchU_Unity](https://github.com/EyezLee/TamagotchU_Unity) - ML-Agents virtual pet with Spine animation
 - [LangChain](https://github.com/langchain-ai/langchain) - Python framework for LLM applications (250K+ stars)
 - [LangChain.js](https://js.langchain.com/docs/get_started/introduction/) - JavaScript/TypeScript LangChain SDK
 - [Awesome LangChain](https://github.com/kyrolabs/awesome-langchain) - Curated list of LangChain tools and resources
