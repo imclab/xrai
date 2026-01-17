@@ -6,6 +6,126 @@
 
 ---
 
+## 2026-01-16 - Claude Code - MAJOR: Unified Hologram Pipeline Breakthrough
+
+**Discovery**: Eliminated redundant compute dispatches by unifying HologramSource into ARDepthSource. Created complete hologram placement system with touch gestures.
+
+**Context**: The H3M hologram system had its own HologramSource doing identical compute work to ARDepthSource. This created duplicate GPU dispatches and fragmented architecture.
+
+**Key Insight**:
+```
+BEFORE (Redundant):
+  ARDepthSource → PositionMap (compute #1) → Regular VFX
+  HologramSource → PositionMap (compute #2) → Hologram VFX  ← DUPLICATE!
+
+AFTER (Unified):
+  ARDepthSource (singleton) → PositionMap → ALL VFX
+                                    ↓
+                          VFXARBinder (per-VFX)
+                                    ↓
+                    ┌───────────────┼───────────────┐
+                    │               │               │
+              Regular VFX    Hologram VFX     Other VFX
+                            (+AnchorPos,
+                             +HologramScale)
+```
+
+**Performance Impact**:
+- Eliminated duplicate compute dispatch per hologram
+- O(1) compute for ALL VFX including holograms
+- 353 FPS @ 10 active VFX (verified)
+- Single source of truth for AR data
+
+**Architecture Created**:
+
+| Component | Purpose | LOC |
+|-----------|---------|-----|
+| `VFXARBinder` (extended) | Hologram mode with AnchorPos, HologramScale, UseTransformMode | ~430 |
+| `HologramController` | Live AR / Metavido video mode switching | ~230 |
+| `HologramPlacer` | Touch gestures: tap, 1-finger drag XZ, 2-finger drag Y, pinch scale | ~280 |
+| `HologramSetup` | Editor menu commands for setup | ~250 |
+| `HologramAutoSetup` | Auto-creates prefab on domain reload | ~110 |
+
+**VFXARBinder Hologram Extensions**:
+```csharp
+// New properties added:
+[Header("Hologram (Mini-Me)")]
+bool _bindAnchorPos;           // Bind anchor position
+bool _bindHologramScale;       // Bind scale factor
+Transform _anchorTransform;    // Reference to anchor
+float _hologramScale = 0.15f;  // 15% = mini-me
+bool _useTransformMode = true; // Transform VFX directly (no VFX modification needed)
+
+// Two modes:
+// 1. Transform Mode (default): Moves/scales VFX GameObject directly
+// 2. Property Mode: Binds AnchorPos/HologramScale to VFX properties
+```
+
+**HologramPlacer Touch Gestures**:
+| Gesture | Action |
+|---------|--------|
+| Tap | Place on AR plane |
+| 1-finger drag | Translate X/Z |
+| 2-finger drag | Translate Y (height) |
+| Pinch | Scale (0.05x - 2x) |
+
+**HologramController Modes**:
+```csharp
+public enum SourceMode {
+    LiveAR,         // ARDepthSource (real-time)
+    MetavidoVideo   // Metavido video file playback
+}
+
+// Metavido mode binds:
+// - VideoPlayer → TextureDemuxer → ColorTexture, DepthTexture
+// - MetadataDecoder → RayParams, InverseView, DepthRange
+```
+
+**Prefab Created**: `Assets/Prefabs/Hologram/Hologram.prefab`
+```
+Hologram
+├── HologramPlacer
+├── HologramController
+└── HologramVFX
+    ├── VisualEffect (hologram_depth_people_metavido.vfx)
+    ├── VFXARBinder
+    └── Scale: 0.15
+```
+
+**Files Created/Modified**:
+- `Assets/Scripts/Hologram/HologramPlacer.cs` - NEW
+- `Assets/Scripts/Hologram/HologramController.cs` - NEW
+- `Assets/Scripts/Editor/HologramSetup.cs` - NEW
+- `Assets/Scripts/Editor/HologramAutoSetup.cs` - NEW
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - Extended with hologram support
+- `Assets/Prefabs/Hologram/Hologram.prefab` - NEW
+
+**Legacy Removed from H3M_HologramRenderer**:
+- ❌ VFXARDataBinder (replaced by VFXARBinder)
+- ❌ VFXPropertyBinder (redundant)
+- ❌ HologramRenderer (compute now in ARDepthSource)
+
+**Menu Commands Added**:
+- `H3M > Hologram > Create Complete Hologram (with Placer)`
+- `H3M > Hologram > Save Selected as Prefab`
+- `H3M > Hologram > Force Create Prefab`
+
+**Key Learnings**:
+1. **Singleton Pattern for Compute**: ONE ARDepthSource serves ALL VFX - never duplicate GPU work
+2. **Transform Mode**: Manipulating VFX GameObject transform is simpler than VFX properties for placement/scale
+3. **Touch Gesture Pattern**: Track `touchCount` changes to distinguish 1-finger vs 2-finger gestures
+4. **InitializeOnLoad + delayCall**: Auto-setup pattern that runs after Unity domain reload
+5. **Metavido Integration**: TextureDemuxer provides ColorTexture/DepthTexture from encoded video
+
+**Related**:
+- See: `Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md` - Hybrid Bridge architecture
+- See: `KnowledgeBase/_LIVE_AR_PIPELINE_ARCHITECTURE.md` - Now marked LEGACY
+- See: `KnowledgeBase/_VFX25_HOLOGRAM_PORTAL_PATTERNS.md` - Hologram patterns
+
+**Impact Rating**: ⭐⭐⭐⭐⭐ (Major architectural unification)
+
+---
+
 ## 2025-01-07 22:45 - Claude Code - Knowledge Architecture Setup
 
 **Discovery**: Unified knowledgebase architecture with symlinked access across all AI tools

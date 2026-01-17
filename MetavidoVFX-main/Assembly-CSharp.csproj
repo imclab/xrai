@@ -183,6 +183,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeautyBeast/Beauty and the Beast/Scripts/Summoner2.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeatDetection/Tutorials/MusicSyncVisualizer/AudioSyncColor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeatDetection/Tutorials/MusicSyncVisualizer/AudioSyncScale.cs" />
+    <Compile Include="Assets/Scripts/Hologram/HologramPlacer.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/ParticleSysem/RFX4_ParticleLight.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_RotateAround.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Binary/Binary.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_ParticleGravityPoint.cs" />
     <Compile Include="Assets/Scripts/ARKitMetavidoController.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_DeactivateRigidbodyByTime.cs" />
+    <Compile Include="Assets/Scripts/Hologram/HologramController.cs" />
     <Compile Include="Assets/H3M/Core/DiagnosticOverlay.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ShaderID.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/AudioToTransform.cs" />
@@ -1419,14 +1421,14 @@
     <Reference Include="Unity.InferenceEngine.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Pugrad.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Editor.dll</HintPath>

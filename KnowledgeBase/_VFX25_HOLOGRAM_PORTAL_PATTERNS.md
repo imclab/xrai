@@ -285,7 +285,102 @@ public class PortalManager : MonoBehaviour
 
 ---
 
-## 5. Quick Reference: VFX Graph Depth Setup
+## 5. Unified Hologram Pipeline (2026-01-16 Breakthrough)
+
+**Discovery**: HologramSource was duplicating ARDepthSource compute work. Now unified.
+
+### 5.1 Architecture
+
+```
+BEFORE (Redundant):
+  ARDepthSource → PositionMap (compute #1) → Regular VFX
+  HologramSource → PositionMap (compute #2) → Hologram VFX  ← DUPLICATE!
+
+AFTER (Unified):
+  ARDepthSource (singleton) → PositionMap → ALL VFX
+                                    ↓
+                          VFXARBinder (per-VFX)
+                                    ↓
+                    ┌───────────────┼───────────────┐
+                    │               │               │
+              Regular VFX    Hologram VFX     Other VFX
+                            (+AnchorPos,
+                             +HologramScale)
+```
+
+### 5.2 VFXARBinder Hologram Extensions
+
+```csharp
+// MetavidoVFX-main/Assets/Scripts/Bridges/VFXARBinder.cs
+[Header("Hologram (Mini-Me)")]
+[SerializeField] bool _bindAnchorPos = false;
+[SerializeField] bool _bindHologramScale = false;
+[SerializeField] Transform _anchorTransform;
+[SerializeField] float _hologramScale = 0.15f;  // 15% = mini-me
+[SerializeField] bool _useTransformMode = true; // Transform VFX directly
+
+// Two modes:
+// 1. Transform Mode: Moves/scales VFX GameObject directly
+// 2. Property Mode: Binds AnchorPos/HologramScale to VFX properties
+```
+
+### 5.3 HologramPlacer Touch Gestures
+
+```csharp
+// MetavidoVFX-main/Assets/Scripts/Hologram/HologramPlacer.cs
+// Simple AR placement - tap to place, gestures to manipulate
+
+| Gesture | Action |
+|---------|--------|
+| Tap | Place on AR plane |
+| 1-finger drag | Translate X/Z |
+| 2-finger drag | Translate Y (height) |
+| Pinch | Scale (0.05x - 2x) |
+
+// Key pattern: Track touchCount changes
+void HandleManipulation() {
+    if (Input.touchCount == 1) HandleDrag();      // XZ
+    else if (Input.touchCount == 2) HandleTwoFingerGesture();  // Y + Scale
+}
+```
+
+### 5.4 HologramController (Live AR / Metavido)
+
+```csharp
+// MetavidoVFX-main/Assets/Scripts/Hologram/HologramController.cs
+public enum SourceMode {
+    LiveAR,         // ARDepthSource (real-time)
+    MetavidoVideo   // Metavido .mp4 file playback
+}
+
+// Metavido mode uses:
+// - VideoPlayer → video frames
+// - TextureDemuxer → ColorTexture, DepthTexture (from side-by-side encoding)
+// - MetadataDecoder → RayParams, InverseView, DepthRange
+```
+
+### 5.5 Prefab Structure
+
+```
+Assets/Prefabs/Hologram/Hologram.prefab
+├── HologramPlacer       (touch gestures)
+├── HologramController   (mode switching)
+└── HologramVFX
+    ├── VisualEffect     (hologram_depth_people_metavido.vfx)
+    ├── VFXARBinder      (binds AR data + hologram transform)
+    └── Scale: 0.15      (mini-me default)
+```
+
+### 5.6 Key Learnings
+
+1. **Singleton Compute**: ONE ARDepthSource serves ALL VFX - never duplicate GPU work
+2. **Transform Mode**: Simpler than VFX properties for placement/scale
+3. **Touch Pattern**: `touchCount` changes distinguish gesture types
+4. **Metavido Integration**: TextureDemuxer extracts Color/Depth from encoded video
+
+---
+
+## 6. Quick Reference: VFX Graph Depth Setup
 
 ```
 VFX Graph Properties Required:

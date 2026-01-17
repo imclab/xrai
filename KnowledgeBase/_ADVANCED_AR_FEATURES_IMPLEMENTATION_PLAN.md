@@ -2970,7 +2970,7 @@ namespace H3M.Effects
  **File**: `/Users/jamestunick/Downloads/AI_Knowledge_Base_Setup/______VFX25/RCAMS/Rcam4-main 4/Rcam4Controller/Assets/Scripts/FrameEncoder.cs`
 
  **Critical Pattern**:
- ```csharp
+```csharp
 void OnCameraFrameReceived(ARCameraFrameEventArgs args)
 {
     // Extract Y/CbCr textures from AR Foundation

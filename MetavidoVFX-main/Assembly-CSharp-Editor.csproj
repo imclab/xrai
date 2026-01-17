@@ -99,6 +99,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ProcessingFrame.cs" />
     <Compile Include="Assets/Scripts/Editor/HoloKitDefineSetup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/FixBordersProcessorSettings.cs" />
+    <Compile Include="Assets/Scripts/Editor/HologramSetup.cs" />
     <Compile Include="Assets/Scripts/UI/Editor/VFXGallerySetup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Editor/AnalogGlitchEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fringe/Editor/FringeEditor.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequenceAssetEditor.cs" />
     <Compile Include="Assets/Scripts/VFX/Editor/VFXProxSetup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/LoopingProcessorSettings.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXDomainReloadFix.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Motion/Editor/ConstantMotionEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/AssembleProcessorSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/AlphaFromRGBProcessorSettings.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="Assets/Editor/BuildScript.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ProcessingFrameSequence.cs" />
     <Compile Include="Assets/H3M/Editor/H3MHologramSetup.cs" />
+    <Compile Include="Assets/Scripts/Editor/WebRTCDomainReloadFix.cs" />
     <Compile Include="Assets/Scripts/Editor/AutoSetupOnLoad.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/RemoveBackgroundSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/AssembleProcessor.cs" />
@@ -173,6 +176,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/RetimeProcessorSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/Editor/VFXVolumeMixerPropertyDrawer.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequencer.InputFrames.cs" />
+    <Compile Include="Assets/Scripts/Editor/HologramAutoSetup.cs" />
     <Compile Include="Assets/H3M/Editor/H3MPhase1Setup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Isoline/Editor/IsolineEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequencerCanvas.cs" />
@@ -1190,14 +1194,14 @@
     <Reference Include="Unity.InferenceEngine.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Pugrad.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Editor.dll</HintPath>
