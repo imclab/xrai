@@ -2,8 +2,13 @@
 
 **Purpose**: Comprehensive reference of GitHub repos used across all workspaces (Portals_6, Paint-AR, Open Brush) to improve Claude's coding capabilities for AR/VFX/XR/Unity development.
 
-**Last Updated**: 2025-01-07
-**Recent Additions**: Unity-Technologies official repos, Gaussian Splatting Unity implementations, Dilmerv VisionOS examples, Icosa Gallery Unity tools, enhanced Keijiro collection
+**Last Updated**: 2026-01-17
+**Recent Additions**: HoloKit projects (TouchingHologram, HoloKitApp, HoloKitMultiplayer), LLMUnity AI characters, TamagotchU ML-Agents, FaceTrackingVFX upgrade, new pattern KB files
+
+**Pattern KB Files**:
+- `_HAND_VFX_PATTERNS.md` - 52 hand tracking VFX effects (Buddha + HoloKit libraries)
+- `_GAUSSIAN_SPLATTING_VFX_PATTERNS.md` - SplatVFX patterns (keijiro)
+- `_AI_CHARACTER_PATTERNS.md` - LLMUnity AI character integration
 
 ---
 
