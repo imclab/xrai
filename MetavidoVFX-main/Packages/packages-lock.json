@@ -26,6 +26,12 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.icosa.icosa-api-client-unity": {
+      "version": "file:com.icosa.icosa-api-client-unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.kyrylokuzyk.arfoundationremote": {
       "version": "file:../Assets/Plugins/ARFoundationRemoteInstaller/com.kyrylokuzyk.arfoundationremote.tgz",
       "depth": 0,
@@ -443,9 +449,9 @@
       "source": "registry",
       "dependencies": {
         "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.video": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequesttexture": "1.0.0",
-        "com.unity.modules.video": "1.0.0"
+        "com.unity.modules.unitywebrequesttexture": "1.0.0"
       },
       "url": "https://registry.npmjs.com"
     },
@@ -551,6 +557,12 @@
     "com.unity.modules.androidjni": {
       "version": "1.0.0",
       "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.animation": {
+      "version": "1.0.0",
+      "depth": 0,
       "source": "builtin",
       "dependencies": {}
     },

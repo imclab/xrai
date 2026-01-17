@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0712b5d7b4f19674394fbe447344d62b, type: 3}
+  m_Name: GIBLION 2024 INSTANCED GRASS TETXURED MODE NOTES
+  m_EditorClassIdentifier: 
+  noteText: 'GIBLION 2024 instanced textured grass notes
+
+
+    The system uses the
+    original instanced grass script with a new material that handles the textured
+    aspect
+
+
+    There is also a new system to occlude the grass, using the OCCLUDE
+    culling compute shader
+
+
+    The top down depth camera is rendering to a texture
+    the scene depth and passes the result using the "_ShoreContourTex" texture name
+    in the grass shader. Objects in the depth render layers will occlude the grass.
+    The grass material must also be referenced in the materials list in the depth
+    render script in the right.
+
+
+    The system updates as player moves a distance
+
+
+    The
+    grass adapts to the terrain based on the same top down depth texture and will
+    be applied on any objects in the Terrain layer, the occluders must be set very
+    high so are used as occluders instead of grass be moved on their surface. the
+    Depth cutoff height dictates where the cutoff of occluders will happen
+
+
+
+
+'
+  fontSize: 24
+  richText: 0
