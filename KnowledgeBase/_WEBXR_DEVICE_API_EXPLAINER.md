@@ -338,13 +338,82 @@ navigator.xr.addEventListener('devicechange', () => {
 
 ## Unity WebXR Integration
 
-For Unity WebGL builds with WebXR support:
+### De-Panther/unity-webxr-export (Recommended)
+
+**Repo**: [github.com/De-Panther/unity-webxr-export](https://github.com/De-Panther/unity-webxr-export)
+**Demo**: [Live VR Demo](https://de-panther.github.io/unity-webxr-export/Build) | [XR Interaction Toolkit Demo](https://de-panther.github.io/unity-webxr-export/XRInteractionToolkitDemo)
+
+Integrates the WebXR JavaScript API into Unity WebGL, enabling VR/AR development in Unity with C#.
+
+#### Installation (OpenUPM)
+```bash
+# WebXR Export
+openupm add com.de-panther.webxr
+
+# WebXR Interactions
+openupm add com.de-panther.webxr-interactions
+```
+
+#### Unity Version Compatibility
+| Version | Support |
+|---------|---------|
+| 2020.3.11f1+ | ✅ |
+| 2021.1.4f1+ | ✅ |
+| 2022.1+ | ✅ |
+| 2023.1+ | ✅ |
+| 6000.0.23f1+ | ✅ |
+
+#### Browser/Device Compatibility
+| Platform | Browser | VR | AR |
+|----------|---------|:--:|:--:|
+| Windows | Chrome, Edge | ✅ | - |
+| Meta Quest (1/2/Pro/3) | Quest Browser, Wolvic | ✅ | ✅ |
+| HoloLens 2 | Edge | ✅ | ✅ |
+| Android | Chrome, Samsung Internet | ✅ | ✅ |
+| iOS | Mozilla WebXR Viewer | ✅ | ✅ |
+| VIVE Focus Plus | Firefox Reality | ✅ | - |
+| VIVE Focus 3 | Wolvic | ✅ | - |
+| Magic Leap 2 | Helio | ✅ | ✅ |
+| PICO 4/4E | PICO Browser, Wolvic | ✅ | - |
+| Apple Vision Pro | Safari (with flags) | ⚠️ | ⚠️ |
+
+⚠️ Vision Pro: Requires enabling flags in system settings. No `selected` event on hand pinch.
+
+#### WebXR APIs Supported
+| API | Status |
+|-----|--------|
+| WebXR Device API | ✅ Unity Display/Input XR Subsystems |
+| WebXR Gamepads Module | ✅ Unity New Input System |
+| WebXR AR Module | ✅ |
+| WebXR Hit Test | ✅ (viewer space only, not AR Foundation) |
+| WebXR Hand Input | ✅ Unity XR Hands package |
+| WebXR Input Profiles | ✅ XR Interaction Toolkit |
+| Haptic Feedback | ✅ on supported devices |
+
+#### Additional Features
+- **Spectator Camera** - Third-person view for streaming
+- **Mixed Reality Capture** - Record MR content
+- **WebXR Polyfill** - Fallback for unsupported browsers
+- **Passthrough/Seethrough** - Not using AR Foundation
+
+#### Roadmap
+- Version 0.20.0+: Unity XR SDK support
+- Next: AR Foundation support
+- Note: Built-in Render Pipeline dropped in 0.20.0 (URP/HDRP only)
+
+### Other Options
 
 | Package | Description |
 |---------|-------------|
-| [unity-webxr-export](https://github.com/nicedeveloper/unity-webxr-export) | Unity WebXR exporter |
-| [needle-engine](https://needle.tools/) | Unity to WebXR runtime |
-| [three.js](https://threejs.org/) + WebXR | Direct three.js implementation |
+| [needle-engine](https://needle.tools/) | Unity to WebXR runtime (three.js based) |
+| [SimpleWebXR](https://github.com/Rufus31415/Simple-WebXR-Unity) | Lightweight WebXR for Unity |
+| [three.js](https://threejs.org/) + WebXR | Direct JavaScript implementation |
+
+### Useful Resources
+- [WebXR Input Profile Viewer](https://immersive-web.github.io/webxr-input-profiles/packages/viewer/dist/index.html)
+- [WebXR Samples](https://immersive-web.github.io/webxr-samples/)
+- [WebXR Polyfill](https://github.com/immersive-web/webxr-polyfill)
+- [WebXR Discord](https://discord.gg/Jt5tfaM)
 
 ---
 
