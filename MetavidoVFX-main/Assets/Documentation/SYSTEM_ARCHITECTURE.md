@@ -1,10 +1,10 @@
 # MetavidoVFX System Architecture
 
-**Generated**: 2026-01-14, Updated: 2026-01-15
+**Generated**: 2026-01-14, Updated: 2026-01-17
 **Unity Version**: 6000.2.14f1
 **Platform**: iOS (ARKit)
 **Render Pipeline**: URP 17.2.0
-**Total Scripts**: 73 (core: 27, H3M: 12, Echovision: 8, Binders: 5, Segmentation: 3, Editor: 13, Utils: 5)
+**Primary Pipeline**: ARDepthSource + VFXARBinder (Hybrid Bridge Pattern)
 
 ---
 
@@ -54,10 +54,17 @@ MetavidoVFX is an AR Foundation VFX demonstration project that visualizes volume
 ```
 Assets/
 ├── Scripts/
-│   ├── VFX/                          # Core VFX management
+│   ├── Bridges/                     # Primary AR -> VFX pipeline (Hybrid Bridge)
+│   │   ├── ARDepthSource.cs          # Single compute dispatch (Depth/Stencil -> PositionMap)
+│   │   ├── VFXARBinder.cs            # Per-VFX binding (SetTexture)
+│   │   ├── AudioBridge.cs            # Audio bands -> global shader props
+│   │   └── DirectDepthBinder.cs      # Zero-compute binder for new VFX
+│   ├── VFX/                          # VFX management + tools
 │   │   ├── VFXCategory.cs            # VFX categorization & binding requirements
-│   │   ├── VFXBinderManager.cs       # Unified data binding system (PRIMARY)
-│   │   └── HumanParticleVFX.cs       # Depth-to-world position mapping
+│   │   ├── VFXLibraryManager.cs      # VFX catalog + pipeline setup
+│   │   ├── VFXPipelineDashboard.cs   # Runtime pipeline dashboard
+│   │   ├── VFXTestHarness.cs         # Keyboard test harness
+│   │   └── VFXProxBuffer.cs          # Global buffers for proximity VFX
 │   ├── HandTracking/
 │   │   ├── HandVFXController.cs      # HoloKit hand-driven VFX
 │   │   └── ARKitHandTracking.cs      # XR Hands fallback
@@ -71,8 +78,10 @@ Assets/
 │   │   ├── VFXGalleryUI.cs           # World-space gaze & dwell selector
 │   │   ├── VFXSelectorUI.cs          # Screen-space UI Toolkit selector
 │   │   └── VFXCardInteractable.cs    # HoloKit gaze+gesture support
-│   ├── PeopleOcclusion/
-│   │   └── PeopleOcclusionVFXManager.cs  # (Legacy - DISABLED)
+│   ├── _Legacy/                      # Legacy pipelines (do not use)
+│   │   ├── VFXBinderManager.cs       # Legacy centralized binder
+│   │   ├── VFXARDataBinder.cs        # Legacy per-VFX binder
+│   │   └── PeopleOcclusionVFXManager.cs  # Legacy runtime spawner
 │   └── Editor/                       # Editor setup utilities
 ├── H3M/
 │   └── Core/
@@ -85,8 +94,10 @@ Assets/
 │       ├── SoundWaveEmitter.cs       # Audio-driven wave VFX
 │       └── AudioProcessor.cs         # Legacy audio (2 properties)
 ├── Resources/
-│   ├── DepthToWorld.compute          # Depth→world position conversion
+│   ├── DepthToWorld.compute          # Depth->world position conversion (runtime)
 │   └── VFX/                          # VFX assets loaded at runtime
+├── Shaders/
+│   └── DepthToWorld.compute          # Depth->world position conversion (editor load)
 ├── VFX/                              # 65+ VFX assets
 │   ├── HumanEffects/                 # People/body VFX
 │   ├── Environment/                  # World/environment VFX
@@ -100,43 +111,42 @@ Assets/
 
 ## 3. VFX System Architecture
 
-### 3.1 VFXBinderManager (PRIMARY Pipeline)
+### 3.1 Primary Pipeline: Hybrid Bridge (ARDepthSource + VFXARBinder)
 
-Central data routing system that binds AR data to all VFX in the scene.
+Single compute dispatch with lightweight per-VFX binding. This is the current, recommended pipeline.
 
-**Location**: `Assets/Scripts/VFX/VFXBinderManager.cs` (422 lines)
+**Locations**:
+- `Assets/Scripts/Bridges/ARDepthSource.cs` (singleton compute source)
+- `Assets/Scripts/Bridges/VFXARBinder.cs` (per-VFX binder)
 
 **Data Flow**:
 ```
-AR Session Origin → VFXBinderManager → All VFX
-                          ↓
-         DepthMap, ColorMap, StencilMap, RayParams, InverseView
-                          ↓
-              GPU Compute (DepthToWorld.compute)
-                          ↓
-                    PositionMap (world XYZ)
+AR Foundation → ARDepthSource → PositionMap/DepthMap/StencilMap/ColorMap
+                                      ↓
+                               VFXARBinder (per VFX)
+                                      ↓
+                                   VFX Graph
 ```
 
 **Key Responsibilities**:
-- Fetches AR textures from AROcclusionManager
-- Computes PositionMap via GPU compute shader
-- Calculates RayParams for UV+depth→3D conversion
-- Pushes properties to ALL registered VFX per frame
-- Supports both EnhancedAudioProcessor and legacy AudioProcessor
+- Pulls depth and stencil from `AROcclusionManager` (prefers human depth, falls back to environment)
+- Optional portrait rotation via `RotateUV90CW` for iOS depth orientation
+- Computes `PositionMap` with `DepthToWorld.compute` (single dispatch per frame)
+- Computes `RayParams` using projection matrix center shift
+- Exposes `DepthMap`, `StencilMap`, `PositionMap`, `ColorMap`, `RayParams`, `InverseView`
+- Optional `VelocityMap` (disabled by default)
+- Editor-only mock textures for pipeline testing without a device
 
-**Critical Binding - RayParams**:
-```csharp
-// Required for Metavido/Rcam VFX to convert UV+depth to 3D positions
-float fovV = arCamera.fieldOfView * Mathf.Deg2Rad;
-float tanV = Mathf.Tan(fovV * 0.5f);
-float tanH = tanV * arCamera.aspect;
-_rayParams = new Vector4(0f, 0f, tanH, tanV);
+**Debug Hooks**:
+- `ARDepthSource` context menu: `Debug Source`, `Enable Verbose Logging`
+- `VFXARBinder` context menu: `Debug Binder`, `Auto-Detect Bindings`
 
-vfx.SetVector4("RayParams", _rayParams);
-vfx.SetVector4("ProjectionVector", _rayParams);  // Alias
-```
+### 3.2 DirectDepthBinder (Zero-Compute Option)
 
-### 3.2 VFX Categories
+`Assets/Scripts/Bridges/DirectDepthBinder.cs` passes raw depth + camera params directly to VFX.
+Use this for new VFX graphs that do their own depth-to-world conversion.
+
+### 3.3 VFX Categories
 
 **Location**: `Assets/Scripts/VFX/VFXCategory.cs`
 
@@ -157,14 +167,16 @@ enum VFXBindingRequirements {
 | **Environment** | `VFX/Environment/`, `VFX/SdfVfx/` | Spawn, Throttle only |
 | **Mesh/Audio** | `Echovision/VFX/` | MeshPointCache, Wave*, HumanStencilTexture |
 
-### 3.3 Legacy Pipelines (DISABLED)
+### 3.4 Legacy Pipelines (DISABLED)
 
 | Pipeline | Status | Reason |
 |----------|--------|--------|
-| PeopleOcclusionVFXManager | DISABLED | Creates own VFX at runtime, conflicts |
-| ARKitMetavidoBinder | REMOVED | Per-VFX binding, redundant |
+| VFXBinderManager (`_Legacy/`) | Legacy | Replaced by ARDepthSource |
+| VFXARDataBinder (`_Legacy/`) | Legacy | Replaced by VFXARBinder |
+| PeopleOcclusionVFXManager (`_Legacy/`) | Legacy | Runtime spawner conflicts with VFX library |
+| ARKitMetavidoBinder | Legacy | Per-VFX binding, redundant |
 
-**Cleanup**: `H3M > Pipeline Cleanup > Run Full Cleanup`
+**Cleanup**: use `H3M > VFX Pipeline Master > Legacy Management` menu items to disable or remove legacy components.
 
 ---
 
@@ -179,29 +191,29 @@ AR Session Origin
 │   ├── ARCameraBackground
 │   ├── Camera (Main)
 │   ├── AROcclusionManager
+│   │   ├── humanDepthTexture
 │   │   ├── environmentDepthTexture
 │   │   └── humanStencilTexture
 │   └── TrackedPoseDriver
-├── VFXBinderManager
-├── HologramSource
-│   └── DepthToWorld.compute
-└── HandVFXController
-    ├── LeftHandVFX
-    └── RightHandVFX
+├── ARDepthSource
+├── HologramSource (optional)
+├── HandVFXController (optional)
+└── VFX (each with VFXARBinder)
+    └── VisualEffect + VFXARBinder
 ```
 
 ### 4.2 Depth Processing Pipeline
 
 ```
-AROcclusionManager.environmentDepthTexture (256×192, 16-bit float)
-        ↓
-VFXBinderManager.UpdateCachedData()
+AROcclusionManager.humanDepthTexture (preferred) or environmentDepthTexture
+        ↓ (optional RotateUV90CW for iOS portrait)
+ARDepthSource.LateUpdate()
         ↓
 DepthToWorld.compute (GPU kernel)
-        ├── Input: _Depth, _Stencil, _InvVP, _ProjectionMatrix
-        └── Output: _PositionRT (512×512 ARGBFloat)
+        ├── Input: _Depth, _Stencil, _InvVP
+        └── Output: _PositionRT (ARGBFloat)
         ↓
-VFX.SetTexture("PositionMap", _positionMapRT)
+VFXARBinder.SetTexture("PositionMap", PositionMap)
 ```
 
 ### 4.3 Hand Tracking
@@ -421,46 +433,27 @@ Max Particles:       500,000
 ┌─────────────────────────────────────────────────────────────┐
 │                    AR SESSION ORIGIN                         │
 ├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ARKit Sensors         ARCameraManager      AROcclusionMgr  │
-│  ──────────────────→  (Camera texture) →  (Depth + Stencil) │
-│                                                     │        │
-│                                                     ▼        │
-│                              ┌──────────────────────────┐   │
-│                              │ VFXBinderManager.cs      │   │
-│                              │ (PRIMARY PIPELINE)       │   │
-│                              │ Outputs:                 │   │
-│                              │  • DepthMap              │   │
-│                              │  • ColorMap              │   │
-│                              │  • StencilMap            │   │
-│                              │  • PositionMap (GPU)     │   │
-│                              │  • InverseView           │   │
-│                              │  • RayParams             │   │
-│                              └────────────┬─────────────┘   │
-│                                           │                  │
-│    ┌──────────────────────────────────────┼──────────────┐  │
-│    │                                      │              │  │
-│    ▼                                      ▼              ▼  │
-│ ┌─────────────────┐  ┌─────────────────────┐  ┌──────────┐ │
-│ │HandVFXController│  │EnhancedAudioProcessor│  │MeshVFX  │ │
-│ │ HandPosition    │  │ AudioVolume          │  │MeshCache│ │
-│ │ HandVelocity    │  │ AudioBass/Mid/Treble │  │Normals  │ │
-│ │ BrushWidth      │  │ AudioPitch           │  │Count    │ │
-│ └────────┬────────┘  └──────────┬───────────┘  └────┬────┘ │
-│          │                      │                   │      │
-│          └──────────────────────┼───────────────────┘      │
-│                                 ▼                          │
-│                    ┌────────────────────────┐              │
-│                    │  All VFX (65+ assets)  │              │
-│                    │  Categorized + Raw     │              │
-│                    └────────────────────────┘              │
-│                                 │                          │
-│                                 ▼                          │
-│                    ┌────────────────────────┐              │
-│                    │  Performance Systems   │              │
-│                    │  • VFXAutoOptimizer    │              │
-│                    │  • VFXLODController    │              │
-│                    └────────────────────────┘              │
+│  ARKit Sensors → ARCameraManager → Color texture            │
+│               → AROcclusionManager → Depth + Stencil        │
+│                              │                              │
+│                              ▼                              │
+│                       ARDepthSource                         │
+│      (single compute + optional rotation + mock data)       │
+│   Outputs: DepthMap, StencilMap, PositionMap, ColorMap,      │
+│            RayParams, InverseView                            │
+│                              │                              │
+│                              ▼                              │
+│                   VFXARBinder (per VFX)                     │
+│                              │                              │
+│                              ▼                              │
+│                           VFX Graph                         │
+│                              ▲                              │
+│  HandVFXController   AudioBridge   MeshVFX (GraphicsBuffer)  │
+│  (hands/gestures)    (audio)       (AR mesh)                 │
+│                              │                              │
+│                              ▼                              │
+│                     Performance Systems                      │
+│                 (VFXAutoOptimizer, VFXLOD)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -472,13 +465,14 @@ Max Particles:       500,000
 
 | Property | Type | Description |
 |----------|------|-------------|
-| DepthMap | Texture2D | Environment depth from ARKit |
-| StencilMap | Texture2D | Human segmentation mask |
-| ColorMap | Texture2D | Camera color texture |
-| PositionMap | Texture2D | GPU-computed world positions |
-| InverseView | Matrix4x4 | Camera cameraToWorldMatrix |
-| InverseProjection | Matrix4x4 | projectionMatrix.inverse |
-| RayParams | Vector4 | (0, 0, tan(fov/2)*aspect, tan(fov/2)) |
+| DepthMap | Texture2D | Human depth preferred, environment depth fallback |
+| StencilMap | Texture2D | Human segmentation mask (or white) |
+| ColorMap | Texture2D | Camera color capture from ARDepthSource |
+| PositionMap | Texture2D | GPU-computed world positions (ARGBFloat) |
+| VelocityMap | Texture2D | Optional GPU velocity texture (if enabled) |
+| InverseView | Matrix4x4 | TRS(camera position, rotation, Vector3.one) |
+| InverseProjection | Matrix4x4 | projectionMatrix.inverse (optional bind) |
+| RayParams | Vector4 | (centerShiftX, centerShiftY, tanH, tanV) with rotation fix |
 | DepthRange | Vector2 | (minDepth=0.1, maxDepth=10.0) |
 
 ### 11.2 Hand Tracking Properties
@@ -508,6 +502,7 @@ Max Particles:       500,000
 | Standard | Alternates |
 |----------|------------|
 | InverseView | InverseViewMatrix |
+| InverseProjection | InverseProj |
 | RayParams | ProjectionVector |
 | StencilMap | HumanStencil, Stencil Map |
 | PositionMap | Position Map |
@@ -518,90 +513,80 @@ Max Particles:       500,000
 
 ## 12. Troubleshooting
 
-### 12.1 Particles Not Visible
+### 12.1 VFX Not Visible / No Particles
 
-**Cause**: Missing RayParams binding
+**Cause**: ARDepthSource not ready, VFXARBinder missing, or property names mismatch.
 
-**Fix**: Ensure VFXBinderManager is active and binding RayParams:
-```csharp
-if (vfx.HasVector4("RayParams"))
-    vfx.SetVector4("RayParams", _rayParams);
-```
+**Fix**:
+1. Ensure `ARDepthSource` exists in the scene and `IsReady` is true.
+2. Use `ARDepthSource` context menu `Debug Source` to verify `DepthMap`, `PositionMap`, and `RayParams`.
+3. Ensure each VFX has `VFXARBinder` and run `Auto-Detect Bindings`.
+4. Confirm VFX properties use expected names (DepthMap, PositionMap, RayParams, InverseView).
 
-### 12.2 Audio Not Working
+### 12.2 PositionMap Is Black or Static
 
-**Cause**: Missing EnhancedAudioProcessor
+**Cause**: DepthToWorld compute shader missing, kernel name mismatch, or no depth input.
 
-**Fix**: Run `H3M > EchoVision > Setup Audio Input`
+**Fix**:
+- Assign `Assets/Shaders/DepthToWorld.compute` to ARDepthSource if missing.
+- Confirm kernels `DepthToWorld` and `CalculateVelocity` exist.
+- Verify depth textures are non-null in `Debug Source`.
+- Ensure dispatch uses `[numthreads(32,32,1)]` sizing (ARDepthSource already does this).
 
-### 12.3 Build Fails with CS0234
+### 12.3 Depth or Stencil Appears Rotated/Mirrored
 
-**Cause**: UnityEditor namespace in runtime code
+**Cause**: Portrait rotation mismatch on iOS.
 
-**Fix**: Wrap Editor-only code:
+**Fix**:
+- Toggle `Rotate Depth Texture` on ARDepthSource.
+- Ensure `Hidden/RotateUV90CW` shader exists.
+- Re-check `RayParams` sign (ARDepthSource negates tanH when rotated).
+
+### 12.4 ColorMap Is Black or Grayscale
+
+**Cause**: Color capture not happening or ARCameraTextureProvider missing.
+
+**Fix**:
+- Ensure ARDepthSource has a valid `ARCameraTextureProvider` in scene.
+- Confirm AR camera is set on ARDepthSource.
+- Use `Debug Source` to verify `ColorMap` dimensions update each frame.
+
+### 12.5 Editor Has No AR Data
+
+**Cause**: No live device feed.
+
+**Fix**:
+- Use AR Foundation Remote (see `ARFoundationRemoteSetup.md`), or
+- Enable `Use Mock Data In Editor` on ARDepthSource for offline testing.
+
+### 12.6 Audio Not Working
+
+**Cause**: AudioBridge missing or VFX property names mismatch.
+
+**Fix**:
+- Add `AudioBridge` with a valid `AudioSource`.
+- Enable `_bindAudio` on VFXARBinder and verify property names.
+- For legacy audio-driven VFX, use `EnhancedAudioProcessor`.
+
+### 12.7 Hologram Placement or Scale Wrong
+
+**Cause**: Anchor transform or scale not bound.
+
+**Fix**:
+- Set `AnchorTransform` and `HologramScale` on VFXARBinder.
+- Use `Enable Hologram Mode` context menu to auto-configure.
+
+### 12.8 Build Fails with CS0234
+
+**Cause**: UnityEditor namespace used in runtime code.
+
+**Fix**:
 ```csharp
 #if UNITY_EDITOR
 UnityEditor.AssetDatabase.LoadAssetAtPath(...)
 #endif
 ```
 
-### 12.4 DepthToWorld Kernel Not Found
-
-**Cause**: Compute shader doesn't compile in Editor with Metal
-
-**Solution**: Works on device; gracefully disabled in Editor
-
-### 12.5 Compute Shader Thread Group Mismatch
-
-**Cause**: VFXBinderManager dispatched with wrong group size (8x8 vs actual 32x32)
-
-**Symptom**: Over-dispatch but bounds check prevents crash; still inefficient
-
-**Fix**: In VFXBinderManager.cs, use `Mathf.CeilToInt(width / 32.0f)`:
-```csharp
-// DepthToWorld.compute uses [numthreads(32,32,1)]
-int groupsX = Mathf.CeilToInt(width / 32.0f);
-int groupsY = Mathf.CeilToInt(height / 32.0f);
-_depthToWorldCompute.Dispatch(_depthToWorldKernel, groupsX, groupsY, 1);
-```
-
-### 12.6 HologramRenderer Overwrites Raw Depth
-
-**Cause**: HologramRenderer.cs incorrectly bound PositionMap to DepthMap property
-
-**Symptom**: VFX expecting raw depth received computed positions; particles failed
-
-**Fix**: Remove fallback in HologramRenderer.cs that sets DepthMap = PositionMap
-
-### 12.7 Scene Freezes When Switching VFX
-
-**Cause**: Asset swapping causes reinitialization
-
-**Fix**: Use Spawn Control mode in VFXGalleryUI:
-```csharp
-gallery.useSpawnControlMode = true;
-```
-
 ---
 
-## Appendix: File Inventory
-
-| Category | Files | Total Lines | Key Scripts |
-|----------|-------|-------------|-------------|
-| VFX Core | 3 | ~830 | VFXBinderManager (422), VFXCategory (92), HumanParticleVFX (318) |
-| VFX Binders | 5 | ~500 | VFXARDataBinder, VFXAudioDataBinder, VFXHandDataBinder |
-| Hand Tracking | 3 | ~700 | HandVFXController (365), ARKitHandTracking (187) |
-| Audio | 2 | ~400 | EnhancedAudioProcessor (287), AudioProcessor (105) |
-| Performance | 3 | ~930 | VFXAutoOptimizer (424), VFXLODController (185), VFXProfiler (320) |
-| UI | 4 | ~1,650 | VFXGalleryUI (659), VFXSelectorUI (272), SimpleVFXUI (477) |
-| Editor | 13 | ~2,000 | Setup utilities, auto-configuration |
-| H3M Core | 7 | ~700 | HologramSource (126), HologramRenderer, HologramAnchor |
-| H3M Editor | 5 | ~500 | HologramBuilder, Setup utilities |
-| Echovision | 8 | ~800 | MeshVFX, SoundWaveEmitter, DepthImageProcessor |
-| Segmentation | 3 | ~400 | BodyPartSegmenter, SegmentedDepthToWorld.compute |
-| Utils | 5 | ~400 | ARCameraTextureProvider, helpers |
-| **Total** | **73** | **~10,000** | |
-
----
-
-*Document generated by Claude Code deep review - 2026-01-14, Updated 2026-01-15*
+*Document updated for Hybrid Bridge architecture - 2026-01-17*
