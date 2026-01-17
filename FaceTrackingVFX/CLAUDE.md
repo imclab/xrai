@@ -49,6 +49,28 @@ This project uses Unity 2019.1 and legacy ARKit plugin. To use with modern Unity
 4. Update VFX Graph to current version
 5. Use ARFaceManager instead of legacy ARKit
 
+### Modernized Script (Added 2026-01-17)
+
+`ARFoundationFaceMeshBaker.cs` - AR Foundation compatible version of the face mesh baker.
+
+**Key Changes from Legacy**:
+```csharp
+// OLD (Unity-ARKit-Plugin)
+using UnityEngine.XR.iOS;
+UnityARSessionNativeInterface.ARFaceAnchorUpdatedEvent += FaceUpdated;
+anchorData.faceGeometry.vertices
+
+// NEW (AR Foundation)
+using UnityEngine.XR.ARFoundation;
+_arFace.updated += OnFaceUpdated;
+Mesh.AcquireReadOnlyMeshData(faceMesh)
+```
+
+**Usage**:
+1. Add ARFaceManager to XR Origin
+2. Create Face Prefab with ARFoundationFaceMeshBaker + MeshFilter
+3. Assign to ARFaceManager.facePrefab
+
 ---
 
 ## Integration Pattern
