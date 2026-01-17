@@ -1,0 +1,3573 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1593424854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1593424855}
+  - component: {fileID: 1593424857}
+  - component: {fileID: 1593424856}
+  m_Layer: 0
+  m_Name: V_Flare_Follow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1593424855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593424854}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793135695327273}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &1593424857
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593424854}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: c5f5d8965ff941846a08b647f42bea31, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 0.6
+        m_Name: Size
+        m_Overridden: 1
+      - m_Value: 0.02
+        m_Name: CA
+        m_Overridden: 1
+      - m_Value: 5
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 9, y: 0.04, z: 1712}
+        m_Name: Fre | Amp | Seed
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0, y: 0.04, z: 0.008000001, w: 1}
+        m_Name: Base Color
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 9, w: 0.5}
+        m_Name: Refine
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.038343534
+            value: 0.25
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.7932895
+            value: 0.17214662
+            inSlope: -0.3704539
+            outSlope: -0.3704539
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.21350555
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Alpha Over Life
+        m_Overridden: 1
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 1875c6de9d575994db2864adba4f0525, type: 3}
+        m_Name: Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &1593424856
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593424854}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &1736381415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1736381416}
+  - component: {fileID: 1736381418}
+  - component: {fileID: 1736381417}
+  m_Layer: 0
+  m_Name: Universal Particle (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1736381416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736381415}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793135695327273}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &1736381418
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736381415}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 7169ac025803b424d8b4e3949ec73c8c, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 1
+        m_Name: Emit Time
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Position Random Inside Sphere
+        m_Overridden: 1
+      - m_Value: 64
+        m_Name: Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Emitt Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Emitt Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Position Random Inside Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 4
+        m_Name: Color Multipier
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Delay Before Loop
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Single Burst Delay
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 33
+        m_Name: Single Burst Number
+        m_Overridden: 1
+      - m_Value: 1.65
+        m_Name: Debug Delay
+        m_Overridden: 1
+      - m_Value: 0.2
+        m_Name: Random Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Random Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Burst Delay
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: Burst Amount
+        m_Overridden: 1
+      - m_Value: 0.025
+        m_Name: CA Intensity
+        m_Overridden: 1
+      - m_Value: 5
+        m_Name: Spawn Time
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Birth Sphere Radius
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha Multipier
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 0.3
+        m_Name: Birth Sphere Thickness
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 1, y: 3}
+        m_Name: Initial Speed Range
+        m_Overridden: 1
+      - m_Value: {x: 0.02, y: 0.01}
+        m_Name: Random Size Multipier
+        m_Overridden: 1
+      - m_Value: {x: 2, y: 1}
+        m_Name: Gravity and Drag
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1.5}
+        m_Name: Random LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 0.2, y: 0.5}
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 22, y: 32}
+        m_Name: Burst Speed Range
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: -1, y: 0, z: 0}
+        m_Name: Target_position
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 2, y: 2, z: 0.5, w: 0}
+        m_Name: Turbulence
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 12
+        m_Name: Random Seed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.13235295
+          - serializedVersion: 3
+            time: 0.10240963
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.06543625
+          - serializedVersion: 3
+            time: 0.90210634
+            value: 0.99056226
+            inSlope: -0.048243098
+            outSlope: -8.031119
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.05272823
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -12.327004
+            outSlope: -12.327004
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.016778529
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Spawn Curve
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 6
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.05
+            value: 1
+            inSlope: 0.0023498507
+            outSlope: 0.0023498507
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Speed Over Life Multipier
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 22.321526
+            outSlope: 22.321526
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.044799805
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Scale Y by Speed
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Add Scale Y by Speed
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 5.115723
+            outSlope: 5.115723
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.07415484
+            value: 0.99968934
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.80908805
+            value: 1.0022103
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Alpha Over Life
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 12.172549, g: 12.047059, b: 23.968628, a: 1}
+          key1: {r: 0.18039216, g: 0.44705883, b: 1.4980392, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65342
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.02549126, g: 1.9058825, b: 0, a: 1}
+          key1: {r: 0, g: 0.59479296, b: 0.67058825, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 35852
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Gradient
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 1
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Spawn
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Burst
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Constant
+        m_Overridden: 1
+--- !u!73398921 &1736381417
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736381415}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793135695327278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793135695327273}
+  m_Layer: 0
+  m_Name: Main
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793135695327273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135695327278}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 527793137702760889}
+  - {fileID: 1593424855}
+  - {fileID: 1049500689382742728}
+  - {fileID: 1736381416}
+  m_Father: {fileID: 527793137748885510}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &527793135893052568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793135893052571}
+  - component: {fileID: 527793135893052565}
+  - component: {fileID: 527793135893052570}
+  m_Layer: 0
+  m_Name: Universal Particle _ dot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793135893052571
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135893052568}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793137013377811}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793135893052565
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135893052568}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: d76cf4fcbfc1511418f9b710bcf33fd4, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 1
+        m_Name: Emit Time
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Position Random Inside Sphere
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Emitt Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Emitt Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Position Random Inside Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Color Multipier
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Delay Before Loop
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Single Burst Delay
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 33
+        m_Name: Single Burst Number
+        m_Overridden: 1
+      - m_Value: 1.65
+        m_Name: Debug Delay
+        m_Overridden: 1
+      - m_Value: 0.2
+        m_Name: Random Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Random Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Burst Delay
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: Burst Amount
+        m_Overridden: 1
+      - m_Value: 0.01
+        m_Name: CA Intensity
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 2, y: 3}
+        m_Name: Initial Speed Range
+        m_Overridden: 1
+      - m_Value: {x: 0.01, y: 0.04}
+        m_Name: Random Size Multipier
+        m_Overridden: 1
+      - m_Value: {x: -1, y: 2}
+        m_Name: Gravity and Drag
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1.5}
+        m_Name: Random LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 0.35, y: 0.65}
+        m_Name: LifeTime
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: Target_position
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.5, y: 3, z: 0.5, w: 0}
+        m_Name: Turbulence
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 12
+        m_Name: Random Seed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.13235295
+          - serializedVersion: 3
+            time: 0.10240963
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.06543625
+          - serializedVersion: 3
+            time: 0.90210634
+            value: 0.99056226
+            inSlope: -0.048243098
+            outSlope: -8.031119
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.05272823
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -12.327004
+            outSlope: -12.327004
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.016778529
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Spawn Curve
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 6
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.05
+            value: 1
+            inSlope: 0.0023498507
+            outSlope: 0.0023498507
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Speed Over Life Multipier
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 22.321526
+            outSlope: 22.321526
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.044799805
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Scale Y by Speed
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Add Scale Y by Speed
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.44800088, g: 15.999998, b: 4.0095286, a: 1}
+          key1: {r: 1.2645197, g: 2.5693963, b: 2.4445136, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 1
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Spawn
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant
+        m_Overridden: 1
+--- !u!73398921 &527793135893052570
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135893052568}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793135903566841
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793135903566840}
+  - component: {fileID: 527793135903566842}
+  - component: {fileID: 527793135903566843}
+  m_Layer: 0
+  m_Name: Universal Particle _ dot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793135903566840
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135903566841}
+  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793136855846816}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793135903566842
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135903566841}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 0ba87f92696d5264da0b85d44f1a58d8, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 1
+        m_Name: Emit Time
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Position Random Inside Sphere
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Emitt Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Emitt Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Position Random Inside Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Color Multipier
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Delay Before Loop
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Single Burst Delay
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 33
+        m_Name: Single Burst Number
+        m_Overridden: 1
+      - m_Value: 1.65
+        m_Name: Debug Delay
+        m_Overridden: 1
+      - m_Value: 0.2
+        m_Name: Random Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Random Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Burst Delay
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: Burst Amount
+        m_Overridden: 1
+      - m_Value: 0.01
+        m_Name: CA Intensity
+        m_Overridden: 1
+      - m_Value: 12
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha Multipier
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 2, y: 3}
+        m_Name: Initial Speed Range
+        m_Overridden: 1
+      - m_Value: {x: 0.005, y: 0.02}
+        m_Name: Random Size Multipier
+        m_Overridden: 1
+      - m_Value: {x: -2, y: 2}
+        m_Name: Gravity and Drag
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1.5}
+        m_Name: Random LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 0.35, y: 0.65}
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 2}
+        m_Name: Burst Speed Range
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: Target_position
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.5, y: 3, z: 0.5, w: 0}
+        m_Name: Turbulence
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 12
+        m_Name: Random Seed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.13235295
+          - serializedVersion: 3
+            time: 0.10240963
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.06543625
+          - serializedVersion: 3
+            time: 0.90210634
+            value: 0.99056226
+            inSlope: -0.048243098
+            outSlope: -8.031119
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.05272823
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -12.327004
+            outSlope: -12.327004
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.016778529
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Spawn Curve
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 6
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.05
+            value: 1
+            inSlope: 0.0023498507
+            outSlope: 0.0023498507
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Speed Over Life Multipier
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 22.321526
+            outSlope: 22.321526
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.044799805
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Scale Y by Speed
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Add Scale Y by Speed
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.33599946, g: 15.999998, b: 0.33599946, a: 1}
+          key1: {r: 1.2523786, g: 1.4331459, b: 2.5693965, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 1
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Spawn
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant
+        m_Overridden: 1
+--- !u!73398921 &527793135903566843
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793135903566841}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793136368224371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793136368224370}
+  - component: {fileID: 527793136368224364}
+  - component: {fileID: 527793136368224365}
+  m_Layer: 0
+  m_Name: Expiration_Wind
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793136368224370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793136368224371}
+  m_LocalRotation: {x: -0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 527793137013377811}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!2083052967 &527793136368224364
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793136368224371}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: a08e80dec7bc74bd1b2be83f4ea48081, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 0.5
+        m_Name: Lifetime
+        m_Overridden: 1
+      - m_Value: 2.4
+        m_Name: Size
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant Rate
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant Rate [debug]
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Delay
+        m_Overridden: 1
+      - m_Value: 0.05
+        m_Name: IntensityNoise
+        m_Overridden: 1
+      - m_Value: 0.6
+        m_Name: IntensityAnimationNoise
+        m_Overridden: 1
+      - m_Value: 90
+        m_Name: Rotation
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 1, y: 1}
+        m_Name: Animation Noise Tiling
+        m_Overridden: 1
+      - m_Value: {x: 0.3, y: 2}
+        m_Name: TilingAnimationNoise
+        m_Overridden: 1
+      - m_Value: {x: 0.75, y: 3}
+        m_Name: TilingMain
+        m_Overridden: 1
+      - m_Value: {x: 0.3, y: 2}
+        m_Name: TilingAnimationMask
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1}
+        m_Name: TilingNoise
+        m_Overridden: 1
+      - m_Value: {x: -1.414, y: 0.5}
+        m_Name: SpeedAnimationNoise
+        m_Overridden: 1
+      - m_Value: {x: -2, y: 1}
+        m_Name: SpeedMain
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0, y: 0.929, z: 0.20644455, w: 0}
+        m_Name: Color
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
+        m_Name: Animation Noise Refine
+        m_Overridden: 1
+      - m_Value: {x: 6, y: 16, z: 3, w: 0.5}
+        m_Name: AnimationMaskRefine
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
+        m_Name: RefineAnimationMask
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
+        m_Name: RefineAnimationNoise
+        m_Overridden: 1
+      - m_Value: {x: 3, y: 24, z: 2, w: 0.5}
+        m_Name: ReineMain
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.9619471
+            inSlope: -0.0052847825
+            outSlope: -0.0052847825
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.27034667
+          - serializedVersion: 3
+            time: 1
+            value: -4
+            inSlope: -10.903114
+            outSlope: -10.903114
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.06920791
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.009321272
+            value: -0.21803218
+            inSlope: 0.7132222
+            outSlope: 0.7132222
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.19890165
+            outWeight: 0.08015189
+          - serializedVersion: 3
+            time: 1
+            value: 0.15247679
+            inSlope: 0.044655852
+            outSlope: 0.044655852
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.20543613
+            outWeight: 0.14443815
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Process
+        m_Overridden: 1
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 4c1d80d9bc444494bb06039b5f59c796, type: 3}
+        m_Name: Mask
+        m_Overridden: 1
+      - m_Value: {fileID: 70948873267775455, guid: 65588ce964fcf45aca098c8d81bd4661, type: 3}
+        m_Name: Mesh
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 522c2bd8036be4afcaf9e8b807adb452, type: 3}
+        m_Name: Animatin Noise
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 386d2358aa594075905d136e9aad5a54, type: 3}
+        m_Name: Main
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: fe2e15946ebf56c4aaf31d8d9d4b5209, type: 3}
+        m_Name: Noise
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 0e2aab565bf1449499c94f5d04006fd8, type: 3}
+        m_Name: Final Mask
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 0e2aab565bf1449499c94f5d04006fd8, type: 3}
+        m_Name: AnimationMask
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &527793136368224365
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793136368224371}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793136855846817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793136855846816}
+  m_Layer: 0
+  m_Name: Birth Explode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793136855846816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793136855846817}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 527793135903566840}
+  - {fileID: 527793137341264752}
+  m_Father: {fileID: 527793137748885510}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &527793137013377808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137013377811}
+  m_Layer: 0
+  m_Name: Hit Explode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &527793137013377811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137013377808}
+  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 527793135893052571}
+  - {fileID: 527793137661264226}
+  - {fileID: 527793137691160324}
+  - {fileID: 527793137238673406}
+  - {fileID: 527793136368224370}
+  m_Father: {fileID: 527793137748885510}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+--- !u!1 &527793137238673407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137238673406}
+  - component: {fileID: 527793137238673400}
+  - component: {fileID: 527793137238673401}
+  m_Layer: 0
+  m_Name: Universal Flare Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137238673406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137238673407}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793137013377811}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793137238673400
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137238673407}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 3
+        m_Name: Size Mulitipier
+        m_Overridden: 1
+      - m_Value: 0.15
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Delay
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Size Multipier
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: BornAnimationDuration
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: DeathAnimationDuration
+        m_Overridden: 1
+      - m_Value: 0.001
+        m_Name: Ca Intensity
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.2770917, y: 0.06528339, z: 0.06528339, w: 0}
+        m_Name: Inner Color
+        m_Overridden: 1
+      - m_Value: {x: 0.9411765, y: 2.227451, z: 4, w: 0}
+        m_Name: Base Color
+        m_Overridden: 1
+      - m_Value: {x: 0.6492144, y: 0.9379466, z: 3.9999995, w: 1}
+        m_Name: Flare Base Color
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 1
+        m_Name: Type
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Output Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.0002289
+            inSlope: -2.0885282
+            outSlope: -2.0885282
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.063253015
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Alpha Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 5.7421384
+            outSlope: 5.7421384
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.045871563
+          - serializedVersion: 3
+            time: 0.49246985
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 1.3485695, g: 1.2518295, b: 4.8795815, a: 1}
+          key1: {r: 0.3647059, g: 0.41241828, b: 0.6509804, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 65535
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 0}
+        m_Name: Main Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 4b45802263cb74f42a778743d0cf1768, type: 3}
+        m_Name: Flare Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Flare Texture2D
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 0
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Fresnel Support
+        m_Overridden: 1
+--- !u!73398921 &527793137238673401
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137238673407}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793137341264753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137341264752}
+  - component: {fileID: 527793137341264754}
+  - component: {fileID: 527793137341264755}
+  m_Layer: 0
+  m_Name: Universal Flare Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137341264752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137341264753}
+  m_LocalRotation: {x: 1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793136855846816}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793137341264754
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137341264753}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 3
+        m_Name: Size Mulitipier
+        m_Overridden: 1
+      - m_Value: 0.15
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Delay
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Size Multipier
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: BornAnimationDuration
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: DeathAnimationDuration
+        m_Overridden: 1
+      - m_Value: 0.001
+        m_Name: Ca Intensity
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Multiply Size
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.2770917, y: 0.06528339, z: 0.06528339, w: 0}
+        m_Name: Inner Color
+        m_Overridden: 1
+      - m_Value: {x: 0.9411765, y: 2.227451, z: 4, w: 0}
+        m_Name: Base Color
+        m_Overridden: 1
+      - m_Value: {x: 0.6492144, y: 0.9379466, z: 3.9999995, w: 1}
+        m_Name: Flare Base Color
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 1
+        m_Name: Type
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Output Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.0002289
+            inSlope: -2.0885282
+            outSlope: -2.0885282
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.063253015
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Alpha Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 5.7421384
+            outSlope: 5.7421384
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.045871563
+          - serializedVersion: 3
+            time: 0.49246985
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.5904293, g: 4.8795815, b: 0.89688087, a: 1}
+          key1: {r: 0.3647059, g: 0.41241828, b: 0.6509804, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 65535
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 0}
+        m_Name: Main Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 4b45802263cb74f42a778743d0cf1768, type: 3}
+        m_Name: Flare Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Name: Flare Texture2D
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 0
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Fresnel Support
+        m_Overridden: 1
+--- !u!73398921 &527793137341264755
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137341264753}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793137439145340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137439145343}
+  - component: {fileID: 527793135842114627}
+  - component: {fileID: 8813456197368409040}
+  - component: {fileID: 527793135842114625}
+  - component: {fileID: 527793135842114624}
+  - component: {fileID: 527793135842114631}
+  - component: {fileID: 527793135842114630}
+  - component: {fileID: 527793135842114629}
+  - component: {fileID: 527793135842114628}
+  m_Layer: 0
+  m_Name: 13_Wind_Basic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137439145343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 527793137748885510}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &527793135842114627
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!135 &8813456197368409040
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &527793135842114625
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &527793135842114624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &527793135842114631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f05662b983eb640a782c0cbf2064a7ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 13
+  Name: Wind Bolt
+  MagicSchool: {fileID: 11400000, guid: 2538b6f69a2414261af7493230eed42b, type: 2}
+  SpellType: 0
+  SpawnOffset: {x: 0, y: 0, z: 0.5}
+  PerpendicularToGround: 0
+  ChargeTime: 1
+  MaxChargeCount: 5
+  MaxUseCount: 999
+--- !u!114 &527793135842114630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77d2549ca7cef4e1485712e3c7d1663b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lifetime: 3
+  _spawnSound: {fileID: 8300000, guid: d55d972c0193e4e5e9ff8c0e72974dba, type: 3}
+  _destroyDelay: 1
+--- !u!114 &527793135842114629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96a8e88bcbb6407490fbf329b443eba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 4
+--- !u!114 &527793135842114628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137439145340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1349d2545f9e94e3299bcb1643e43413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitOnce: 1
+  _hitSound: {fileID: 8300000, guid: cc2714b80f49d412fa14fdc09cb9df4a, type: 3}
+  _destroyDelay: 1
+--- !u!1 &527793137661264227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137661264226}
+  - component: {fileID: 527793137661264220}
+  - component: {fileID: 527793137661264221}
+  m_Layer: 0
+  m_Name: Universal Particle _Lines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137661264226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137661264227}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793137013377811}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793137661264220
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137661264227}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 0ba87f92696d5264da0b85d44f1a58d8, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 1
+        m_Name: Emit Time
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Position Random Inside Sphere
+        m_Overridden: 1
+      - m_Value: 16
+        m_Name: Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Emitt Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Emitt Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Position Random Inside Sphere Thickness
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: Color Multipier
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Delay Before Loop
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Single Burst Delay
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 33
+        m_Name: Single Burst Number
+        m_Overridden: 1
+      - m_Value: 1.75
+        m_Name: Debug Delay
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Random Sphere Radius
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Burst Delay
+        m_Overridden: 1
+      - m_Value: 32
+        m_Name: Burst Amount
+        m_Overridden: 1
+      - m_Value: 0.01
+        m_Name: CA Intensity
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 2, y: 3}
+        m_Name: Initial Speed Range
+        m_Overridden: 1
+      - m_Value: {x: 0.03, y: 0.06}
+        m_Name: Random Size Multipier
+        m_Overridden: 1
+      - m_Value: {x: -1, y: 2}
+        m_Name: Gravity and Drag
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1.5}
+        m_Name: Random LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 0.35, y: 0.65}
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 3}
+        m_Name: Burst Speed Range
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: Target_position
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.5, y: 3, z: 0.5, w: 0}
+        m_Name: Turbulence
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 12
+        m_Name: Random Seed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.13235295
+          - serializedVersion: 3
+            time: 0.10240963
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.06543625
+          - serializedVersion: 3
+            time: 0.90210634
+            value: 0.99056226
+            inSlope: -0.048243098
+            outSlope: -8.031119
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.05272823
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: -12.327004
+            outSlope: -12.327004
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.016778529
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Spawn Curve
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 6
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.05
+            value: 1
+            inSlope: 0.0023498507
+            outSlope: 0.0023498507
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Speed Over Life Multipier
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 22.321526
+            outSlope: 22.321526
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.044799805
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: -0.012331247
+            inSlope: 6.7995915
+            outSlope: 6.7995915
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.03776802
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.212677
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Add Scale Y by Speed
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0.22399996, g: 15.999998, b: 3.5959668, a: 1}
+          key1: {r: 1.2645197, g: 2.5693963, b: 2.4583118, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65342
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 0
+          atime3: 0
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: e5fe5690ab827df4e9b30a2afa0c049e, type: 3}
+        m_Name: Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 1
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Spawn
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant
+        m_Overridden: 1
+--- !u!73398921 &527793137661264221
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137661264227}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793137691160325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137691160324}
+  - component: {fileID: 527793137691160326}
+  - component: {fileID: 527793137691160327}
+  m_Layer: 0
+  m_Name: Universal Flare
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137691160324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137691160325}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793137013377811}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &527793137691160326
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137691160325}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: bfa1155b00b59e345ac17cfa7a57d91c, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 2
+        m_Name: Size Mulitipier
+        m_Overridden: 1
+      - m_Value: 0.45
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Delay
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Brightness
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Amount
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: Size Multipier
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Constant Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: BornAnimationDuration
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: DeathAnimationDuration
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 0, y: 0}
+        m_Name: Initial Speed Range
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Gravity and Drag
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 70.935486, y: 16.506996, z: 16.506996, w: 0}
+        m_Name: Inner Color
+        m_Overridden: 1
+      - m_Value: {x: 15.999998, y: 15.999998, z: 15.999998, w: 0}
+        m_Name: Base Color
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 0, w: 0}
+        m_Name: Main Texture Tiling & Offset
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 9, z: 9, w: 0.5}
+        m_Name: Main Texture Adjustment
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 1, z: 0.5, w: 1}
+        m_Name: Turbulence
+        m_Overridden: 1
+      - m_Value: {x: 341.78006, y: 341.78006, z: 341.78006, w: 1}
+        m_Name: Flare Base Color
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array:
+      - m_Value: 1
+        m_Name: Type
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Output Type
+        m_Overridden: 1
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.0002289
+            inSlope: -2.0885282
+            outSlope: -2.0885282
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.063253015
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Alpha Over Life
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 11.067399
+            outSlope: 11.067399
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.039738394
+          - serializedVersion: 3
+            time: 0.24668127
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: Size Over Life
+        m_Overridden: 1
+    m_Gradient:
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 1, g: 1, b: 1, a: 1}
+          key1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 0
+          atime1: 65535
+          atime2: 65535
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 2
+        m_Name: Color Over Life
+        m_Overridden: 1
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
+        m_Name: Main Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
+        m_Name: Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 6e4421724b20df742b7a38abe43e48bd, type: 3}
+        m_Name: Flare Texture
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 5044169c7ab3c50489096daebd396381, type: 3}
+        m_Name: Flare Texture2D
+        m_Overridden: 1
+    m_Bool:
+      m_Array:
+      - m_Value: 0
+        m_Name: Debug Mode
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Fresnel Support
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Constant Spawn
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Burst Spawn
+        m_Overridden: 1
+--- !u!73398921 &527793137691160327
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137691160325}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793137702760894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137702760889}
+  - component: {fileID: 527793137702760890}
+  - component: {fileID: 527793137702760891}
+  m_Layer: 0
+  m_Name: VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137702760889
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137702760894}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 527793135695327273}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!2083052967 &527793137702760890
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137702760894}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: a2e94b844ff839b4e9796c82e21306b9, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 0.24
+        m_Name: Size
+        m_Overridden: 1
+      - m_Value: 0.244
+        m_Name: Intensity
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Rotation
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: -2, y: 0}
+        m_Name: Speed
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 0}
+        m_Name: D_Speed
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 2}
+        m_Name: Tiling
+        m_Overridden: 1
+      - m_Value: {x: 0.2, y: 5}
+        m_Name: Remap
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1}
+        m_Name: Inner Fresnel
+        m_Overridden: 1
+      - m_Value: {x: 2, y: 16}
+        m_Name: Outer Fresnel
+        m_Overridden: 1
+      - m_Value: {x: -1, y: 1}
+        m_Name: S_Speed
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.36470592, y: 1, z: 0.37100115, w: 0}
+        m_Name: Color
+        m_Overridden: 1
+      - m_Value: {x: 6, y: 24, z: 3, w: 0.25}
+        m_Name: Refine
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 1, z: 0.40106964, w: 0}
+        m_Name: Color A
+        m_Overridden: 1
+      - m_Value: {x: 1, y: 1, z: 1, w: 0.5}
+        m_Name: S_Refine
+        m_Overridden: 1
+      - m_Value: {x: 0.1317702, y: 1, z: 0.01999998, w: 0}
+        m_Name: Color B
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 386d2358aa594075905d136e9aad5a54, type: 3}
+        m_Name: Texture2D
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 386d2358aa594075905d136e9aad5a54, type: 3}
+        m_Name: Surface Texture
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &527793137702760891
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137702760894}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &527793137748885511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527793137748885510}
+  - component: {fileID: 527793137748885505}
+  - component: {fileID: 1421664904196037491}
+  m_Layer: 0
+  m_Name: Visual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527793137748885510
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137748885511}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 527793135695327273}
+  - {fileID: 527793136855846816}
+  - {fileID: 527793137013377811}
+  m_Father: {fileID: 527793137439145343}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &527793137748885505
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137748885511}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a4e214866674bca4f90cb214ced98f69, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1421664904196037491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527793137748885511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47545e9eafa4a474e83d23a43c41f7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackSpell: {fileID: 527793135842114628}
+  _lifetimeController: {fileID: 527793135842114630}
+  _animator: {fileID: 527793137748885505}
+--- !u!1 &1760538792058058622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1049500689382742728}
+  - component: {fileID: 7721810417148406325}
+  - component: {fileID: 1372094162086238509}
+  m_Layer: 0
+  m_Name: V_WindBolt_Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1049500689382742728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760538792058058622}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 527793135695327273}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &7721810417148406325
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760538792058058622}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 5aa2aef7122d04a889ac3dd9e54c8499, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 4
+        m_Name: Spawn Rate
+        m_Overridden: 1
+      - m_Value: 4
+        m_Name: Spawn Per Unit
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array: []
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &1372094162086238509
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760538792058058622}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0

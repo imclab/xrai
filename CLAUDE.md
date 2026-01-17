@@ -13,8 +13,18 @@ Unity-XR-AI/
 ├── KnowledgeBase/           # 75+ knowledge files, patterns, references
 ├── AgentBench/              # Unity research workbench (source code access)
 ├── Vis/                     # 10 3D visualization frontends
+│
+├── # UNITY PROJECTS
 ├── MetavidoVFX-main/        # Unity VFX project (AR Foundation + H3M)
 ├── Fluo-GHURT-main/         # Keijiro's Fluo controller/receiver system
+├── SplatVFX/                # Gaussian Splatting for VFX Graph (keijiro)
+├── TouchingHologram/        # HoloKit hand tracking + Buddha VFX (holoi)
+├── TamagotchU/              # ML-Agents + Spine virtual pet (EyezLee)
+├── HoloKitApp/              # Official HoloKit multi-reality app (holoi)
+├── HoloKitMultiplayer/      # Colocated multiplayer boilerplate (holoi)
+├── FaceTrackingVFX/         # ARKit face mesh → VFX Graph (mao-test-h)
+├── LLMUnity/                # AI characters with local LLMs (undreamai)
+│
 ├── mcp-server/              # MCP KB Server (TypeScript)
 ├── Scripts/                 # Utility scripts
 ├── specs/                   # Spec-Kit specifications
@@ -139,6 +149,43 @@ Unity source code research workbench from keijiro/AgentBench.
 
 ---
 
+## 🆕 Projects Migrated (2026-01-17)
+
+| Project | Source | Key Technologies |
+|---------|--------|------------------|
+| **SplatVFX** | keijiro/SplatVFX | Gaussian Splatting, VFX Graph, URP 17 |
+| **TouchingHologram** | holoi/touching-hologram | HoloKit SDK, Hand Tracking, 24 Buddha VFX |
+| **TamagotchU** | EyezLee/TamagotchU_Unity | ML-Agents, Spine 4.3, Dynamic Bone, VATBaker |
+| **HoloKitApp** | holoi/holokit-app | Multi-reality AR, Netcode, MPC, Apple Watch |
+| **HoloKitMultiplayer** | holoi/holokit-colocated-multiplayer | Colocated AR, Image Marker Alignment |
+| **FaceTrackingVFX** | mao-test-h/FaceTracking-VFX | ARKit Face Mesh, Smrvfx, VFX Graph |
+| **LLMUnity** | undreamai/LLMUnity | Local LLMs, RAG, AI Characters, Mobile |
+
+### KB Files Added
+- `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` - Photon/Normcore/coherence comparison
+- `_WEBXR_DEVICE_API_EXPLAINER.md` - WebXR + unity-webxr-export
+
+---
+
+## 📋 Next Steps
+
+### Immediate
+1. **Upgrade FaceTrackingVFX** - Unity 2019 → Unity 6, ARKit Plugin → AR Foundation
+2. **Test HoloKit projects** - Verify build on iOS device
+3. **Extract VFX patterns** - Consolidate 24 Buddha VFX + HoloKit VFX library
+
+### Integration Opportunities
+- **Gaussian Splatting + AR** - SplatVFX in AR Foundation context
+- **Hand Tracking + MetavidoVFX** - Port TouchingHologram hand interaction to MetavidoVFX
+- **ML-Agents + VFX** - Connect trained models to VFX Graph outputs
+- **Colocated Multiplayer** - Apply HoloKitMultiplayer patterns to MetavidoVFX
+
+### Documentation
+- Add all new projects to `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md`
+- Extract reusable patterns to KB files
+
+---
+
 ## 🔍 For AI Assistants
 
 1. **Search KB first** before implementing new features
@@ -159,4 +206,4 @@ MIT License - Knowledge bases and code snippets attributed to original repos.
 
 **Maintained by**: James Tunick
 
-**Last Updated**: 2026-01-16
+**Last Updated**: 2026-01-17
