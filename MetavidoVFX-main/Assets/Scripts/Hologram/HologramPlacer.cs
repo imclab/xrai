@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -25,6 +26,9 @@ public class HologramPlacer : MonoBehaviour
     [Tooltip("Show reticle before placement")]
     [SerializeField] bool _showReticle = true;
     [SerializeField] GameObject _reticlePrefab;
+
+    [Tooltip("Optional: Auto-place at this transform on start (skips tap-to-place)")]
+    [SerializeField] Transform _initialPlacementTarget;
 
     [Header("Constraints")]
     [SerializeField] float _minScale = 0.05f;
@@ -62,6 +66,50 @@ public class HologramPlacer : MonoBehaviour
         // Hide target until placed
         if (_target != null)
             _target.gameObject.SetActive(false);
+    }
+
+    void Start()
+    {
+        // Auto-place at initial target if specified
+        if (_initialPlacementTarget != null)
+        {
+            StartCoroutine(WaitAndAutoPlace());
+        }
+    }
+
+    IEnumerator WaitAndAutoPlace()
+    {
+        // Wait 2 frames to ensure other scripts have initialized
+        yield return null;
+        yield return null;
+
+        // Check if ARDepthSource exists and wait briefly for it to be ready
+        var depthSource = ARDepthSource.Instance;
+        if (depthSource != null)
+        {
+            // Wait up to 1 second for AR data
+            float timeout = 1f;
+            float elapsed = 0f;
+
+            while (elapsed < timeout && !depthSource.IsReady)
+            {
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            if (depthSource.IsReady)
+            {
+                Debug.Log($"[HologramPlacer] ARDepthSource ready after {elapsed:F2}s");
+            }
+            else
+            {
+                Debug.Log($"[HologramPlacer] ARDepthSource not ready yet (waiting for AR Foundation Remote?)");
+            }
+        }
+
+        // Place at target position
+        PlaceAt(_initialPlacementTarget.position);
+        Debug.Log($"[HologramPlacer] Auto-placed at {_initialPlacementTarget.name} ({_initialPlacementTarget.position})");
     }
 
     void Update()

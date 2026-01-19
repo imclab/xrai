@@ -576,6 +576,7 @@ MonoBehaviour:
   _planeManager: {fileID: 1949552023}
   _showReticle: 1
   _reticlePrefab: {fileID: 0}
+  _initialPlacementTarget: {fileID: 1526401167}
   _minScale: 0.05
   _maxScale: 2
   _dragSpeed: 0.002
@@ -828,7 +829,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55622476}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c58731793f77423786ac8bbbdaa62ba, type: 3}
   m_Name: 
@@ -842,7 +843,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55622476}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b729ee3b9ee64a168ccaa32338f1509, type: 3}
   m_Name: 
@@ -14849,7 +14850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &765500513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14862,7 +14863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56892d9bbe01b4e8599b7f6492a5b319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VFXARBinder
-  _source: {fileID: 0}
+  _source: {fileID: 1197446206}
   _bindDepthMap: 1
   _bindStencilMap: 0
   _bindPositionMap: 0
@@ -14916,8 +14917,8 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765500512}
-  m_Enabled: 0
-  m_CastShadows: 1
+  m_Enabled: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -14962,7 +14963,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765500512}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 0aa28ce584eda4f2dbf3875e50934496, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: e77f7974780114cddafc2b21c56b5197, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -14971,7 +14972,13 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 1
+        m_Name: Throttle
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: Ripple
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -24964,7 +24971,7 @@ MonoBehaviour:
   _useMockDataInEditor: 0
   _mockResolution: {x: 256, y: 192}
   _colorResolution: {x: 1920, y: 1080}
-  _verboseLogging: 0
+  _verboseLogging: 1
   _colorProvider: {fileID: 0}
   _enableVelocity: 1
 --- !u!4 &1197446207
@@ -32660,7 +32667,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500878001}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b911eb41c0dc642cf9f6ff297f0d9e4d, type: 3}
   m_Name: 
@@ -32672,7 +32679,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500878001}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a645f219fe4a24b15b1c326b0b5406d9, type: 3}
   m_Name: 
@@ -33327,7 +33334,7 @@ GameObject:
   - component: {fileID: 1526401165}
   - component: {fileID: 1526401164}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: TargetSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43621,58 +43628,6 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
---- !u!1 &2122378962
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2122378964}
-  - component: {fileID: 2122378963}
-  m_Layer: 0
-  m_Name: BodyPartSegmenter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2122378963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2122378962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ed688011f56d49a096d16699e2c6aa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Segmentation.BodyPartSegmenter
-  _arCameraBackground: {fileID: 0}
-  _arCamera: {fileID: 0}
-  _resourceSet: {fileID: 0}
-  _inferenceWidth: 512
-  _inferenceHeight: 384
-  _debugVisualization: 1
-  _runEveryFrame: 1
-  _skipFrames: 0
---- !u!4 &2122378964
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2122378962}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1018380027502157667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44242,6 +44197,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6169083417436354128, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
+      propertyPath: _bindAnchorPos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169083417436354128, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
+      propertyPath: _anchorTransform
+      value: 
+      objectReference: {fileID: 545848305}
+    - target: {fileID: 6169083417436354128, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
+      propertyPath: _bindHologramScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8064211986379335112, guid: ea96ac9fd70284aad8c9458d9e4c0b04, type: 3}
       propertyPath: externalDocument
       value: 
@@ -44299,5 +44266,4 @@ SceneRoots:
   - {fileID: 1448177046}
   - {fileID: 133815467}
   - {fileID: 12502412}
-  - {fileID: 2122378964}
   - {fileID: 1867297946}
