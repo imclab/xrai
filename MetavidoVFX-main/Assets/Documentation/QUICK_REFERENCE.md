@@ -307,6 +307,25 @@ VFXBinderManager:
   - computeSegmentedPositionMaps = true
 ```
 
+### AR Texture Access Crash on Startup
+AR Foundation texture getters throw NullReferenceException internally when AR isn't ready.
+The `?.` operator does NOT protect against this - use try-catch wrapper:
+
+```csharp
+// WRONG - crashes when AR subsystem isn't ready:
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// CORRECT - TryGetTexture pattern:
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Applies to**: `humanDepthTexture`, `environmentDepthTexture`, `humanStencilTexture`
+
 ---
 
 ## VFX Library System (2026-01)

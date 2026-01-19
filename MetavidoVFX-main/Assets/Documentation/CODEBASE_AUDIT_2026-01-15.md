@@ -8,7 +8,7 @@
 
 ---
 
-## Fix Status (Updated 2026-01-15)
+## Fix Status (Updated 2026-01-19)
 
 | Bug | Status | Fix Applied |
 |-----|--------|-------------|
@@ -17,6 +17,7 @@
 | BUG 3: Memory Leak | ❌ NOT A BUG | Serialized RenderTextures are inspector-assigned assets, not runtime allocations |
 | BUG 4: Missing HasTexture Guards | ✅ FIXED | `PeopleOcclusionVFXManager.cs`: Added guards on lines 175-180 |
 | BUG 5: Blocking Microphone Init | ❌ ALREADY FIXED | `EnhancedAudioProcessor.cs`: Already has 3-second timeout |
+| **BUG 6: AR Texture Access Crash** | ✅ FIXED | 6 files: `TryGetTexture()` pattern wraps AR Foundation texture getters |
 
 ---
 
@@ -129,6 +130,36 @@ yield return new WaitWhile(() => Microphone.GetPosition(device) <= 0);
 ```
 
 **Impact**: App freezes 100-500ms on some iOS devices during start.
+
+---
+
+### BUG 6: AR Foundation Texture Access NullReferenceException (FIXED 2026-01-19)
+**Files**: `ARDepthSource.cs`, `HumanParticleVFX.cs`, `DepthImageProcessor.cs`, `DirectDepthBinder.cs`, `DiagnosticOverlay.cs`, `SimpleHumanHologram.cs`
+**Confidence**: 100% (verified on device)
+
+**Issue**: AR Foundation texture property getters (`humanDepthTexture`, `environmentDepthTexture`, `humanStencilTexture`) throw `NullReferenceException` internally when AR subsystem isn't ready. The null-coalescing operator (`?.`) does NOT protect against this because the exception happens **inside** the getter, not at the property access level.
+
+```csharp
+// WRONG (crashes when AR isn't ready):
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// CORRECT (TryGetTexture pattern):
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Impact**: App crashes on startup before AR Foundation initializes. Manifests as:
+```
+NullReferenceException: Object reference not set to an instance of an object.
+UnityEngine.Texture2D.UpdateExternalTexture (System.IntPtr nativeTex)
+UnityEngine.XR.ARFoundation.AROcclusionManager.get_humanDepthTexture ()
+```
+
+**Fix Applied**: Added `TryGetTexture()` helper method to all 6 files that access AR Foundation textures. The helper wraps the texture getter in try-catch to safely return null when AR isn't ready.
 
 ---
 
