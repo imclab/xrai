@@ -5,10 +5,11 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Simple AR object placement and manipulation.
-/// - Tap to place on AR plane
+/// - Tap to place/reposition on AR plane (always enabled)
 /// - One finger drag: translate X/Z
 /// - Two finger drag: translate Y
 /// - Pinch: scale
+/// - Two finger twist: rotate Y-axis
 ///
 /// Minimal and clean - inspired by Paint-AR patterns.
 /// </summary>
@@ -36,6 +37,7 @@ public class HologramPlacer : MonoBehaviour
     [SerializeField] float _dragSpeed = 0.002f;
     [SerializeField] float _heightSpeed = 0.003f;
     [SerializeField] float _scaleSpeed = 0.01f;
+    [SerializeField] float _rotateSpeed = 0.5f;
 
     // State
     bool _isPlaced;
@@ -44,6 +46,7 @@ public class HologramPlacer : MonoBehaviour
 
     // Touch tracking
     float _lastPinchDistance;
+    float _lastTwistAngle;
     Vector2 _lastTouchCenter;
     int _lastTouchCount;
 
@@ -114,10 +117,13 @@ public class HologramPlacer : MonoBehaviour
 
     void Update()
     {
+        // Always check for tap placement (repositioning)
+        CheckForPlacement();
+
+        // Update reticle when not placed
         if (!_isPlaced)
         {
             UpdateReticle();
-            CheckForPlacement();
         }
         else
         {
@@ -307,12 +313,15 @@ public class HologramPlacer : MonoBehaviour
 
         var center = (touch0.position + touch1.position) / 2f;
         var distance = Vector2.Distance(touch0.position, touch1.position);
+        var delta = touch1.position - touch0.position;
+        var angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
 
         if (_lastTouchCount != 2)
         {
             // Just started two-finger gesture
             _lastPinchDistance = distance;
             _lastTouchCenter = center;
+            _lastTwistAngle = angle;
             return;
         }
 
@@ -326,8 +335,13 @@ public class HologramPlacer : MonoBehaviour
         newScale = Mathf.Clamp(newScale, _minScale, _maxScale);
         _target.localScale = Vector3.one * newScale;
 
+        // Rotation: twist
+        float angleDelta = Mathf.DeltaAngle(_lastTwistAngle, angle);
+        _target.Rotate(Vector3.up, -angleDelta * _rotateSpeed, Space.World);
+
         _lastPinchDistance = distance;
         _lastTouchCenter = center;
+        _lastTwistAngle = angle;
     }
 
     #endregion
@@ -337,7 +351,7 @@ public class HologramPlacer : MonoBehaviour
     void OnGUI()
     {
         #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        GUILayout.BeginArea(new Rect(10, Screen.height - 100, 200, 90));
+        GUILayout.BeginArea(new Rect(10, Screen.height - 120, 200, 110));
         GUILayout.BeginVertical("box");
 
         GUILayout.Label($"Placed: {_isPlaced}");
@@ -345,6 +359,7 @@ public class HologramPlacer : MonoBehaviour
         {
             GUILayout.Label($"Scale: {_target.localScale.x:F2}");
             GUILayout.Label($"Height: {_target.position.y:F2}m");
+            GUILayout.Label($"Rotation: {_target.eulerAngles.y:F0}°");
         }
 
         if (_isPlaced && GUILayout.Button("Reset"))
