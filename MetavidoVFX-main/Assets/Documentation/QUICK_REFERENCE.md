@@ -361,6 +361,49 @@ VFX created in Editor persist across play/stop:
 
 ---
 
+## HologramPlacer (AR Placement & Manipulation)
+
+**Location**: `Assets/Scripts/Hologram/HologramPlacer.cs`
+
+### Touch Gestures
+| Gesture | Action |
+|---------|--------|
+| **Tap** | Place/reposition hologram on AR plane (always enabled) |
+| **One-finger drag** | Translate X/Z (camera-relative) |
+| **Two-finger vertical drag** | Translate Y (height) |
+| **Pinch** | Scale (0.05x to 2x) |
+| **Two-finger twist** | Rotate Y-axis |
+
+### Inspector Settings
+```
+Target                    Transform    Object to place/manipulate
+AR Raycast Manager        Reference    Auto-found if null
+AR Plane Manager          Reference    Auto-found if null
+Show Reticle              bool         Preview placement position
+Reticle Prefab            GameObject   Custom reticle (optional)
+Initial Placement Target  Transform    Auto-place at position on start
+Min Scale                 float        0.05 (default)
+Max Scale                 float        2.0 (default)
+Drag Speed                float        0.002 (default)
+Height Speed              float        0.003 (default)
+Scale Speed               float        0.01 (default)
+Rotate Speed              float        0.5 (default)
+```
+
+### Public API
+```csharp
+bool IsPlaced              // True if hologram is placed
+Transform Target           // The placed object
+
+void PlaceAt(Vector3 pos)  // Place at world position
+void Reset()               // Return to pre-placement state
+```
+
+### Debug UI (Dev Builds)
+Bottom-left shows: Placed status, Scale, Height, Rotation angle, Reset button
+
+---
+
 ## Build Commands
 
 ```bash

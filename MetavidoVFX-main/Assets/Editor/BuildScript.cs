@@ -9,7 +9,7 @@ public class BuildScript
     {
         string[] scenes = new string[]
         {
-            "Assets/Scenes/HOLOGRAM_Mirror_MVP.unity"
+            "Assets/HOLOGRAM.unity"
         };
 
         // Open the scene to inject Debug Console
