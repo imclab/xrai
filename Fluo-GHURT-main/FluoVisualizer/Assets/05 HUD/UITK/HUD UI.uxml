@@ -1,9 +1,0 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/05%20HUD/UITK/HUD%20Styles.uss?fileID=7433441132597879392&amp;guid=1b1512b2360724b3587d54b430c7b73e&amp;type=3#HUD Styles" />
-    <ui:VisualElement name="container" style="margin-top: 36px; margin-right: 36px; margin-bottom: 36px; margin-left: 36px; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-        <ui:Label text="* System Link Established (00:00)&#10;* Core Sync Active&#10;* Target Lock Pending (*)" name="label1" style="position: absolute; left: 0; top: 0;" />
-        <ui:Label text="00 11 22 33 44 55 66&#10;00 11 22 33 44 55 66&#10;00 11 22 33 44 55 66&#10;00 11 22 33 44 55 66" name="label2" style="position: absolute; -unity-text-align: upper-right; top: 0; right: 0;" />
-        <ui:Label text="Packet Stream: 44%&#10;Node Status: Stable&#10;Pattern Recognized" name="label3" style="position: absolute; right: 0; bottom: 0; -unity-text-align: upper-right;" />
-        <ui:Label text="BPM [120]&#10;Deck A [&quot;Crimson Pulse&quot;]&#10;Deck B [&quot;Sapphire Drift&quot;]" name="label4" style="position: absolute; bottom: 143px; -unity-text-align: upper-left; left: 20px; font-size: 20px;" />
-    </ui:VisualElement>
-</ui:UXML>

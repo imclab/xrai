@@ -1,2 +1,0 @@
-# FXAA
-FXAA for unity
