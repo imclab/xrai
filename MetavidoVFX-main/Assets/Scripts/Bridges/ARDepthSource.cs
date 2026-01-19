@@ -354,16 +354,28 @@ public class ARDepthSource : MonoBehaviour
         return rotatedRT;
     }
 
+    // Safe texture access - AR Foundation getters can throw when AR isn't ready
+    Texture TryGetTexture(System.Func<Texture> getter)
+    {
+        try { return getter?.Invoke(); }
+        catch { return null; }
+    }
+
     void LateUpdate()
     {
+        // Guard: skip if occlusion manager not available
+        if (_occlusion == null) return;
+
         // Prefer human depth for body VFX, fall back to environment depth
+        // Use TryGetTexture because AR Foundation getters can throw NullReferenceException
+        // internally when AR subsystem isn't ready (UpdateExternalTexture with null nativeTex)
         Texture depth = null;
         if (_preferHumanDepth)
-            depth = _occlusion?.humanDepthTexture ?? _occlusion?.environmentDepthTexture;
+            depth = TryGetTexture(() => _occlusion.humanDepthTexture) ?? TryGetTexture(() => _occlusion.environmentDepthTexture);
         else
-            depth = _occlusion?.environmentDepthTexture ?? _occlusion?.humanDepthTexture;
+            depth = TryGetTexture(() => _occlusion.environmentDepthTexture) ?? TryGetTexture(() => _occlusion.humanDepthTexture);
 
-        Texture stencil = _occlusion?.humanStencilTexture;
+        Texture stencil = TryGetTexture(() => _occlusion.humanStencilTexture);
 
         #if UNITY_EDITOR
         // Use mock data in Editor when no AR data available
@@ -379,7 +391,7 @@ public class ARDepthSource : MonoBehaviour
             _usingMockData = false;
             // Throttle warning to once per second (not every frame)
             if (_verboseLogging && Time.frameCount % 60 == 0)
-                Debug.LogWarning($"[ARDepthSource] No depth available. HumanDepth={_occlusion?.humanDepthTexture != null}, EnvDepth={_occlusion?.environmentDepthTexture != null}");
+                Debug.LogWarning($"[ARDepthSource] No depth available yet (AR subsystem initializing)");
             return;
         }
 
@@ -511,8 +523,10 @@ public class ARDepthSource : MonoBehaviour
         Debug.Log($"UsingMockData: {_usingMockData}");
         Debug.Log($"PreferHumanDepth: {_preferHumanDepth}");
         Debug.Log($"RotateDepthTexture: {_rotateDepthTexture}");
-        Debug.Log($"HumanDepthTexture: {_occlusion?.humanDepthTexture} ({_occlusion?.humanDepthTexture?.width}x{_occlusion?.humanDepthTexture?.height})");
-        Debug.Log($"EnvironmentDepthTexture: {_occlusion?.environmentDepthTexture} ({_occlusion?.environmentDepthTexture?.width}x{_occlusion?.environmentDepthTexture?.height})");
+        var humanDepth = TryGetTexture(() => _occlusion?.humanDepthTexture);
+        var envDepth = TryGetTexture(() => _occlusion?.environmentDepthTexture);
+        Debug.Log($"HumanDepthTexture: {humanDepth} ({humanDepth?.width}x{humanDepth?.height})");
+        Debug.Log($"EnvironmentDepthTexture: {envDepth} ({envDepth?.width}x{envDepth?.height})");
         Debug.Log($"DepthMap (selected): {DepthMap} ({DepthMap?.width}x{DepthMap?.height})");
         Debug.Log($"StencilMap: {StencilMap} ({StencilMap?.width}x{StencilMap?.height})");
         Debug.Log($"PositionMap: {PositionMap} ({PositionMap?.width}x{PositionMap?.height})");
