@@ -1,0 +1,274 @@
+<!doctype html>
+<!--
+Copyright 2021 The Immersive Web Community Group
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+  <meta name='mobile-web-app-capable' content='yes'>
+  <meta name='apple-mobile-web-app-capable' content='yes'>
+  <link rel='icon' type='image/png' sizes='32x32' href='../favicon-32x32.png'>
+  <link rel='icon' type='image/png' sizes='96x96' href='../favicon-96x96.png'>
+  <link rel='stylesheet' href='../css/common.css'>
+
+  <title>Projection Layer with Occlusion</title>
+</head>
+
+<body>
+  <header>
+    <details open>
+      <summary>Projection Layer with Multiview</summary>
+      <p>
+        This sample demonstrates use of WebXR depth sensing to do simple occlusion.
+        <a class="back" href="./">Back</a>
+      </p>
+      <p id="mv-status"></p>
+      <input type="checkbox" id="do_antialias" checked>antialias</input>
+      <input type="checkbox" id="do_multiview" checked>use multiview</input>
+    </details>
+  </header>
+  <script type="module">
+    import { WebXRButton } from '../js/util/webxr-button.js';
+    import { Scene, WebXRView } from '../js/render/scenes/scene.js';
+    import { Renderer, createWebGLContext } from '../js/render/core/renderer.js';
+    import { CubeSeaNode } from '../js/render/nodes/cube-sea.js';
+    import { InlineViewerHelper } from '../js/util/inline-viewer-helper.js';
+    import { QueryArgs } from '../js/util/query-args.js';
+
+    // XR globals.
+    let do_antialias = document.getElementById('do_antialias');
+    let do_multiview = document.getElementById('do_multiview');
+    let xrButton = null;
+    let xrImmersiveRefSpace = null;
+    let inlineViewerHelper = null;
+    let xrGLFactory = null;
+    let xrFramebuffer = null;
+
+    // WebGL scene globals.
+    let gl = null;
+    let renderer = null;
+    let scene = new Scene();
+    let is_multisampled_supported = false;
+    let samples = 1;
+    let mv_ext = null;
+    let depthStencilTex = null;
+    let cubeSea = new CubeSeaNode({ imageUrl: '../media/textures/cube-sea.png'});
+
+    scene.addNode(cubeSea);
+    scene.enableStats(true);
+
+    function initXR() {
+      xrButton = new WebXRButton({
+        onRequestSession: onRequestSession,
+        onEndSession: onEndSession
+      });
+      document.querySelector('header').appendChild(xrButton.domElement);
+
+      if (navigator.xr) {
+        navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+          let mvCompat = testMultiViewCompatibility();
+          if (!mvCompat) {
+            document.querySelector('#mv-status').textContent = "❌ - Multiview is unsupported in this browser";
+            do_multiview.checked = false;
+            do_multiview.disable = true;
+          } else {
+            document.querySelector('#mv-status').textContent = "✔️- Multiview Supported";
+          }
+          xrButton.enabled = supported;
+        });
+
+        navigator.xr.requestSession('inline').then(onSessionStarted);
+      }
+    }
+
+    function testMultiViewCompatibility() {
+      let tempWebGLContext = createWebGLContext({
+        xrCompatible: true,
+        webgl2: true
+      });
+
+      return tempWebGLContext.getExtension('OVR_multiview2') != null;
+    }
+
+    function initGL() {
+      if (gl)
+        return;
+
+      gl = createWebGLContext({
+        xrCompatible: true,
+        webgl2: true
+      });
+      document.body.appendChild(gl.canvas);
+
+      samples = gl.getParameter(gl.MAX_SAMPLES);
+
+      mv_ext = gl.getExtension('OVR_multiview2');
+      if (mv_ext) {
+        console.log("OVR_multiview2 extension is supported");
+      }
+      else {
+        console.log("OVR_multiview2 extension is NOT supported");
+      }
+
+      function onResize() {
+        gl.canvas.width = gl.canvas.clientWidth * window.devicePixelRatio;
+        gl.canvas.height = gl.canvas.clientHeight * window.devicePixelRatio;
+      }
+      window.addEventListener('resize', onResize);
+      onResize();
+
+      // Set up a non-black clear color so that we can see if something renders wrong.
+      gl.clearColor(0.1, 0.2, 0.3, 1.0);
+    }
+
+    function onRequestSession() {
+      return navigator.xr.requestSession('immersive-ar', {
+          requiredFeatures: ['depth-sensing'],
+          optionalFeatures: [],
+          depthSensing: {
+            usagePreference: ["gpu-optimized"],
+            dataFormatPreference: ["unsigned-short"],
+            matchDepthView: false
+          }}).then((session) => {
+        xrButton.setSession(session);
+        session.isImmersive = true;
+        onSessionStarted(session);
+      });
+    }
+
+    function onVisibilityChange(event) {
+      console.log("Visibility change for "
+        + (event.session.isImmersive ? "immersive" : "non-immersive")
+        + " session: "
+        + event.session.visibilityState);
+    }
+
+    function onSelectStart(ev) {
+      let session = ev.frame.session;
+      session.depthActive ? session.pauseDepthSensing() : session.resumeDepthSensing();
+    }
+
+    function onSessionStarted(session) {
+      session.addEventListener('end', onSessionEnded);
+      session.addEventListener('visibilitychange', onVisibilityChange);
+
+      session.addEventListener('selectstart', onSelectStart);
+
+      initGL();
+
+      if (session.isImmersive) {
+        renderer = new Renderer(gl, do_multiview.checked, do_antialias.checked, true /* use depth */);
+
+        scene.setRenderer(renderer);
+
+        xrFramebuffer = gl.createFramebuffer();
+        xrGLFactory = new XRWebGLBinding(session, gl);
+        if (mv_ext && do_multiview.checked) {
+          let layer = xrGLFactory.createProjectionLayer({
+            textureType: "texture-array",
+            depthFormat: gl.DEPTH_COMPONENT24,
+            useDepthSorting: true,
+          });
+          session.updateRenderState({ layers: [layer] });
+        } else {
+          let glLayer = new XRWebGLLayer(session, gl);
+          session.updateRenderState({ baseLayer: glLayer });
+        }
+
+        gl.clearColor(0, 0, 0, 0);
+      } else {
+        renderer = new Renderer(gl);
+
+        scene.setRenderer(renderer);
+
+        let glLayer = new XRWebGLLayer(session, gl);
+        session.updateRenderState({ baseLayer: glLayer });
+        gl.clearColor(0.1, 0.2, 0.3, 1.0);
+      }
+
+      let refSpaceType = session.isImmersive ? 'local' : 'viewer';
+      session.requestReferenceSpace(refSpaceType).then((refSpace) => {
+        if (session.isImmersive) {
+          xrImmersiveRefSpace = refSpace;
+        } else {
+          // In most samples moving forward we'll use this helper class rather
+          // than the reference space directly to inject the necessary logic
+          // for looking around an inline session with mouse and touch input.
+          inlineViewerHelper = new InlineViewerHelper(gl.canvas, refSpace);
+        }
+        session.requestAnimationFrame(onXRFrame);
+      });
+    }
+
+    function onEndSession(session) {
+      session.end();
+    }
+
+    function onSessionEnded(event) {
+      if (event.session.isImmersive) {
+        xrButton.setSession(null);
+      }
+      renderer = new Renderer(gl);
+      scene.setRenderer(renderer);
+    }
+
+    function onXRFrame(t, frame) {
+      let session = frame.session;
+      session.requestAnimationFrame(onXRFrame);
+      let refSpace = session.isImmersive ?
+        xrImmersiveRefSpace :
+        inlineViewerHelper.referenceSpace;
+      let pose = frame.getViewerPose(refSpace);
+
+      scene.startFrame();
+      scene.clear = session.isImmersive;
+
+      let depthData = [];
+      if (session.isImmersive) {
+        for (let view of pose.views) {
+          let viewport = null;
+          let depthEntry = xrGLFactory.getDepthInformation(view);
+          if (depthEntry) {
+            depthData.push(depthEntry);
+            if (view == pose.views[0]) {
+              if ((depthData[0].depthNear !== session.renderState.depthNear) || (depthData[0].depthFar !== session.renderState.depthFar)) {
+                session.updateRenderState({
+                  'depthNear': depthData[0].depthNear,
+                  'depthFar': depthData[0].depthFar
+                });
+              }
+            }
+          }
+        }
+      }
+
+      //scene.updateInputSources(frame, refSpace);
+      scene.drawXRFrame(frame, pose, undefined, depthData);
+
+      scene.endFrame();
+    }
+
+    initXR();
+  </script>
+</body>
+
+</html>

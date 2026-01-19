@@ -1,0 +1,305 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aacfb80dc794b8ba5fd207d1da5c13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scenes:
+  - Path: Packages/com.needle.sample-assets/Runtime/Stencils-Portals/PortalStencil.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Stencil Portals/Stencil Portals.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Sandbox.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Sandbox/Sandbox.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/BrunoSimons20k/BrunoSimons20k.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/VideoPlayer/VideoPlayer.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/CustomShader.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Shaders/CustomShader.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/UI Button.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/UI Button/UI Button.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/SpatialTrigger.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/SpatialTrigger/SpatialTrigger.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Assets/CollaborativeSandbox.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/UI Fonts/Fonts.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Assets/GroundProjection.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/GroundProjection/GroundProjection.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Physics/Basic Physics.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/MyScene.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Physics/Cannon Playground.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/ProgressiveLoading.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Canvas Texture with P5js/P5js.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Screensharing/Screensharing.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/ProgressiveLoading/ProgressiveLoading.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Animation.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Physics/Physics + Animation.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/CharacterController.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/CharacterController/CharacterController.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Multi Scenes.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Multi-Scenes/Multi Scenes.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Scene 1.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Particles/Particles.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/ParticlesMesh.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Epic Toon FX/Demo/Scenes/etfx_wind.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Epic Toon FX/Demo/Scenes/etfx_fire.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Particles Interactive.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Particles/Particles Burst on
+      click.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Minimal.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/Visibility.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/LifetimeSamples/ObjectVisibility.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/BrunoSimon20k/BrunoSimon20k.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/Physics/Joints.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/HTMLCustomLayout/CustomLayout.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.sample-assets/Runtime/HTMLAROverlay/AROverlay.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Scrollytelling/Scrollytelling.unity
+    Projects:
+    - ProjectPath: ../../package/WebProjects~/Scrollytelling
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/ProgressiveLoading/ProgressiveLoading.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Physics/Cannon Playground.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/UI Button/UI Button.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/HTMLCustomLayout/CustomLayout.unity
+    Projects:
+    - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/HTMLCustomLayout
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/HTMLAROverlay/AROverlay.unity
+    Projects:
+    - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/AROverlay
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/VideoPlayer/VideoPlayer.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Particles/Particles Burst on
+      click.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Particles/Particles.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/GroundProjection/GroundProjection.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Sandbox/Sandbox.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/MiscScripting/MiscScripting.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Canvas Texture with P5js/P5js.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Spritesheets/Spritesheet.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/HTMLCustomXRButtons/HTMLCustomXRButtons.unity
+    Projects:
+    - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/HTMLCustomXRButtons
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/ShadowCatcher/ShadowCatcher.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/ParticlesOnCollision.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Particles/ParticlesOnCollision.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/ExportTest.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Assets/ReflectionProbes.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/ReflectionProbe/ReflectionProbes.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Physics/Physics + Animation.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/LifetimeSamples/ObjectVisibility.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Stencil Portals/Stencil Portals.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Screensharing/Screensharing.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Javascript-Interop/Javascript
+      interop.unity
+    Projects: []
+    BuilderScene: 
+  - Path: Assets/PostProcessing.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/PostProcessing/PostProcessing.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/_Shared/NpmDefCollection/NpmDefCollection.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/CustomHands/CustomHands.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/SummoningAnimation/Summoning.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  - Path: Packages/com.needle.engine-samples/Runtime/Mediapipe/Mediapipe Hands.unity
+    Projects:
+    - ProjectPath: Library/Needle/Sample
+    BuilderScene: 
+  Projects:
+  - ProjectPath: Library/Needle/Sample
+  - ProjectPath: ../../package/WebProjects~/Scrollytelling
+  - ProjectPath: ../../package/WebProjects~/HTMLCustomLayout
+  - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/HTMLCustomLayout
+  - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/HTMLCustomXRButtons
+  - ProjectPath: Packages/com.needle.engine-samples/WebProjects~/AROverlay
