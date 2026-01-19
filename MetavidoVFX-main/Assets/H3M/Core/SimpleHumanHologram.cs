@@ -27,14 +27,22 @@ namespace H3M.Core
             if (arCamera == null) arCamera = Camera.main;
         }
 
+        // Safe texture access - AR Foundation getters can throw when AR isn't ready
+        Texture TryGetTexture(System.Func<Texture> getter)
+        {
+            try { return getter?.Invoke(); }
+            catch { return null; }
+        }
+
         void Update()
         {
             if (vfx == null || occlusionManager == null) return;
 
             // Get depth texture - prefer human (segmented) over environment (full scene)
+            // Use TryGetTexture because AR Foundation getters can throw NullReferenceException
             Texture depth = null;
-            if (useHumanDepth) depth = occlusionManager.humanDepthTexture;
-            if (depth == null && useLiDARDepth) depth = occlusionManager.environmentDepthTexture;
+            if (useHumanDepth) depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+            if (depth == null && useLiDARDepth) depth = TryGetTexture(() => occlusionManager.environmentDepthTexture);
 
             if (depth == null) return;
 
@@ -64,7 +72,8 @@ namespace H3M.Core
         void OnGUI()
         {
             // Simple debug overlay
-            var depth = occlusionManager?.humanDepthTexture ?? occlusionManager?.environmentDepthTexture;
+            var depth = TryGetTexture(() => occlusionManager?.humanDepthTexture) ??
+                        TryGetTexture(() => occlusionManager?.environmentDepthTexture);
             string status = depth != null ? $"Depth: {depth.width}x{depth.height}" : "No depth";
             string particles = vfx != null ? $"Particles: {vfx.aliveParticleCount}" : "No VFX";
 

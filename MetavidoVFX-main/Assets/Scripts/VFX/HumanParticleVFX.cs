@@ -62,6 +62,13 @@ namespace MetavidoVFX.VFX
         private static readonly int PropertyID_PositionMap = Shader.PropertyToID("PositionMap");
         private static readonly int PropertyID_ColorMap = Shader.PropertyToID("ColorMap");
 
+        // Safe texture access - AR Foundation getters can throw when AR isn't ready
+        Texture TryGetTexture(System.Func<Texture> getter)
+        {
+            try { return getter?.Invoke(); }
+            catch { return null; }
+        }
+
         void Awake()
         {
             _camera = GetComponent<Camera>();
@@ -106,7 +113,7 @@ namespace MetavidoVFX.VFX
         {
             if (!_initialized || occlusionManager == null) return;
 
-            var humanDepthTexture = occlusionManager.humanDepthTexture;
+            var humanDepthTexture = TryGetTexture(() => occlusionManager.humanDepthTexture);
             if (humanDepthTexture == null) return;
 
             // Check for orientation change
@@ -145,7 +152,7 @@ namespace MetavidoVFX.VFX
 
             _lastDeviceOrientation = Input.deviceOrientation;
 
-            var humanDepth = occlusionManager.humanDepthTexture;
+            var humanDepth = TryGetTexture(() => occlusionManager.humanDepthTexture);
             if (humanDepth != null)
             {
                 InitSetup(humanDepth);

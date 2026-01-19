@@ -75,8 +75,10 @@ namespace H3M.Core
             var occlusion = FindFirstObjectByType<AROcclusionManager>();
             if (occlusion != null)
             {
-                var envDepth = occlusion.environmentDepthTexture;
-                var humanDepth = occlusion.humanDepthTexture;
+                // Wrap in try-catch - AR Foundation getters can throw when AR isn't ready
+                Texture envDepth = null, humanDepth = null;
+                try { envDepth = occlusion.environmentDepthTexture; } catch { }
+                try { humanDepth = occlusion.humanDepthTexture; } catch { }
                 _log += $"EnvDepth: {(envDepth != null ? $"{envDepth.width}x{envDepth.height}" : "NULL")}\n";
                 _log += $"HumanDepth: {(humanDepth != null ? $"{humanDepth.width}x{humanDepth.height}" : "NULL")}\n";
             }

@@ -47,7 +47,15 @@ public class DepthImageProcessor : MonoBehaviour
 
     public Matrix4x4 DisplayRotatioMatrix { get => m_DisplayRotationMatrix; }
 
-    public Texture2D HumanStencilTexture { get => occlusionManager.humanStencilTexture; }
+    // Safe texture access - AR Foundation getters can throw when AR isn't ready
+    public Texture2D HumanStencilTexture
+    {
+        get
+        {
+            try { return occlusionManager?.humanStencilTexture; }
+            catch { return null; }
+        }
+    }
 
 
     void Awake()

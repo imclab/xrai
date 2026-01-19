@@ -19,15 +19,23 @@ public class DirectDepthBinder : MonoBehaviour
         _camera ??= Camera.main;
     }
 
+    // Safe texture access - AR Foundation getters can throw when AR isn't ready
+    Texture TryGetTexture(System.Func<Texture> getter)
+    {
+        try { return getter?.Invoke(); }
+        catch { return null; }
+    }
+
     void LateUpdate()
     {
-        var depth = _occlusion?.environmentDepthTexture;
+        var depth = TryGetTexture(() => _occlusion?.environmentDepthTexture);
         if (depth == null || _vfx == null) return;
 
         // Pass RAW depth - VFX Graph converts to world position
         _vfx.SetTexture("DepthMap", depth);
-        if (_occlusion.humanStencilTexture)
-            _vfx.SetTexture("ColorMap", _occlusion.humanStencilTexture);
+        var stencil = TryGetTexture(() => _occlusion?.humanStencilTexture);
+        if (stencil != null)
+            _vfx.SetTexture("ColorMap", stencil);
         
         _vfx.SetMatrix4x4("InverseView", _camera.cameraToWorldMatrix);
         _vfx.SetVector4("RayParams", CalculateRayParams());
