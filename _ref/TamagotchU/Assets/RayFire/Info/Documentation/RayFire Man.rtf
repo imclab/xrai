@@ -1,0 +1,118 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fswiss\fcharset0 Calibri;}{\f1\fswiss\fcharset204 Calibri;}{\f2\fnil\fcharset2 Symbol;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\nowidctlpar\sl276\slmult1\qc\ul\b\f0\fs52\lang9 RayFire Man\ulnone\b0\fs24\lang1033\par
+
+\pard\nowidctlpar\sl276\slmult1\par
+\b\fs22\lang9 RayFire Man \b0 component stores all \b global \b0 properties which unreasonable to store in every Rigid and other components.\par
+\par
+You can add it on your own \b empty object \b0 to change \b default \b0 properties, otherwise such object with RayFire Man component will be created in Awake \b automatically\b0 . \par
+\par
+Only \b one \b0 object with RayFire Man component should be in scene, otherwise other objects will be \b destroyed \b0 and only one object with RayFire man will be left. \fs24\lang1033\par
+\b\fs22\lang9\par
+\fs48\tab\b0\fs24\lang1033\par
+\b\fs48\lang9\tab Physics\b0\fs24\lang1033\par
+\par
+\b\fs22\lang9 Set Gravity\b0\lang1033 : Sets custom gravity for simulated objects.\par
+\b\lang9 Multiplier\b0\lang1033 : Custom gravity multiplier.\fs24\par
+\par
+\b\f1\fs22\lang1049 C\f0\lang1033 ollider Size\b0 : Minimum objects size. Objects with Size less than this value will not get collider.\b\lang9\par
+\par
+Interpolation\b0\lang1033 : For the main characters or vehicles that are followed by the camera it is recommended to use interpolation. For any other rigidbodies it is recommended not to use interpolation.\fs24  (Unity Documentation)\par
+
+\pard\nowidctlpar\li720\sl276\slmult1\tx720\f2\'b7\tab\b\f0\fs22 None\b0 : Simulate object using it's Meshfilter's mesh in Mesh Collider.\fs24\par
+\f2\'b7\tab\b\f0\fs22 Interpolate\b0 : Interpolation will always lag a little bit behind but can be smoother than extrapolation.\fs24\par
+\f2\'b7\tab\b\f0\fs22 Extrapolate\b0 : Extrapolation will predict the position of the rigidbody based on the current velocity.\fs24\par
+
+\pard\nowidctlpar\li360\sl276\slmult1\par
+
+\pard\nowidctlpar\sl276\slmult1\b\fs48\lang9\tab Collision Detection\fs22\par
+\par
+Collision Detection\b0 : \lang1033 Use this to set up a Rigidbody's for continuous collision detection, which is used to prevent fast moving objects from passing through other objects without detecting collisions. \fs24\par
+\fs22 For best results, set this value to \b Continuous Dynamic \b0 for fast moving objects, and for other objects which these need to collide with, set it to \b Continuous\b0 . These two options have a big impact on physics performance. \fs24\par
+\fs22 Alternatively, you can use \b Continuous Speculative\b0 , which is generally cheaper and can also be used on kinematic objects. If you don't have issues with collisions of fast objects, leave it set to the default value of \b Discrete\b0 . \fs24\par
+\b\fs22 Continuous \b0 Collision Detection is only supported for Rigidbodies with Sphere-, Capsule- or BoxColliders.\fs24  (Unity Documentation)\par
+\par
+It is possible to set defferent Collision Detection for simple mesh objects and complex clusters. It is better to use Discrete type for Clusters.\par
+
+\pard\nowidctlpar\sl276\slmult1\qc\par
+
+\pard\nowidctlpar\sl276\slmult1\b\fs48\lang9\tab Materials\b0\fs24\lang1033\par
+\par
+\b\fs22 Minimum Mass\b0 : Minimum mass value which will be assigned to simulated object if it's mass calculated by it's volume and density will be less than this value. Allows to avoid collision of very light objects with very heavy and makes simulation more stable.\fs24\par
+\par
+\b\fs22 Maximum Mass\b0 : Maximum mass value which will be assigned to simulated object if it's mass calculated by it's volume and density will be higher than this value. Allows to avoid collision of very light objects with very heavy and makes simulation more stable.\fs24\par
+\par
+\b\fs28\lang9\tab\fs48 Material Presets\b0\fs24\lang1033\par
+\par
+\fs22 List of hardcoded materials with predefined simulation and demolition properties. Used by  Rigid component. Allows you to define all simulation and demolition advanced properties for specific material and then just choose this \b Material \b0 in object's \b Rigid / Physics \b0 properties.\fs24\par
+\par
+\b\fs28\lang9\tab Demolition\b0\fs24\lang1033\par
+\par
+\b\fs22 Destructible\b0 : Makes material destructible. Turned off by default for all metal materials. Object with not destructible material won't be demolished by collision.\fs24\par
+
+\pard\nowidctlpar\li360\sl276\slmult1\par
+
+\pard\nowidctlpar\sl276\slmult1\b\fs22 Solidity\b0 : Global material solidity multiplier which used at collision to calculate if object should be demolished or not.\fs24\par
+\par
+\b\fs28\lang9\tab Rigid Body\b0\fs24\lang1033\par
+\par
+\b\fs22 Density\b0 : Predefined density. Object mass depends on picked material density and collider volume.\fs24\par
+\par
+\b\fs22 Drag\b0 : Allows to decrease position velocity over time.\fs24\par
+\par
+\b\fs22 Angular Drag\b0 : Allows to decrease rotation velocity over time.\fs24\par
+\par
+\b\fs28\lang9\tab Physic Material\b0\fs24\lang1033\par
+\par
+\b\fs22 Material\b0 : Physic material which will be used for all objects with this material. If \b Material \b0 is not define then it will be created and defined here at Start using following Frictions and Bounciness properties.\fs24\par
+\par
+\b\fs22 Dynamic Friction\b0 : Dynamic Friction for Physic material.\fs24\par
+\par
+\b\fs22 Static Friction\b0 : Static Friction for Physic material.\fs24\par
+\par
+\b\fs22 Bounciness\b0 : Bounciness for Physic material.\fs24\par
+\b\fs28\lang9\tab\par
+\fs48\tab Activation\b0\fs24\lang1033\par
+\par
+\b\fs22\lang9 Parent\b0 : Object Transform that will be used as parent for all activated objects\lang1033 . \fs24\par
+\par
+\b\fs48\lang9\tab Demolition\b0\fs24\lang1033\par
+\par
+\b\fs22\lang9 Global Solidity\b0 : Global Solidity multiplier\lang1033 . \fs24\par
+\par
+\b\fs22\lang9 Time Quota\b0 : \lang1033 Demolition time quota in milliseconds. Allows to prevent demolition at the same frame if there was already another demolition at the same frame and it took more time than \b Time Quota \b0 value.\par
+\par
+\b\lang9 Quota Action\b0 : Allows to completely \b Skip \b0 object demolition or \b Postpone \b0 it to the next frame if demolition \b Time Qota \b0 for this frame is reached.\lang1033  \fs24\par
+\par
+\fs28\tab\fs24\par
+\fs28\tab\b\fs48 Advanced Properties\b0\fs24\par
+\par
+\b\fs28\tab Fragments\b0\fs24\par
+\par
+\b\fs22\lang9 Parent\b0 : \lang1033 Defines parent for all new fragments.\fs24\par
+\par
+\b\fs22\lang9 Maximum Amount\b0 : \lang1033 Maximum amount of allowed fragments. Object won't be demolished if existing amount of fragments in scene higher that this value. Fading allows to decrease amount of fragments in scene.\fs24\par
+\par
+\b\fs22\lang9 Bad Mesh Try\b0 : Amount of attempts to fragment mesh with topology issues\lang1033 . After object will fail to be fragments defined amount of times it will be marked as Bad Mesh and it won't be possible to fragment it again.\fs24\par
+\par
+\b\fs28\tab Shadow Casting\b0\fs24\par
+\par
+\b\fs22\lang9 Size Threshold\b0 : Disable Shadow Casting for all objects with size less than this value\lang1033 .\fs24\par
+\par
+\fs28\tab\b\fs48 Pooling\b0\fs24\par
+\par
+\b\fs28\tab Fragments\b0\fs24\par
+\par
+\b\fs22\lang9 Enable\b0 : \lang1033 Enable Fragment dummy pooling. Fragment dummy has all necessary components except mesh and convex hull collider. With Fragment pooling Manager instantiate by few dummies every frame so it won't have to create hundreds of Gameobjects with components at one frame when some object will be demolished.\par
+\par
+\b\lang9 Reuse\b0 : Reuse Rigid fragment objects after their fading\lang1033 . Resets MeshFilter and MeshRenderer components\fs24\par
+\par
+\b\fs22\lang9 Capacity\b0 : Maximum amount of fragment dummies\lang1033 .\fs24\par
+\par
+\b\fs28\tab Particles\b0\fs24\par
+\par
+\b\fs22\lang9 Enable\b0 : \lang1033 Enable Particle Source dummy pooling.\fs24\par
+\par
+\par
+}
+ 
