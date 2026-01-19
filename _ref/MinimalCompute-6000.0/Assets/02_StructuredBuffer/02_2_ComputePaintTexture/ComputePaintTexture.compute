@@ -1,0 +1,96 @@
+﻿#pragma kernel CSMain
+#pragma multi_compile_local DRAWLINE CURVEDSTAIGHTLINE CIRCLES
+
+struct Particle
+{
+	float3 prevposition;
+	float3 position;
+};
+
+StructuredBuffer<Particle> particleBuffer;
+RWTexture2D<float4> Result;
+
+int size; //texture resolution
+int particleCount; //no. of spheres
+#define quadSize 10 //scale of the Quad object in scene
+#define thickness 0.0001f
+
+float2 uvFromPos(float3 pos)
+{
+	return ( pos.xz + quadSize * 0.5f ) / (float) quadSize;
+}
+
+//https://forum.unity.com/threads/compute-shader-for-line-drawing.599989/#post-4013116
+float XonLineAB( float2 x, float2 a, float2 b )
+{
+    float2 XA = x-a;
+	float2 BA = b-a;
+
+	float dotAB = dot(BA,BA); //distAB * distAB
+	float dotX = dot(XA,BA);
+
+    float p = saturate( dotX / dotAB ); //percentage
+    float2 vec = XA - BA * p;  // perpendicular vector
+	float dist = dot(vec,vec) * 100.0;
+
+	return step(dist,thickness);
+}
+
+float CurvedStraightLine( float2 x, float2 a, float2 b )
+{
+	float2 BA = b-a;
+	float2 XA = x-a;
+	float dist = abs(dot(BA,XA));
+
+	return step(dist , thickness * 0.3);
+}
+
+float Circles( float2 x, float2 a, float2 b )
+{
+	float2 XB = x-b;
+	float2 XA = x-a;
+	float dist = abs(dot(XB,XA));
+
+	return step(dist , thickness * 0.5);
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	float2 currentuv = 0;
+	float2 prevuv = 0;
+	float2 uv = float2(id.xy) / float(size);
+	float draw = 0;
+
+	for(int i=0; i<particleCount;i++)
+	{
+		//Convert positions to texture UV space
+		currentuv = uvFromPos(particleBuffer[i].position);
+		prevuv = uvFromPos(particleBuffer[i].prevposition);
+
+		//check if current uv is between prev and current line
+		#if CURVEDSTAIGHTLINE
+		draw += CurvedStraightLine(uv,prevuv,currentuv);
+		#elif CIRCLES
+		draw += Circles(uv,prevuv,currentuv);
+		#else
+		draw += XonLineAB(uv,prevuv,currentuv);
+		#endif
+	}
+
+	//color
+	float dist = distance(currentuv,prevuv);
+	float4 color = 0;
+	color.rg = frac(abs(currentuv - prevuv) * 15.0);
+	color.b = frac(uv.x * uv.y) * 2.0;
+	color *= dist * 20.0;
+
+	//Additive color
+	draw = saturate(draw);
+	Result[id.xy] += color * draw;
+
+	//fadeout
+	Result[id.xy] *= 0.999f;
+}
+
+
