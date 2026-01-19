@@ -1,0 +1,60 @@
+#pragma kernel RenderTextureToMat_sRGB
+#pragma kernel RenderTextureToMat_Linear
+
+Texture2D<float4> Source;
+RWStructuredBuffer<uint> Destination;
+bool HFlip;
+bool VFlip;
+
+// Linear to sRGB conversion
+float4 LinearTosRGB(float4 color)
+{
+    // sRGB conversion
+    return float4(
+        color.r <= 0.0031308 ? color.r * 12.92 : pow(color.r, 1.0 / 2.4) * 1.055 - 0.055,
+        color.g <= 0.0031308 ? color.g * 12.92 : pow(color.g, 1.0 / 2.4) * 1.055 - 0.055,
+        color.b <= 0.0031308 ? color.b * 12.92 : pow(color.b, 1.0 / 2.4) * 1.055 - 0.055,
+        color.a
+    );
+}
+
+// Packed alpha conversion
+uint PackRGBA(float4 a)
+{
+    uint4 i = (uint4)(a * 255 + 0.5);
+    return i.x | (i.y << 8) | (i.z << 16) | (i.w << 24);
+}
+
+[numthreads(8,8,1)]
+void RenderTextureToMat_sRGB(uint3 id : SV_DispatchThreadID)
+{
+
+    uint w, h;
+    Source.GetDimensions(w, h);
+
+    float4 v = Source[id.xy];
+
+    uint x = HFlip ? w - id.x - 1 : id.x;
+    uint y = VFlip ? h - id.y - 1 : id.y;
+
+    Destination[x + y * w] = PackRGBA(v);
+
+}
+
+[numthreads(8, 8, 1)]
+void RenderTextureToMat_Linear(uint3 id : SV_DispatchThreadID)
+{
+
+    uint w, h;
+    Source.GetDimensions(w, h);
+
+    float4 v = Source[id.xy];
+
+    uint x = HFlip ? w - id.x - 1 : id.x;
+    uint y = VFlip ? h - id.y - 1 : id.y;
+
+    // Clamp values to ensure they are in [0, 1] range
+    v = clamp(v, 0, 1);
+
+    Destination[x + y * w] = PackRGBA(LinearTosRGB(v));
+}

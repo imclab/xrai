@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Camera
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: This Asset can be used to determine camera gestures.
+  <ConditionAssetList>k__BackingField:
+  - rid: 4117126885006114816
+  - rid: 4117126975223758850
+  - rid: 6288752532981284868
+  - rid: 6288752532981284871
+  - rid: 6288752532981284873
+  - rid: 6288752532981284874
+  - rid: 6288752532981284894
+  - rid: 6288752532981284896
+  - rid: 6288752532981284898
+  - rid: 6288752532981284900
+  references:
+    version: 2
+    RefIds:
+    - rid: 4117126885006114816
+      type: {class: JointDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Distance between left thumb tip and right index
+          tip (0m ~ 0.1m)
+        <Joint1>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 6
+        <Joint2>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 11
+        <Min>k__BackingField: 0
+        <Max>k__BackingField: 0.1
+    - rid: 4117126975223758850
+      type: {class: JointDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Distance between right thumb tip and left index
+          tip (0m ~ 0.1m)
+        <Joint1>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 6
+        <Joint2>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 11
+        <Min>k__BackingField: 0
+        <Max>k__BackingField: 0.1
+    - rid: 6288752532981284868
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left thumb proximal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 4
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284871
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left thumb distal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 5
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284873
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left index intermediate (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 9
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284874
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left index distal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 10
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284894
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right thumb proximal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 4
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284896
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right thumb distal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 5
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284898
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right index intermediate (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 9
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6288752532981284900
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right index distal (Pitch -30~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 10
+        <PitchMin>k__BackingField: -30
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0

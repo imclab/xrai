@@ -1,0 +1,219 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Shuriken_Pose
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: Pose during a shuriken gesture
+  <ConditionAssetList>k__BackingField:
+  - rid: 4117126910256349186
+  - rid: 4117126910256349191
+  - rid: 4117126910256349192
+  - rid: 4117126910256349197
+  - rid: 4117126910256349201
+  - rid: 6567055485860839520
+  - rid: 6567055485860839522
+  - rid: 6567055485860839524
+  - rid: 6567055485860839526
+  - rid: 6567055485860839529
+  - rid: 6567055485860839539
+  - rid: 6567055485860839573
+  references:
+    version: 2
+    RefIds:
+    - rid: 4117126910256349186
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left thumb proximal (Pitch -55~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 4
+        <PitchMin>k__BackingField: -55
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 4117126910256349191
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left index proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 8
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 4117126910256349192
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left middle proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 13
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 4117126910256349197
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left ring proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 18
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 4117126910256349201
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of left little proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 0
+          <JointID>k__BackingField: 23
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839520
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right thumb proximal (Pitch -55~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 4
+        <PitchMin>k__BackingField: -55
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839522
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right index proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 8
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839524
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right middle proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 13
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839526
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right ring proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 18
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839529
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right little proximal (Pitch -20~55)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 23
+        <PitchMin>k__BackingField: -20
+        <PitchMax>k__BackingField: 55
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 0
+    - rid: 6567055485860839539
+      type: {class: HandsDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Are both hands facing the opposite direction? (less
+          than 45 degrees)
+        <Direction>k__BackingField: 1
+        <Angle>k__BackingField: 45
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839573
+      type: {class: OR, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is either hand moving
+        <ConditionAssetList>k__BackingField:
+        - rid: 6567055485860839592
+        - rid: 6567055485860839594
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839592
+      type: {class: AND, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: left hand
+        <ConditionAssetList>k__BackingField:
+        - rid: 6567055485860839596
+        - rid: 6567055485860839598
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839594
+      type: {class: AND, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: right hand
+        <ConditionAssetList>k__BackingField:
+        - rid: 6567055485860839601
+        - rid: 6567055485860839602
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839596
+      type: {class: HandMove, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the left hand moving at a speed greater than
+          0.01?
+        <HandType>k__BackingField: 0
+        <Speed>k__BackingField: 0.01
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839598
+      type: {class: HandMoveDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Left hand did move front relative to the camera
+          local. (max 90 degrees)
+        <HandType>k__BackingField: 0
+        <Direction>k__BackingField: 4
+        <Angle>k__BackingField: 90
+        <RotationBase>k__BackingField: 2
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839601
+      type: {class: HandMove, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the right hand moving at a speed greater than
+          0.01?
+        <HandType>k__BackingField: 1
+        <Speed>k__BackingField: 0.01
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839602
+      type: {class: HandMoveDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Right hand did move front relative to the camera
+          local. (max 90 degrees)
+        <HandType>k__BackingField: 1
+        <Direction>k__BackingField: 4
+        <Angle>k__BackingField: 90
+        <RotationBase>k__BackingField: 2
+        <IsNot>k__BackingField: 0
