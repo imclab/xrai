@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Beam_Charge
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: Shape of both hands during beam charge
+  <ConditionAssetList>k__BackingField:
+  - rid: 6567055323610480656
+  - rid: 6567055323610480658
+  - rid: 6567055323610480663
+  - rid: 6567055349258911746
+  - rid: 6567055349258911748
+  references:
+    version: 2
+    RefIds:
+    - rid: 6567055323610480656
+      type: {class: HandsDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Are your hands facing each other? (less than 90
+          degrees)
+        <Direction>k__BackingField: 2
+        <Angle>k__BackingField: 90
+        <IsNot>k__BackingField: 0
+    - rid: 6567055323610480658
+      type: {class: HandsDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Hand distance 0.05m at least.
+        <Condition>k__BackingField: 1
+        <Distance>k__BackingField: 0.05
+    - rid: 6567055323610480663
+      type: {class: HandsDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Hand distance 0.35m at most.
+        <Condition>k__BackingField: 0
+        <Distance>k__BackingField: 0.35
+    - rid: 6567055349258911746
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Charge_Hand_L true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 7e2095c6a52094c0e98fbaf83ec374e2,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 6567055349258911748
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Charge_Hand_R true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 1686747f10d98469a8bae73c39ad35a7,
+          type: 2}
+        <IsNot>k__BackingField: 0

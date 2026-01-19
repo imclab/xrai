@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Right_Handup_Sequence
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: This Asset can be used to determine the right handup
+    sequence gestures.
+  <ConditionAssetList>k__BackingField:
+  - rid: 3345968498821038146
+  references:
+    version: 2
+    RefIds:
+    - rid: 3345968498821038146
+      type: {class: Sequence, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Flow of action of raising hands
+        <BeginState>k__BackingField: Begin
+        <Trigger>k__BackingField:
+        - rid: 3345968498821038148
+        <CancelState>k__BackingField: Cancel
+        <Cancel>k__BackingField: []
+        <Flow>k__BackingField:
+        - rid: 3345968498821038150
+        - rid: 3345968498821038152
+        <FinishState>k__BackingField: Finish
+    - rid: 3345968498821038148
+      type: {class: HandMoveDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Right hand moved to the up relative to world coordinates.
+          (less than 30 degrees)
+        <HandType>k__BackingField: 1
+        <Direction>k__BackingField: 0
+        <Angle>k__BackingField: 30
+        <RotationBase>k__BackingField: 0
+        <IsNot>k__BackingField: 0
+    - rid: 3345968498821038150
+      type: {class: HandMoveDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Did the right hand move 0.05 meters to the up in
+          the world coordinate system?
+        <HandType>k__BackingField: 1
+        <Direction>k__BackingField: 0
+        <Distance>k__BackingField: 0.05
+        <RotationBase>k__BackingField: 0
+        <IsNot>k__BackingField: 0
+    - rid: 3345968498821038152
+      type: {class: AND, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the right hand in the form of a raised hand?
+        <ConditionAssetList>k__BackingField:
+        - rid: 3345968498821038154
+        - rid: 3345968498821038156
+        <IsNot>k__BackingField: 0
+    - rid: 3345968498821038154
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Right_Paper true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 371c6a3cdce594837812fe75839fda84,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 3345968498821038156
+      type: {class: JointRotation, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Angle of right wrist (Pitch -135~-45)[deg.]
+        <Joint>k__BackingField:
+          <Hand>k__BackingField: 1
+          <JointID>k__BackingField: 1
+        <PitchMin>k__BackingField: -135
+        <PitchMax>k__BackingField: -45
+        <YawMin>k__BackingField: -180
+        <YawMax>k__BackingField: 180
+        <IsWorldRotation>k__BackingField: 1

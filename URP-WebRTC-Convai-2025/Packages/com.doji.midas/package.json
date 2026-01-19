@@ -1,0 +1,42 @@
+{
+  "name": "com.doji.midas",
+  "version": "1.3.0",
+  "displayName": "MiDaS",
+  "description": "Monocular Depth Estimation with Unity Sentis",
+  "dependencies": {
+    "com.unity.sentis": "2.1.0"
+  },
+  "author": {
+    "name": "Doji Technologies",
+    "email": "support@doji-tech.com",
+    "url": "https://www.doji-tech.com/"
+  },
+  "documentationUrl": "https://docs.doji-tech.com/com.doji.midas/",
+  "samples": [
+    {
+      "displayName": "Shared Sample Assets (Required)",
+      "description": "Shared resources for samples. Any other samples depends on this to be imported.",
+      "path": "Samples~/00-SharedSampleAssets"
+    },
+    {
+      "displayName": "Basic Sample",
+      "description": "Basic example on how to perform depth estimation with an input texture.",
+      "path": "Samples~/01-BasicSample"
+    },
+    {
+      "displayName": "Webcam Sample",
+      "description": "Basic example on how to perform depth estimation with a Webcam.",
+      "path": "Samples~/02-WebcamSample"
+    },
+    {
+      "displayName": "Video Sample",
+      "description": "Basic example on how to perform depth estimation on a VideoPlayer texture.",
+      "path": "Samples~/03-VideoSample"
+    },
+    {
+      "displayName": "Async Webcam Sample",
+      "description": "Example on how to reduce lag by spreading the execution over multiple frames.",
+      "path": "Samples~/04-WebcamSampleAsync"
+    }
+  ]
+}

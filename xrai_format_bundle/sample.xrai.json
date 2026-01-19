@@ -1,0 +1,28 @@
+{
+  "format": "XRAI",
+  "version": "1.0",
+  "scene": {
+    "nodes": [
+      {
+        "id": "npc1",
+        "transform": [
+          0,
+          0,
+          0
+        ],
+        "components": {
+          "geometry": {
+            "ref": "geom:npcMesh"
+          },
+          "material": {
+            "ref": "mat:npcMat"
+          },
+          "aiAgent": {
+            "model": "gpt-4",
+            "prompt": "You are a helpful guide in a museum."
+          }
+        }
+      }
+    ]
+  }
+}

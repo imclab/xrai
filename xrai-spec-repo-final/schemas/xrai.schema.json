@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "XRAI File Format",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "scene"
+  ],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "XRAI"
+    },
+    "version": {
+      "type": "string"
+    },
+    "scene": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

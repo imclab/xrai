@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Beam
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: This asset enables the detection of Beam gestures.
+  <ConditionAssetList>k__BackingField:
+  - rid: 6567055323610480665
+  references:
+    version: 2
+    RefIds:
+    - rid: 6567055323610480665
+      type: {class: Sequence, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: The process of shooting a beam
+        <BeginState>k__BackingField: Begin
+        <Trigger>k__BackingField:
+        - rid: 6567055349258911763
+        <CancelState>k__BackingField: Cancel
+        <Cancel>k__BackingField:
+        - rid: 6567055349258911761
+        <Flow>k__BackingField:
+        - rid: 6567055349258911772
+        - rid: 6567055349258911757
+        - rid: 6567055349258911774
+        - rid: 6567055349258911770
+        <FinishState>k__BackingField: Finish
+    - rid: 6567055349258911757
+      type: {class: Sequence, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: The process of moving the hand forward and then
+          taking a shot involves a few steps
+        <BeginState>k__BackingField: 
+        <Trigger>k__BackingField: []
+        <CancelState>k__BackingField: Cancel
+        <Cancel>k__BackingField:
+        - rid: 6567055485860839501
+        <Flow>k__BackingField:
+        - rid: 6567055485860839512
+        - rid: 6567055485860839459
+        <FinishState>k__BackingField: 
+    - rid: 6567055349258911761
+      type: {class: GestureStateCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the gesture state "Cancel"?
+        <State>k__BackingField: Cancel
+        <IsNot>k__BackingField: 0
+    - rid: 6567055349258911763
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Charge true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 61ba7e64beba54fdc8ca15a3d6ee429a,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 6567055349258911770
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Shot false?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 15fc4a583bdc34229879b08f4abb5123,
+          type: 2}
+        <IsNot>k__BackingField: 1
+    - rid: 6567055349258911772
+      type: {class: GestureStateUpdate, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Update the gesture state to "Charge".
+        <NewState>k__BackingField: Charge
+    - rid: 6567055349258911774
+      type: {class: GestureStateUpdate, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Update the gesture state to "Shot".
+        <NewState>k__BackingField: Shot
+    - rid: 6567055485860839459
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Shot true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 15fc4a583bdc34229879b08f4abb5123,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839501
+      type: {class: OR, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Trigger cancel event when these gestures are not
+          performed
+        <ConditionAssetList>k__BackingField:
+        - rid: 6567055485860839504
+        - rid: 6567055485860839506
+        <IsNot>k__BackingField: 1
+    - rid: 6567055485860839504
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Charge true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 61ba7e64beba54fdc8ca15a3d6ee429a,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839506
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Beam_Shot true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 15fc4a583bdc34229879b08f4abb5123,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 6567055485860839512
+      type: {class: HandMoveDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Did the right hand move 0.07 meters to the front
+          in the camera local coordinate system?
+        <HandType>k__BackingField: 1
+        <Direction>k__BackingField: 4
+        <Distance>k__BackingField: 0.07
+        <RotationBase>k__BackingField: 2
+        <IsNot>k__BackingField: 0

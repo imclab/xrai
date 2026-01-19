@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48abfb91691b54c74bbeebab5747367b, type: 3}
+  m_Name: Clap
+  m_EditorClassIdentifier: 
+  <Description>k__BackingField: This asset enables the detection of clapping gestures.
+  <ConditionAssetList>k__BackingField:
+  - rid: 4117127038824873984
+  references:
+    version: 2
+    RefIds:
+    - rid: 4117127038824873984
+      type: {class: Sequence, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: The process of clapping
+        <BeginState>k__BackingField: Begin
+        <Trigger>k__BackingField:
+        - rid: 4117127038824874011
+        - rid: 4117127179380981801
+        - rid: 4117127179380981802
+        <CancelState>k__BackingField: Cancel
+        <Cancel>k__BackingField:
+        - rid: 4117127038824874012
+        - rid: 4117127179380981803
+        <Flow>k__BackingField:
+        - rid: 4117127363738730497
+        <FinishState>k__BackingField: Finish
+    - rid: 4117127038824874011
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Paper true?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 1e1a07d2222fc4a6a9955924210633d0,
+          type: 2}
+        <IsNot>k__BackingField: 0
+    - rid: 4117127038824874012
+      type: {class: GestureCheck, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is gesture Paper false?
+        <GestureAsset>k__BackingField: {fileID: 11400000, guid: 1e1a07d2222fc4a6a9955924210633d0,
+          type: 2}
+        <IsNot>k__BackingField: 1
+    - rid: 4117127179380981801
+      type: {class: HandsDirection, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Are your hands facing each other? (less than 90
+          degrees)
+        <Direction>k__BackingField: 2
+        <Angle>k__BackingField: 90
+        <IsNot>k__BackingField: 0
+    - rid: 4117127179380981802
+      type: {class: HandsDistance, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Hand distance 1m at most.
+        <Condition>k__BackingField: 0
+        <Distance>k__BackingField: 1
+    - rid: 4117127179380981803
+      type: {class: AND, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: If one hand moves too slowly, cancel
+        <ConditionAssetList>k__BackingField:
+        - rid: 4117127179380981804
+        - rid: 4117127179380981806
+        <IsNot>k__BackingField: 0
+    - rid: 4117127179380981804
+      type: {class: HandMove, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the left-hand-movement-speed too fast  ? (more 
+          than 0.001)
+        <HandType>k__BackingField: 0
+        <Speed>k__BackingField: 0.001
+        <IsNot>k__BackingField: 1
+    - rid: 4117127179380981806
+      type: {class: HandMove, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Is the right-hand-movement-speed too fast  ? (more 
+          than 0.001)
+        <HandType>k__BackingField: 1
+        <Speed>k__BackingField: 0.001
+        <IsNot>k__BackingField: 1
+    - rid: 4117127363738730497
+      type: {class: JoinHandsTogether, ns: Graffity.HandGesture.Conditions, asm: Graffity.HandGesture}
+      data:
+        <Detail>k__BackingField: Are both hands coming together?
+        <Angle>k__BackingField: 30
+        <RadiusRatio>k__BackingField: 0.7
+        <IsNot>k__BackingField: 0

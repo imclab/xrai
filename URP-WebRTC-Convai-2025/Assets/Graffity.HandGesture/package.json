@@ -1,0 +1,29 @@
+{
+  "name": "com.graffity.handgesture",
+  "displayName": "Graffity.HandGesture",
+  "version": "1.0.1",
+  "unity": "2022.3",
+  "description": "Library for easy \"detecting handgesture and handmotion\" and \"setup custom handgesure\".",
+  "author": {
+      "name": "Graffity inc.",
+      "url": "https://graffity.jp/"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+        "com.unity.textmeshpro": "3.0.8",
+        "com.unity.xr.visionos": "1.2.3",
+        "com.unity.xr.hands": "1.3.0"
+  },
+  "samples": [
+      {
+          "displayName": "TemplateAssets",
+          "description": "TemplateAssets for HandGesture. Please check how to setup gesture asset.",
+          "path": "Samples~/TemplateAssets"
+      },
+      {
+        "displayName": "GestureSamples",
+          "description": "Sample for checking behaviour of static gesture.",
+        "path": "Samples~/GestureSamples"
+      }
+  ]
+}
