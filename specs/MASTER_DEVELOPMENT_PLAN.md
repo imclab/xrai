@@ -41,25 +41,39 @@
 │  - 73 VFX organized, categories, dashboard                                  │
 └─────────────────────────────────────────────────────────────────────────────┘
                                     │
-        ┌───────────────────────────┼───────────────────────────┐
-        ▼                           ▼                           ▼
-┌───────────────────────┐ ┌─────────────────────────┐ ┌─────────────────────────┐
-│   ENHANCEMENT LAYER   │ │   3D CONTENT LAYER      │ │   MULTIMODAL LAYER      │
-│ 007-vfx-multi-mode    │ │ 009-icosa-sketchfab     │ │ 008-multimodal-ml       │
-│ [READY]               │ │ [DRAFT]                 │ │ [ARCH APPROVED]         │
-│ - VFX modes           │ │ - Voice-to-object       │ │ - ITrackingProvider     │
-│ - Audio: beat, FFT    │ │ - Icosa + Sketchfab     │ │ - IVoiceProvider        │
-│ - Physics: collision  │ │ - glTF runtime loading  │ │ - LLM context           │
-└───────────────────────┘ │ - LRU model cache       │ └───────────┬─────────────┘
-                          │ - Attribution tracking  │             │
-                          └───────────┬─────────────┘             │
-                                      │                           │
-                                      └─────────────┬─────────────┘
-                                                    ▼
+     ┌──────────────────────────────┼──────────────────────────────┐
+     ▼                              ▼                              ▼
+┌─────────────────────┐ ┌─────────────────────────┐ ┌─────────────────────────┐
+│ ENHANCEMENT LAYER   │ │   3D CONTENT LAYER      │ │   MULTIMODAL LAYER      │
+│ 007-vfx-multi-mode  │ │ 009-icosa-sketchfab     │ │ 008-multimodal-ml       │
+│ [READY] 19 tasks    │ │ [DRAFT] 14 tasks        │ │ [ARCH APPROVED] 67 tasks│
+│ - VFX modes         │ │ - Voice-to-object       │ │ - ITrackingProvider     │
+│ - Audio: beat, FFT  │ │ - Icosa + Sketchfab     │ │ - IVoiceProvider        │
+│ - Physics: collision│ │ - glTF runtime loading  │ │ - LLM context           │
+└─────────────────────┘ │ - LRU model cache       │ └───────────┬─────────────┘
+                        │ - Attribution tracking  │             │
+                        └───────────┬─────────────┘             │
+                                    │                           │
+     ┌──────────────────────────────┴───────────────────────────┴─────────┐
+     ▼                                                                     ▼
+┌─────────────────────────────────────────┐ ┌─────────────────────────────────┐
+│           PAINTING LAYER                 │ │       MULTIPLAYER LAYER          │
+│  011-openbrush-integration [DRAFT]       │ │  010-normcore-multiuser [DRAFT]  │
+│  25 tasks, ~62 hours                     │ │  15 tasks, ~22 hours             │
+│  - 90+ URP brushes (20 Tier 1)           │ │  - AR-only multiuser drawing     │
+│  - Audio reactive (5 Waveform variants)  │ │  - Normcore real-time sync       │
+│  - Mirror painting (14 point, 17 wall)   │ │  - Voice chat integration        │
+│  - Save/load (JSON format)               │ │  - AR Foundation touch input     │
+│  - API painting (HTTP endpoints)         │ │  - BrushStroke RealtimeModel     │
+│  - Reaktion audio system                 │ └────────────────┬────────────────┘
+└─────────────────────────────────────────┘                   │
+                                                              │
+                               ┌──────────────────────────────┘
+                               ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           HOLOGRAM LAYER                                     │
 │  002-h3m-foundation [IMPLEMENTED]                                           │
-│  003-hologram-conferencing [DRAFT - depends on 008 multiuser]              │
+│  003-hologram-conferencing [DRAFT - depends on 008+010 multiuser]          │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -233,9 +247,58 @@ Assets/Scenes/
 - Attribution panel for CC compliance
 - Device-validated performance
 
-### Sprint 11: Spec 003 - Hologram Conferencing (5 days)
+### Sprint 11: Spec 010 - Normcore AR Multiuser (5 days)
 
-**Dependency**: Sprint 7 (multiuser foundation from 008)
+**Dependency**: Sprint 0 (debug infrastructure)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | Task 0.1-0.3: Setup | Import AR Spectator, configure Normcore |
+| 2 | Task 1.1-1.2: Connection tests | Multi-device room join |
+| 3 | Task 2.1-2.2: AR input | ARBrushInput, adapt Brush.cs |
+| 4 | Task 2.3-2.4: Sync tests | Stroke sync, late joiner |
+| 5 | Task 3.1-3.5: Voice & polish | Voice chat, performance |
+
+**Key Deliverables**:
+- `Assets/Scripts/Normcore/ARBrushInput.cs` - AR touch to brush position
+- `Assets/Scripts/Normcore/ARBrush.cs` - Adapted from VR Brush.cs
+- Voice chat working between devices
+- Full multiplayer drawing validated
+
+### Sprint 12: Spec 011 - Open Brush Integration (14 days / 7 internal sprints)
+
+**Dependency**: Sprint 1 (VFX Multi-Mode audio), Sprint 0 (debug infrastructure)
+
+| Days | Internal Sprint | Tasks | Test |
+|------|-----------------|-------|------|
+| 1-2 | Sprint 0: Setup | 0.1-0.4: Namespace, BrushData, BrushStroke, BrushManager | Unit: mesh generation |
+| 3-4 | Sprint 1: Tier 1 | 1.1-1.4: Import materials, port shaders, flat/tube geometry | Editor: 10 brushes render |
+| 5-6 | Sprint 2: Audio | 2.1-2.4: Reaktion port, modulation, Waveform shader | Editor: audio reactive |
+| 7-8 | Sprint 3: Mirror | 3.1-3.5: Point symmetry, wallpaper groups, UI | Editor: 12-fold symmetry |
+| 9-10 | Sprint 4: Save | 4.1-4.4: JSON format, serializer, load, UI | Unit: round-trip |
+| 11-12 | Sprint 5: API | 5.1-5.4: HTTP server, endpoints, stroke API | Integration: remote drawing |
+| 13-14 | Sprint 6: Polish | 6.1-6.4: Tier 2 brushes, AR input, perf, testing | Device: full validation |
+
+**Key Deliverables**:
+- `Assets/Scripts/Brush/` - Complete brush namespace (~15 scripts)
+- 20+ URP brush materials with BrushData assets
+- 5 audio reactive brushes with Reaktion integration
+- Point symmetry (14 families) + Wallpaper groups (17 patterns)
+- JSON save/load for scenes
+- HTTP API for programmatic painting
+- AR touch input with plane raycasting
+
+**Performance Targets**:
+| Metric | Target | Device |
+|--------|--------|--------|
+| 100 strokes FPS | 30+ | iPhone 12 |
+| 500 strokes FPS | 30+ | iPhone 15 Pro |
+| Audio latency | <20ms | Waveform brush |
+| Save 500 strokes | <2s | JSON serialization |
+
+### Sprint 13: Spec 003 - Hologram Conferencing (5 days)
+
+**Dependency**: Sprint 7 (multiuser foundation from 008), Sprint 11 (Normcore validation)
 
 *Tasks from 003-hologram-conferencing/tasks.md*
 
@@ -523,10 +586,29 @@ unity-editor -executeMethod BuildScript.BuildIOS
 | Spec 007 | [007-vfx-multi-mode/](./007-vfx-multi-mode/) |
 | Spec 008 | [008-crossplatform-multimodal-ml-foundations/](./008-crossplatform-multimodal-ml-foundations/) |
 | Spec 009 | [009-icosa-sketchfab-integration/](./009-icosa-sketchfab-integration/) |
+| Spec 010 | [010-normcore-multiuser/](./010-normcore-multiuser/) |
+| Spec 011 | [011-openbrush-integration/](./011-openbrush-integration/) |
 | Architecture | [008.../FINAL_RECOMMENDATIONS.md](./008-crossplatform-multimodal-ml-foundations/FINAL_RECOMMENDATIONS.md) |
 | KB: LLMR | [KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md](../KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md) |
+| KB: Multiuser | [KnowledgeBase/_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md](../KnowledgeBase/_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md) |
 | Icosa Integration | [MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md](../MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md) |
+| Open Brush Ref | [_ref/open-brush-feature-pure-openxr/](../_ref/open-brush-feature-pure-openxr/) |
+
+---
+
+## Total Effort Summary
+
+| Spec | Tasks | Hours | Sprints |
+|------|-------|-------|---------|
+| 007 - VFX Multi-Mode | 19 | ~40h | 1 |
+| 008 - Multimodal ML | 67 | ~140h | 7 |
+| 009 - Icosa/Sketchfab | 14 | ~42h | 3 |
+| 010 - Normcore Multiuser | 15 | ~22h | 1 |
+| 011 - Open Brush | 25 | ~62h | 2 (14 days) |
+| 003 - Hologram Conferencing | TBD | TBD | 1 |
+| **Total** | **140+** | **~300h+** | **15** |
 
 ---
 
 *Created: 2026-01-20*
+*Last Updated: 2026-01-20*

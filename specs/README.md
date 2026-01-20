@@ -17,20 +17,24 @@
 
 ### Implementation Order (Sprints)
 
-| Sprint | Spec | Focus | Tasks |
-|--------|------|-------|-------|
-| 0 | 008 | Debug Infrastructure | D-001 to D-007 |
-| 1 | 007 | VFX Multi-Mode & Audio | T-001 to T-019 |
-| 2 | 008 | Tracking Core Interfaces | T-005 to T-007, D-007 to D-009 |
-| 3 | 008 | ARKit Providers | T-008b to T-013c |
-| 4 | 008 | Voice Architecture | T-030 to T-037 |
-| 5 | **009** | **Icosa/Sketchfab Foundation** | 0.1-0.3 (SketchfabClient, ModelCache) |
-| 6 | **009** | **Unified Search & Caching** | 1.1-1.3 (UnifiedModelSearch, AR placement) |
-| 7 | 008 | Testing & LLM | T-038 to T-051 |
-| 8 | 008 | Platform Providers | T-012 to T-019 |
-| 9 | 008 | Multiuser Sync | T-023 to T-026 |
-| 10 | 009 | 3D Model UI & Polish | 2.1-3.4 (UI panels, testing) |
-| 11 | 003 | Hologram Conferencing | (depends on 008 multiuser) |
+| Sprint | Spec | Focus | Tasks | Est. |
+|--------|------|-------|-------|------|
+| 0 | 008 | Debug Infrastructure | D-001 to D-007 | 3d |
+| 1 | 007 | VFX Multi-Mode & Audio | T-001 to T-019 | 5d |
+| 2 | 008 | Tracking Core Interfaces | T-005 to T-007, D-007 to D-009 | 5d |
+| 3 | 008 | ARKit Providers | T-008b to T-013c | 5d |
+| 4 | 008 | Voice Architecture | T-030 to T-037 | 5d |
+| 5 | 008 | Testing & LLM | T-038 to T-051 | 5d |
+| 6 | 008 | Platform Providers | T-012 to T-019 | 5d |
+| 7 | 008 | Multiuser Sync | T-023 to T-026 | 5d |
+| 8 | **009** | **Icosa/Sketchfab Foundation** | 0.1-0.3 (SketchfabClient, ModelCache) | 5d |
+| 9 | **009** | **Unified Search & Caching** | 1.1-1.3 (UnifiedModelSearch) | 5d |
+| 10 | **009** | **3D Model UI & Polish** | 2.1-3.4 (UI panels, testing) | 5d |
+| 11 | **010** | **Normcore AR Multiuser** | 0.1-3.5 (AR drawing, voice chat) | 5d |
+| 12 | **011** | **Open Brush Integration** | 0.1-6.4 (Brushes, Audio, Mirror, API) | 14d |
+| 13 | 003 | Hologram Conferencing | (depends on 008+010 multiuser) | 5d |
+
+**Total: ~72 days / ~300+ hours**
 
 ---
 
@@ -46,6 +50,8 @@
 | 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
 | **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **Architecture Approved** | **P0** | **67 tasks** |
 | 009 | [Icosa & Sketchfab 3D Model Integration](./009-icosa-sketchfab-integration/spec.md) | Draft | P1 | 14 tasks |
+| 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |
+| 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
 
 ## Removed Specs
 
@@ -59,20 +65,29 @@
 - `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - AR Foundation patterns
 - `_COMPREHENSIVE_HOLOGRAM_PIPELINE_ARCHITECTURE.md` - 6-layer architecture
 - `_HOLOGRAM_RECORDING_PLAYBACK.md` - Metavido format specs
-- `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` - Multiplayer patterns
+- `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` - Multiplayer patterns (Normcore, Photon)
 - `_HAND_VFX_PATTERNS.md` - 52 VFX effects
 - `_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md` - LLM integration (LLMR, meta prompting)
 - `_XR_AI_INDUSTRY_ROADMAP_2025-2027.md` - Industry roadmap (Unity, Meta, Google, OpenAI)
+
+### Reference Codebases
+- `_ref/open-brush-feature-pure-openxr/` - Open Brush URP brushes, Reaktion audio, symmetry
+- `_ref/Normcore-Multiplayer-Drawing-Multiplayer/` - VR multiplayer drawing (Normcore)
+- `Normcore AR Spectator.unitypackage` - AR spectator for iOS
 
 ### Online Sources
 - [AR Foundation 6.2 Docs](https://docs.unity3d.com/Packages/com.unity.xr.arfoundation@6.2/manual/features/occlusion/occlusion-manager.html)
 - [Unity WebRTC Package](https://github.com/Unity-Technologies/com.unity.webrtc)
 - [keijiro/Metavido](https://github.com/keijiro/Metavido)
 - [keijiro/MetavidoVFX](https://github.com/keijiro/MetavidoVFX)
+- [keijiro/Reaktion](https://github.com/keijiro/Reaktion) - Audio reactive library
 - [Icosa Gallery API](https://api.icosa.gallery/v1/docs) - 3D model search
 - [Icosa Unity Toolkit](https://github.com/icosa-gallery/icosa-toolkit-unity)
 - [Sketchfab Download API](https://sketchfab.com/blogs/community/announcing-the-sketchfab-download-api-a-search-bar-for-the-3d-world/)
 - [KhronosGroup/UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) - Runtime glTF loading
+- [icosa-gallery/open-brush](https://github.com/icosa-gallery/open-brush) - Open source Tilt Brush fork
+- [Normcore Documentation](https://normcore.io/documentation/) - Real-time multiplayer
+- [Normcore Multiplayer Drawing](https://normcore.io/documentation/guides/recipes/creating-a-multiplayer-drawing-app)
 
 ## Spec-Kit Structure
 
@@ -111,6 +126,12 @@ specs/
 ├── 009-icosa-sketchfab-integration/  # P1 (14 tasks)
 │   ├── spec.md                  # Voice-to-object, 3D model search
 │   └── tasks.md                 # 4 sprints, ~42 hours
+├── 010-normcore-multiuser/           # P1 (15 tasks)
+│   ├── spec.md                  # AR-only multiplayer drawing
+│   └── tasks.md                 # 4 sprints, ~22 hours
+├── 011-openbrush-integration/        # P1 (25 tasks)
+│   ├── spec.md                  # URP brushes, audio reactive, mirror painting
+│   └── tasks.md                 # 7 sprints, ~62 hours
 ```
 
 ## Usage
