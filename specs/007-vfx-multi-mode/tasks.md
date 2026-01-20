@@ -1,7 +1,7 @@
 # Tasks: VFX Multi-Mode & Audio/Physics System
 
 **Spec**: [007-vfx-multi-mode](./spec.md)
-**Status**: In Progress (Phases 1-3 Complete, Phase 4-6 Pending)
+**Status**: In Progress (Phases 1-5 Complete, Phase 6 Pending)
 
 ## Phase 1: VFX Category Integration ✅
 
@@ -26,7 +26,7 @@
   - Save ~8MB when unused
   - **Implemented**: ARDepthSource.RequestColorMap(bool)
 
-## Phase 2: Audio System Enhancement ✅
+## Phase 2: Audio System Enhancement ✅ (Complete)
 
 - [x] **T-004**: Implement BeatDetector class (~150 LOC)
   - FFT on bass band (20-200Hz)
@@ -43,16 +43,18 @@
   - Performance: <0.1ms additional
   - **Implemented**: AudioBridge.cs lines 36, 73, 131-132
 
-- [ ] **T-006**: Configure 4-band audio in AudioBridge
+- [x] **T-006**: Configure 4-band audio in AudioBridge
   - Fixed 4-band: Bass, Mids, Treble, SubBass
   - Support both mic input and AudioClip analysis
   - AudioSource component for music file playback
   - Auto-detect active audio source
+  - **Implemented**: AudioBridge.cs - microphone support, RMS volume, 4 frequency bands
 
-- [ ] **T-007**: Update VFXAudioDataBinder for beat detection
+- [x] **T-007**: Update VFXAudioDataBinder for beat detection
   - Expose BeatPulse, BeatIntensity per VFX
   - Add parameter mapping configuration
   - Support multiple VFX properties driven by same band
+  - **Implemented**: VFXAudioDataBinder.cs lines 34-40, 143-151
 
 ## Phase 3: Physics System Enhancement ✅
 
@@ -76,39 +78,46 @@
   - Set HandVelocity Vector3 to VFX
   - **Implemented**: enableHandVelocity, handVelocityProperty, UpdateHandVelocity()
 
-## Phase 4: VFX Compatibility Audit
+## Phase 4: VFX Compatibility Audit ✅
 
-- [ ] **T-011**: Audit all 73 VFX for mode compatibility
+- [x] **T-011**: Audit all 73 VFX for mode compatibility
   - Check which properties each VFX exposes
   - Determine supported modes per VFX
   - Create compatibility matrix
+  - **Implemented**: VFXCompatibilityAuditor.cs - EditorWindow + console audit
+  - **Report**: Assets/Documentation/VFX_COMPATIBILITY_AUDIT.md
 
-- [ ] **T-012**: Add fallback handling for unsupported modes
+- [x] **T-012**: Add fallback handling for unsupported modes
   - Log warning when mode unsupported
   - Suggest alternative mode
   - Don't break VFX execution
+  - **Implemented**: VFXARBinder.FindFallbackMode(), VFXModeController.ModeChangeReport
 
-- [ ] **T-013**: Update VFXProfiler for mode tracking
+- [x] **T-013**: Update VFXProfiler for mode tracking
   - Show current mode per VFX
   - Track mode-specific performance
   - Report unsupported mode attempts
+  - **Implemented**: VFXProfiler.cs - GetModeStatistics(), GetVFXMissingModeSupport(), GetAverageCostPerMode()
 
-## Phase 5: UI Integration
+## Phase 5: UI Integration ✅
 
-- [ ] **T-014**: Update VFXToggleUI with mode selector
+- [x] **T-014**: Update VFXToggleUI with mode selector
   - Per-VFX mode dropdown
   - Category quick-filter
   - Audio/Physics enable toggles
+  - **Implemented**: VFXToggleUI.cs lines 474-515 (mode selector), lines 517-575 (audio section)
 
-- [ ] **T-015**: Add audio visualization to dashboard
+- [x] **T-015**: Add audio visualization to dashboard
   - Frequency band bars
   - Beat indicator
   - Input level meter
+  - **Implemented**: AudioMonitor.cs - IMGUI display, toggle with 'M' key
 
-- [ ] **T-016**: Add physics visualization to dashboard
+- [x] **T-016**: Add physics visualization to dashboard
   - Camera velocity vector
   - Gravity direction indicator
   - Collision count
+  - **Implemented**: VFXPipelineDashboard.cs - DrawPhysicsInfo() (lines 405-434)
 
 ## Phase 6: Testing & Validation
 

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.InputSystem;
+using MetavidoVFX.VFX.Binders;
 
 /// <summary>
 /// Real-time pipeline visualization dashboard.
@@ -56,6 +57,14 @@ public class VFXPipelineDashboard : MonoBehaviour
     int _totalParticles;
     List<VFXARBinder> _binders = new List<VFXARBinder>();
     List<VisualEffect> _allVFX = new List<VisualEffect>();
+
+    // Physics tracking (spec-007 T-016)
+    Vector3 _cameraVelocity;
+    float _cameraSpeed;
+    Vector3 _lastCameraPosition;
+    Vector3 _currentGravity = new Vector3(0, -9.81f, 0);
+    int _meshPointCount;
+    bool _hasPhysicsBinders;
 
     // Styles
     GUIStyle _boxStyle;
@@ -117,6 +126,43 @@ public class VFXPipelineDashboard : MonoBehaviour
             if (vfx.enabled && vfx.gameObject.activeInHierarchy)
             {
                 _totalParticles += vfx.aliveParticleCount;
+            }
+        }
+
+        // Physics tracking (spec-007 T-016)
+        UpdatePhysicsStats();
+    }
+
+    void UpdatePhysicsStats()
+    {
+        // Camera velocity
+        var mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            if (_lastCameraPosition != Vector3.zero)
+            {
+                Vector3 delta = mainCamera.transform.position - _lastCameraPosition;
+                _cameraVelocity = delta / _updateInterval;
+                _cameraSpeed = _cameraVelocity.magnitude;
+            }
+            _lastCameraPosition = mainCamera.transform.position;
+        }
+
+        // Get mesh point count from global shader property
+        _meshPointCount = Shader.GetGlobalInt("_MeshPointCount");
+
+        // Check for physics binders and get gravity from first active one
+        _hasPhysicsBinders = false;
+        var physicsBinders = FindObjectsByType<VFXPhysicsBinder>(FindObjectsSortMode.None);
+        foreach (var binder in physicsBinders)
+        {
+            if (binder.enabled && binder.enableGravity)
+            {
+                _hasPhysicsBinders = true;
+                _currentGravity = binder.useWorldGravity
+                    ? new Vector3(0, binder.gravityStrength, 0)
+                    : binder.gravityDirection.normalized * Mathf.Abs(binder.gravityStrength);
+                break;
             }
         }
     }
@@ -194,6 +240,10 @@ public class VFXPipelineDashboard : MonoBehaviour
 
         // Active VFX Section
         DrawActiveVFX(ref x, ref y, _width);
+        y += 8;
+
+        // Physics Section (spec-007 T-016)
+        DrawPhysicsInfo(ref x, ref y, _width);
 
         // Restore GUI matrix
         GUI.matrix = oldMatrix;
@@ -356,6 +406,37 @@ public class VFXPipelineDashboard : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Physics visualization section (spec-007 T-016)
+    /// Shows: Camera velocity vector, gravity direction, collision count
+    /// </summary>
+    void DrawPhysicsInfo(ref float x, ref float y, float width)
+    {
+        GUI.Label(new Rect(x, y, width, 20), "Physics (T-016)", _headerStyle);
+        y += 22;
+
+        // Camera Velocity Vector
+        string velText = $"({_cameraVelocity.x:F2}, {_cameraVelocity.y:F2}, {_cameraVelocity.z:F2})";
+        Color velColor = _cameraSpeed > 0.1f ? _okColor : new Color(0.6f, 0.6f, 0.6f);
+        DrawStatusLine(ref x, ref y, width, "Camera Velocity", velText, velColor);
+
+        // Camera Speed
+        DrawStatusLine(ref x, ref y, width, "Speed", $"{_cameraSpeed:F2} m/s",
+            _cameraSpeed > 1f ? _warningColor : velColor);
+
+        // Gravity Direction
+        string gravText = _hasPhysicsBinders
+            ? $"({_currentGravity.x:F1}, {_currentGravity.y:F1}, {_currentGravity.z:F1})"
+            : "Not Active";
+        DrawStatusLine(ref x, ref y, width, "Gravity", gravText,
+            _hasPhysicsBinders ? _okColor : new Color(0.5f, 0.5f, 0.5f));
+
+        // AR Mesh Collision Count
+        string meshText = _meshPointCount > 0 ? $"{FormatNumber(_meshPointCount)} points" : "No Mesh";
+        DrawStatusLine(ref x, ref y, width, "Mesh Collision", meshText,
+            _meshPointCount > 0 ? _okColor : new Color(0.5f, 0.5f, 0.5f));
+    }
+
     void DrawStatusLine(ref float x, ref float y, float width, string label, string value, Color color)
     {
         GUI.Label(new Rect(x, y, 150, 18), label, _labelStyle);
@@ -387,6 +468,7 @@ public class VFXPipelineDashboard : MonoBehaviour
         height += 10 + 22 + (ARDepthSource.Instance?.IsReady == true ? 6 * 16 : 0) + 18 + 18 + 18; // Pipeline
         height += 10 + 22 + 20 + 20 + 20; // Performance
         height += 10 + 22 + Mathf.Min(_activeVFXCount, 5) * 18 + (_activeVFXCount > 5 ? 18 : 0); // VFX
+        height += 10 + 22 + 4 * 18; // Physics (T-016): header + 4 lines
         return height;
     }
 
