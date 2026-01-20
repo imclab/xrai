@@ -1,7 +1,7 @@
 # VFX Sources Registry
 
-**Total VFX**: 223 assets in Resources/VFX
-**Categories**: 26 folders
+**Total VFX**: 235 assets in Resources/VFX
+**Categories**: 29 folders
 **Last Updated**: 2026-01-20
 
 ## VFX Pipeline Types
@@ -35,6 +35,12 @@
 | **SdfVfx** | keijiro/SdfVfx | 5 | SDF generation |
 | **VfxGraphTestbed** | keijiro/VfxGraphTestbed | 16 | Experimental |
 | **SplatVFX** | keijiro/SplatVFX | 3 | Gaussian splatting |
+| **LaspVfx** | keijiro/LaspVfx | 4 | Audio reactive (LASP) |
+| **Anomask** | keijiro/Anomask | 1 | Face anonymizer (URP) |
+| **FloatingHUD** | keijiro/FloatingHUD | 1 | HUD projector (URP) |
+| **GeoVfx** | keijiro/GeoVfx | 2 | Data visualization |
+| **DrumPadVFX** | keijiro/DrumPadVFX | 1 | Audio reactive drums |
+| **Testbed4** | keijiro/VfxGraphTestbed4 | 3 | Environment effects |
 
 ### HoloKit/Holoi Projects
 | Source | Repo | VFX Count | Category |
@@ -88,30 +94,35 @@ KeypointBuffer  GraphicsBuffer  17 pose landmarks
 
 ```
 Resources/VFX/
+├── Portals6/       (22)   Portal effects
+├── Essentials/     (22)   Boids, noise, waveform
+├── Buddha/         (21)   Hand-tracked mesh
+├── UnitySamples/   (20)   Learning templates
+├── Rcam2/          (20)   HDRP→URP body
+├── Keijiro/        (16)   Experimental
+├── Rcam4/          (14)   NDI-style body
+├── Dcam/           (13)   Depth camera vis
+├── NNCam2/          (9)   Keypoint-driven
+├── Rcam3/           (8)   Depth people/env
+├── Fluo/            (8)   Brush/painting
+├── WebRTC/          (7)   Trails + SDF
+├── Khoreo/          (7)   Stage performance
+├── Akvfx/           (7)   Azure Kinect style
 ├── People/          (5)   Core body effects
 ├── Environment/     (5)   World-space effects
-├── NNCam2/          (9)   Keypoint-driven
-├── Akvfx/           (7)   Azure Kinect style
-├── Rcam2/          (20)   HDRP→URP body
-├── Rcam3/           (8)   Depth people/env
-├── Rcam4/          (14)   NDI-style body
 ├── SdfVfx/          (5)   SDF generation
-├── Buddha/         (21)   Hand-tracked mesh
-├── Fluo/            (8)   Brush/painting
-├── Khoreo/          (7)   Stage performance
+├── LaspVfx/         (4)   Audio reactive (LASP)
+├── Tamagotchu/      (4)   Virtual pet
+├── Testbed4/        (3)   Age, Flame, Random
+├── Splat/           (3)   Gaussian splatting
+├── GeoVfx/          (2)   Population, Temperature
 ├── Smrvfx/          (2)   Skinned mesh
-├── Keijiro/        (16)   Experimental
-├── UnitySamples/   (20)   Learning templates
-├── Portals6/       (22)   Portal effects
 ├── FaceTracking/    (2)   Face mesh
 ├── Compute/         (2)   Compute examples
-├── Myaku/           (1)   AR character
-├── Splat/           (3)   Gaussian splatting
-├── Tamagotchu/      (4)   Virtual pet
-├── WebRTC/          (7)   Trails + SDF
-├── Essentials/     (22)   Boids, noise, waveform
-├── Dcam/           (13)   Depth camera vis
-└── (legacy)         (4)   Uncategorized
+├── Anomask/         (1)   Face anonymizer
+├── FloatingHUD/     (1)   HUD projector
+├── DrumPad/         (1)   Audio drums
+└── Myaku/           (1)   AR character
 ```
 
 ## GitHub Repos Referenced
@@ -119,8 +130,10 @@ Resources/VFX/
 - keijiro/Rcam2, Rcam3, Rcam4
 - keijiro/Akvfx, Smrvfx, SdfVfx
 - keijiro/Khoreo, Fluo
-- keijiro/VfxGraphTestbed
+- keijiro/VfxGraphTestbed, VfxGraphTestbed4
 - keijiro/SplatVFX
+- keijiro/LaspVfx, Anomask, FloatingHUD
+- keijiro/GeoVfx, DrumPadVFX
 - holoi/touching-hologram
 - mao-test-h/FaceTrackingVFX
 - cinight/MinimalCompute
@@ -137,6 +150,8 @@ Resources/VFX/
 | 2026-01-20 | Buddha, Fluo, Khoreo, etc | 76 | Reference migration |
 | 2026-01-20 | _ref projects | 17 | Final migration |
 | 2026-01-20 | VFX-Essentials, Dcam2 | 35 | Final batch |
+| 2026-01-20 | LaspVfx, Anomask, FloatingHUD | 6 | Audio + HUD VFX |
+| 2026-01-20 | GeoVfx, DrumPadVFX, Testbed4 | 6 | Data viz + Env |
 
 ## Original Names Registry
 

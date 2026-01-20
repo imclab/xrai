@@ -134,5 +134,32 @@
 
 ---
 
-*All tasks completed: 2026-01-16*
+## Phase 8: Auto-Wiring Enhancements (Future)
+
+- [ ] **T-018**: Extend VFXARBinder property alias registry
+  - Add underscore-prefix variants for Keijiro VFX (_DepthMap, _ColorMap)
+  - Add NNCam2-specific aliases (Keypoints → KeypointBuffer)
+  - Add Fluo brush aliases (StrokeBuffer, BrushWidth)
+  - Document complete alias matrix in VFX_AUTOWIRING_REFERENCE.md
+
+- [ ] **T-019**: Add VFX source type detection to VFXCompatibilityAuditor
+  - Detect source type from path patterns (NNCam2/, Rcam/, Fluo/, etc.)
+  - Detect source type from property signatures
+  - Add source type to audit report CSV/Markdown
+
+- [ ] **T-020**: Generate VFX auto-wiring report
+  - Extend VFXBindingDocGenerator with wiring status
+  - Output: VFX_AUTOWIRING_REPORT.md
+  - Show which aliases resolved for each VFX
+  - Flag unresolved properties for manual review
+
+- [ ] **T-021**: Batch auto-detect bindings menu command
+  - `H3M > VFX Pipeline Master > Auto-Wire > Wire All Scene VFX`
+  - `H3M > VFX Pipeline Master > Auto-Wire > Generate Wiring Report`
+  - `H3M > VFX Pipeline Master > Auto-Wire > Validate All Bindings`
+
+---
+
+*Core tasks completed: 2026-01-16*
 *Verified: 2026-01-20*
+*Phase 8 added: 2026-01-20*
