@@ -2,6 +2,7 @@
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -27,8 +28,8 @@ namespace Metavido.Diagnostics.Editor
         [MenuItem("H3M/Debug/Setup Debug Defines (Development)", priority = 500)]
         public static void AddDebugDefines()
         {
-            var group = EditorUserBuildSettings.selectedBuildTargetGroup;
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+            var namedTarget = GetCurrentNamedBuildTarget();
+            var defines = PlayerSettings.GetScriptingDefineSymbols(namedTarget);
             var defineList = new List<string>(defines.Split(';'));
 
             bool changed = false;
@@ -43,8 +44,8 @@ namespace Metavido.Diagnostics.Editor
 
             if (changed)
             {
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, string.Join(";", defineList));
-                Debug.Log($"[DebugDefinesSetup] Added debug defines for {group}: {string.Join(", ", DebugDefines)}");
+                PlayerSettings.SetScriptingDefineSymbols(namedTarget, string.Join(";", defineList));
+                Debug.Log($"[DebugDefinesSetup] Added debug defines for {namedTarget}: {string.Join(", ", DebugDefines)}");
             }
             else
             {
@@ -55,8 +56,8 @@ namespace Metavido.Diagnostics.Editor
         [MenuItem("H3M/Debug/Remove Debug Defines (Production)", priority = 501)]
         public static void RemoveDebugDefines()
         {
-            var group = EditorUserBuildSettings.selectedBuildTargetGroup;
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+            var namedTarget = GetCurrentNamedBuildTarget();
+            var defines = PlayerSettings.GetScriptingDefineSymbols(namedTarget);
             var defineList = new List<string>(defines.Split(';'));
 
             bool changed = false;
@@ -71,8 +72,8 @@ namespace Metavido.Diagnostics.Editor
 
             if (changed)
             {
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, string.Join(";", defineList));
-                Debug.Log($"[DebugDefinesSetup] Removed debug defines for {group}");
+                PlayerSettings.SetScriptingDefineSymbols(namedTarget, string.Join(";", defineList));
+                Debug.Log($"[DebugDefinesSetup] Removed debug defines for {namedTarget}");
             }
             else
             {
@@ -83,16 +84,43 @@ namespace Metavido.Diagnostics.Editor
         [MenuItem("H3M/Debug/Check Debug Defines", priority = 502)]
         public static void CheckDebugDefines()
         {
-            var group = EditorUserBuildSettings.selectedBuildTargetGroup;
-            var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group);
+            var namedTarget = GetCurrentNamedBuildTarget();
+            var defines = PlayerSettings.GetScriptingDefineSymbols(namedTarget);
             var defineList = new HashSet<string>(defines.Split(';'));
 
-            Debug.Log($"=== Debug Defines Status ({group}) ===");
+            Debug.Log($"=== Debug Defines Status ({namedTarget}) ===");
             foreach (var define in DebugDefines)
             {
                 bool present = defineList.Contains(define);
                 Debug.Log($"  {(present ? "✓" : "✗")} {define}");
             }
+        }
+
+        /// <summary>
+        /// Convert the selected build target group to NamedBuildTarget (Unity 2021.2+ API)
+        /// </summary>
+        private static NamedBuildTarget GetCurrentNamedBuildTarget()
+        {
+            var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+            var targetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget);
+
+            return targetGroup switch
+            {
+                BuildTargetGroup.Standalone => NamedBuildTarget.Standalone,
+                BuildTargetGroup.iOS => NamedBuildTarget.iOS,
+                BuildTargetGroup.Android => NamedBuildTarget.Android,
+                BuildTargetGroup.WebGL => NamedBuildTarget.WebGL,
+                BuildTargetGroup.WSA => NamedBuildTarget.WindowsStoreApps,
+                BuildTargetGroup.PS4 => NamedBuildTarget.PS4,
+                BuildTargetGroup.PS5 => NamedBuildTarget.PS5,
+                BuildTargetGroup.XboxOne => NamedBuildTarget.XboxOne,
+                BuildTargetGroup.tvOS => NamedBuildTarget.tvOS,
+                BuildTargetGroup.LinuxHeadlessSimulation => NamedBuildTarget.LinuxHeadlessSimulation,
+                BuildTargetGroup.EmbeddedLinux => NamedBuildTarget.EmbeddedLinux,
+                BuildTargetGroup.QNX => NamedBuildTarget.QNX,
+                BuildTargetGroup.VisionOS => NamedBuildTarget.VisionOS,
+                _ => NamedBuildTarget.FromBuildTargetGroup(targetGroup)
+            };
         }
 
         [MenuItem("H3M/Debug/Add DebugBootstrap to Scene", priority = 510)]

@@ -72,8 +72,11 @@
                                ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           HOLOGRAM LAYER                                     │
-│  002-h3m-foundation [IMPLEMENTED]                                           │
+│  002-h3m-foundation [✅ COMPLETE - Legacy components superseded]            │
 │  003-hologram-conferencing [DRAFT - depends on 008+010 multiuser]          │
+│                                                                              │
+│  RECOMMENDED: Use Hologram prefab (HologramPlacer + HologramController)     │
+│  LEGACY: H3M_HologramRig (HologramSource + HologramRenderer + HologramAnchor)│
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 

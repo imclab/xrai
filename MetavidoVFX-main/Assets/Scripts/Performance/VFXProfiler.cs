@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.VFX;
+using MetavidoVFX.VFX;
 
 namespace MetavidoVFX.Performance
 {
@@ -41,6 +42,12 @@ namespace MetavidoVFX.Performance
             public bool hasStrips;
             public bool isEnabled;
             public float estimatedCost; // 0-100 score
+
+            // Mode tracking (spec-007 T-013)
+            public VFXCategoryType currentMode;
+            public VFXCategoryType[] supportedModes;
+            public bool hasVFXARBinder;
+            public bool hasVFXCategory;
         }
 
         public List<VFXProfileData> ProfileData => _profileData;
@@ -96,6 +103,16 @@ namespace MetavidoVFX.Performance
             _report.AppendLine($"  High-Cost VFX: {issueCount}");
             _report.AppendLine();
 
+            // Mode statistics (spec-007 T-013)
+            var modeStats = GetModeStatistics();
+            _report.AppendLine("  Mode Distribution:");
+            foreach (var kv in modeStats)
+            {
+                if (kv.Value > 0)
+                    _report.AppendLine($"    {kv.Key}: {kv.Value} VFX");
+            }
+            _report.AppendLine();
+
             // Warnings
             if (totalParticles > criticalParticleCount)
             {
@@ -130,6 +147,11 @@ namespace MetavidoVFX.Performance
                 _report.AppendLine($"     Particles: {data.particleCount:N0} / Capacity: {data.capacity:N0}");
                 _report.AppendLine($"     Cost: {costLevel} ({data.estimatedCost:F0}/100)");
 
+                // Mode info (spec-007 T-013)
+                _report.AppendLine($"     Mode: {data.currentMode} | Supported: {string.Join(", ", data.supportedModes)}");
+                if (!data.hasVFXARBinder)
+                    _report.AppendLine("     ⚠️ Missing VFXARBinder (no mode switching)");
+
                 if (data.hasExpensiveNoise)
                     _report.AppendLine("     ⚠️ Uses expensive noise (Turbulence/Voronoi)");
                 if (data.has3DTextures)
@@ -160,8 +182,28 @@ namespace MetavidoVFX.Performance
                 vfx = vfx,
                 name = vfx.gameObject.name,
                 isEnabled = vfx.enabled && vfx.gameObject.activeInHierarchy,
-                particleCount = vfx.aliveParticleCount
+                particleCount = vfx.aliveParticleCount,
+                currentMode = VFXCategoryType.People, // Default
+                supportedModes = new VFXCategoryType[0]
             };
+
+            // Mode tracking (spec-007 T-013)
+            var binder = vfx.GetComponent<VFXARBinder>();
+            var category = vfx.GetComponent<VFXCategory>();
+
+            data.hasVFXARBinder = binder != null;
+            data.hasVFXCategory = category != null;
+
+            if (binder != null)
+            {
+                data.currentMode = binder.CurrentMode;
+                data.supportedModes = binder.GetSupportedModes();
+            }
+            else if (category != null)
+            {
+                data.currentMode = category.Category;
+                data.supportedModes = new[] { category.Category, VFXCategoryType.Hybrid };
+            }
 
             // Try to get capacity (approximate from asset name patterns)
             var asset = vfx.visualEffectAsset;
@@ -199,7 +241,7 @@ namespace MetavidoVFX.Performance
                 data.capacity = Mathf.Max(1000, data.particleCount * 2);
             }
 
-            // Calculate cost score
+            // Calculate cost score (includes mode-based adjustments)
             data.estimatedCost = CalculateCost(data);
 
             return data;
@@ -314,6 +356,85 @@ namespace MetavidoVFX.Performance
                     total += data.particleCount;
             }
             return total;
+        }
+
+        /// <summary>
+        /// Get mode statistics (spec-007 T-013)
+        /// </summary>
+        public Dictionary<VFXCategoryType, int> GetModeStatistics()
+        {
+            var stats = new Dictionary<VFXCategoryType, int>();
+
+            // Initialize all modes to 0
+            foreach (VFXCategoryType mode in System.Enum.GetValues(typeof(VFXCategoryType)))
+            {
+                stats[mode] = 0;
+            }
+
+            // Count active VFX per mode
+            foreach (var data in _profileData)
+            {
+                if (data.isEnabled)
+                {
+                    stats[data.currentMode]++;
+                }
+            }
+
+            return stats;
+        }
+
+        /// <summary>
+        /// Get VFX that don't have VFXARBinder (can't switch modes)
+        /// </summary>
+        public List<VFXProfileData> GetVFXMissingModeSupport()
+        {
+            var result = new List<VFXProfileData>();
+            foreach (var data in _profileData)
+            {
+                if (data.isEnabled && !data.hasVFXARBinder)
+                {
+                    result.Add(data);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get average cost per mode (for mode-based optimization)
+        /// </summary>
+        public Dictionary<VFXCategoryType, float> GetAverageCostPerMode()
+        {
+            var costs = new Dictionary<VFXCategoryType, List<float>>();
+
+            foreach (VFXCategoryType mode in System.Enum.GetValues(typeof(VFXCategoryType)))
+            {
+                costs[mode] = new List<float>();
+            }
+
+            foreach (var data in _profileData)
+            {
+                if (data.isEnabled)
+                {
+                    costs[data.currentMode].Add(data.estimatedCost);
+                }
+            }
+
+            var averages = new Dictionary<VFXCategoryType, float>();
+            foreach (var kv in costs)
+            {
+                if (kv.Value.Count > 0)
+                {
+                    float sum = 0;
+                    foreach (var c in kv.Value) sum += c;
+                    averages[kv.Key] = sum / kv.Value.Count;
+                }
+                else
+                {
+                    averages[kv.Key] = 0;
+                }
+            }
+
+            return averages;
         }
     }
 }

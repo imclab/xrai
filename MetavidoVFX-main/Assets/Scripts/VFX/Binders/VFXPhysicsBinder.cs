@@ -1,23 +1,19 @@
-// VFXPhysicsBinder - Optional velocity-driven input and physics/gravity for VFX
+// VFXPhysicsBinder - Velocity, gravity, AR mesh collision, and hand velocity for VFX
+// Updated for spec-007: Added mesh collision support, AR-relative gravity, hand velocity
 // Attach to any VFX GameObject along with VFXPropertyBinder
-// Provides toggleable velocity and gravity bindings with configurable ranges
 
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
+using MetavidoVFX.HandTracking;
 
 namespace MetavidoVFX.VFX.Binders
 {
     /// <summary>
-    /// Binds optional velocity-driven input and physics/gravity to VFX properties.
-    ///
-    /// Velocity Properties (bind when enabled):
-    /// - Velocity / ReferenceVelocity (Vector3): Motion direction and speed
-    /// - Speed (float): Velocity magnitude
-    ///
-    /// Physics Properties (bind when enabled):
-    /// - Gravity / Gravity Vector (Vector3): Gravity force direction
-    /// - GravityStrength (float): Gravity magnitude (-20 to 20)
+    /// Binds physics data to VFX properties including:
+    /// - Camera/hand velocity
+    /// - Gravity with AR-relative direction
+    /// - AR mesh collision buffers (spec-007)
     /// </summary>
     [VFXBinder("Physics/Physics Data")]
     public class VFXPhysicsBinder : VFXBinderBase
@@ -40,6 +36,10 @@ namespace MetavidoVFX.VFX.Binders
         [Range(0f, 0.99f)]
         public float velocitySmoothing = 0.5f;
 
+        [Header("Hand Velocity (spec-007)")]
+        [Tooltip("Enable hand velocity binding from HandVFXController")]
+        public bool enableHandVelocity = false;
+
         [Header("Physics/Gravity Settings")]
         [Tooltip("Enable gravity/physics binding")]
         public bool enableGravity = false;
@@ -53,6 +53,17 @@ namespace MetavidoVFX.VFX.Binders
 
         [Tooltip("Use world gravity direction (ignores gravityDirection)")]
         public bool useWorldGravity = true;
+
+        [Tooltip("AR-relative gravity: gravity follows device orientation")]
+        public bool useARRelativeGravity = false;
+
+        [Header("AR Mesh Collision (spec-007)")]
+        [Tooltip("Enable AR mesh collision - requires MeshVFX in scene")]
+        public bool enableMeshCollision = false;
+
+        [Tooltip("Bounce factor when particles hit AR mesh (0 = stop, 1 = full bounce)")]
+        [Range(0f, 1f)]
+        public float bounceFactor = 0.5f;
 
         [Header("Property Names")]
         [VFXPropertyBinding("UnityEngine.Vector3")]
@@ -73,6 +84,20 @@ namespace MetavidoVFX.VFX.Binders
         [VFXPropertyBinding("float")]
         public ExposedProperty gravityStrengthProperty = "GravityStrength";
 
+        [Header("Hand Velocity Properties (spec-007)")]
+        [VFXPropertyBinding("UnityEngine.Vector3")]
+        public ExposedProperty handVelocityProperty = "HandVelocity";
+
+        [VFXPropertyBinding("float")]
+        public ExposedProperty handSpeedProperty = "HandSpeed";
+
+        [Header("Mesh Collision Properties (spec-007)")]
+        [VFXPropertyBinding("float")]
+        public ExposedProperty bounceFactorProperty = "BounceFactor";
+
+        [VFXPropertyBinding("int")]
+        public ExposedProperty meshPointCountProperty = "MeshPointCount";
+
         [Header("Debug")]
         public bool verboseLogging = false;
 
@@ -81,7 +106,8 @@ namespace MetavidoVFX.VFX.Binders
             CameraMovement,     // Derive from camera position delta
             VelocityMap,        // Sample from VelocityMap texture center
             ManualInput,        // Use manualVelocity field
-            Transform           // Derive from this object's movement
+            Transform,          // Derive from this object's movement
+            HandTracking        // Use hand velocity from HandVFXController (spec-007)
         }
 
         // Internal state
@@ -91,6 +117,10 @@ namespace MetavidoVFX.VFX.Binders
         private Vector3 _smoothedVelocity;
         private float _smoothedSpeed;
         private bool _initialized;
+
+        // Hand velocity state (spec-007)
+        private Vector3 _handVelocity;
+        private float _handSpeed;
 
         // VelocityMap sampling
         private RenderTexture _velocityMapRT;
@@ -134,10 +164,23 @@ namespace MetavidoVFX.VFX.Binders
                 BindVelocity(component);
             }
 
+            // Update and bind hand velocity (spec-007)
+            if (enableHandVelocity)
+            {
+                UpdateHandVelocity();
+                BindHandVelocity(component);
+            }
+
             // Bind gravity
             if (enableGravity)
             {
                 BindGravity(component);
+            }
+
+            // Bind mesh collision (spec-007)
+            if (enableMeshCollision)
+            {
+                BindMeshCollision(component);
             }
         }
 
@@ -262,7 +305,16 @@ namespace MetavidoVFX.VFX.Binders
         {
             // Calculate gravity vector
             Vector3 gravityVector;
-            if (useWorldGravity)
+
+            if (useARRelativeGravity && _arCamera != null)
+            {
+                // AR-relative gravity: "down" based on device orientation (spec-007)
+                // This makes gravity point toward the floor even when device is tilted
+                gravityVector = -_arCamera.transform.up * Mathf.Abs(gravityStrength);
+                if (gravityStrength > 0f)
+                    gravityVector = -gravityVector;
+            }
+            else if (useWorldGravity)
             {
                 gravityVector = new Vector3(0f, gravityStrength, 0f);
             }
@@ -290,9 +342,86 @@ namespace MetavidoVFX.VFX.Binders
 
             if (verboseLogging && Time.frameCount % 60 == 0)
             {
-                Debug.Log($"[VFXPhysicsBinder] Gravity: {gravityVector:F2} Strength: {gravityStrength:F2}");
+                Debug.Log($"[VFXPhysicsBinder] Gravity: {gravityVector:F2} Strength: {gravityStrength:F2} AR-Relative: {useARRelativeGravity}");
             }
         }
+
+        #region Hand Velocity (spec-007)
+
+        void UpdateHandVelocity()
+        {
+            // Try to get hand velocity from HandVFXController
+            var handController = FindFirstObjectByType<HandTracking.HandVFXController>();
+            if (handController != null)
+            {
+                // Use reflection or public property to get hand velocity
+                // HandVFXController has HandVelocity property
+                var velocityProp = handController.GetType().GetProperty("HandVelocity");
+                if (velocityProp != null)
+                {
+                    _handVelocity = (Vector3)velocityProp.GetValue(handController);
+                    _handSpeed = _handVelocity.magnitude;
+                }
+            }
+            else
+            {
+                _handVelocity = Vector3.zero;
+                _handSpeed = 0f;
+            }
+        }
+
+        void BindHandVelocity(VisualEffect component)
+        {
+            if (component.HasVector3(handVelocityProperty))
+                component.SetVector3(handVelocityProperty, _handVelocity);
+
+            if (component.HasFloat(handSpeedProperty))
+                component.SetFloat(handSpeedProperty, _handSpeed);
+
+            // Common property name variants
+            if (component.HasVector3("Hand Velocity"))
+                component.SetVector3("Hand Velocity", _handVelocity);
+
+            if (verboseLogging && Time.frameCount % 60 == 0)
+            {
+                Debug.Log($"[VFXPhysicsBinder] Hand Velocity: {_handVelocity:F2} Speed: {_handSpeed:F2}");
+            }
+        }
+
+        #endregion
+
+        #region Mesh Collision (spec-007)
+
+        void BindMeshCollision(VisualEffect component)
+        {
+            // MeshVFX sets global buffers (_MeshPointCache, _MeshNormalCache) and per-VFX properties
+            // We just need to bind the bounce factor and mesh point count
+
+            // Bind bounce factor
+            if (component.HasFloat(bounceFactorProperty))
+                component.SetFloat(bounceFactorProperty, bounceFactor);
+
+            if (component.HasFloat("Bounce"))
+                component.SetFloat("Bounce", bounceFactor);
+
+            // MeshPointCount is typically set by MeshVFX, but we can also access global
+            int meshPointCount = Shader.GetGlobalInt("_MeshPointCount");
+            if (meshPointCount > 0)
+            {
+                if (component.HasInt(meshPointCountProperty))
+                    component.SetInt(meshPointCountProperty, meshPointCount);
+            }
+
+            // Note: GraphicsBuffers (MeshPointCache, MeshNormalCache) are set by MeshVFX directly
+            // VFX Graph accesses them via global shader buffers or direct binding from MeshVFX
+
+            if (verboseLogging && Time.frameCount % 60 == 0)
+            {
+                Debug.Log($"[VFXPhysicsBinder] Mesh Collision: Points={meshPointCount}, Bounce={bounceFactor:F2}");
+            }
+        }
+
+        #endregion
 
         void OnDestroy()
         {
@@ -307,7 +436,9 @@ namespace MetavidoVFX.VFX.Binders
         {
             string status = "";
             if (enableVelocity) status += $"Vel({velocitySource})";
+            if (enableHandVelocity) status += (status.Length > 0 ? " + " : "") + "Hand";
             if (enableGravity) status += (status.Length > 0 ? " + " : "") + $"Grav({gravityStrength:F1})";
+            if (enableMeshCollision) status += (status.Length > 0 ? " + " : "") + $"Mesh(B:{bounceFactor:F1})";
             return $"Physics : {status}";
         }
 
@@ -343,6 +474,38 @@ namespace MetavidoVFX.VFX.Binders
         public void SetManualVelocity(Vector3 velocity)
         {
             manualVelocity = velocity;
+        }
+
+        /// <summary>
+        /// Enable/disable hand velocity binding (spec-007)
+        /// </summary>
+        public void SetHandVelocityEnabled(bool enabled)
+        {
+            enableHandVelocity = enabled;
+        }
+
+        /// <summary>
+        /// Enable/disable mesh collision binding (spec-007)
+        /// </summary>
+        public void SetMeshCollisionEnabled(bool enabled)
+        {
+            enableMeshCollision = enabled;
+        }
+
+        /// <summary>
+        /// Set bounce factor for mesh collision (spec-007)
+        /// </summary>
+        public void SetBounceFactor(float bounce)
+        {
+            bounceFactor = Mathf.Clamp01(bounce);
+        }
+
+        /// <summary>
+        /// Enable AR-relative gravity (spec-007)
+        /// </summary>
+        public void SetARRelativeGravity(bool enabled)
+        {
+            useARRelativeGravity = enabled;
         }
     }
 }

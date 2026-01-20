@@ -1,9 +1,157 @@
-* -text
+# Unity .gitattributes
+# Optimized for speed: binary handling + LFS for large files
 
+# ==============================================================================
+# TEXT FILES (diff-able, line-ending normalized)
+# ==============================================================================
+
+# Default: Auto-detect (conservative)
+* text=auto
+
+# C# source
 *.cs        text eol=lf diff=csharp
+*.asmdef    text eol=lf
+
+# Shaders
 *.shader    text eol=lf
 *.cginc     text eol=lf
 *.hlsl      text eol=lf
 *.compute   text eol=lf
+*.glsl      text eol=lf
 
+# Unity YAML (scenes, prefabs, assets)
+*.unity     text eol=lf merge=unityyamlmerge
+*.prefab    text eol=lf merge=unityyamlmerge
+*.asset     text eol=lf merge=unityyamlmerge
 *.meta      text eol=lf
+*.mat       text eol=lf
+*.anim      text eol=lf
+*.controller text eol=lf
+*.overrideController text eol=lf
+*.physicMaterial text eol=lf
+*.physicsMaterial2D text eol=lf
+*.playable  text eol=lf
+*.mask      text eol=lf
+*.brush     text eol=lf
+*.flare     text eol=lf
+*.fontsettings text eol=lf
+*.guiskin   text eol=lf
+*.giparams  text eol=lf
+*.renderTexture text eol=lf
+*.spriteatlas text eol=lf
+*.terrainlayer text eol=lf
+*.mixer     text eol=lf
+*.signal    text eol=lf
+*.lighting  text eol=lf
+
+# Config
+*.json      text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.xml       text eol=lf
+*.txt       text eol=lf
+*.md        text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+
+# ==============================================================================
+# BINARY FILES (no diff, no merge)
+# ==============================================================================
+
+# Images
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.bmp       binary
+*.tga       binary
+*.tiff      binary
+*.tif       binary
+*.psd       binary
+*.hdr       binary
+*.exr       binary
+*.ico       binary
+*.svg       binary
+
+# Audio
+*.mp3       binary
+*.wav       binary
+*.ogg       binary
+*.aif       binary
+*.aiff      binary
+
+# Video
+*.mp4       binary
+*.mov       binary
+*.avi       binary
+*.webm      binary
+
+# 3D Models
+*.fbx       binary
+*.obj       binary
+*.dae       binary
+*.3ds       binary
+*.blend     binary
+*.gltf      binary
+*.glb       binary
+
+# Unity specific binary
+*.cubemap   binary
+*.unitypackage binary
+
+# Compiled
+*.dll       binary
+*.so        binary
+*.dylib     binary
+*.a         binary
+*.bundle    binary
+*.framework binary
+
+# Fonts
+*.ttf       binary
+*.otf       binary
+*.woff      binary
+*.woff2     binary
+*.eot       binary
+
+# Archives
+*.zip       binary
+*.7z        binary
+*.gz        binary
+*.tar       binary
+*.rar       binary
+
+# ==============================================================================
+# GIT LFS (large files - reduces clone/fetch time)
+# ==============================================================================
+
+# ML Models (can be huge)
+*.onnx      filter=lfs diff=lfs merge=lfs -text
+*.ort       filter=lfs diff=lfs merge=lfs -text
+*.sentis    filter=lfs diff=lfs merge=lfs -text
+*.bytes     filter=lfs diff=lfs merge=lfs -text
+
+# Large media (>1MB typically)
+*.psd       filter=lfs diff=lfs merge=lfs -text
+*.tga       filter=lfs diff=lfs merge=lfs -text
+*.exr       filter=lfs diff=lfs merge=lfs -text
+*.hdr       filter=lfs diff=lfs merge=lfs -text
+
+# 3D Models (often large)
+*.fbx       filter=lfs diff=lfs merge=lfs -text
+*.blend     filter=lfs diff=lfs merge=lfs -text
+*.abc       filter=lfs diff=lfs merge=lfs -text
+
+# Video
+*.mp4       filter=lfs diff=lfs merge=lfs -text
+*.mov       filter=lfs diff=lfs merge=lfs -text
+
+# Unity packages
+*.unitypackage filter=lfs diff=lfs merge=lfs -text
+
+# Native plugins (can be large)
+*.dll       filter=lfs diff=lfs merge=lfs -text
+*.so        filter=lfs diff=lfs merge=lfs -text
+*.dylib     filter=lfs diff=lfs merge=lfs -text
+*.bundle    filter=lfs diff=lfs merge=lfs -text

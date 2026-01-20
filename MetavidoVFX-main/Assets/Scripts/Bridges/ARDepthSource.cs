@@ -39,6 +39,10 @@ public class ARDepthSource : MonoBehaviour
     RenderTexture _mockPositionMap;
     bool _usingMockData;
 
+    // Log spam prevention - only log warnings/status once
+    bool _hasLoggedNoDepthWarning;
+    bool _hasLoggedDepthAvailable;
+
     // Rotation resources
     Material _rotateMaterial;
     RenderTexture _rotatedDepthRT;
@@ -67,6 +71,10 @@ public class ARDepthSource : MonoBehaviour
     public bool UsingMockData => _usingMockData;
     public float LastComputeTimeMs { get; private set; }
 
+    // Demand-driven ColorMap (spec-007)
+    int _colorMapRequestCount;
+    public bool ColorMapAllocated => ColorMap != null && ColorMap.IsCreated();
+
     // Velocity support (disabled by default - can cause tracking issues)
     [SerializeField] bool _enableVelocity = false;
     RenderTexture _prevPositionMap;
@@ -83,12 +91,16 @@ public class ARDepthSource : MonoBehaviour
         _occlusion ??= FindFirstObjectByType<AROcclusionManager>();
         _cameraManager ??= FindFirstObjectByType<ARCameraManager>();
         _arCamera ??= Camera.main;
-        // Load from Shaders folder (not Resources)
+        // Load compute shader - try Resources first (for runtime), then AssetDatabase (Editor)
         if (_depthToWorld == null)
         {
+            _depthToWorld = Resources.Load<ComputeShader>("DepthToWorld");
             #if UNITY_EDITOR
-            _depthToWorld = UnityEditor.AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/Shaders/DepthToWorld.compute");
+            if (_depthToWorld == null)
+                _depthToWorld = UnityEditor.AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/Shaders/DepthToWorld.compute");
             #endif
+            if (_depthToWorld == null)
+                Debug.LogError("[ARDepthSource] DepthToWorld.compute not found in Resources or Shaders folder!");
         }
         _colorProvider ??= FindFirstObjectByType<Metavido.ARCameraTextureProvider>();
 
@@ -98,9 +110,8 @@ public class ARDepthSource : MonoBehaviour
             _velocityKernel = _depthToWorld.FindKernel("CalculateVelocity");
         }
 
-        // Create color capture RenderTexture (fallback if no colorProvider)
-        ColorMap = new RenderTexture(_colorResolution.x, _colorResolution.y, 0, RenderTextureFormat.ARGB32);
-        ColorMap.Create();
+        // ColorMap is now demand-driven (spec-007) - only allocated when VFX request it via RequestColorMap(true)
+        // Legacy: If you need ColorMap always available, call RequestColorMap(true) from your initialization code
 
         // Create mock textures for Editor testing
         #if UNITY_EDITOR
@@ -160,10 +171,13 @@ public class ARDepthSource : MonoBehaviour
         _mockPositionMap.enableRandomWrite = true;
         _mockPositionMap.Create();
 
-        // Fill color map with gradient for visual feedback
-        RenderTexture.active = ColorMap;
-        GL.Clear(true, true, new Color(0.2f, 0.4f, 0.6f, 1f)); // Blue-ish gradient
-        RenderTexture.active = null;
+        // Fill color map with gradient for visual feedback (if allocated)
+        if (ColorMap != null && ColorMap.IsCreated())
+        {
+            RenderTexture.active = ColorMap;
+            GL.Clear(true, true, new Color(0.2f, 0.4f, 0.6f, 1f)); // Blue-ish gradient
+            RenderTexture.active = null;
+        }
 
         Debug.Log($"[ARDepthSource] Mock textures created: {w}x{h}");
     }
@@ -324,10 +338,12 @@ public class ARDepthSource : MonoBehaviour
     {
         if (source == null) return null;
 
-        // Initialize rotation material
+        // Initialize rotation material - try Resources first, then Shader.Find
         if (_rotateMaterial == null)
         {
-            var shader = Shader.Find("Hidden/RotateUV90CW");
+            var shader = Resources.Load<Shader>("RotateUV90CW");
+            if (shader == null)
+                shader = Shader.Find("Hidden/RotateUV90CW");
             if (shader == null)
             {
                 if (_verboseLogging)
@@ -389,11 +405,17 @@ public class ARDepthSource : MonoBehaviour
         if (depth == null)
         {
             _usingMockData = false;
-            // Throttle warning to once per second (not every frame)
-            if (_verboseLogging && Time.frameCount % 60 == 0)
-                Debug.LogWarning($"[ARDepthSource] No depth available yet (AR subsystem initializing)");
+            // Log warning ONCE (not every frame or every 60 frames)
+            if (!_hasLoggedNoDepthWarning)
+            {
+                Debug.LogWarning("[ARDepthSource] No depth available yet (AR subsystem initializing). This warning will only appear once.");
+                _hasLoggedNoDepthWarning = true;
+            }
             return;
         }
+
+        // Reset warning flag when depth becomes available (so we warn again if it stops)
+        _hasLoggedNoDepthWarning = false;
 
         _usingMockData = false;
 
@@ -405,8 +427,12 @@ public class ARDepthSource : MonoBehaviour
                 stencil = RotateTexture(stencil, ref _rotatedStencilRT);
         }
 
-        if (_verboseLogging && Time.frameCount % 60 == 0)
-            Debug.Log($"[ARDepthSource] Using depth: {depth.width}x{depth.height} (rotated={_rotateDepthTexture})");
+        // Log depth availability ONCE (not every 60 frames)
+        if (!_hasLoggedDepthAvailable)
+        {
+            Debug.Log($"[ARDepthSource] Depth available: {depth.width}x{depth.height} (rotated={_rotateDepthTexture})");
+            _hasLoggedDepthAvailable = true;
+        }
 
         float startTime = Time.realtimeSinceStartup;
 
@@ -515,6 +541,57 @@ public class ARDepthSource : MonoBehaviour
         #endif
     }
     
+    #region Demand-Driven ColorMap (spec-007)
+
+    /// <summary>
+    /// Request ColorMap allocation. Call with true when a VFX needs color, false when it doesn't.
+    /// ColorMap is allocated when at least one VFX requests it.
+    /// </summary>
+    public void RequestColorMap(bool needed)
+    {
+        int prevCount = _colorMapRequestCount;
+
+        if (needed)
+            _colorMapRequestCount++;
+        else
+            _colorMapRequestCount = Mathf.Max(0, _colorMapRequestCount - 1);
+
+        // Allocate on first request
+        if (prevCount == 0 && _colorMapRequestCount > 0)
+        {
+            AllocateColorMap();
+        }
+        // Deallocate when no longer needed
+        else if (prevCount > 0 && _colorMapRequestCount == 0)
+        {
+            DeallocateColorMap();
+        }
+    }
+
+    void AllocateColorMap()
+    {
+        if (ColorMap != null && ColorMap.IsCreated()) return;
+
+        ColorMap = new RenderTexture(_colorResolution.x, _colorResolution.y, 0, RenderTextureFormat.ARGB32);
+        ColorMap.Create();
+
+        if (_verboseLogging)
+            Debug.Log($"[ARDepthSource] ColorMap allocated (demand-driven): {_colorResolution.x}x{_colorResolution.y}");
+    }
+
+    void DeallocateColorMap()
+    {
+        if (ColorMap == null) return;
+
+        ColorMap.Release();
+        ColorMap = null;
+
+        if (_verboseLogging)
+            Debug.Log("[ARDepthSource] ColorMap deallocated (no longer needed)");
+    }
+
+    #endregion
+
     [ContextMenu("Debug Source")]
     void DebugSource()
     {

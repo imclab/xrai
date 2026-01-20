@@ -12,6 +12,14 @@ public class BuildScript
             "Assets/HOLOGRAM.unity"
         };
 
+        // Fix ARM64 branch out of range error for large IL2CPP builds
+        // Set IL2CPP code generation to optimize for size (reduces code to fit within 128MB branch limit)
+        var namedTarget = UnityEditor.Build.NamedBuildTarget.iOS;
+        PlayerSettings.SetIl2CppCodeGeneration(namedTarget, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
+        // Increase managed stripping to reduce code size
+        PlayerSettings.SetManagedStrippingLevel(namedTarget, ManagedStrippingLevel.Medium);
+        Debug.Log("[BuildScript] Set IL2CPP code generation to OptimizeSize with Medium stripping");
+
         // Open the scene to inject Debug Console
         var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(scenes[0]);
 

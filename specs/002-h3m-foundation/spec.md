@@ -3,8 +3,58 @@
 **Feature Branch**: `002-h3m-foundation`
 **Created**: 2025-12-06
 **Updated**: 2026-01-20
-**Status**: Implemented (Core Pipeline)
+**Status**: ✅ Complete (Superseded by Hybrid Bridge Pipeline)
 **Input**: User description: "Focus on holograms. MVP is 'Man in the Mirror' - see myself as a mini hologram on the table. Use RGBD video, segmentation (body/face/hands), and VFX Graph. Look at MetavidoVFX/Rcam/Bibcam/Kamm examples. Decouple LLM/Voice stuff (deferred)."
+
+---
+
+## ⚠️ Architecture Update (2026-01-20)
+
+**This spec's H3M components are now LEGACY.** The Hybrid Bridge Pipeline (ARDepthSource + VFXARBinder) supersedes the original H3M architecture.
+
+### Recommended Setup: Hologram Prefab
+
+**Location**: `Assets/Prefabs/Hologram/Hologram.prefab`
+
+| Component | Purpose |
+|-----------|---------|
+| `HologramPlacer` | AR placement + gestures (tap, drag, pinch, rotate, height) |
+| `HologramController` | Mode switching (Live AR / Metavido playback) |
+| `VFXARBinder` | Lightweight VFX binding via ARDepthSource |
+
+**Hierarchy**:
+```
+Hologram                    ← HologramPlacer + HologramController
+└── HologramVFX             ← VisualEffect + VFXARBinder
+```
+
+### Legacy Setup: H3M_HologramRig
+
+**Location**: `Assets/H3M/Prefabs/H3M_HologramRig.prefab` (LEGACY)
+
+| Component | Purpose | Status |
+|-----------|---------|--------|
+| `HologramSource` | Own compute shader for depth→position | ❌ Redundant (use ARDepthSource) |
+| `HologramRenderer` | VFX binding | ❌ Redundant (use VFXARBinder) |
+| `HologramAnchor` | AR placement + gestures | ⚠️ Superseded by HologramPlacer |
+| `HologramDebugUI` | Debug panel | ✅ Still useful |
+
+### Why the New Approach is Better
+
+1. **Shared Compute** - ARDepthSource is singleton; one dispatch for ALL VFX (O(1) scaling)
+2. **Simpler** - 2 components vs 4 components
+3. **Dual-Mode** - HologramController supports Live AR AND Metavido playback
+4. **Richer Gestures** - HologramPlacer adds height adjustment, reticle, auto-placement
+5. **Pipeline Consistent** - Same pattern as all other VFX in the project
+
+### Migration Path
+
+If using H3M_HologramRig:
+1. Replace with `Assets/Prefabs/Hologram/Hologram.prefab`
+2. Ensure ARDepthSource exists in scene (auto-created by VFXLibraryManager)
+3. Configure `_initialPlacementTarget` for auto-placement (optional)
+
+---
 
 ## Triple Verification (2026-01-20)
 

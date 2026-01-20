@@ -42,6 +42,12 @@ namespace MetavidoVFX.UI
         [SerializeField] private VFXLibraryManager libraryManager;
         [SerializeField] private bool autoFindLibrary = true;
 
+        [Header("Mode Control (spec-007)")]
+        [SerializeField] private VFXModeController modeController;
+        [SerializeField] private bool autoFindModeController = true;
+        [SerializeField] private bool showModeSelector = true;
+        [SerializeField] private bool showModeCompatibility = true;
+
         [Header("UI Settings")]
 #if ENABLE_INPUT_SYSTEM
         [SerializeField] private Key toggleUIKey = Key.Tab;
@@ -64,10 +70,21 @@ namespace MetavidoVFX.UI
         private Label _countLabel;
         private Label _fpsLabel;
         private Label _activeLabel;
+        private Label _modeLabel;
         private VisualElement _categoriesContainer;
         private Button _allOffBtn;
         private Button _expandBtn;
         private Button _collapseBtn;
+        private VisualElement _modeRow;
+        private PopupField<string> _modeDropdown;
+
+        // Audio visualizer (spec-007 T-016)
+        private VisualElement _audioVisualizerRow;
+        private VisualElement _bassBar;
+        private VisualElement _midsBar;
+        private VisualElement _trebleBar;
+        private VisualElement _beatIndicator;
+        private Label _audioLabel;
 
         // State
         private Dictionary<VFXCategoryType, bool> _categoryExpanded = new();
@@ -98,6 +115,13 @@ namespace MetavidoVFX.UI
             public const string VfxToggle = "vfx-toggle";
             public const string VfxName = "vfx-name";
             public const string VfxNameActive = "vfx-name-active";
+            public const string VfxUnsupported = "vfx-unsupported";
+            public const string ModeRow = "vfx-mode-row";
+            public const string ModeLabel = "vfx-mode-label";
+            public const string ModeDropdown = "vfx-mode-dropdown";
+            public const string AudioRow = "vfx-audio-row";
+            public const string AudioBar = "vfx-audio-bar";
+            public const string BeatIndicator = "vfx-beat-indicator";
             public const string Hidden = "hidden";
         }
 
@@ -121,6 +145,12 @@ namespace MetavidoVFX.UI
                 }
             }
 
+            // Find VFXModeController (spec-007)
+            if (autoFindModeController && modeController == null)
+            {
+                modeController = VFXModeController.Instance ?? FindObjectOfType<VFXModeController>();
+            }
+
             // Initialize category expansion state
             foreach (VFXCategoryType cat in System.Enum.GetValues(typeof(VFXCategoryType)))
             {
@@ -131,6 +161,12 @@ namespace MetavidoVFX.UI
             {
                 libraryManager.OnLibraryPopulated += RefreshUI;
                 libraryManager.OnVFXToggled += OnVFXToggled;
+            }
+
+            // Subscribe to mode changes (spec-007)
+            if (modeController != null)
+            {
+                modeController.OnModeChanged += HandleModeChanged;
             }
 
             // Setup UI after a frame to ensure documents are ready
@@ -149,6 +185,12 @@ namespace MetavidoVFX.UI
             {
                 libraryManager.OnLibraryPopulated -= RefreshUI;
                 libraryManager.OnVFXToggled -= OnVFXToggled;
+            }
+
+            // Unsubscribe from mode changes (spec-007)
+            if (modeController != null)
+            {
+                modeController.OnModeChanged -= HandleModeChanged;
             }
 
             // Clean up programmatically created panel from external document
@@ -174,6 +216,9 @@ namespace MetavidoVFX.UI
             {
                 _activeLabel.text = $"Active: {libraryManager.ActiveCount}/{libraryManager.MaxActiveVFX}";
             }
+
+            // Update audio visualizer (spec-007 T-016)
+            UpdateAudioVisualizer();
 
             // Toggle UI visibility
 #if ENABLE_INPUT_SYSTEM
@@ -426,6 +471,109 @@ namespace MetavidoVFX.UI
             controlsRow.Add(collapseBtn);
             panel.Add(controlsRow);
 
+            // Mode selector row (spec-007 T-014)
+            if (showModeSelector)
+            {
+                var modeRow = new VisualElement();
+                modeRow.name = "mode-row";
+                modeRow.AddToClassList(UssClasses.ModeRow);
+                modeRow.style.flexDirection = FlexDirection.Row;
+                modeRow.style.alignItems = Align.Center;
+                modeRow.style.justifyContent = Justify.SpaceBetween;
+                modeRow.style.marginBottom = 6;
+                modeRow.style.paddingLeft = modeRow.style.paddingRight = 4;
+                modeRow.style.backgroundColor = new Color(0.12f, 0.12f, 0.12f, 0.7f);
+                modeRow.style.borderTopLeftRadius = modeRow.style.borderTopRightRadius =
+                    modeRow.style.borderBottomLeftRadius = modeRow.style.borderBottomRightRadius = 3;
+                modeRow.style.paddingTop = modeRow.style.paddingBottom = 4;
+
+                var modeLabel = new Label("Mode:");
+                modeLabel.name = "mode-label";
+                modeLabel.AddToClassList(UssClasses.ModeLabel);
+                modeLabel.style.fontSize = 11;
+                modeLabel.style.color = new Color(1, 1, 1, 0.8f);
+                modeLabel.style.width = 40;
+                modeRow.Add(modeLabel);
+
+                // Mode dropdown
+                var modeNames = new List<string>();
+                foreach (VFXCategoryType mode in System.Enum.GetValues(typeof(VFXCategoryType)))
+                {
+                    modeNames.Add(mode.ToString());
+                }
+
+                var currentMode = modeController?.CurrentGlobalMode ?? VFXCategoryType.People;
+                var modeDropdown = new PopupField<string>(modeNames, currentMode.ToString());
+                modeDropdown.name = "mode-dropdown";
+                modeDropdown.AddToClassList(UssClasses.ModeDropdown);
+                modeDropdown.style.flexGrow = 1;
+                modeDropdown.style.marginLeft = 8;
+                modeDropdown.RegisterValueChangedCallback(evt => OnModeDropdownChanged(evt.newValue));
+                modeRow.Add(modeDropdown);
+
+                panel.Add(modeRow);
+            }
+
+            // Audio visualizer row (spec-007 T-016)
+            {
+                var audioRow = new VisualElement();
+                audioRow.name = "audio-visualizer-row";
+                audioRow.AddToClassList(UssClasses.AudioRow);
+                audioRow.style.flexDirection = FlexDirection.Row;
+                audioRow.style.alignItems = Align.Center;
+                audioRow.style.justifyContent = Justify.SpaceBetween;
+                audioRow.style.marginBottom = 6;
+                audioRow.style.paddingLeft = audioRow.style.paddingRight = 4;
+                audioRow.style.paddingTop = audioRow.style.paddingBottom = 4;
+                audioRow.style.backgroundColor = new Color(0.08f, 0.08f, 0.12f, 0.8f);
+                audioRow.style.borderTopLeftRadius = audioRow.style.borderTopRightRadius =
+                    audioRow.style.borderBottomLeftRadius = audioRow.style.borderBottomRightRadius = 3;
+                audioRow.style.display = DisplayStyle.None; // Hidden by default, shown when audio active
+
+                // Beat indicator (pulses on beat)
+                var beatIndicator = new VisualElement();
+                beatIndicator.name = "beat-indicator";
+                beatIndicator.AddToClassList(UssClasses.BeatIndicator);
+                beatIndicator.style.width = 12;
+                beatIndicator.style.height = 12;
+                beatIndicator.style.borderTopLeftRadius = beatIndicator.style.borderTopRightRadius =
+                    beatIndicator.style.borderBottomLeftRadius = beatIndicator.style.borderBottomRightRadius = 6;
+                beatIndicator.style.backgroundColor = new Color(0.3f, 0.3f, 0.3f);
+                beatIndicator.style.marginRight = 6;
+                audioRow.Add(beatIndicator);
+
+                // Label
+                var audioLabel = new Label("♪");
+                audioLabel.name = "audio-label";
+                audioLabel.style.fontSize = 11;
+                audioLabel.style.color = new Color(1, 1, 1, 0.6f);
+                audioLabel.style.width = 16;
+                audioRow.Add(audioLabel);
+
+                // Frequency bars container
+                var barsContainer = new VisualElement();
+                barsContainer.style.flexDirection = FlexDirection.Row;
+                barsContainer.style.flexGrow = 1;
+                barsContainer.style.height = 16;
+                barsContainer.style.alignItems = Align.FlexEnd;
+                barsContainer.style.marginLeft = 4;
+
+                // Bass bar (red)
+                var bassBar = CreateAudioBar("bass-bar", new Color(0.9f, 0.3f, 0.3f));
+                barsContainer.Add(bassBar);
+
+                // Mids bar (yellow)
+                var midsBar = CreateAudioBar("mids-bar", new Color(0.9f, 0.9f, 0.3f));
+                barsContainer.Add(midsBar);
+
+                // Treble bar (cyan)
+                var trebleBar = CreateAudioBar("treble-bar", new Color(0.3f, 0.9f, 0.9f));
+                barsContainer.Add(trebleBar);
+
+                audioRow.Add(barsContainer);
+                panel.Add(audioRow);
+            }
+
             // Scrollable category container
             var scroll = new ScrollView();
             scroll.name = "category-scroll";
@@ -462,6 +610,21 @@ namespace MetavidoVFX.UI
             return btn;
         }
 
+        /// <summary>Creates audio frequency bar element (T-016)</summary>
+        VisualElement CreateAudioBar(string name, Color color)
+        {
+            var bar = new VisualElement();
+            bar.name = name;
+            bar.AddToClassList(UssClasses.AudioBar);
+            bar.style.width = new Length(30, LengthUnit.Percent);
+            bar.style.height = 4; // Will be scaled by audio level
+            bar.style.maxHeight = 16;
+            bar.style.backgroundColor = color;
+            bar.style.marginLeft = bar.style.marginRight = 2;
+            bar.style.borderTopLeftRadius = bar.style.borderTopRightRadius = 2;
+            return bar;
+        }
+
         void QueryAndWireElements()
         {
             if (_panel == null) return;
@@ -488,6 +651,19 @@ namespace MetavidoVFX.UI
             {
                 _collapseBtn.clicked += CollapseAll;
             }
+
+            // Wire up mode selector (spec-007)
+            _modeRow = _panel.Q<VisualElement>("mode-row");
+            _modeDropdown = _panel.Q<PopupField<string>>("mode-dropdown");
+            _modeLabel = _panel.Q<Label>("mode-label");
+
+            // Wire up audio visualizer (spec-007 T-016)
+            _audioVisualizerRow = _panel.Q<VisualElement>("audio-visualizer-row");
+            _bassBar = _panel.Q<VisualElement>("bass-bar");
+            _midsBar = _panel.Q<VisualElement>("mids-bar");
+            _trebleBar = _panel.Q<VisualElement>("treble-bar");
+            _beatIndicator = _panel.Q<VisualElement>("beat-indicator");
+            _audioLabel = _panel.Q<Label>("audio-label");
         }
 
         void RefreshUI()
@@ -784,6 +960,153 @@ namespace MetavidoVFX.UI
 
             Debug.Log($"[VFXToggleUI] Injected into {document.name}" +
                      (containerName != null ? $" container '{containerName}'" : ""));
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // Mode System (spec-007 T-014)
+        // ═══════════════════════════════════════════════════════════════
+
+        /// <summary>Called when mode dropdown changes</summary>
+        void OnModeDropdownChanged(string modeName)
+        {
+            if (modeController == null) return;
+
+            if (System.Enum.TryParse<VFXCategoryType>(modeName, out var mode))
+            {
+                var report = modeController.SetGlobalMode(mode);
+                if (!report.AllSuccessful)
+                {
+                    Debug.Log($"[VFXToggleUI] {report}");
+                }
+                UpdateModeCompatibilityVisuals();
+            }
+        }
+
+        /// <summary>Called when mode changes externally</summary>
+        void HandleModeChanged(VFXCategoryType newMode)
+        {
+            // Update dropdown without triggering callback
+            if (_modeDropdown != null)
+            {
+                _modeDropdown.SetValueWithoutNotify(newMode.ToString());
+            }
+            UpdateModeCompatibilityVisuals();
+        }
+
+        /// <summary>Update VFX items to show mode compatibility</summary>
+        void UpdateModeCompatibilityVisuals()
+        {
+            if (!showModeCompatibility || modeController == null) return;
+
+            var currentMode = modeController.CurrentGlobalMode;
+
+            foreach (var container in _categoryContainers.Values)
+            {
+                foreach (var child in container.Children())
+                {
+                    if (child.userData is VFXItemData data && data.Entry.VFX != null)
+                    {
+                        var binder = data.Entry.VFX.GetComponent<VFXARBinder>();
+                        bool supports = binder == null || binder.SupportsMode(currentMode);
+
+                        // Update visual state
+                        if (supports)
+                        {
+                            child.RemoveFromClassList(UssClasses.VfxUnsupported);
+                            child.style.opacity = 1f;
+                            data.Toggle.SetEnabled(true);
+                        }
+                        else
+                        {
+                            child.AddToClassList(UssClasses.VfxUnsupported);
+                            child.style.opacity = 0.5f;
+                            data.Toggle.SetEnabled(true); // Still allow toggle, but show as dim
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>Get current mode from controller</summary>
+        public VFXCategoryType CurrentMode => modeController?.CurrentGlobalMode ?? VFXCategoryType.People;
+
+        /// <summary>Set mode programmatically</summary>
+        public void SetMode(VFXCategoryType mode)
+        {
+            if (modeController != null)
+            {
+                modeController.SetGlobalMode(mode);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // Audio Visualizer (spec-007 T-016)
+        // ═══════════════════════════════════════════════════════════════
+
+        /// <summary>Update audio visualizer bars and beat indicator</summary>
+        void UpdateAudioVisualizer()
+        {
+            if (_audioVisualizerRow == null) return;
+
+            // Get current mode
+            var currentMode = modeController?.CurrentGlobalMode ?? VFXCategoryType.People;
+            bool showAudio = currentMode == VFXCategoryType.Audio || currentMode == VFXCategoryType.Hybrid;
+
+            // Show/hide audio row based on mode
+            _audioVisualizerRow.style.display = showAudio ? DisplayStyle.Flex : DisplayStyle.None;
+
+            if (!showAudio) return;
+
+            // Get audio data from AudioBridge
+            var audioBridge = AudioBridge.Instance;
+            if (audioBridge == null) return;
+
+            // Update frequency bars (scale height by level, max 16px)
+            float barScale = 16f * 100f; // AudioBridge values are small, need scaling
+
+            if (_bassBar != null)
+            {
+                float bassHeight = Mathf.Clamp(audioBridge.Bass * barScale, 2f, 16f);
+                _bassBar.style.height = bassHeight;
+            }
+
+            if (_midsBar != null)
+            {
+                float midsHeight = Mathf.Clamp(audioBridge.Mids * barScale, 2f, 16f);
+                _midsBar.style.height = midsHeight;
+            }
+
+            if (_trebleBar != null)
+            {
+                float trebleHeight = Mathf.Clamp(audioBridge.Treble * barScale, 2f, 16f);
+                _trebleBar.style.height = trebleHeight;
+            }
+
+            // Update beat indicator (pulse on beat)
+            if (_beatIndicator != null)
+            {
+                float beatPulse = audioBridge.BeatPulse;
+                if (beatPulse > 0.5f)
+                {
+                    // Bright when beat detected
+                    _beatIndicator.style.backgroundColor = new Color(1f, 0.4f, 0.4f);
+                    _beatIndicator.style.scale = new Scale(new Vector2(1.2f, 1.2f));
+                }
+                else
+                {
+                    // Dim when no beat
+                    float brightness = 0.3f + beatPulse * 0.4f;
+                    _beatIndicator.style.backgroundColor = new Color(brightness, brightness, brightness);
+                    _beatIndicator.style.scale = new Scale(Vector2.one);
+                }
+            }
+
+            // Update label with volume
+            if (_audioLabel != null)
+            {
+                float vol = audioBridge.Volume;
+                _audioLabel.style.opacity = 0.5f + vol * 50f; // Pulse with volume
+            }
         }
 
         // Helper class

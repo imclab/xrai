@@ -236,7 +236,8 @@ public class HologramPlacer : MonoBehaviour
             {
                 plane.gameObject.SetActive(false);
             }
-            _planeManager.planePrefab?.SetActive(false);
+            if (_planeManager.planePrefab != null)
+                _planeManager.planePrefab.SetActive(false);
         }
 
         Debug.Log($"[HologramPlacer] Placed at {position}");

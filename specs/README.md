@@ -42,16 +42,30 @@
 
 | ID | Name | Status | Priority | Tasks |
 |----|------|--------|----------|-------|
-| 002 | [H3M Hologram Foundation](./002-h3m-foundation/spec.md) | Implemented | P1 | - |
+| 002 | [H3M Hologram Foundation](./002-h3m-foundation/spec.md) | ✅ Complete (Legacy) | P1 | Done |
 | 003 | [Hologram Conferencing](./003-hologram-conferencing/spec.md) | Draft | P2 | Pending |
-| 004 | [MetavidoVFX Systems](./004-metavidovfx-systems/spec.md) | Implemented ✅ | P1 | - |
-| 005 | [AR Texture Safety](./005-ar-texture-safety/spec.md) | Implemented ✅ | P1 | - |
-| 006 | [VFX Library & Pipeline](./006-vfx-library-pipeline/spec.md) | Implemented ✅ | P1 | Complete |
+| 004 | [MetavidoVFX Systems](./004-metavidovfx-systems/spec.md) | ✅ Complete | P1 | Done |
+| 005 | [AR Texture Safety](./005-ar-texture-safety/spec.md) | ✅ Complete | P1 | Done |
+| 006 | [VFX Library & Pipeline](./006-vfx-library-pipeline/spec.md) | ✅ Complete | P1 | Done |
 | 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
 | **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **Architecture Approved** | **P0** | **67 tasks** |
 | 009 | [Icosa & Sketchfab 3D Model Integration](./009-icosa-sketchfab-integration/spec.md) | Draft | P1 | 14 tasks |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
+
+### Hologram Implementation Note
+
+**Spec 002** introduced the H3M hologram components, which are now **LEGACY**. The recommended approach is:
+
+| Approach | Components | Status |
+|----------|------------|--------|
+| **Recommended** | `Hologram.prefab` (HologramPlacer + HologramController + VFXARBinder) | ✅ Use this |
+| Legacy | `H3M_HologramRig.prefab` (HologramSource + HologramRenderer + HologramAnchor) | ⚠️ Deprecated |
+
+The new Hologram prefab uses the **Hybrid Bridge Pipeline** (ARDepthSource + VFXARBinder), which provides:
+- Shared compute (O(1) scaling)
+- Dual-mode support (Live AR / Metavido playback)
+- Richer gestures (tap, drag, height, pinch, rotate)
 
 ## Removed Specs
 
@@ -96,7 +110,7 @@ specs/
 ├── README.md                    # This index
 ├── MASTER_DEVELOPMENT_PLAN.md   # Consolidated sprint plan
 │
-├── 002-h3m-foundation/
+├── 002-h3m-foundation/          # ✅ COMPLETE (Legacy - use Hologram prefab)
 │   ├── spec.md                  # Feature specification
 │   └── tasks.md                 # Task breakdown
 ├── 003-hologram-conferencing/

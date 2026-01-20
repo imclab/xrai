@@ -6,6 +6,58 @@
 
 ---
 
+## 2026-01-20 (Session 2) - Claude Code - VFX Subgraph Selection & Existing Solution Pattern
+
+**Discovery**: When adding world-space positioning to keypoint-based VFX, ALWAYS check for existing subgraphs before creating compute shaders. The "Get Keypoint World" subgraph already handles UV→world conversion via PositionMap sampling.
+
+**Key Pattern - Check Before Creating**:
+```
+❌ WRONG approach:
+1. Identify need for UV→world position conversion
+2. Create new compute shader (KeypointUVToWorld.compute)
+3. Add CPU readback or buffer management
+4. Wire everything together
+
+✅ CORRECT approach:
+1. Identify need for UV→world position conversion
+2. SEARCH for existing subgraphs: "Get Keypoint World", "Sample World Position"
+3. Check if subgraph already exists that does this
+4. Wire existing subgraph in VFX Graph Editor
+```
+
+**NNCam VFX Subgraph Reference**:
+| Subgraph | Inputs | Outputs | Use Case |
+|----------|--------|---------|----------|
+| Get Keypoint | Buffer, Index, Z Offset (float) | Position, UV, Score | Screen-space positioning (joints VFX) |
+| Get Keypoint World | Buffer, Index, PositionMap (Texture2D) | Position, UV, Score | World-space positioning (eyes VFX) |
+| Sample World Position | UV, PositionMap | Position | Raw UV→world sampling |
+
+**VFX Graph GUID Reference**:
+- `Get Keypoint`: `d165f6ed4dc68443e9de23907e00d7bb`
+- `Get Keypoint World`: `69374374b83d4400db2bb56f0970b48d`
+
+**NNCamKeypointBinder Binding Support**:
+```csharp
+// Already supported - just enable in Inspector:
+bindPositionMap = true;           // Binds PositionMap from ARDepthSource
+bindKeypointWorldPositions = true; // Optional: pre-computed world positions buffer
+```
+
+**Critical Workflow**:
+1. Ask "Do we have an existing solution for this?"
+2. Search codebase for subgraphs/shaders doing similar work
+3. Check knowledgebase patterns
+4. Only create new code if truly necessary
+
+**Impact**: Avoided unnecessary compute shader creation, kept VFX Graph-based solution consistent with project patterns
+
+**Cross-References**:
+- `MetavidoVFX-main/Assets/VFX/NNCam2/Get Keypoint World.vfxoperator`
+- `MetavidoVFX-main/Assets/NNCam/Scripts/NNCamKeypointBinder.cs`
+- `MetavidoVFX-main/Assets/Resources/VFX/NNCam2/eyes_any_nncam2.vfx`
+
+---
+
 ## 2026-01-20 - Claude Code - AR Foundation Texture Access Crash Fix (BUG 6)
 
 **Discovery**: AR Foundation texture property getters (`humanDepthTexture`, `humanStencilTexture`, `environmentDepthTexture`) throw `NullReferenceException` **internally** when AR subsystem isn't ready. The `?.` null-coalescing operator does NOT protect because the exception happens inside the getter, not at property access level.
