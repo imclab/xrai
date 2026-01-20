@@ -54,7 +54,8 @@ namespace MyakuMyakuAR
             set
             {
                 showDebugUI = value;
-                detectionContainer.gameObject.SetActive(value);
+                if (detectionContainer != null)
+                    detectionContainer.gameObject.SetActive(value);
             }
         }
 
@@ -66,15 +67,27 @@ namespace MyakuMyakuAR
                 SegmentationFilterDelegate = SegmentationFilter,
             };
 
-            detectionBoxes = new TMPro.TMP_Text[maxDetections];
-            detectionBoxOutline = new Image[maxDetections];
-            for (int i = 0; i < maxDetections; i++)
+            // Only create debug UI if prefab and container are assigned
+            if (detectionBoxPrefab != null && detectionContainer != null)
             {
-                var box = Instantiate(detectionBoxPrefab, detectionContainer);
-                box.name = $"Detection {i}";
-                box.gameObject.SetActive(false);
-                detectionBoxes[i] = box;
-                detectionBoxOutline[i] = box.transform.GetChild(0).GetComponent<Image>();
+                detectionBoxes = new TMPro.TMP_Text[maxDetections];
+                detectionBoxOutline = new Image[maxDetections];
+                for (int i = 0; i < maxDetections; i++)
+                {
+                    var box = Instantiate(detectionBoxPrefab, detectionContainer);
+                    box.name = $"Detection {i}";
+                    box.gameObject.SetActive(false);
+                    detectionBoxes[i] = box;
+                    // Safely get outline child - may not exist in all prefab variants
+                    if (box.transform.childCount > 0)
+                    {
+                        detectionBoxOutline[i] = box.transform.GetChild(0).GetComponent<Image>();
+                    }
+                }
+            }
+            else
+            {
+                showDebugUI = false; // Disable debug UI if references missing
             }
 
             if (TryGetComponent(out textureSource))
@@ -82,7 +95,7 @@ namespace MyakuMyakuAR
                 textureSource.OnTexture.AddListener(OnTexture);
             }
 
-            if (!segmentationImage.TryGetComponent(out segmentationImageAspectRatioFitter))
+            if (segmentationImage != null && !segmentationImage.TryGetComponent(out segmentationImageAspectRatioFitter))
             {
                 Debug.LogWarning($"No {nameof(AspectRatioFitter)} found in {segmentationImage.name}");
             }
@@ -145,14 +158,17 @@ namespace MyakuMyakuAR
             OnDetect?.Invoke(this);
 
             // Invoke events when the segmentation texture is updated
-            if (ShowDebugUI)
+            if (ShowDebugUI && detectionBoxes != null)
             {
                 UpdateDetectionBox(inference.Detections);
                 var segTex = inference.SegmentationTexture;
-                segmentationImage.texture = segTex;
-                if (segmentationImageAspectRatioFitter != null)
+                if (segmentationImage != null)
                 {
-                    segmentationImageAspectRatioFitter.aspectRatio = (float)segTex.width / segTex.height;
+                    segmentationImage.texture = segTex;
+                    if (segmentationImageAspectRatioFitter != null)
+                    {
+                        segmentationImageAspectRatioFitter.aspectRatio = (float)segTex.width / segTex.height;
+                    }
                 }
             }
         }
@@ -189,7 +205,8 @@ namespace MyakuMyakuAR
                 rt.anchoredPosition = rect.min * viewportSize;
                 rt.sizeDelta = rect.size * viewportSize;
 
-                detectionBoxOutline[i].color = color;
+                if (detectionBoxOutline[i] != null)
+                    detectionBoxOutline[i].color = color;
             }
 
             // Hide unused boxes
