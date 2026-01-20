@@ -56,9 +56,10 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
 | `MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md` | Voice-to-object 3D model integration |
-| `specs/README.md` | Spec-Kit index (002-009) |
-| `specs/MASTER_DEVELOPMENT_PLAN.md` | 11-sprint implementation roadmap |
+| `specs/README.md` | Spec-Kit index (002-012) |
+| `specs/MASTER_DEVELOPMENT_PLAN.md` | 17-sprint implementation roadmap |
 | `specs/009-icosa-sketchfab-integration/spec.md` | 3D model search & placement spec |
+| `specs/012-hand-tracking/spec.md` | Hand tracking + brush painting spec |
 
 ---
 
@@ -70,7 +71,8 @@ Unity-XR-AI/
 - **Code Snippets**: 50+ production-ready patterns
 - **Platform Coverage**: iOS 15+, Android, Quest 3/Pro, WebGL, Vision Pro
 - **MetavidoVFX Scripts**: 458 C# scripts (core + H3M + Echovision + NNCam)
-- **VFX Assets**: 88 total (73 in Resources/VFX organized by category)
+- **VFX Assets**: 235 total (73 in Resources/VFX organized by category)
+- **Specs**: 11 active (002-012), 6 complete, 5 in draft
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
 - **Performance**: 353 FPS @ 10 VFX (verified Jan 16, 2026)
 
@@ -182,27 +184,34 @@ Unity source code research workbench from keijiro/AgentBench.
 - ✅ DebugConfig.cs with category filtering
 - ⬜ WebcamMockSource for Editor testing
 
-**Sprint 5-6** (planned): Icosa/Sketchfab Integration (Spec 009)
+**Sprint 1** (next): VFX Multi-Mode (Spec 007)
+- ⬜ VFXModeController for Screen/World/AR modes
+- ⬜ BeatDetector for audio-reactive effects
+- ⬜ AR mesh collision for particles
+
+**Sprint 13-14** (P0 priority): Hand Tracking + Brush Painting (Spec 012)
+- ⬜ IHandTrackingProvider unified interface
+- ⬜ HoloKit/XRHands/BodyPix/Touch providers
+- ⬜ VFXHandBinder for hand→VFX properties
+- ⬜ BrushController, GestureInterpreter, StrokeManager
+- ⬜ 8 brush VFX types with pinch→draw control
+
+**Sprint 8-10** (planned): Icosa/Sketchfab Integration (Spec 009)
 - ⬜ SketchfabClient.cs - Sketchfab Download API wrapper
 - ⬜ ModelCache.cs - LRU disk caching for models
 - ⬜ UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
-- ⬜ ModelSearchUI - UI Toolkit search/browse panel
 
-**Sprint 7+** (planned): Multimodal ML (Spec 008)
-- ⬜ ITrackingProvider interface
-- ⬜ IVoiceProvider for STT/TTS
-- ⬜ Self-refining LLM agents
+### Completed Specs
+- ✅ Spec 002 - H3M Hologram Foundation (Legacy, use Hologram.prefab)
+- ✅ Spec 004 - MetavidoVFX Systems
+- ✅ Spec 005 - AR Texture Safety
+- ✅ Spec 006 - VFX Library & Pipeline (73 VFX, 353 FPS)
 
 ### Integration Opportunities
 - **Voice-to-Object** - "Put a cat here" → Icosa/Sketchfab search → AR placement
 - **Gaussian Splatting + AR** - SplatVFX in AR Foundation context
-- **Hand Tracking + MetavidoVFX** - Port TouchingHologram hand interaction
-- **Colocated Multiplayer** - Apply HoloKitMultiplayer patterns
-
-### Documentation
-- ✅ Spec 009 created (Icosa/Sketchfab)
-- ⬜ Add Icosa/Sketchfab to `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md`
-- ⬜ Extract voice-to-object patterns to KB files
+- **Hand Tracking + MetavidoVFX** - Spec 012 unifies HoloKit + XRHands
+- **Colocated Multiplayer** - Apply HoloKitMultiplayer patterns (Spec 010)
 
 ---
 

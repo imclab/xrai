@@ -32,9 +32,10 @@
 | 10 | **009** | **3D Model UI & Polish** | 2.1-3.4 (UI panels, testing) | 5d |
 | 11 | **010** | **Normcore AR Multiuser** | 0.1-3.5 (AR drawing, voice chat) | 5d |
 | 12 | **011** | **Open Brush Integration** | 0.1-6.4 (Brushes, Audio, Mirror, API) | 14d |
-| 13 | 003 | Hologram Conferencing | (depends on 008+010 multiuser) | 5d |
+| 13 | **012** | **Hand Tracking + Brush Painting** | T1-T5 (Interface, Providers, VFX, Gestures) | 5d |
+| 14 | 003 | Hologram Conferencing | (depends on 008+010 multiuser) | 5d |
 
-**Total: ~72 days / ~300+ hours**
+**Total: ~77 days / ~330+ hours**
 
 ---
 
@@ -52,6 +53,7 @@
 | 009 | [Icosa & Sketchfab 3D Model Integration](./009-icosa-sketchfab-integration/spec.md) | Draft | P1 | 14 tasks |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
+| **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **Draft** | **P0** | **24 tasks (8 phases)** |
 
 ### Hologram Implementation Note
 
@@ -162,6 +164,9 @@ specs/
 ├── 011-openbrush-integration/        # P1 (25 tasks)
 │   ├── spec.md                  # URP brushes, audio reactive, mirror painting
 │   └── tasks.md                 # 7 sprints, ~62 hours
+├── 012-hand-tracking/                # P0 (24 tasks)
+│   ├── spec.md                  # Hand tracking + brush painting
+│   └── tasks.md                 # 8 phases, ~32 hours
 ```
 
 ## Usage

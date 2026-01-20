@@ -1,8 +1,10 @@
 # Master Development Plan: Unity-XR-AI
 
 **Last Updated**: 2026-01-20
-**Status**: Active
+**Status**: Active (Sprint 0 in progress)
 **Methodology**: Incremental, Test-First, Debug-Verbose
+**VFX Count**: 235 assets (73 in Resources/VFX)
+**Migration Target**: `/Users/jamestunick/Documents/GitHub/portals_main` (modular features)
 
 ---
 
@@ -28,6 +30,13 @@
 - Unity MCP for scene manipulation
 - ARFoundationRemote for device camera streaming
 - Webcam fallback when no device available
+
+### 5. Modular & Migration-Ready
+- Features designed as self-contained modules (no hard dependencies between specs)
+- Interfaces over implementations (IHandTrackingProvider, IVoiceProvider, etc.)
+- ScriptableObject configs for runtime parameters
+- Assembly Definitions for clean dependency boundaries
+- **Migration target**: `portals_main` Unity project
 
 ---
 
@@ -66,7 +75,21 @@
 │  - Save/load (JSON format)               │ │  - AR Foundation touch input     │
 │  - API painting (HTTP endpoints)         │ │  - BrushStroke RealtimeModel     │
 │  - Reaktion audio system                 │ └────────────────┬────────────────┘
-└─────────────────────────────────────────┘                   │
+└────────────────┬────────────────────────┘                   │
+                 │                                            │
+    ┌────────────┴────────────────────────────────────────────┘
+    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        HAND TRACKING LAYER                                   │
+│  012-hand-tracking [DRAFT - P0]                                             │
+│  24 tasks (8 phases), ~32 hours                                             │
+│  - IHandTrackingProvider unified interface                                   │
+│  - HoloKit SDK (21 joints) + XR Hands (26 joints) providers                 │
+│  - BodyPix/Touch fallbacks                                                   │
+│  - Brush painting: pinch→draw, velocity→particles, rotation→angle           │
+│  - GraphicsBuffer stroke persistence                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                                              │
                                                               │
                                ┌──────────────────────────────┘
                                ▼
@@ -299,7 +322,43 @@ Assets/Scenes/
 | Audio latency | <20ms | Waveform brush |
 | Save 500 strokes | <2s | JSON serialization |
 
-### Sprint 13: Spec 003 - Hologram Conferencing (5 days)
+### Sprint 13: Spec 012 - Hand Tracking + Brush Painting (5 days)
+
+**Dependency**: Sprint 1 (VFX Multi-Mode), existing HandVFXController/ARKitHandTracking code
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T1.1-T1.4: IHandTrackingProvider interface | Unit: interface contract |
+| 2 | T2.1-T2.4: Provider implementations | Unit: HoloKit, XRHands, BodyPix, Touch |
+| 3 | T3.1-T3.4: VFX integration | Editor: VFXHandBinder, property bindings |
+| 3-4 | T4.1-T4.3: Gesture system | Editor: pinch/grab detection |
+| 4-5 | T5.1-T5.4: Testing & verification | Device: iPhone + HoloKit |
+
+**Key Deliverables**:
+- `Assets/Scripts/HandTracking/Interfaces/IHandTrackingProvider.cs`
+- `Assets/Scripts/HandTracking/Providers/*` (4 providers)
+- `Assets/Scripts/VFX/Binders/VFXHandBinder.cs`
+- Updated `HandVFXController.cs` using unified provider
+
+**Note**: Leverages existing `HandVFXController.cs` (420 LOC) and `ARKitHandTracking.cs` (340 LOC) - refactors to unified interface, does NOT rewrite.
+
+### Sprint 14: Spec 012 - Brush Painting System (5 days)
+
+**Dependency**: Sprint 13 (hand tracking providers)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T5.1-T5.4: BrushController, GestureInterpreter | Unit: gesture→action |
+| 2 | T6.1-T6.3: BrushPalette, ColorPicker | Editor: selection UI |
+| 3 | T7.1-T7.3: StrokeManager, persistence | Unit: GraphicsBuffer |
+| 4-5 | T8.1-T8.4: VFX brush integration | Device: 8 brush types |
+
+**Key Deliverables**:
+- `Assets/Scripts/Painting/` (6 scripts)
+- `Assets/Scripts/VFX/Binders/VFXBrushBinder.cs`
+- 8 brush VFX assets configured
+
+### Sprint 15: Spec 003 - Hologram Conferencing (5 days)
 
 **Dependency**: Sprint 7 (multiuser foundation from 008), Sprint 11 (Normcore validation)
 
@@ -591,6 +650,7 @@ unity-editor -executeMethod BuildScript.BuildIOS
 | Spec 009 | [009-icosa-sketchfab-integration/](./009-icosa-sketchfab-integration/) |
 | Spec 010 | [010-normcore-multiuser/](./010-normcore-multiuser/) |
 | Spec 011 | [011-openbrush-integration/](./011-openbrush-integration/) |
+| Spec 012 | [012-hand-tracking/](./012-hand-tracking/) |
 | Architecture | [008.../FINAL_RECOMMENDATIONS.md](./008-crossplatform-multimodal-ml-foundations/FINAL_RECOMMENDATIONS.md) |
 | KB: LLMR | [KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md](../KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md) |
 | KB: Multiuser | [KnowledgeBase/_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md](../KnowledgeBase/_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md) |
@@ -601,15 +661,59 @@ unity-editor -executeMethod BuildScript.BuildIOS
 
 ## Total Effort Summary
 
-| Spec | Tasks | Hours | Sprints |
-|------|-------|-------|---------|
-| 007 - VFX Multi-Mode | 19 | ~40h | 1 |
-| 008 - Multimodal ML | 67 | ~140h | 7 |
-| 009 - Icosa/Sketchfab | 14 | ~42h | 3 |
-| 010 - Normcore Multiuser | 15 | ~22h | 1 |
-| 011 - Open Brush | 25 | ~62h | 2 (14 days) |
-| 003 - Hologram Conferencing | TBD | TBD | 1 |
-| **Total** | **140+** | **~300h+** | **15** |
+| Spec | Tasks | Hours | Sprints | Status |
+|------|-------|-------|---------|--------|
+| 006 - VFX Library Pipeline | 17 | ~35h | - | ✅ Complete |
+| 007 - VFX Multi-Mode | 19 | ~40h | 1 | Ready |
+| 008 - Multimodal ML | 67 | ~140h | 7 | Arch Approved |
+| 009 - Icosa/Sketchfab | 14 | ~42h | 3 | Draft |
+| 010 - Normcore Multiuser | 15 | ~22h | 1 | Draft |
+| 011 - Open Brush | 25 | ~62h | 2 (14 days) | Draft |
+| **012 - Hand Tracking** | **24** | **~32h** | **2** | **Draft (P0)** |
+| 003 - Hologram Conferencing | TBD | TBD | 1 | Draft |
+| **Total** | **181+** | **~370h+** | **17** |
+
+---
+
+## Legacy & Deprecated Components
+
+### ⚠️ Deprecated (Do Not Use)
+
+| Component | Location | Replaced By | Notes |
+|-----------|----------|-------------|-------|
+| `VFXBinderManager` | `_Legacy/` | `VFXARBinder` | Old centralized binding (spec 006 removed) |
+| `VFXARDataBinder` | `_Legacy/` | `VFXARBinder` | Old per-VFX binding (spec 006 removed) |
+| `EnhancedAudioProcessor` | `Scripts/Audio/` | `AudioBridge` | Simpler 6-band FFT (spec 006) |
+| `PeopleOcclusionVFXManager` | Removed | `ARDepthSource` | Consolidated into single source |
+| `H3M_HologramRig.prefab` | `H3M/Prefabs/` | `Hologram.prefab` | Legacy hologram (spec 002 deprecated) |
+| `HologramSource` | `H3M/Core/` | `HologramPlacer` | Legacy hologram recording |
+| `HologramRenderer` | `H3M/Core/` | `HologramController` | Legacy hologram playback |
+| `HologramAnchor` | `H3M/Core/` | Built into `HologramController` | Legacy AR anchor |
+
+### ✅ Current (Use These)
+
+| Component | Location | Purpose | Spec |
+|-----------|----------|---------|------|
+| `ARDepthSource` | `Scripts/Bridges/` | Single compute dispatch for depth→world | 006 |
+| `VFXARBinder` | `Scripts/Bridges/` | Per-VFX texture binding (lightweight) | 006 |
+| `VFXLibraryManager` | `Scripts/VFX/` | 73 VFX organized by category | 006 |
+| `AudioBridge` | `Scripts/Bridges/` | 6-band FFT → global shader props | 006 |
+| `Hologram.prefab` | `Prefabs/` | Recommended hologram (HologramPlacer + Controller) | 002 |
+| `HandVFXController` | `Scripts/HandTracking/` | HoloKit hand tracking + VFX | 012 |
+| `ARKitHandTracking` | `Scripts/HandTracking/` | XR Hands fallback | 012 |
+| `NNCamKeypointBinder` | `NNCam/Scripts/` | BodyPix keypoints → VFX | 006 |
+| `BodyPartSegmenter` | `Scripts/Segmentation/` | 24-part body segmentation | 004 |
+
+### 🔒 Frozen (Reserved for Spec 003)
+
+| Component | Status | Reserved For |
+|-----------|--------|--------------|
+| `HologramSource`, `HologramRenderer`, `HologramAnchor` | Frozen | Spec 003 |
+| `HologramPlacer`, `HologramController` | Frozen | Spec 003 |
+| `MetadataDecoder`, `TextureDemuxer`, `FrameEncoder` | Reserved | Spec 003 |
+| WebRTC hologram streaming | Reserved | Spec 003 |
+
+**Policy**: Future specs (012+) MUST NOT modify hologram-related components.
 
 ---
 
