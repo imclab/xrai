@@ -67,6 +67,22 @@ The new Hologram prefab uses the **Hybrid Bridge Pipeline** (ARDepthSource + VFX
 - Dual-mode support (Live AR / Metavido playback)
 - Richer gestures (tap, drag, height, pinch, rotate)
 
+### 🚫 Hologram Functionality Policy
+
+**IMPORTANT**: Future specs (012+) MUST NOT modify hologram-related components or behavior.
+
+| Component | Reserved For | Status |
+|-----------|-------------|--------|
+| `HologramSource`, `HologramRenderer`, `HologramAnchor` | Spec 003 | Frozen |
+| `HologramPlacer`, `HologramController` | Spec 003 | Frozen |
+| `H3M_HologramRig.prefab`, `Hologram.prefab` | Spec 003 | Frozen |
+| `MetadataDecoder`, `TextureDemuxer`, `FrameEncoder` | Spec 003 | Reserved |
+| WebRTC hologram streaming | Spec 003 | Reserved |
+
+**Reason**: Spec 003 (Hologram Conferencing) handles all hologram recording, playback, and multiplayer functionality. Mixing hologram changes across multiple specs creates conflicts and testing complexity.
+
+**If you need hologram behavior changes**: Add them to `specs/003-hologram-conferencing/tasks.md` instead.
+
 ## Removed Specs
 
 | ID | Name | Reason |
