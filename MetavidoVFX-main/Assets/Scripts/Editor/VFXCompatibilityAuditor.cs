@@ -21,6 +21,15 @@ namespace MetavidoVFX.Editor
         string _filterText = "";
         VFXCategoryType? _filterMode = null;
 
+        // Additional input mapping toggle
+        bool _enableCustomInputMapping = false;
+        bool _showCustomMappingSection = false;
+        string _customDepthProperty = "";
+        string _customStencilProperty = "";
+        string _customColorProperty = "";
+        string _customPositionProperty = "";
+        string _customAudioProperty = "";
+
         // Property detection patterns
         static readonly string[] DepthProperties = { "DepthMap", "Depth Map", "DepthTexture", "_Depth" };
         static readonly string[] StencilProperties = { "StencilMap", "Stencil Map", "StencilTexture", "HumanStencil" };
@@ -233,6 +242,40 @@ namespace MetavidoVFX.Editor
                 int selected = _filterMode.HasValue ? (int)_filterMode.Value + 1 : 0;
                 int newSelected = EditorGUILayout.Popup(selected, modeOptions, GUILayout.Width(100));
                 _filterMode = newSelected == 0 ? null : (VFXCategoryType?)(newSelected - 1);
+            }
+
+            // Custom Input Mapping Section
+            EditorGUILayout.Space(5);
+            _showCustomMappingSection = EditorGUILayout.Foldout(_showCustomMappingSection, "Additional Input Mapping", true);
+            if (_showCustomMappingSection)
+            {
+                EditorGUI.indentLevel++;
+                _enableCustomInputMapping = EditorGUILayout.ToggleLeft("Enable Custom Property Detection", _enableCustomInputMapping);
+
+                if (_enableCustomInputMapping)
+                {
+                    EditorGUILayout.HelpBox("Add custom property names to detect during audit. Leave empty to skip.", MessageType.Info);
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.LabelField("Depth:", GUILayout.Width(60));
+                        _customDepthProperty = EditorGUILayout.TextField(_customDepthProperty, GUILayout.Width(150));
+                        EditorGUILayout.LabelField("Stencil:", GUILayout.Width(60));
+                        _customStencilProperty = EditorGUILayout.TextField(_customStencilProperty, GUILayout.Width(150));
+                    }
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.LabelField("Color:", GUILayout.Width(60));
+                        _customColorProperty = EditorGUILayout.TextField(_customColorProperty, GUILayout.Width(150));
+                        EditorGUILayout.LabelField("Position:", GUILayout.Width(60));
+                        _customPositionProperty = EditorGUILayout.TextField(_customPositionProperty, GUILayout.Width(150));
+                    }
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.LabelField("Audio:", GUILayout.Width(60));
+                        _customAudioProperty = EditorGUILayout.TextField(_customAudioProperty, GUILayout.Width(150));
+                    }
+                }
+                EditorGUI.indentLevel--;
             }
 
             // Stats

@@ -104,6 +104,10 @@ public class VFXARBinder : MonoBehaviour
     [VFXPropertyBinding("System.Single")]
     public ExposedProperty hologramScaleProperty = "HologramScale";
 
+    [Header("Auto-Binding")]
+    [Tooltip("Automatically detect and enable bindings based on VFX properties")]
+    [SerializeField] bool _autoBindOnStart = true;
+
     [Header("Mode System (spec-007)")]
     [Tooltip("Use VFXCategory bindings instead of manual toggles")]
     [SerializeField] bool _useCategoryBindings = true;
@@ -172,13 +176,69 @@ public class VFXARBinder : MonoBehaviour
         _vfx = GetComponent<VisualEffect>();
         _category = GetComponent<VFXCategory>();
 
+        // Auto-detect bindings if enabled
+        if (_autoBindOnStart)
+        {
+            AutoDetectBindings();
+        }
         // If using category bindings and category exists, sync bindings on start
-        if (_useCategoryBindings && _category != null)
+        else if (_useCategoryBindings && _category != null)
         {
             _currentMode = _category.Category;
             ApplyBindingsFromCategory();
         }
     }
+
+    /// <summary>
+    /// Public accessor for auto-bind setting
+    /// </summary>
+    public bool AutoBindOnStart { get => _autoBindOnStart; set => _autoBindOnStart = value; }
+
+    #if UNITY_EDITOR
+    // Track previous value to detect toggle change
+    [System.NonSerialized] bool _prevAutoBindValue;
+
+    /// <summary>
+    /// Called when Inspector values change in Editor.
+    /// Triggers auto-binding when toggle is enabled.
+    /// </summary>
+    void OnValidate()
+    {
+        // Only run auto-detect when toggle changes from false to true
+        if (_autoBindOnStart && !_prevAutoBindValue)
+        {
+            // Delay to next frame to ensure VFX component is available
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                if (this != null && _autoBindOnStart)
+                {
+                    AutoDetectBindings();
+                }
+            };
+        }
+        _prevAutoBindValue = _autoBindOnStart;
+    }
+
+    /// <summary>
+    /// Reset is called when component is first added or reset.
+    /// Initialize tracking variable.
+    /// </summary>
+    void Reset()
+    {
+        _prevAutoBindValue = _autoBindOnStart;
+        // Auto-detect on component add
+        if (_autoBindOnStart)
+        {
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                if (this != null)
+                {
+                    AutoDetectBindings();
+                }
+            };
+        }
+    }
+    #endif
 
     void LateUpdate()
     {

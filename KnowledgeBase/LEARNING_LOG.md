@@ -6,6 +6,90 @@
 
 ---
 
+## 2026-01-20 (Session 3) - Claude Code - Rcam Series Deep Research
+
+**Discovery**: Completed comprehensive research of Keijiro's Rcam2/3/4 repositories. Uncovered critical VFX property naming conventions, depth reconstruction patterns, and production-proven architecture evolution from HDRP→URP.
+
+**Key Findings**:
+
+1. **Property Naming Convention Changed**:
+   - Rcam2 (HDRP): `ProjectionVector`, `InverseViewMatrix`
+   - Rcam3/4 (URP): `InverseProjection`, `InverseView` ← **STANDARDIZED**
+   - VFX Graphs targeting Rcam2 need property renaming for Rcam3/4
+
+2. **Depth Reconstruction Pattern (Universal)**:
+   ```csharp
+   // InverseProjection Vector4 = [1/fx, 1/fy, cx/fx, cy/fy]
+   Vector4 GetInverseProjection(Matrix4x4 proj) {
+       return new Vector4(
+           1f / proj[0,0], 1f / proj[1,1],
+           proj[0,2] / proj[0,0], proj[1,2] / proj[1,1]
+       );
+   }
+   ```
+   ```hlsl
+   // HLSL reconstruction (RcamCommon.hlsl)
+   float3 RcamDistanceToWorldPosition(float2 uv, float d, float4 inv_proj, float4x4 inv_view) {
+       float3 p = float3((uv - 0.5) * 2, 1);
+       p.xy = (p.xy * inv_proj.xy) + inv_proj.zw;
+       return mul(inv_view, float4(p * d, 1)).xyz;
+   }
+   ```
+
+3. **VFXProxBuffer (Rcam3 Innovation)**:
+   - 16x16x16 spatial hash grid (4096 cells, 32 points/cell)
+   - O(864) nearest-neighbor queries (27-cell 3D neighborhood)
+   - Perfect for Plexus/Metaball/Line-based VFX
+   - Production-tested, GPU-accelerated
+
+4. **Modern Blitter Pattern (Rcam4/Unity 6)**:
+   ```csharp
+   // Replaces deprecated Graphics.Blit
+   public void Run(Texture source, RenderTexture dest, int pass) {
+       RenderTexture.active = dest;
+       _material.mainTexture = source;
+       _material.SetPass(pass);
+       Graphics.DrawProceduralNow(MeshTopology.Triangles, 3, 1);
+   }
+   ```
+
+5. **Body/Environment VFX Organization**:
+   - Rcam2: BodyFX/ (14 VFX), EnvFX/ (12 VFX)
+   - Rcam4: Body/ (12 VFX), Environment/ (6 VFX)
+   - Stencil mask available but NOT exposed in base binders
+
+**Architecture Evolution**:
+| | Rcam2 | Rcam3 | Rcam4 |
+|---|---|---|---|
+| Pipeline | HDRP 8.2.0 | URP 17.0.3 | URP 17.0.3 |
+| Unity | 2020.1.6 | Unity 6 | Unity 6 |
+| Binder | VFXRcamMetadataBinder | RcamBinder | RcamBinder |
+| Innovation | LiDAR VFX | VFXProxBuffer | URP Features |
+
+**Docs Created**:
+- `/KnowledgeBase/_RCAM_SERIES_ARCHITECTURE_RESEARCH.md` (20K tokens, 11 sections, 5 code snippets)
+- `/KnowledgeBase/_RCAM_QUICK_REFERENCE.md` (1.5K tokens, production patterns)
+
+**Impact on MetavidoVFX**:
+- Validates ARDepthSource hybrid bridge pattern
+- Consider adopting Rcam property naming convention
+- Port VFXProxBuffer for future Plexus effects
+- Replace Graphics.Blit with Blitter class (Unity 6)
+- Use ExposedProperty pattern in VFXARBinder
+
+**Critical Pattern - Standardized VFX Properties**:
+```csharp
+[VFXPropertyBinding("UnityEngine.Texture2D")]
+public ExposedProperty ColorMapProperty = "ColorMap";  // NOT AR_ColorTexture
+```
+
+**References**:
+- Rcam2: https://github.com/keijiro/Rcam2
+- Rcam3: https://github.com/keijiro/Rcam3
+- Rcam4: https://github.com/keijiro/Rcam4
+
+---
+
 ## 2026-01-20 (Session 2) - Claude Code - VFX Subgraph Selection & Existing Solution Pattern
 
 **Discovery**: When adding world-space positioning to keypoint-based VFX, ALWAYS check for existing subgraphs before creating compute shaders. The "Get Keypoint World" subgraph already handles UV→world conversion via PositionMap sampling.
@@ -3343,3 +3427,123 @@ git rm --cached MetavidoVFX-main/*.sln
 - See: `MetavidoVFX-main/Assets/Resources/VFX/` for organized VFX
 
 ---
+
+## 2026-01-20 (Session 4) - Rcam VFX Binding Specification
+
+**Task**: Research keijiro's Rcam2, Rcam3, Rcam4 projects to understand VFX binding requirements
+**Output**: `_RCAM_VFX_BINDING_SPECIFICATION.md` (complete binding reference for 73 VFX assets)
+
+**Key Findings**:
+
+1. **VFX Asset Inventory** (MetavidoVFX):
+   - Rcam2: 20 VFX (HDRP→URP converted)
+   - Rcam3: 8 VFX (URP standard)
+   - Rcam4: 14 VFX (URP production)
+   - Total: 42 Rcam-based VFX (plus 31 other categories)
+
+2. **Property Evolution** (Rcam2 → Rcam3/4):
+   - `RayParamsMatrix` (Matrix4x4) → `InverseProjection` (Vector4)
+   - `ProjectionVector` → `InverseProjection` (renamed)
+   - `InverseViewMatrix` → `InverseView` (same type)
+
+3. **VFXARBinder Alias Resolution**:
+   - Auto-detects property names across Rcam2/3/4, Akvfx, H3M
+   - Supports 7 alias arrays (DepthMap, StencilMap, ColorMap, RayParams, etc.)
+   - Example: `DepthMap` = `{ "DepthMap", "Depth", "DepthTexture", "_Depth" }`
+
+4. **Body vs Environment Separation**:
+   - **People VFX**: Bind `StencilMap` (human segmentation from ARKit)
+   - **Environment VFX**: Do NOT bind stencil (or use `Texture2D.whiteTexture`)
+   - **"Any" VFX** (Rcam3): Stencil optional (grid/sweeper effects)
+
+5. **Depth Rotation for iOS Portrait**:
+   - ARKit depth is landscape (wider than tall)
+   - MetavidoVFX VFX expect portrait (taller than wide)
+   - Solution: 90° CW rotation via `RotateUV90CW.shader` + swapped RT dimensions
+   - RayParams adjustment: Negate `tanH` component
+
+6. **VFXProxBuffer** (Rcam3 spatial acceleration):
+   - 16×16×16 spatial hash grid (4096 cells, 32 points/cell max)
+   - O(1) insertion, O(864) queries per particle (27-cell neighborhood)
+   - Use case: Plexus/Metaball effects needing nearest-neighbor queries
+   - **Status**: NOT implemented in MetavidoVFX (would benefit plexus VFX)
+
+7. **Blitter Class** (Rcam4/Unity 6):
+   - Replacement for deprecated `Graphics.Blit`
+   - Uses `DrawProceduralNow(MeshTopology.Triangles, 3, 1)` (fullscreen triangle)
+   - **Status**: MetavidoVFX still using `Graphics.Blit` (should migrate)
+
+**Critical Implementation Notes**:
+
+**Global Texture Access (VFX Graph)**:
+```csharp
+❌ Shader.SetGlobalTexture("_DepthMap", depth);  // VFX Graph CANNOT read
+✅ vfx.SetTexture("DepthMap", depth);            // Per-VFX binding required
+
+✅ EXCEPTION: Vectors/Matrices CAN be global
+   Shader.SetGlobalVector("_ARRayParams", rayParams);
+   Shader.SetGlobalMatrix("_ARInverseView", invView);
+```
+
+**Compute Shader Thread Groups**:
+```csharp
+❌ WRONG: [numthreads(8,8,1)] + ceil(width/8) dispatch
+✅ CORRECT: [numthreads(32,32,1)] + ceil(width/32) dispatch
+```
+
+**Depth Format Standard**: Always `RenderTextureFormat.RHalf` (16-bit float)
+
+**Integration Status** (MetavidoVFX):
+
+✅ Implemented:
+- ARDepthSource (O(1) compute dispatch for ALL VFX)
+- VFXARBinder (lightweight binding with alias resolution)
+- RayParams calculation (`centerShift + tan(FOV)`)
+- InverseView matrix (TRS pattern)
+- Depth rotation (iOS portrait mode)
+- StencilMap binding (human segmentation)
+- Demand-driven ColorMap (spec-007)
+- Throttle/Intensity binding
+- Audio binding (global shader vectors)
+
+⚠️ Partially Implemented:
+- InverseProjection (using RayParams instead)
+- VelocityMap (compute exists, disabled by default)
+- Normal map (compute exists, rarely used)
+
+❌ Not Implemented (Rcam3/4 Features):
+- VFXProxBuffer (spatial acceleration)
+- Blitter class (using deprecated Blit)
+- Color LUT (Texture3D grading)
+- URP Renderer Features (background/recolor)
+
+**References**:
+
+Web Research:
+- https://github.com/keijiro/Rcam2 (HDRP 8.2.0, Unity 2020.1.6)
+- https://github.com/keijiro/Rcam3 (URP 17.0.3, Unity 6, VFXProxBuffer)
+- https://github.com/keijiro/Rcam4 (URP 17.0.3, Unity 6, Blitter class)
+
+Knowledge Base:
+- `_RCAM_QUICK_REFERENCE.md` - Property naming, binder pattern (212 LOC)
+- `_RCAM_SERIES_ARCHITECTURE_RESEARCH.md` - Full architecture (732 LOC, 47 files analyzed)
+- `_RCAM_VFX_BINDING_SPECIFICATION.md` - **NEW** - Binding reference for 73 VFX (500+ LOC)
+
+Local Files:
+- `MetavidoVFX-main/Assets/Scripts/Bridges/VFXARBinder.cs` (887 LOC)
+- `MetavidoVFX-main/Assets/Scripts/Bridges/ARDepthSource.cs` (627 LOC)
+- `MetavidoVFX-main/Assets/Shaders/DepthToWorld.compute` (GPU depth→world)
+- `MetavidoVFX-main/Assets/Resources/VFX/Rcam2/` (20 VFX)
+- `MetavidoVFX-main/Assets/Resources/VFX/Rcam3/` (8 VFX)
+- `MetavidoVFX-main/Assets/Resources/VFX/Rcam4/` (14 VFX)
+
+**Next Steps**:
+
+1. Test InverseProjection calculation for true Rcam3/4 compatibility
+2. Consider VFXProxBuffer port for plexus effects
+3. Migrate depth rotation to Blitter class (Unity 6 compliance)
+4. Add VelocityMap support for lightning/trail effects
+5. Document compute shader thread group sizing as best practice
+
+**Tags**: `vfx-graph` `ar-foundation` `keijiro` `depth-reconstruction` `rcam` `metavidovfx` `compute-shader` `binding-patterns` `property-aliases` `spatial-acceleration`
+

@@ -16,25 +16,34 @@
 
 ## Overview
 
-This spec defines the integration of key Open Brush features into MetavidoVFX while maintaining our simpler AR-focused architecture. The goal is to extract maximum value from Open Brush's mature feature set (90+ brushes, audio reactive painting, sophisticated symmetry modes, API-driven drawing) while avoiding the complexity of their full VR-focused scene graph.
+This spec defines the integration of key Open Brush features into MetavidoVFX while maintaining our simpler AR-focused architecture. The goal is to extract core value from Open Brush's mature feature set (brushes, audio reactive painting, symmetry modes) while avoiding the complexity of their full VR-focused scene graph.
 
 ### Goals
 
-1. **URP Brush Migration** - Port all 90+ brushes including 5 audio reactive variants
+1. **URP Brush Migration** - Port 10 essential brushes including 3 audio reactive variants (MVP)
 2. **Simplified Save/Load** - Implement lightweight scene serialization without full .tilt format complexity
-3. **Mirror Painting Modes** - Integrate point symmetry (14 families) and wallpaper groups (17 patterns)
-4. **API-Driven Painting** - Enable programmatic brush control via HTTP/WebSocket API
-5. **Cross-Platform Input** - Extract OpenXR input patterns while keeping AR-first simplicity
+3. **Mirror Painting Modes** - Integrate point symmetry (orders 1-8) and 4 wallpaper groups
+4. **Cross-Platform Input** - Extract OpenXR input patterns while keeping AR-first simplicity
+
+### Future Goals (P3)
+
+5. **API-Driven Painting** - Enable programmatic brush control via HTTP/WebSocket API (deferred)
+6. **Full Brush Catalog** - Port remaining 80+ brushes (deferred)
 
 ### Scope Boundaries
 
-**In Scope:**
-- Brush materials, shaders, and geometry generation
-- Audio reactive brush parameters
-- Symmetry/mirror transform calculation
-- Core API endpoints for brush control
+**In Scope (MVP):**
+- 10 brush materials, shaders, and geometry generation
+- 3 audio reactive brush parameters (Waveform, WaveformFFT, WaveformTube)
+- Point symmetry (orders 1-8) and 4 wallpaper groups (p1, pm, p4m, p6m)
 - JSON scene serialization (strokes, layers, camera)
 - AR touch → brush position mapping
+
+**Out of Scope (Deferred to P3):**
+- API endpoints for brush control (HTTP/WebSocket)
+- Full 90+ brush catalog (start with 10)
+- Complex symmetry (orders 9-12, polyhedral families)
+- 13 additional wallpaper groups
 
 **Out of Scope (Open Brush features we won't migrate):**
 - Full .tilt file format compatibility
@@ -85,7 +94,7 @@ As an AR user, I want to select from a variety of brush styles for different art
 
 **Independent Test**:
 1. Open brush selection UI
-2. Verify 20+ brush options visible (subset of full 90)
+2. Verify 10 brush options visible (MVP set)
 3. Select "Ink" brush
 4. Draw stroke on AR plane
 5. Verify stroke has correct visual appearance
@@ -115,12 +124,14 @@ As a user, I want my brush strokes to react to music/audio input in real-time.
 2. **Given** WaveformFFT brush, **When** audio playing, **Then** frequency bands drive colors
 3. **Given** silence, **When** drawing, **Then** default static appearance
 
-**Audio Reactive Brushes to Port**:
+**Audio Reactive Brushes to Port (MVP - 3 brushes)**:
 - `Waveform.mat` - RMS amplitude modulation
 - `WaveformFFT.mat` - Frequency band colors
+- `WaveformTube.mat` - Tube radius animation
+
+**Deferred to P3**:
 - `WaveformParticles.mat` - Particle emission rate
 - `WaveformPulse.mat` (NeonPulse) - Pulsing intensity
-- `WaveformTube.mat` - Tube radius animation
 
 ---
 
@@ -132,27 +143,34 @@ As an artist, I want to draw with symmetry modes to create complex patterns effi
 
 **Independent Test**:
 1. Enable mirror mode
-2. Select "Point Symmetry - C4v" (4-fold with vertical mirrors)
+2. Select "Point Symmetry - C4" (4-fold rotational)
 3. Draw single stroke
-4. Verify 8 strokes appear (4 rotations × 2 mirror)
+4. Verify 4 strokes appear (4 rotations)
 5. Move brush position
 6. Verify all mirrors follow
 
 **Acceptance Scenarios**:
 1. **Given** point symmetry C4, **When** draw stroke, **Then** 4 rotated copies appear
-2. **Given** wallpaper p6m, **When** draw, **Then** hexagonal tiled pattern
+2. **Given** wallpaper p4m, **When** draw, **Then** square tiled pattern
 3. **Given** color shift enabled, **When** mirrors generated, **Then** HSB shifts per copy
 
-**Point Symmetry Families** (from Open Brush):
-- Cyclic: Cn, Cnv, Cnh, Sn (n = 1-12)
-- Dihedral: Dn, Dnh, Dnd
+**Point Symmetry (MVP - orders 1-8)**:
+- Cyclic: Cn (n = 1-8)
+- Example: C2 = 2-fold, C4 = 4-fold, C6 = hexagonal
+
+**Deferred to P3**:
+- Higher orders (9-12)
+- Cnv, Cnh, Sn, Dn, Dnh, Dnd (mirror variants)
 - Polyhedral: T, Th, Td, O, Oh, I, Ih
 
-**Wallpaper Groups** (17 patterns):
-- p1, pg, cm, pm
-- p6, p6m, p3, p3m1, p31m
-- p4, p4m, p4g
-- p2, pgg, pmg, pmm, cmm
+**Wallpaper Groups (MVP - 4 patterns)**:
+- p1 (translation only)
+- pm (horizontal reflection)
+- p4m (square tiling with mirrors)
+- p6m (hexagonal tiling with mirrors)
+
+**Deferred to P3** (13 additional patterns):
+- pg, cm, p3, p3m1, p31m, p4, p4g, p2, pgg, pmg, pmm, cmm, p6
 
 ---
 
@@ -205,11 +223,11 @@ As a user, I want to save my AR drawings and load them later.
 
 ---
 
-### User Story 5 - API-Driven Painting (Priority: P2)
+### User Story 5 - API-Driven Painting (Priority: P3 - Deferred)
 
 As a developer, I want to control brush painting programmatically via HTTP API.
 
-**Why this priority**: Enables LLM integration, automation, generative art.
+**Why deferred**: Complex feature; focus MVP on core drawing. Enables LLM integration, automation, generative art in future phase.
 
 **Independent Test**:
 1. Enable API server
@@ -270,15 +288,21 @@ As an AR user, I want to draw by touching the screen with my finger.
 
 ## Requirements
 
-### Functional Requirements
+### Functional Requirements (MVP)
 
-- **FR-001**: System MUST support minimum 20 brush types (subset of Open Brush 90+)
-- **FR-002**: System MUST support 5 audio reactive brush variants
-- **FR-003**: System MUST support point symmetry with orders 1-12
-- **FR-004**: System MUST support all 17 wallpaper groups
+- **FR-001**: System MUST support 10 brush types (MVP set)
+- **FR-002**: System MUST support 3 audio reactive brush variants
+- **FR-003**: System MUST support point symmetry with orders 1-8
+- **FR-004**: System MUST support 4 wallpaper groups (p1, pm, p4m, p6m)
 - **FR-005**: System MUST save/load scenes to JSON format
-- **FR-006**: System SHOULD expose HTTP API for brush control
-- **FR-007**: System MUST map AR touch input to brush position
+- **FR-006**: System MUST map AR touch input to brush position
+
+### Functional Requirements (P3 - Deferred)
+
+- **FR-007**: System SHOULD expose HTTP API for brush control
+- **FR-008**: System SHOULD support full 90+ brush catalog
+- **FR-009**: System SHOULD support orders 9-12 and polyhedral symmetry
+- **FR-010**: System SHOULD support all 17 wallpaper groups
 
 ### Non-Functional Requirements
 
@@ -443,15 +467,20 @@ AudioModulation
 
 ## Success Criteria
 
-### Measurable Outcomes
+### Measurable Outcomes (MVP)
 
-- **SC-001**: 20+ brushes functional with correct visual appearance
-- **SC-002**: All 5 audio reactive brushes respond to audio input
-- **SC-003**: Point symmetry orders 1-12 generate correct mirror count
-- **SC-004**: All 17 wallpaper groups produce correct tiling patterns
+- **SC-001**: 10 brushes functional with correct visual appearance
+- **SC-002**: 3 audio reactive brushes respond to audio input
+- **SC-003**: Point symmetry orders 1-8 generate correct mirror count
+- **SC-004**: 4 wallpaper groups (p1, pm, p4m, p6m) produce correct tiling patterns
 - **SC-005**: Save/load round-trip preserves all stroke data
-- **SC-006**: API can create strokes programmatically
-- **SC-007**: AR touch input draws strokes on detected planes
+- **SC-006**: AR touch input draws strokes on detected planes
+
+### Measurable Outcomes (P3 - Deferred)
+
+- **SC-007**: API can create strokes programmatically
+- **SC-008**: Full 90+ brush catalog functional
+- **SC-009**: All 17 wallpaper groups produce correct tiling patterns
 
 ### Performance Targets
 
@@ -465,7 +494,7 @@ AudioModulation
 
 ## Brush Priority List
 
-### Tier 1 - Essential (Port First)
+### MVP (10 Brushes - Port First)
 
 | Brush | Category | Audio Reactive | Notes |
 |-------|----------|----------------|-------|
@@ -473,29 +502,29 @@ AudioModulation
 | Light | Basic | No | Glowing effect |
 | Flat | Basic | No | Simple flat ribbon |
 | Marker | Basic | No | Solid opaque |
-| Highlighter | Basic | No | Semi-transparent |
 | Wire | Basic | No | Thin line |
-| Waveform | Basic | Yes | RMS modulated |
-| WaveformFFT | Basic | Yes | Frequency colors |
 | Smoke | Basic | No | Particle effect |
 | Fire | Basic | No | Animated |
+| Waveform | Audio | Yes | RMS modulated |
+| WaveformFFT | Audio | Yes | Frequency colors |
+| WaveformTube | Audio | Yes | Audio tube radius |
 
-### Tier 2 - Enhanced (Port Second)
+### P3 - Enhanced (Port Later)
 
 | Brush | Category | Audio Reactive | Notes |
 |-------|----------|----------------|-------|
+| Highlighter | Basic | No | Semi-transparent |
 | Rainbow | Basic | No | Color gradient |
 | Electricity | Basic | No | Lightning effect |
 | Bubbles | Basic | No | Particle spheres |
 | Stars | Basic | No | Star particles |
-| Streamers | Basic | No | Ribbon particles |
-| WaveformParticles | Basic | Yes | Audio particles |
-| WaveformPulse | Basic | Yes | Pulsing neon |
-| WaveformTube | Basic | Yes | Audio tube radius |
+| WaveformParticles | Audio | Yes | Audio particles |
+| WaveformPulse | Audio | Yes | Pulsing neon |
 | Disco | Basic | No | Reflective |
 | Plasma | Basic | No | Animated |
+| Streamers | Basic | No | Ribbon particles |
 
-### Tier 3 - Complete (Port Last)
+### P3 - Complete (Port Last)
 
 Remaining 70+ brushes from Open Brush catalog.
 

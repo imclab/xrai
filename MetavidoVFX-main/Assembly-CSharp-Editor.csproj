@@ -85,6 +85,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequencer.Processors.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Datamosh/Editor/DatamoshEditor.cs" />
     <Compile Include="Assets/Scripts/Editor/HoloKitHandTrackingSetup.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXBindingSelectorWindow.cs" />
     <Compile Include="Assets/Scripts/Editor/ARKitMetavidoSceneSetup.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/OpenUrlButton.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/ObjectExporter/UnityFBXExporter/Editor/ExporterMenu.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Editor/AnalogGlitchEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/GuiSectionBase.cs" />
     <Compile Include="Assets/Scripts/Editor/FileLoggerSetup.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXARBinderEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/ProductWelcomeScreenBase.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fringe/Editor/FringeEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/ScrollViewGuiSection.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/GPUFrameProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Motion/Editor/BrownianMotionEditor.cs" />
     <Compile Include="Assets/Scripts/Editor/RestoreVoxelsMetavido.cs" />
+    <Compile Include="Assets/Scripts/Editor/AROcclusionDebugSetup.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/SplineMesh/Scripts/Editor/SplineEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/PreferenceDefinition/HandleOnEditorPersistedValueChange.cs" />
     <Compile Include="Assets/Scripts/Performance/Editor/VFXAutoOptimizerEditor.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/FadeProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Obscurance/Editor/Obscurance2Editor.cs" />
     <Compile Include="Assets/Scripts/Editor/EditorPlayModeHelper.cs" />
+    <Compile Include="Assets/NNCam/Scripts/Editor/NNCamVFXValidator.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/ResizeProcessor.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/AQUA/jp.keijiro.kino.aqua.universal/Editor/AquaEffectEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/CropProcessor.cs" />
@@ -246,6 +250,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/Editor/InterpolatorConfigDrawer.cs" />
     <Compile Include="Assets/Samples/App UI/1.3.1/StoryBook/Editor/Link.stories.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Editor/MotionGraphDrawer.cs" />
+    <Compile Include="Assets/Editor/VFXBindingValidator.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Editor/ShaderGUI/KnitwearGUI.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vignette/Editor/VignetteEditor.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Editor/ShaderGUI/Shaders/KnitwearLitShader.cs" />
@@ -262,6 +267,7 @@
     <Compile Include="Assets/Scripts/Editor/VFXLibrarySetup.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/Unity cloth simulation/Cloth/Editor/ClothSpawnerEditor.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/urptoon U2021/Graphics/Shaders/ToonShader/Editor/ToonShaderEditorBase.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXPipelineAuditor.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ShaderPack/Editor/ToonyLitShader.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Bloom/Editor/BloomEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/Editor/VFXVolumeMixerSettings.cs" />
@@ -293,6 +299,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/FrameProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/PremultiplyAlphaProcessor.cs" />
     <Compile Include="Assets/Stylized Character_Archer/ToonShader/Shader/Editor/ToonShaderGUI.cs" />
+    <Compile Include="Assets/Scripts/Editor/AudioHLSLGuide.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/RemapColorProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/RemapColorProcessorSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/FrameProcessorStack.cs" />

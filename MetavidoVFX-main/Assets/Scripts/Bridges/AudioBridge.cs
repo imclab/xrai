@@ -4,6 +4,7 @@ using MetavidoVFX.Audio;
 /// <summary>
 /// FFT analysis → global audio properties for ALL VFX.
 /// Includes 4-band frequency analysis and beat detection (spec-007).
+/// Also provides AudioDataTexture for VFX without exposed properties.
 /// </summary>
 public class AudioBridge : MonoBehaviour
 {
@@ -29,11 +30,29 @@ public class AudioBridge : MonoBehaviour
     [Range(0.05f, 0.5f)]
     [SerializeField] float _minBeatInterval = 0.1f;
 
+    [Header("Audio Data Texture")]
+    [Tooltip("Enable texture output for VFX without exposed audio properties")]
+    [SerializeField] bool _enableAudioDataTexture = true;
+
     [Header("Debug")]
     [SerializeField] bool _verboseLogging = false;
 
     float[] _spectrum;
     BeatDetector _beatDetector;
+
+    // Audio data texture (2x2 RGBA float): encodes all audio values
+    // Pixel layout:
+    //   (0,0): Volume, Bass, Mids, Treble
+    //   (1,0): SubBass, BeatPulse, BeatIntensity, 0
+    Texture2D _audioDataTexture;
+    Color[] _audioDataPixels;
+
+    /// <summary>
+    /// 2x2 texture containing all audio data for VFX binding.
+    /// Sample at UV (0.25, 0.25) for (Volume, Bass, Mids, Treble)
+    /// Sample at UV (0.75, 0.25) for (SubBass, BeatPulse, BeatIntensity, 0)
+    /// </summary>
+    public Texture2D AudioDataTexture => _audioDataTexture;
 
     // Shader property IDs
     static readonly int _AudioBandsID = Shader.PropertyToID("_AudioBands");
@@ -77,6 +96,21 @@ public class AudioBridge : MonoBehaviour
             pulseDecayTime: _pulseDecayTime
         );
         _beatDetector.MinBeatInterval = _minBeatInterval;
+
+        // Initialize audio data texture (2x2 for efficient sampling)
+        if (_enableAudioDataTexture)
+        {
+            _audioDataTexture = new Texture2D(2, 2, TextureFormat.RGBAFloat, false, true)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+                name = "AudioDataTexture"
+            };
+            _audioDataPixels = new Color[4];
+
+            if (_verboseLogging)
+                Debug.Log("[AudioBridge] Created AudioDataTexture (2x2 RGBAFloat)");
+        }
 
         if (_verboseLogging)
             Debug.Log($"[AudioBridge] Initialized with {_sampleCount} samples, {sampleRate}Hz, beat detection: {_enableBeatDetection}");
@@ -138,6 +172,34 @@ public class AudioBridge : MonoBehaviour
         {
             Shader.SetGlobalFloat(_BeatPulseID, 0f);
             Shader.SetGlobalFloat(_BeatIntensityID, 0f);
+        }
+
+        // Update audio data texture for VFX without exposed properties
+        UpdateAudioDataTexture();
+    }
+
+    void UpdateAudioDataTexture()
+    {
+        if (!_enableAudioDataTexture || _audioDataTexture == null) return;
+
+        // Pixel (0,0): Volume, Bass, Mids, Treble
+        _audioDataPixels[0] = new Color(Volume, Bass, Mids, Treble);
+        // Pixel (1,0): SubBass, BeatPulse, BeatIntensity, reserved
+        _audioDataPixels[1] = new Color(SubBass, BeatPulse, BeatIntensity, 0f);
+        // Pixel (0,1) and (1,1): reserved for future use
+        _audioDataPixels[2] = Color.clear;
+        _audioDataPixels[3] = Color.clear;
+
+        _audioDataTexture.SetPixels(_audioDataPixels);
+        _audioDataTexture.Apply(false, false);
+    }
+
+    void OnDestroy()
+    {
+        if (_audioDataTexture != null)
+        {
+            Destroy(_audioDataTexture);
+            _audioDataTexture = null;
         }
     }
 

@@ -1,11 +1,22 @@
 // VFX Category System - Groups VFX by type for organized switching
-// Categories: People (body), Face, Hands, Environment, Audio
+// Mode-based binding management per source-bindings.md
 
 using UnityEngine;
 using UnityEngine.VFX;
 
 namespace MetavidoVFX.VFX
 {
+    /// <summary>
+    /// Binding mode determines which data sources are used (from source-bindings.md)
+    /// </summary>
+    public enum VFXBindingMode
+    {
+        AR,         // Full AR depth/color pipeline (DepthMap, StencilMap, ColorMap, RayParams)
+        Audio,      // Audio-reactive only (Throttle, global _AudioBands)
+        Keypoint,   // ML body keypoints (KeypointBuffer, optional ColorMap)
+        Standalone  // No external data required
+    }
+
     /// <summary>
     /// VFX category types for organized switching
     /// </summary>
@@ -33,7 +44,8 @@ namespace MetavidoVFX.VFX
         FaceTracking = 16,
         Audio = 32,
         ARMesh = 64,
-        All = DepthMap | ColorMap | StencilMap | HandTracking | FaceTracking | Audio | ARMesh
+        Keypoints = 128,
+        All = DepthMap | ColorMap | StencilMap | HandTracking | FaceTracking | Audio | ARMesh | Keypoints
     }
 
     /// <summary>
@@ -42,6 +54,9 @@ namespace MetavidoVFX.VFX
     [RequireComponent(typeof(VisualEffect))]
     public class VFXCategory : MonoBehaviour
     {
+        [Header("Binding Mode (source-bindings.md)")]
+        [SerializeField] private VFXBindingMode bindingMode = VFXBindingMode.AR;
+
         [Header("Category")]
         [SerializeField] private VFXCategoryType category = VFXCategoryType.People;
         [SerializeField] private VFXBindingRequirements bindings = VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap;
@@ -55,6 +70,7 @@ namespace MetavidoVFX.VFX
         [SerializeField, Range(1, 5)] private int performanceTier = 3; // 1=Light, 5=Heavy
         [SerializeField] private bool mobileOptimized = true;
 
+        public VFXBindingMode BindingMode => bindingMode;
         public VFXCategoryType Category => category;
         public VFXBindingRequirements Bindings => bindings;
         public string DisplayName => string.IsNullOrEmpty(displayName) ? gameObject.name : displayName;
@@ -62,6 +78,44 @@ namespace MetavidoVFX.VFX
         public string Description => description;
         public int PerformanceTier => performanceTier;
         public bool MobileOptimized => mobileOptimized;
+
+        /// <summary>
+        /// Set binding mode (used by auditor)
+        /// </summary>
+        public void SetBindingMode(VFXBindingMode mode)
+        {
+            bindingMode = mode;
+            // Auto-set bindings based on mode (per source-bindings.md)
+            bindings = mode switch
+            {
+                VFXBindingMode.AR => VFXBindingRequirements.DepthMap | VFXBindingRequirements.ColorMap | VFXBindingRequirements.StencilMap,
+                VFXBindingMode.Audio => VFXBindingRequirements.Audio,
+                VFXBindingMode.Keypoint => VFXBindingRequirements.Keypoints | VFXBindingRequirements.ColorMap,
+                VFXBindingMode.Standalone => VFXBindingRequirements.None,
+                _ => VFXBindingRequirements.None
+            };
+        }
+
+        /// <summary>
+        /// Auto-detect binding mode from VFX properties (per source-bindings.md)
+        /// </summary>
+        public VFXBindingMode DetectBindingMode()
+        {
+            if (VFX == null || VFX.visualEffectAsset == null) return VFXBindingMode.Standalone;
+
+            // Check for keypoint buffer first (NNCam)
+            if (VFX.HasGraphicsBuffer("KeypointBuffer")) return VFXBindingMode.Keypoint;
+
+            // Check for AR depth properties (Rcam/Akvfx)
+            if (VFX.HasTexture("DepthMap") || VFX.HasTexture("StencilMap") || VFX.HasTexture("PositionMap"))
+                return VFXBindingMode.AR;
+
+            // Check for audio-only (Fluo)
+            if (VFX.HasFloat("Throttle") && !VFX.HasTexture("DepthMap"))
+                return VFXBindingMode.Audio;
+
+            return VFXBindingMode.Standalone;
+        }
 
         /// <summary>
         /// Set the category (used by VFXLibraryManager during creation)

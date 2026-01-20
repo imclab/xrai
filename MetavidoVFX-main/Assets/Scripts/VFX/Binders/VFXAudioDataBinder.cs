@@ -1,6 +1,7 @@
 // VFXAudioDataBinder - Binds audio frequency band data to VFX
 // Supports both AudioBridge (simple, with beat detection) and EnhancedAudioProcessor (advanced, with pitch)
 // Updated for spec-007: Beat detection support
+// Auto-binds AudioDataTexture for VFX without exposed float properties
 
 using UnityEngine;
 using UnityEngine.VFX;
@@ -38,6 +39,12 @@ namespace MetavidoVFX.VFX.Binders
         [Tooltip("Bind beat detection properties from AudioBridge")]
         public bool bindBeatDetection = true;
 
+        [Header("Audio Data Texture (Auto-Fallback)")]
+        [Tooltip("Automatically bind AudioDataTexture for VFX without exposed audio properties")]
+        public bool autoBindAudioTexture = true;
+        [VFXPropertyBinding("UnityEngine.Texture2D")]
+        public ExposedProperty audioDataTextureProperty = "AudioDataTexture";
+
         [Header("Modulation")]
         [Range(0f, 2f)]
         public float volumeMultiplier = 1f;
@@ -48,6 +55,9 @@ namespace MetavidoVFX.VFX.Binders
 
         // Cache AudioBridge reference for beat detection
         AudioBridge _audioBridge;
+
+        // Track if we're using texture fallback
+        bool _usingTextureFallback;
 
         protected override void Awake()
         {
@@ -63,10 +73,12 @@ namespace MetavidoVFX.VFX.Binders
 
         public override bool IsValid(VisualEffect component)
         {
-            // Valid if either EnhancedAudioProcessor or AudioBridge is available
+            // Valid if AudioBridge is available - it sets global shader properties
+            // that any VFX can read via Custom HLSL (no exposed properties needed)
             bool hasAudioSource = audioProcessor != null || _audioBridge != null;
 
-            bool hasAnyProperty =
+            // Check for any bindable properties (optional - globals work without these)
+            bool hasAnyFloatProperty =
                 component.HasFloat(volumeProperty) ||
                 component.HasFloat(bassProperty) ||
                 component.HasFloat(midProperty) ||
@@ -74,7 +86,15 @@ namespace MetavidoVFX.VFX.Binders
                 component.HasFloat(beatPulseProperty) ||
                 component.HasFloat(beatIntensityProperty);
 
-            return hasAudioSource && hasAnyProperty;
+            // Check for texture property (auto-fallback)
+            bool hasTextureProperty = autoBindAudioTexture && component.HasTexture(audioDataTextureProperty);
+
+            // Track if we're using texture fallback
+            _usingTextureFallback = !hasAnyFloatProperty && hasTextureProperty;
+
+            // ALWAYS valid if we have an audio source - globals are set for Custom HLSL access
+            // Even without exposed properties, VFX can use #include "Assets/Shaders/ARGlobals.hlsl"
+            return hasAudioSource;
         }
 
         public override void UpdateBinding(VisualEffect component)
@@ -129,12 +149,27 @@ namespace MetavidoVFX.VFX.Binders
                 if (component.HasFloat(beatIntensityProperty))
                     component.SetFloat(beatIntensityProperty, _audioBridge.BeatIntensity * beatMultiplier);
             }
+
+            // Auto-bind AudioDataTexture for VFX without exposed float properties
+            if (autoBindAudioTexture && _audioBridge != null && _audioBridge.AudioDataTexture != null)
+            {
+                if (component.HasTexture(audioDataTextureProperty))
+                {
+                    component.SetTexture(audioDataTextureProperty, _audioBridge.AudioDataTexture);
+                }
+            }
         }
 
         public override string ToString()
         {
             string source = audioProcessor != null ? "Enhanced" : (_audioBridge != null ? "Bridge" : "None");
-            return $"Audio Data [{source}]: {volumeProperty}, {bassProperty}, Beat: {bindBeatDetection}";
+            string mode = _usingTextureFallback ? " (Texture)" : "";
+            return $"Audio Data [{source}{mode}]: {volumeProperty}, {bassProperty}, Beat: {bindBeatDetection}";
         }
+
+        /// <summary>
+        /// Returns true if this binder is using AudioDataTexture fallback instead of float properties.
+        /// </summary>
+        public bool IsUsingTextureFallback => _usingTextureFallback;
     }
 }
