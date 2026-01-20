@@ -11,6 +11,7 @@
 | 003 | [Hologram Conferencing](./003-hologram-conferencing/spec.md) | Draft | P2 |
 | 004 | [MetavidoVFX Systems](./004-metavidovfx-systems/spec.md) | Implemented ✅ | P1 |
 | 005 | [AR Texture Safety](./005-ar-texture-safety/spec.md) | Implemented ✅ | P1 |
+| 006 | [VFX Library & Pipeline](./006-vfx-library-pipeline/spec.md) | Implemented ✅ | P1 |
 
 ## Removed Specs
 
@@ -53,6 +54,9 @@ specs/
 │   ├── tasks.md
 │   └── checklists/
 │       └── implementation.md
+├── 006-vfx-library-pipeline/
+│   ├── spec.md
+│   └── tasks.md
 ```
 
 ## Usage
