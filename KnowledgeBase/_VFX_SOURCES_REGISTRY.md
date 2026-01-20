@@ -1,7 +1,7 @@
 # VFX Sources Registry
 
-**Total VFX**: 188 assets in Resources/VFX
-**Categories**: 24 folders
+**Total VFX**: 223 assets in Resources/VFX
+**Categories**: 26 folders
 **Last Updated**: 2026-01-20
 
 ## VFX Pipeline Types
@@ -56,6 +56,8 @@
 | **MyakuMyakuAR** | plantblobs | 1 | AR character |
 | **TamagotchU** | EyezLee/TamagotchU | 4 | Virtual pet |
 | **WebRTC** | URP-WebRTC-Convai | 7 | Trails + SDF |
+| **Essentials** | VFX-Essentials-main | 22 | Boids, noise, waveform, etc. |
+| **Dcam2** | keijiro/Dcam2 | 13 | Depth camera visualizer |
 
 ## Key VFX Property Bindings
 
