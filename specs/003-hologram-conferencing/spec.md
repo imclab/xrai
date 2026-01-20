@@ -2,8 +2,25 @@
 
 **Feature Branch**: `003-hologram-conferencing`
 **Created**: 2026-01-14
-**Status**: Draft
+**Updated**: 2026-01-20
+**Status**: Draft (Phase 1 Recording ready for implementation)
 **Input**: User description: "Optimal low memory way to record & playback holograms. Record person hologram, play it back & put it on desk. Use metavidovfx technique. Also multiplayer via webrtc video conferencing - streaming lidar depth info or metavidovfx encoded video live to drive vfx graph hologram of other connected users."
+
+## Triple Verification (2026-01-20)
+
+| Source | Status | Notes |
+|--------|--------|-------|
+| KB `_HOLOGRAM_RECORDING_PLAYBACK.md` | ✅ Verified | 40K detailed spec, Metavido format |
+| KB `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` | ✅ Verified | Photon/Normcore/coherence comparison |
+| Online: [keijiro/Metavido](https://github.com/keijiro/Metavido) | ✅ Verified | Burnt-in-barcode metadata + squeezed depth |
+| Online: [Unity WebRTC](https://github.com/Unity-Technologies/com.unity.webrtc) | ⚠️ Note | MR-WebRTC deprecated; use Unity official package |
+| Online: [VideoSDK Guide](https://www.videosdk.live/developer-hub/webrtc/unity-webrtc-video-streaming-multiplayer-game) | ✅ Verified | Architecture for PC/mobile/VR streaming |
+
+### Key Technical Findings
+
+1. **Metavido Format**: Embeds camera pose in barcode, depth/stencil via "squeezing" into frame
+2. **WebRTC**: Microsoft MR-WebRTC deprecated - use `com.unity.webrtc` or LiveKit SDK
+3. **SFU Scaling**: For 4+ users, use SRS or LiveKit SFU (not pure P2P)
 
 ## User Scenarios & Testing *(mandatory)*
 
