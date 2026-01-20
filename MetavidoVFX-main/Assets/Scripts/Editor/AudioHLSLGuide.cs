@@ -161,10 +161,10 @@ _BeatIntensity   float    0-1 strength of detected beat
             }
         }
 
-        [MenuItem("H3M/VFX Pipeline Master/Audio/Copy Custom HLSL Template")]
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Copy Custom HLSL Template (Globals)")]
         public static void CopyHLSLTemplate()
         {
-            string template = @"// VFX Custom HLSL - Audio Reactive
+            string template = @"// VFX Custom HLSL - Audio Reactive (Global Shader Properties)
 // Include the audio globals
 #include ""Assets/Shaders/ARGlobals.hlsl""
 
@@ -185,10 +185,143 @@ float3 color = baseColor * (1.0 + beatPulse * 3.0);
 o = scale;";
 
             GUIUtility.systemCopyBuffer = template;
-            Debug.Log("[AudioHLSLGuide] Custom HLSL template copied to clipboard!");
+            Debug.Log("[AudioHLSLGuide] Custom HLSL template (globals) copied to clipboard!");
             EditorUtility.DisplayDialog("Template Copied",
                 "Custom HLSL template copied to clipboard.\n\n" +
+                "Uses global shader properties (no exposed properties needed).\n" +
                 "Paste into a Custom HLSL Operator in VFX Graph.",
+                "OK");
+        }
+
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Copy AudioVFX Template (Texture)")]
+        public static void CopyAudioVFXTemplate()
+        {
+            string template = @"// VFX Custom HLSL - Audio Reactive (AudioDataTexture)
+// Requires: AudioDataTexture (Texture2D) exposed property
+#include ""Assets/Shaders/AudioVFX.hlsl""
+
+// Sample audio once for efficiency
+float4 audioPrimary = SampleAudioPrimary(AudioDataTexture, samplerAudioDataTexture);
+float4 audioExtended = SampleAudioExtended(AudioDataTexture, samplerAudioDataTexture);
+
+float volume = audioPrimary.r;
+float bass = audioPrimary.g;
+float mids = audioPrimary.b;
+float treble = audioPrimary.a;
+float beat = audioExtended.g;
+
+// Position: lift by bass, pulse on beat
+position.y += bass * 1.5;
+float3 pulseDir = normalize(position + 0.001);
+position += pulseDir * beat * 2.0;
+
+// Velocity: add turbulence
+velocity += sin(position * 5.0) * treble * 0.5;
+
+// Size: pulse on beat
+size *= 1.0 + beat * 0.5;";
+
+            GUIUtility.systemCopyBuffer = template;
+            Debug.Log("[AudioHLSLGuide] AudioVFX template copied to clipboard!");
+            EditorUtility.DisplayDialog("Template Copied",
+                "AudioVFX template copied to clipboard.\n\n" +
+                "Requires 'AudioDataTexture' (Texture2D) exposed property.\n" +
+                "VFXAudioDataBinder will auto-bind the texture.\n\n" +
+                "Paste into a Custom HLSL block in VFX Graph.",
+                "OK");
+        }
+
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Open AudioVFX.hlsl")]
+        public static void OpenAudioVFX()
+        {
+            const string path = "Assets/Shaders/AudioVFX.hlsl";
+            var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+            if (asset != null)
+            {
+                AssetDatabase.OpenAsset(asset);
+            }
+            else
+            {
+                Debug.LogError($"[AudioHLSLGuide] Could not find {path}");
+            }
+        }
+
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Open AudioVFX_Examples.hlsl")]
+        public static void OpenAudioVFXExamples()
+        {
+            const string path = "Assets/Shaders/AudioVFX_Examples.hlsl";
+            var asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+            if (asset != null)
+            {
+                AssetDatabase.OpenAsset(asset);
+            }
+            else
+            {
+                Debug.LogError($"[AudioHLSLGuide] Could not find {path}");
+            }
+        }
+
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Add Audio Monitor")]
+        public static void AddAudioMonitor()
+        {
+            // Check if AudioMonitor already exists
+            var existing = Object.FindFirstObjectByType<AudioMonitor>();
+            if (existing != null)
+            {
+                Debug.Log($"[AudioHLSLGuide] AudioMonitor already exists on '{existing.gameObject.name}'");
+                Selection.activeGameObject = existing.gameObject;
+                return;
+            }
+
+            // Try to add to AudioBridge if it exists
+            var audioBridge = Object.FindFirstObjectByType<AudioBridge>();
+            if (audioBridge != null)
+            {
+                var monitor = audioBridge.gameObject.AddComponent<AudioMonitor>();
+                Undo.RegisterCreatedObjectUndo(monitor, "Add AudioMonitor");
+                Debug.Log($"[AudioHLSLGuide] Added AudioMonitor to AudioBridge GameObject");
+                Selection.activeGameObject = audioBridge.gameObject;
+                return;
+            }
+
+            // Create new GameObject with AudioMonitor
+            var go = new GameObject("AudioMonitor");
+            go.AddComponent<AudioMonitor>();
+            Undo.RegisterCreatedObjectUndo(go, "Create AudioMonitor");
+            Debug.Log("[AudioHLSLGuide] Created AudioMonitor GameObject (note: AudioBridge not found)");
+            Selection.activeGameObject = go;
+        }
+
+        [MenuItem("H3M/VFX Pipeline Master/Audio/Setup Complete Audio System")]
+        public static void SetupCompleteAudioSystem()
+        {
+            // Find or create AudioBridge
+            var audioBridge = Object.FindFirstObjectByType<AudioBridge>();
+            if (audioBridge == null)
+            {
+                var go = new GameObject("AudioBridge");
+                audioBridge = go.AddComponent<AudioBridge>();
+                go.AddComponent<AudioSource>();
+                Undo.RegisterCreatedObjectUndo(go, "Create AudioBridge");
+                Debug.Log("[AudioHLSLGuide] Created AudioBridge with AudioSource");
+            }
+
+            // Add AudioMonitor if not present
+            var monitor = audioBridge.GetComponent<AudioMonitor>();
+            if (monitor == null)
+            {
+                monitor = audioBridge.gameObject.AddComponent<AudioMonitor>();
+                Undo.RegisterCreatedObjectUndo(monitor, "Add AudioMonitor");
+                Debug.Log("[AudioHLSLGuide] Added AudioMonitor to AudioBridge");
+            }
+
+            Selection.activeGameObject = audioBridge.gameObject;
+
+            EditorUtility.DisplayDialog("Audio System Setup",
+                "Audio system configured:\n\n" +
+                "• AudioBridge - FFT analysis + beat detection\n" +
+                "• AudioMonitor - Visual debug display (M key)\n\n" +
+                "Next: Add an AudioClip to the AudioSource and press Play.",
                 "OK");
         }
 

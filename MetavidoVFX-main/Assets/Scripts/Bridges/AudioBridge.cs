@@ -1,17 +1,23 @@
 using UnityEngine;
+using System.Collections;
 using MetavidoVFX.Audio;
 
 /// <summary>
 /// FFT analysis → global audio properties for ALL VFX.
 /// Includes 4-band frequency analysis and beat detection (spec-007).
 /// Also provides AudioDataTexture for VFX without exposed properties.
+/// Supports both AudioClip playback and microphone input.
 /// </summary>
 public class AudioBridge : MonoBehaviour
 {
     public static AudioBridge Instance { get; private set; }
 
-    [Header("Audio Source")]
+    public enum AudioInputMode { AudioClip, Microphone }
+
+    [Header("Audio Input")]
+    [SerializeField] AudioInputMode _inputMode = AudioInputMode.AudioClip;
     [SerializeField] AudioSource _source;
+    [SerializeField] string _microphoneDevice = "";
     [Range(64, 8192)] [SerializeField] int _sampleCount = 1024;
 
     [Header("Beat Detection (spec-007)")]
@@ -38,6 +44,7 @@ public class AudioBridge : MonoBehaviour
     [SerializeField] bool _verboseLogging = false;
 
     float[] _spectrum;
+    float[] _samples; // For RMS volume calculation
     BeatDetector _beatDetector;
 
     // Audio data texture (2x2 RGBA float): encodes all audio values
@@ -80,12 +87,22 @@ public class AudioBridge : MonoBehaviour
         set => _enableBeatDetection = value;
     }
 
+    // Input mode control
+    public AudioInputMode InputMode => _inputMode;
+    public bool IsMicrophoneActive => _microphoneActive;
+    public string ActiveMicrophoneDevice => _activeMicDevice;
+
+    // Microphone state
+    bool _microphoneActive;
+    string _activeMicDevice;
+    Coroutine _micInitCoroutine;
+
     void Awake() => Instance = this;
 
     void Start()
     {
-        _source ??= GetComponent<AudioSource>() ?? FindFirstObjectByType<AudioSource>();
         _spectrum = new float[_sampleCount];
+        _samples = new float[_sampleCount]; // For RMS calculation
 
         // Initialize beat detector (spec-007)
         int sampleRate = AudioSettings.outputSampleRate;
@@ -112,8 +129,73 @@ public class AudioBridge : MonoBehaviour
                 Debug.Log("[AudioBridge] Created AudioDataTexture (2x2 RGBAFloat)");
         }
 
+        // Initialize audio input based on mode
+        if (_inputMode == AudioInputMode.Microphone)
+        {
+            _micInitCoroutine = StartCoroutine(InitializeMicrophoneAsync());
+        }
+        else
+        {
+            // AudioClip mode - find or use existing AudioSource
+            _source ??= GetComponent<AudioSource>() ?? FindFirstObjectByType<AudioSource>();
+        }
+
         if (_verboseLogging)
-            Debug.Log($"[AudioBridge] Initialized with {_sampleCount} samples, {sampleRate}Hz, beat detection: {_enableBeatDetection}");
+            Debug.Log($"[AudioBridge] Initialized with {_sampleCount} samples, {sampleRate}Hz, mode: {_inputMode}, beat detection: {_enableBeatDetection}");
+    }
+
+    IEnumerator InitializeMicrophoneAsync()
+    {
+        // Check for microphone devices
+        if (Microphone.devices.Length == 0)
+        {
+            Debug.LogWarning("[AudioBridge] No microphone devices found. Falling back to AudioClip mode.");
+            _inputMode = AudioInputMode.AudioClip;
+            _source ??= GetComponent<AudioSource>() ?? FindFirstObjectByType<AudioSource>();
+            yield break;
+        }
+
+        // List available devices
+        if (_verboseLogging)
+        {
+            Debug.Log("[AudioBridge] Available microphones:");
+            foreach (var device in Microphone.devices)
+                Debug.Log($"  - {device}");
+        }
+
+        // Get or create AudioSource
+        if (_source == null)
+        {
+            _source = gameObject.AddComponent<AudioSource>();
+        }
+
+        // Select microphone device
+        _activeMicDevice = string.IsNullOrEmpty(_microphoneDevice) ? null : _microphoneDevice;
+        string displayName = _activeMicDevice ?? Microphone.devices[0];
+
+        // Start microphone recording
+        _source.clip = Microphone.Start(_activeMicDevice, true, 1, 44100);
+        _source.loop = true;
+
+        // Wait for microphone to start (non-blocking)
+        float timeout = Time.realtimeSinceStartup + 3f;
+        while (Microphone.GetPosition(_activeMicDevice) <= 0)
+        {
+            if (Time.realtimeSinceStartup > timeout)
+            {
+                Debug.LogWarning("[AudioBridge] Microphone initialization timed out. Falling back to AudioClip mode.");
+                _inputMode = AudioInputMode.AudioClip;
+                yield break;
+            }
+            yield return null;
+        }
+
+        // Start playing (muted - just for GetSpectrumData access)
+        _source.Play();
+        _source.volume = 0f; // Mute playback but analyze
+
+        _microphoneActive = true;
+        Debug.Log($"[AudioBridge] Microphone active: {displayName}");
     }
 
     void Update()
@@ -134,6 +216,21 @@ public class AudioBridge : MonoBehaviour
             return;
         }
 
+        // Get raw audio samples for RMS volume calculation
+        _source.GetOutputData(_samples, 0);
+
+        // Calculate RMS (proper volume measurement)
+        float sum = 0f;
+        for (int i = 0; i < _sampleCount; i++)
+        {
+            sum += _samples[i] * _samples[i];
+        }
+        float rms = Mathf.Sqrt(sum / _sampleCount);
+        float db = 20f * Mathf.Log10(rms / 0.1f); // Reference value 0.1
+        db = Mathf.Clamp(db, -80f, 20f);
+        Volume = Remap(db, -20f, 10f, 0f, 1f); // Map -20dB to 10dB → 0-1
+
+        // Get spectrum data for frequency band analysis
         _source.GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
 
         // Compute 4 bands: SubBass (20-60Hz), Bass (60-250Hz), Mids (250-2kHz), Treble (2k-16kHz)
@@ -143,8 +240,6 @@ public class AudioBridge : MonoBehaviour
         Bass = Average(_spectrum, 2, 6);         // ~86-258Hz
         Mids = Average(_spectrum, 6, 48);        // ~258-2064Hz
         Treble = Average(_spectrum, 48, 372);    // ~2064-16kHz
-
-        Volume = (SubBass + Bass + Mids + Treble) * 0.25f;
 
         // Set global shader properties (frequency bands)
         Shader.SetGlobalVector(_AudioBandsID, new Vector4(Bass, Mids, Treble, SubBass) * 100f);
@@ -196,11 +291,55 @@ public class AudioBridge : MonoBehaviour
 
     void OnDestroy()
     {
+        // Stop microphone init coroutine if running
+        if (_micInitCoroutine != null)
+        {
+            StopCoroutine(_micInitCoroutine);
+            _micInitCoroutine = null;
+        }
+
+        // Stop microphone recording
+        if (_microphoneActive && Microphone.IsRecording(_activeMicDevice))
+        {
+            Microphone.End(_activeMicDevice);
+            _microphoneActive = false;
+        }
+
+        // Clean up texture
         if (_audioDataTexture != null)
         {
             Destroy(_audioDataTexture);
             _audioDataTexture = null;
         }
+    }
+
+    /// <summary>
+    /// Switch input mode at runtime. Stops current input and initializes new mode.
+    /// </summary>
+    public void SetInputMode(AudioInputMode mode)
+    {
+        if (_inputMode == mode) return;
+
+        // Stop current microphone if active
+        if (_microphoneActive && Microphone.IsRecording(_activeMicDevice))
+        {
+            Microphone.End(_activeMicDevice);
+            _microphoneActive = false;
+        }
+
+        _inputMode = mode;
+
+        if (mode == AudioInputMode.Microphone)
+        {
+            _micInitCoroutine = StartCoroutine(InitializeMicrophoneAsync());
+        }
+        else
+        {
+            _source ??= GetComponent<AudioSource>() ?? FindFirstObjectByType<AudioSource>();
+        }
+
+        if (_verboseLogging)
+            Debug.Log($"[AudioBridge] Switched to {mode} mode");
     }
 
     float Average(float[] data, int start, int end)
@@ -211,6 +350,13 @@ public class AudioBridge : MonoBehaviour
         float sum = 0;
         for (int i = start; i < end; i++) sum += data[i];
         return sum / (end - start);
+    }
+
+    float Remap(float value, float srcMin, float srcMax, float dstMin, float dstMax)
+    {
+        value = Mathf.Clamp(value, srcMin, srcMax);
+        float t = (value - srcMin) / (srcMax - srcMin);
+        return dstMin + t * (dstMax - dstMin);
     }
 
     /// <summary>
