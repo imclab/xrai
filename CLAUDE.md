@@ -55,7 +55,10 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/SYSTEM_ARCHITECTURE.md` | 90% complete architecture docs |
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
-| `specs/README.md` | Spec-Kit index (002-005) |
+| `MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md` | Voice-to-object 3D model integration |
+| `specs/README.md` | Spec-Kit index (002-009) |
+| `specs/MASTER_DEVELOPMENT_PLAN.md` | 11-sprint implementation roadmap |
+| `specs/009-icosa-sketchfab-integration/spec.md` | 3D model search & placement spec |
 
 ---
 
@@ -114,6 +117,7 @@ AR Foundation VFX project with H3M Hologram system.
 - **H3M Hologram**: HologramSource, HologramRenderer, HologramAnchor
 - **NNCam**: NNCamKeypointBinder, NNCamVFXSwitcher (9 keypoint-driven VFX)
 - **Body Segmentation**: BodyPartSegmenter (24-part BodyPixSentis)
+- **3D Model Integration**: WhisperIcosaController (voice-to-object), IcosaAssetLoader (glTF import)
 
 **Documentation**: `MetavidoVFX-main/Assets/Documentation/README.md`
 
@@ -171,20 +175,34 @@ Unity source code research workbench from keijiro/AgentBench.
 
 ## 📋 Next Steps
 
-### Immediate
-1. **Upgrade FaceTrackingVFX** - Unity 2019 → Unity 6, ARKit Plugin → AR Foundation
-2. **Test HoloKit projects** - Verify build on iOS device
-3. **Extract VFX patterns** - Consolidate 24 Buddha VFX + HoloKit VFX library
+### Active Development (Spec-Driven)
+
+**Sprint 0** (in progress): Debug Infrastructure
+- ✅ DebugFlags.cs with conditional attributes
+- ✅ DebugConfig.cs with category filtering
+- ⬜ WebcamMockSource for Editor testing
+
+**Sprint 5-6** (planned): Icosa/Sketchfab Integration (Spec 009)
+- ⬜ SketchfabClient.cs - Sketchfab Download API wrapper
+- ⬜ ModelCache.cs - LRU disk caching for models
+- ⬜ UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
+- ⬜ ModelSearchUI - UI Toolkit search/browse panel
+
+**Sprint 7+** (planned): Multimodal ML (Spec 008)
+- ⬜ ITrackingProvider interface
+- ⬜ IVoiceProvider for STT/TTS
+- ⬜ Self-refining LLM agents
 
 ### Integration Opportunities
+- **Voice-to-Object** - "Put a cat here" → Icosa/Sketchfab search → AR placement
 - **Gaussian Splatting + AR** - SplatVFX in AR Foundation context
-- **Hand Tracking + MetavidoVFX** - Port TouchingHologram hand interaction to MetavidoVFX
-- **ML-Agents + VFX** - Connect trained models to VFX Graph outputs
-- **Colocated Multiplayer** - Apply HoloKitMultiplayer patterns to MetavidoVFX
+- **Hand Tracking + MetavidoVFX** - Port TouchingHologram hand interaction
+- **Colocated Multiplayer** - Apply HoloKitMultiplayer patterns
 
 ### Documentation
-- Add all new projects to `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md`
-- Extract reusable patterns to KB files
+- ✅ Spec 009 created (Icosa/Sketchfab)
+- ⬜ Add Icosa/Sketchfab to `_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md`
+- ⬜ Extract voice-to-object patterns to KB files
 
 ---
 

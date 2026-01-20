@@ -1,0 +1,532 @@
+# Master Development Plan: Unity-XR-AI
+
+**Last Updated**: 2026-01-20
+**Status**: Active
+**Methodology**: Incremental, Test-First, Debug-Verbose
+
+---
+
+## Development Principles
+
+### 1. Incremental Development
+- Each task produces testable output
+- No task takes longer than 1 day
+- Every PR includes tests
+
+### 2. Test-First with Mock Data
+- Editor testing via MCP + webcam mock
+- Device testing via ARFoundationRemote
+- CI via recorded sessions + MockProvider
+
+### 3. Verbose Debugging (Selective)
+- `[Conditional("DEBUG_TRACKING")]` for tracking logs
+- `[Conditional("DEBUG_VOICE")]` for voice logs
+- `[Conditional("DEBUG_VFX")]` for VFX logs
+- Production builds: all debug code stripped
+
+### 4. MCP-Integrated Editor Testing
+- Unity MCP for scene manipulation
+- ARFoundationRemote for device camera streaming
+- Webcam fallback when no device available
+
+---
+
+## Spec Dependency Graph
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           FOUNDATION LAYER                                   │
+│  006-vfx-library-pipeline [COMPLETE]                                        │
+│  - ARDepthSource, VFXARBinder, VFXLibraryManager                           │
+│  - 73 VFX organized, categories, dashboard                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        ▼                           ▼                           ▼
+┌───────────────────────┐ ┌─────────────────────────┐ ┌─────────────────────────┐
+│   ENHANCEMENT LAYER   │ │   3D CONTENT LAYER      │ │   MULTIMODAL LAYER      │
+│ 007-vfx-multi-mode    │ │ 009-icosa-sketchfab     │ │ 008-multimodal-ml       │
+│ [READY]               │ │ [DRAFT]                 │ │ [ARCH APPROVED]         │
+│ - VFX modes           │ │ - Voice-to-object       │ │ - ITrackingProvider     │
+│ - Audio: beat, FFT    │ │ - Icosa + Sketchfab     │ │ - IVoiceProvider        │
+│ - Physics: collision  │ │ - glTF runtime loading  │ │ - LLM context           │
+└───────────────────────┘ │ - LRU model cache       │ └───────────┬─────────────┘
+                          │ - Attribution tracking  │             │
+                          └───────────┬─────────────┘             │
+                                      │                           │
+                                      └─────────────┬─────────────┘
+                                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           HOLOGRAM LAYER                                     │
+│  002-h3m-foundation [IMPLEMENTED]                                           │
+│  003-hologram-conferencing [DRAFT - depends on 008 multiuser]              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Consolidated Implementation Order
+
+### Sprint 0: Debug Infrastructure (3 days)
+
+**Goal**: Establish debugging and testing foundation before any new features.
+
+| ID | Task | LOC | Output |
+|----|------|-----|--------|
+| D-001 | Create `DebugFlags.cs` with conditional attributes | ~50 | Compile-time debug control |
+| D-002 | Create `DebugLogger.cs` with category filtering | ~100 | Runtime debug filtering |
+| D-003 | Create `DebugOverlay.cs` IMGUI panel | ~150 | Visual debug dashboard |
+| D-004 | Create `WebcamMockSource.cs` for Editor | ~120 | Webcam → AR texture simulation |
+| D-005 | Integrate ARFoundationRemote fallback | ~80 | Device camera in Editor |
+| D-006 | Create `EditorTestScene.unity` | - | MCP-ready test environment |
+
+**Files Created**:
+```
+Assets/Scripts/Debug/
+├── DebugFlags.cs           # Conditional compilation flags
+├── DebugLogger.cs          # Category-filtered logging
+├── DebugOverlay.cs         # IMGUI debug panel
+├── DebugConfig.asset       # ScriptableObject settings
+└── WebcamMockSource.cs     # Webcam → AR mock
+
+Assets/Scenes/
+└── EditorTestScene.unity   # MCP testing scene
+```
+
+### Sprint 1: Spec 007 - VFX Multi-Mode (5 days)
+
+**Dependency**: Spec 006 [COMPLETE]
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-001: VFXCategory integration | Unit: mode binding |
+| 1 | T-002: VFXModeController | Editor: mode switch |
+| 2 | T-004: BeatDetector | Unit: onset detection |
+| 2 | T-005: AudioBridge beat | Editor: audio → VFX |
+| 3 | T-008: AR mesh collision | Editor: particle bounce |
+| 3 | T-010: Hand velocity | Editor: velocity binding |
+| 4 | T-011-T-013: VFX audit | Matrix: 73 VFX × modes |
+| 5 | T-017-T-019: Device testing | Device: performance |
+
+### Sprint 2: Spec 008 Core - Tracking Interfaces (5 days)
+
+**Dependency**: Sprint 0 (debug infrastructure)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-005: ITrackingProvider | Unit: interface contract |
+| 1 | T-006: TrackingProviderFactory | Unit: platform detection |
+| 2 | D-007: MockTrackingProvider | Unit: all capabilities |
+| 2 | D-008: TrackingRecorder | Editor: record session |
+| 3 | D-009: TrackingSimulator | Unit: playback accuracy |
+| 3 | T-007: SentisTrackingProvider | Editor: BodyPix wrap |
+| 4 | T-020: VFXARBinder + providers | Editor: VFX binding |
+| 5 | Integration testing | Device: full pipeline |
+
+### Sprint 3: Spec 008 - ARKit Providers (5 days)
+
+**Dependency**: Sprint 2
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-008b: ARKitBodyProvider (91j) | Device: skeleton |
+| 2 | T-008c: ARKitHandProvider (21j) | Device: hand joints |
+| 2 | T-008d: ARKitPoseProvider (17j) | Device: 2D pose |
+| 3 | T-008e: ARKitFaceProvider | Device: blendshapes |
+| 4 | T-008f: CompositeProvider | Device: aggregation |
+| 5 | T-013b-c: 91-joint VFX | Device: skeleton VFX |
+
+### Sprint 4: Spec 008 - Voice Architecture (5 days)
+
+**Dependency**: Sprint 2 (uses same patterns)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-030: IVoiceProvider | Unit: interface |
+| 1 | T-031: IVoiceConsumer | Unit: interface |
+| 2 | T-032: VoiceService | Unit: orchestration |
+| 2 | T-037: MockVoiceProvider | Unit: simulation |
+| 3 | T-033: WhisperProvider | Editor: transcription |
+| 4 | T-034: WebSpeechProvider | WebGL: browser API |
+| 5 | T-052: VoiceCommandConsumer | Editor: commands |
+
+### Sprint 5: Spec 008 - Testing & LLM (5 days)
+
+**Dependency**: Sprints 2-4
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-038-T-041: Test infrastructure | CI: automated |
+| 2 | T-042-T-043: Unit test suites | CI: coverage |
+| 3 | T-044-T-047: Context providers | Unit: LLM context |
+| 4 | T-048-T-049: Self-validation | Unit: refinement |
+| 5 | T-050-T-051: XRAssistant | Editor: integration |
+
+### Sprint 6: Spec 008 - Platform Providers (5 days)
+
+**Dependency**: Sprints 2-3
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1-2 | T-012: MetaTrackingProvider | Quest: tracking |
+| 2-3 | T-014-T-016: ONNX Web | WebGL: inference |
+| 4 | T-018: visionOSProvider | visionOS: hands |
+| 5 | Cross-platform testing | Matrix: all platforms |
+
+### Sprint 7: Spec 008 - Multiuser (5 days)
+
+**Dependency**: Sprint 5 (testing), Sprint 6 (platforms)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1 | T-023: TrackingDataSerializer | Unit: encoding |
+| 2 | T-024: WebRTC integration | Editor: P2P |
+| 3 | T-025: RemoteAvatarReconstructor | Editor: avatar |
+| 4-5 | T-026: Multiuser testing | Device: 2-4 users |
+
+### Sprint 8: Spec 009 - Icosa/Sketchfab Foundation (5 days)
+
+**Dependency**: Sprint 4 (Voice Architecture - for voice commands)
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1-2 | Task 0.1: SketchfabClient.cs | Unit: search, rate limiting |
+| 2-3 | Task 0.2: ModelCache.cs | Unit: LRU eviction |
+| 4 | Task 0.3: Editor settings | Editor: API key config |
+| 5 | Integration: existing WhisperIcosaController | Editor: voice → search |
+
+**Key Deliverables**:
+- `Assets/H3M/Icosa/SketchfabClient.cs` - Sketchfab Download API
+- `Assets/H3M/Icosa/ModelCache.cs` - LRU disk caching
+- Extended PtSettings for Sketchfab API key
+
+### Sprint 9: Spec 009 - Unified Search & Caching (5 days)
+
+**Dependency**: Sprint 8
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1-2 | Task 1.1: UnifiedModelSearch.cs | Unit: parallel search |
+| 2-3 | Task 1.2: Extend IcosaAssetLoader | Unit: download + cache |
+| 4 | Task 1.3: Extend WhisperIcosaController | Editor: voice → both sources |
+| 5 | Integration testing | Device: voice-to-object |
+
+**Key Deliverables**:
+- `Assets/H3M/Icosa/UnifiedModelSearch.cs` - Aggregated search
+- Extended `IcosaAssetLoader` for both sources
+- Full voice-to-object pipeline
+
+### Sprint 10: Spec 009 - UI & Polish (5 days)
+
+**Dependency**: Sprint 9
+
+| Day | Tasks | Test |
+|-----|-------|------|
+| 1-2 | Task 2.1: ModelSearchUI panel | Editor: search + grid |
+| 2-3 | Task 2.2-2.3: Preview + Attribution | Editor: 3D preview |
+| 3-4 | Task 3.1-3.2: Error handling, performance | Unit: resilience |
+| 5 | Task 3.3: Device testing | Device: iPhone 15 Pro |
+
+**Key Deliverables**:
+- UI Toolkit search panel with thumbnails
+- 3D model preview before placement
+- Attribution panel for CC compliance
+- Device-validated performance
+
+### Sprint 11: Spec 003 - Hologram Conferencing (5 days)
+
+**Dependency**: Sprint 7 (multiuser foundation from 008)
+
+*Tasks from 003-hologram-conferencing/tasks.md*
+
+---
+
+## Debug Infrastructure Details
+
+### DebugFlags.cs
+
+```csharp
+// Conditional compilation symbols defined in:
+// Project Settings > Player > Scripting Define Symbols
+
+public static class DebugFlags
+{
+    // Add to Player settings for debug builds:
+    // DEBUG_TRACKING;DEBUG_VOICE;DEBUG_VFX;DEBUG_NETWORK
+
+    [Conditional("DEBUG_TRACKING")]
+    public static void LogTracking(string message, UnityEngine.Object context = null)
+        => Debug.Log($"[TRACKING] {message}", context);
+
+    [Conditional("DEBUG_VOICE")]
+    public static void LogVoice(string message, UnityEngine.Object context = null)
+        => Debug.Log($"[VOICE] {message}", context);
+
+    [Conditional("DEBUG_VFX")]
+    public static void LogVFX(string message, UnityEngine.Object context = null)
+        => Debug.Log($"[VFX] {message}", context);
+
+    [Conditional("DEBUG_NETWORK")]
+    public static void LogNetwork(string message, UnityEngine.Object context = null)
+        => Debug.Log($"[NETWORK] {message}", context);
+
+    // Runtime toggle (for builds with symbols defined)
+    public static bool TrackingEnabled = true;
+    public static bool VoiceEnabled = true;
+    public static bool VFXEnabled = true;
+    public static bool NetworkEnabled = true;
+}
+```
+
+### DebugLogger.cs
+
+```csharp
+public enum LogCategory { Tracking, Voice, VFX, Network, System }
+public enum LogLevel { Verbose, Info, Warning, Error }
+
+[CreateAssetMenu(fileName = "DebugConfig", menuName = "Debug/Config")]
+public class DebugConfig : ScriptableObject
+{
+    public LogLevel MinLevel = LogLevel.Info;
+    public LogCategory[] EnabledCategories = { LogCategory.System };
+    public bool ShowTimestamps = true;
+    public bool ShowStackTrace = false;
+    public int MaxLogHistory = 1000;
+}
+
+public static class DebugLogger
+{
+    private static DebugConfig _config;
+    private static List<LogEntry> _history = new();
+
+    public static void Log(LogCategory category, LogLevel level, string message)
+    {
+        if (_config == null) LoadConfig();
+        if (level < _config.MinLevel) return;
+        if (!_config.EnabledCategories.Contains(category)) return;
+
+        var entry = new LogEntry(category, level, message, Time.time);
+        _history.Add(entry);
+        if (_history.Count > _config.MaxLogHistory)
+            _history.RemoveAt(0);
+
+        var prefix = _config.ShowTimestamps ? $"[{Time.time:F2}] " : "";
+        Debug.Log($"{prefix}[{category}] {message}");
+    }
+
+    public static IReadOnlyList<LogEntry> GetHistory() => _history;
+    public static void Clear() => _history.Clear();
+}
+```
+
+### WebcamMockSource.cs
+
+```csharp
+#if UNITY_EDITOR
+[ExecuteAlways]
+public class WebcamMockSource : MonoBehaviour
+{
+    [SerializeField] private bool _useWebcam = true;
+    [SerializeField] private int _webcamIndex = 0;
+    [SerializeField] private Vector2Int _resolution = new(640, 480);
+
+    private WebCamTexture _webcamTex;
+    private RenderTexture _depthMock;
+    private RenderTexture _colorMock;
+
+    public RenderTexture DepthTexture => _depthMock;
+    public RenderTexture ColorTexture => _colorMock;
+
+    void OnEnable()
+    {
+        if (!Application.isPlaying) return;
+        if (!_useWebcam) return;
+
+        var devices = WebCamTexture.devices;
+        if (devices.Length == 0)
+        {
+            Debug.LogWarning("[WebcamMock] No webcam found, using procedural mock");
+            return;
+        }
+
+        _webcamTex = new WebCamTexture(devices[_webcamIndex].name, _resolution.x, _resolution.y);
+        _webcamTex.Play();
+
+        _colorMock = new RenderTexture(_resolution.x, _resolution.y, 0, RenderTextureFormat.ARGB32);
+        _depthMock = new RenderTexture(_resolution.x, _resolution.y, 0, RenderTextureFormat.RFloat);
+
+        // Register with ARDepthSource as mock input
+        ARDepthSource.Instance?.SetMockTextures(_colorMock, _depthMock);
+    }
+
+    void Update()
+    {
+        if (_webcamTex == null || !_webcamTex.isPlaying) return;
+
+        // Copy webcam to color
+        Graphics.Blit(_webcamTex, _colorMock);
+
+        // Generate mock depth (gradient or ML inference)
+        GenerateMockDepth();
+    }
+
+    private void GenerateMockDepth()
+    {
+        // Simple gradient depth for basic testing
+        // Can be replaced with ML depth estimation
+        var mat = new Material(Shader.Find("Hidden/DepthGradient"));
+        Graphics.Blit(null, _depthMock, mat);
+    }
+
+    void OnDisable()
+    {
+        if (_webcamTex != null)
+        {
+            _webcamTex.Stop();
+            Destroy(_webcamTex);
+        }
+        if (_colorMock != null) _colorMock.Release();
+        if (_depthMock != null) _depthMock.Release();
+    }
+}
+#endif
+```
+
+### MCP Test Scene Setup
+
+```
+EditorTestScene.unity
+├── Main Camera (with WebcamMockSource)
+├── AR Session Origin (disabled in Editor)
+├── Debug
+│   ├── DebugOverlay
+│   ├── DebugConfig (ScriptableObject)
+│   └── TrackingDebugVisualizer
+├── Tracking
+│   ├── TrackingService
+│   └── MockTrackingProvider
+├── Voice
+│   ├── VoiceService
+│   └── MockVoiceProvider
+├── VFX
+│   ├── ARDepthSource
+│   ├── VFXLibraryManager
+│   └── [VFX Instances]
+└── UI
+    ├── VFXToggleUI
+    └── DebugPanel
+```
+
+---
+
+## CI/CD Pipeline
+
+### Editor Tests (No Device)
+
+```yaml
+# .github/workflows/editor-tests.yml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: game-ci/unity-test-runner@v4
+        with:
+          testMode: editmode
+          projectPath: MetavidoVFX-main
+          customParameters: -enableCodeCoverage
+```
+
+### Recorded Session Tests
+
+```yaml
+# Runs against recorded tracking sessions
+jobs:
+  recorded-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tracking simulation tests
+        run: |
+          unity-editor -batchmode -runTests \
+            -testFilter "TrackingSimulationTests" \
+            -testResults results.xml
+```
+
+### Device Build Matrix
+
+| Platform | Build | Test Method |
+|----------|-------|-------------|
+| iOS | Xcode archive | TestFlight |
+| Android | APK/AAB | Firebase Test Lab |
+| Quest | APK | Meta Quest Developer Hub |
+| WebGL | Static build | BrowserStack |
+
+---
+
+## Verification Gates
+
+### Per-Task Verification
+
+1. **Code compiles** - No errors
+2. **Unit tests pass** - Coverage >80%
+3. **Editor test pass** - MCP verification
+4. **Debug logs clean** - No unexpected errors
+5. **Performance target met** - FPS/latency within spec
+
+### Per-Sprint Verification
+
+1. **All tasks complete** - Checklist verified
+2. **Integration tests pass** - Cross-component
+3. **Device build succeeds** - At least iOS
+4. **Performance regression** - No >10% degradation
+5. **Documentation updated** - API docs current
+
+### Release Gate
+
+1. **All sprints complete** - Through Sprint 7
+2. **Cross-platform matrix** - All platforms green
+3. **Performance benchmarks** - Meeting targets
+4. **Security review** - No vulnerabilities
+5. **User acceptance** - Stakeholder sign-off
+
+---
+
+## Quick Reference: Test Commands
+
+```bash
+# MCP: Check Unity console
+mcp__UnityMCP__read_console
+
+# MCP: Run EditMode tests
+mcp__UnityMCP__run_tests --mode EditMode
+
+# MCP: Take screenshot
+mcp__UnityMCP__manage_scene --action screenshot
+
+# MCP: Get scene hierarchy
+mcp__UnityMCP__manage_scene --action get_hierarchy
+
+# Unity CLI: Run tests
+unity-editor -runTests -testResults results.xml
+
+# Unity CLI: Build iOS
+unity-editor -executeMethod BuildScript.BuildIOS
+```
+
+---
+
+## Related Documents
+
+| Document | Location |
+|----------|----------|
+| Spec Index | [specs/README.md](./README.md) |
+| Spec 006 | [006-vfx-library-pipeline/](./006-vfx-library-pipeline/) |
+| Spec 007 | [007-vfx-multi-mode/](./007-vfx-multi-mode/) |
+| Spec 008 | [008-crossplatform-multimodal-ml-foundations/](./008-crossplatform-multimodal-ml-foundations/) |
+| Spec 009 | [009-icosa-sketchfab-integration/](./009-icosa-sketchfab-integration/) |
+| Architecture | [008.../FINAL_RECOMMENDATIONS.md](./008-crossplatform-multimodal-ml-foundations/FINAL_RECOMMENDATIONS.md) |
+| KB: LLMR | [KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md](../KnowledgeBase/_LLMR_XR_AI_ARCHITECTURE_PATTERNS.md) |
+| Icosa Integration | [MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md](../MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md) |
+
+---
+
+*Created: 2026-01-20*
