@@ -56,13 +56,14 @@ This document explains all systems and components in the MetavidoVFX project.
 |----------|---------|
 | **[VFX_PIPELINE_FINAL_RECOMMENDATION.md](VFX_PIPELINE_FINAL_RECOMMENDATION.md)** | **Primary** - Hybrid Bridge architecture |
 | [TESTING_CHECKLIST.md](TESTING_CHECKLIST.md) | Triple-verified testing workflow |
-| [QUICK_REFERENCE.md](QUICK_REFERENCE.md) | VFX properties cheat sheet |
+| [QUICK_REFERENCE.md](QUICK_REFERENCE.md) | VFX properties cheat sheet + TryGetTexture pattern |
+| [CODEBASE_AUDIT_2026-01-15.md](CODEBASE_AUDIT_2026-01-15.md) | Bug fixes (6 bugs tracked, 4 fixed) |
 | [VFX_NAMING_CONVENTION.md](VFX_NAMING_CONVENTION.md) | Asset naming standards |
 | [VFX_INDEX.md](VFX_INDEX.md) | All 88 VFX assets indexed |
 
 ---
 
-## Data Pipeline Architecture (Updated 2026-01-16)
+## Data Pipeline Architecture (Updated 2026-01-20)
 
 ### ✅ IMPLEMENTATION COMPLETE: Hybrid Bridge Pattern
 
@@ -511,3 +512,25 @@ Assets/
 1. Run `H3M > EchoVision > Validate Setup`
 2. Run missing component setup menus
 3. Check console for error messages
+
+### ⚠️ NullReferenceException on App Startup (AR Textures)
+
+**Cause**: AR Foundation texture getters throw internally when AR subsystem isn't ready. The `?.` operator doesn't protect you.
+
+**Fix**: Use the TryGetTexture pattern:
+```csharp
+// ❌ WRONG - crashes when AR isn't ready:
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// ✅ CORRECT - TryGetTexture pattern:
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Files fixed**: ARDepthSource.cs, SimpleHumanHologram.cs, DiagnosticOverlay.cs, DirectDepthBinder.cs, HumanParticleVFX.cs, DepthImageProcessor.cs
+
+**Spec**: See `specs/005-ar-texture-safety/` for full documentation.

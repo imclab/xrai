@@ -55,6 +55,7 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/SYSTEM_ARCHITECTURE.md` | 90% complete architecture docs |
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
+| `specs/README.md` | Spec-Kit index (002-005) |
 
 ---
 
@@ -94,7 +95,7 @@ AR Foundation VFX project with H3M Hologram system.
 **Build**: `./build_ios.sh`
 **Deploy**: `./deploy_ios.sh`
 
-### Core Architecture (Updated 2026-01-16)
+### Core Architecture (Updated 2026-01-20)
 
 **Primary Pipeline**: Hybrid Bridge Pattern (ARDepthSource + VFXARBinder) - O(1) compute scaling
 - Single compute dispatch (ARDepthSource) for all active VFX
@@ -125,6 +126,7 @@ See `MetavidoVFX-main/Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` for det
 4. ✅ **VFXARBinder ExposedProperty** - Fixed: uses `ExposedProperty` instead of `const string` for proper VFX Graph property resolution
 5. ✅ **ReadPixels Bounds Errors** - Fixed: VFXPhysicsBinder/VelocityVFXBinder validate `IsCreated()` before ReadPixels
 6. ✅ **Editor Mock Textures** - Added: ARDepthSource provides mock textures for Editor testing without AR device
+7. ✅ **AR Texture Access Crash** - Fixed: TryGetTexture pattern in 6 files (spec 005-ar-texture-safety)
 
 ---
 
@@ -206,4 +208,4 @@ MIT License - Knowledge bases and code snippets attributed to original repos.
 
 **Maintained by**: James Tunick
 
-**Last Updated**: 2026-01-17
+**Last Updated**: 2026-01-20

@@ -207,6 +207,23 @@ Ensure "Enable AR Remote" is checked in Project Settings and device/editor are o
 ### Compute Shader Thread Group Mismatch
 `DepthToWorld.compute` uses `[numthreads(32,32,1)]`. Dispatch must use `ceil(width/32)` groups, not `ceil(width/8)`. Fixed in VFXBinderManager.cs (2026-01-14).
 
+### ⚠️ NullReferenceException on App Startup (AR Textures)
+AR Foundation texture getters throw internally when AR subsystem isn't ready. The `?.` operator doesn't protect you.
+
+**Fix**: Use TryGetTexture pattern:
+```csharp
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Fixed files**: ARDepthSource.cs, SimpleHumanHologram.cs, DiagnosticOverlay.cs, DirectDepthBinder.cs, HumanParticleVFX.cs, DepthImageProcessor.cs (2026-01-20)
+
+**Spec**: `../specs/005-ar-texture-safety/spec.md`
+
 ### HologramRenderer Binding Conflict
 HologramRenderer.cs must NOT bind PositionMap to DepthMap property. VFX expecting raw depth would receive computed positions, causing particles to fail. Fixed by removing fallback (2026-01-14).
 
@@ -519,7 +536,7 @@ vfxARDataBinder.SetGravityEnabled(bool)
 vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 ```
 
-## Project Statistics (2026-01-16)
+## Project Statistics (2026-01-20)
 
 | Metric | Count |
 |--------|-------|
@@ -566,6 +583,7 @@ Extended documentation in parent repo:
 ## Specifications
 
 Project specifications in parent repo:
-- `../specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror)
-- `../specs/003-hologram-conferencing/` - Recording/playback/multiplayer
-- `../specs/004-metavidovfx-systems/` - VFX systems implementation status
+- `../specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror) ✅
+- `../specs/003-hologram-conferencing/` - Recording/playback/multiplayer (Draft)
+- `../specs/004-metavidovfx-systems/` - VFX systems implementation ✅
+- `../specs/005-ar-texture-safety/` - TryGetTexture pattern ✅

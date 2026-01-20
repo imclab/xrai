@@ -1,6 +1,6 @@
 # MetavidoVFX System Architecture
 
-**Generated**: 2026-01-14, Updated: 2026-01-17
+**Generated**: 2026-01-14, Updated: 2026-01-20
 **Unity Version**: 6000.2.14f1
 **Platform**: iOS (ARKit)
 **Render Pipeline**: URP 17.2.0
@@ -673,4 +673,29 @@ UnityEditor.AssetDatabase.LoadAssetAtPath(...)
 
 ---
 
-*Document updated for Hybrid Bridge architecture - 2026-01-17*
+### 12.9 NullReferenceException on App Startup (AR Textures)
+
+**Cause**: AR Foundation texture getters throw internally when AR subsystem isn't ready. The `?.` operator doesn't protect you because the exception occurs inside the getter.
+
+**Fix**: Use the TryGetTexture pattern:
+
+```csharp
+// ❌ WRONG - crashes when AR isn't ready:
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// ✅ CORRECT - TryGetTexture pattern:
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Files fixed**: ARDepthSource.cs, SimpleHumanHologram.cs, DiagnosticOverlay.cs, DirectDepthBinder.cs, HumanParticleVFX.cs, DepthImageProcessor.cs
+
+**Reference**: `specs/005-ar-texture-safety/spec.md`, KB: `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md`
+
+---
+
+*Document updated for Hybrid Bridge architecture + AR Texture Safety - 2026-01-20*
