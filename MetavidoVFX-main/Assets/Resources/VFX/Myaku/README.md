@@ -149,3 +149,35 @@ controller.OnDetect += (ctrl) => {
 | **Size** | ~15MB runtime | Built into Unity |
 
 For new projects, prefer **Unity Sentis** when possible.
+
+---
+
+## VFX Binder Options
+
+| Binder | Source | Use Case |
+|--------|--------|----------|
+| `MyakuMyakuBinder` | ARDepthSource (StencilMap) | Human body particles |
+| `Yolo11VFXBinder` | Yolo11SegARController | Object detection particles |
+
+### MyakuMyakuBinder (Default)
+Uses AR Foundation human segmentation. Fast (~16ms), no ML download.
+
+### Yolo11VFXBinder (Optional)
+Uses YOLO11 object detection. Downloads model on first run (~6MB).
+
+```csharp
+// Switch binder on existing VFX
+var vfx = GetComponent<VisualEffect>();
+Destroy(GetComponent<MyakuMyakuBinder>());
+gameObject.AddComponent<Yolo11VFXBinder>();
+```
+
+---
+
+## ONNX Importer Conflict
+
+Unity Sentis and ONNX Runtime both target `.onnx` files:
+- **Sentis** (.onnx) - BodyPix, Unity ML models
+- **ONNX Runtime** - YOLO11 (downloads at runtime, no import needed)
+
+The warning is safe to ignore since YOLO11 downloads models at runtime.
