@@ -1,0 +1,1 @@
+../../xrai-speckit/.specify/templates/agent-file-template.md

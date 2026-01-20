@@ -1,0 +1,1 @@
+../../xrai-speckit/.specify/templates/plan-template.md

@@ -64,4 +64,37 @@ specs/
 
 ## Template Location
 
-See `xrai-speckit/.specify/templates/` for spec templates.
+Templates are available in `.specify/templates/` (symlinked from `xrai-speckit/.specify/templates/`):
+
+| Template | Purpose |
+|----------|---------|
+| `spec-template.md` | Feature specification with user stories |
+| `tasks-template.md` | Task breakdown with phases |
+| `checklist-template.md` | QA/implementation checklists |
+| `plan-template.md` | Implementation planning |
+
+### Create New Spec
+
+```bash
+# Create new spec directory
+mkdir -p specs/NNN-feature-name/checklists
+
+# Copy templates
+cp .specify/templates/spec-template.md specs/NNN-feature-name/spec.md
+cp .specify/templates/tasks-template.md specs/NNN-feature-name/tasks.md
+```
+
+### Constitution
+
+Project principles are defined in `.specify/memory/constitution.md`:
+- Holographic & Immersive First
+- Cross-Platform Reality
+- Robustness & Self-Healing
+- Spec-Driven Development (SDD)
+
+### Scripts
+
+Utility scripts available in `.specify/scripts/bash/`:
+- `create-new-feature.sh` - Scaffold new feature spec
+- `setup-plan.sh` - Setup implementation plan
+- `check-prerequisites.sh` - Validate environment

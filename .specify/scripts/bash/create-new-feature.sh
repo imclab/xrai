@@ -1,0 +1,1 @@
+../../../xrai-speckit/.specify/scripts/bash/create-new-feature.sh

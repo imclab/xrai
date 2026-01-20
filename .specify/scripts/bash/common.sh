@@ -1,0 +1,1 @@
+../../../xrai-speckit/.specify/scripts/bash/common.sh

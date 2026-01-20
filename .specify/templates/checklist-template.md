@@ -1,0 +1,1 @@
+../../xrai-speckit/.specify/templates/checklist-template.md

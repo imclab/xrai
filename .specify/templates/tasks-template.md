@@ -1,0 +1,1 @@
+../../xrai-speckit/.specify/templates/tasks-template.md

@@ -1,0 +1,1 @@
+../../../xrai-speckit/.specify/scripts/bash/setup-plan.sh

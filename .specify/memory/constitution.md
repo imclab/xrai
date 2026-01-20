@@ -1,0 +1,1 @@
+../../xrai-speckit/.specify/memory/constitution.md
