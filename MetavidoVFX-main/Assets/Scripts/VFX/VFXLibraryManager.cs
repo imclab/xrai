@@ -63,6 +63,15 @@ namespace MetavidoVFX.VFX
         [SerializeField] private bool startAllDisabled = true;
         [SerializeField] private int maxActiveVFX = 3;
 
+        [Header("Hologram VFX (Top of Menu)")]
+        [Tooltip("Direct reference to hologram VFX (from Hologram prefab). Drag HologramVFX here.")]
+        [SerializeField] private VisualEffect hologramVFX;
+        [Tooltip("Name pattern to identify hologram VFX if direct reference is null")]
+        [SerializeField] private string hologramVFXName = "hologram";
+
+        // Cached hologram entry
+        private VFXEntry _hologramEntry;
+
         [Header("Pipeline Reference")]
         [Tooltip("ARDepthSource instance (auto-found if null)")]
         [SerializeField] private ARDepthSource _arDepthSource;
@@ -110,7 +119,33 @@ namespace MetavidoVFX.VFX
             // Ensure ARDepthSource exists
             EnsureARDepthSource();
 
+            // Find hologram VFX from Hologram/HologramVFX in scene hierarchy
+            if (hologramVFX == null)
+            {
+                var hologramRoot = GameObject.Find("Hologram");
+                if (hologramRoot != null)
+                {
+                    var hologramVFXTransform = hologramRoot.transform.Find("HologramVFX");
+                    if (hologramVFXTransform != null)
+                    {
+                        hologramVFX = hologramVFXTransform.GetComponent<VisualEffect>();
+                        if (hologramVFX != null)
+                        {
+                            Debug.Log($"[VFXLibrary] Found hologram VFX: Hologram/HologramVFX");
+                        }
+                    }
+                }
+            }
+
+            // Disable hologram initially (will be re-enabled after list is built)
+            if (startAllDisabled && hologramVFX != null)
+            {
+                hologramVFX.gameObject.SetActive(false);
+                hologramVFX.enabled = false;
+            }
+
             // If we have existing children (created in Editor), rebuild lists from them
+            // Note: VFX are disabled during rebuild/create if startAllDisabled is true
             if (useExistingChildren && transform.childCount > 0)
             {
                 RebuildFromChildren();
@@ -119,6 +154,48 @@ namespace MetavidoVFX.VFX
             {
                 PopulateLibraryRuntime();
             }
+
+            // Add hologram entry at the start of the list
+            AddHologramEntry();
+
+            // Enable only the hologram VFX (all others disabled during creation)
+            if (startAllDisabled)
+            {
+                EnableHologramVFX();
+            }
+        }
+
+        /// <summary>
+        /// Add hologram VFX entry at index 0 if it exists and isn't already in list
+        /// </summary>
+        private void AddHologramEntry()
+        {
+            if (hologramVFX == null) return;
+
+            // Check if already in list
+            if (_allVFX.Any(e => e.VFX == hologramVFX)) return;
+
+            // Create entry for hologram
+            _hologramEntry = new VFXEntry
+            {
+                GameObject = hologramVFX.gameObject,
+                VFX = hologramVFX,
+                AssetName = hologramVFX.visualEffectAsset != null ? hologramVFX.visualEffectAsset.name : "Hologram",
+                ARBinder = hologramVFX.GetComponent<VFXARBinder>(),
+                CategoryType = VFXCategoryType.People
+            };
+
+            // Insert at index 0 (top of menu)
+            _allVFX.Insert(0, _hologramEntry);
+
+            // Also add to category
+            if (!_vfxByCategory.ContainsKey(_hologramEntry.CategoryType))
+            {
+                _vfxByCategory[_hologramEntry.CategoryType] = new List<VFXEntry>();
+            }
+            _vfxByCategory[_hologramEntry.CategoryType].Insert(0, _hologramEntry);
+
+            Debug.Log($"[VFXLibrary] Added hologram entry at top: {_hologramEntry.AssetName}");
         }
 
         #region Pipeline Setup
@@ -354,30 +431,86 @@ namespace MetavidoVFX.VFX
                     ? entry.Category.Category
                     : DetectCategory(entry.AssetName);
 
+                // Immediately disable if startAllDisabled is true
+                if (startAllDisabled)
+                {
+                    entry.GameObject.SetActive(false);
+                    entry.VFX.enabled = false;
+                }
+
                 _allVFX.Add(entry);
                 _vfxByCategory[entry.CategoryType].Add(entry);
 
-                if (entry.IsActive)
+                // Only track as active if not disabled at start
+                if (!startAllDisabled && entry.IsActive)
                 {
                     _activeVFX.Add(entry);
                 }
             }
 
-            // Sort each category by name
-            foreach (var cat in _vfxByCategory.Keys.ToList())
-            {
-                _vfxByCategory[cat] = _vfxByCategory[cat].OrderBy(e => e.AssetName).ToList();
-            }
+            // Sort with hologram first, then alphabetically
+            SortVFXLists();
 
             Debug.Log($"[VFXLibrary] Rebuilt {_allVFX.Count} VFX entries from existing children");
+            OnLibraryPopulated?.Invoke();
+        }
 
-            if (startAllDisabled)
+        /// <summary>
+        /// Sort VFX lists with hologram first, then alphabetically
+        /// </summary>
+        private void SortVFXLists()
+        {
+            // Custom sort: hologram first, then alphabetically
+            _allVFX = _allVFX
+                .OrderByDescending(e => IsHologramVFX(e)) // hologram first (true > false)
+                .ThenBy(e => e.AssetName)
+                .ToList();
+
+            foreach (var cat in _vfxByCategory.Keys.ToList())
             {
-                DisableAll();
-                Debug.Log($"[VFXLibrary] All VFX disabled at start");
+                _vfxByCategory[cat] = _vfxByCategory[cat]
+                    .OrderByDescending(e => IsHologramVFX(e))
+                    .ThenBy(e => e.AssetName)
+                    .ToList();
+            }
+        }
+
+        /// <summary>
+        /// Check if VFX entry is the hologram VFX
+        /// </summary>
+        private bool IsHologramVFX(VFXEntry entry)
+        {
+            // Priority 1: Direct reference match
+            if (hologramVFX != null && entry.VFX == hologramVFX) return true;
+
+            // Priority 2: Name pattern match
+            if (!string.IsNullOrEmpty(hologramVFXName))
+            {
+                return entry.AssetName.ToLowerInvariant().Contains(hologramVFXName.ToLowerInvariant());
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Enable only the hologram VFX
+        /// </summary>
+        public void EnableHologramVFX()
+        {
+            // Priority 1: Use cached entry
+            if (_hologramEntry != null)
+            {
+                SetVFXActive(_hologramEntry, true);
+                Debug.Log($"[VFXLibrary] Enabled hologram VFX: {_hologramEntry.AssetName}");
+                return;
             }
 
-            OnLibraryPopulated?.Invoke();
+            // Priority 2: Find by IsHologramVFX
+            var entry = _allVFX.FirstOrDefault(e => IsHologramVFX(e));
+            if (entry != null)
+            {
+                SetVFXActive(entry, true);
+                Debug.Log($"[VFXLibrary] Enabled hologram VFX: {entry.AssetName}");
+            }
         }
 
         /// <summary>
@@ -592,24 +725,14 @@ namespace MetavidoVFX.VFX
 
                 _allVFX.Add(entry);
                 _vfxByCategory[entry.CategoryType].Add(entry);
-
-                if (startAllDisabled)
-                {
-                    SetVFXActive(entry, false);
-                }
-
                 OnVFXCreated?.Invoke(entry);
             }
 
-            // Sort by name
-            foreach (var cat in _vfxByCategory.Keys.ToList())
-            {
-                _vfxByCategory[cat] = _vfxByCategory[cat].OrderBy(e => e.AssetName).ToList();
-            }
+            // Sort with hologram first
+            SortVFXLists();
 
             string modeStr = persistent ? "persistent" : "runtime";
             Debug.Log($"[VFXLibrary] Created {_allVFX.Count} VFX instances ({modeStr})");
-
             OnLibraryPopulated?.Invoke();
         }
 
@@ -645,6 +768,13 @@ namespace MetavidoVFX.VFX
             // Add VFXCategory for organization
             entry.Category = entry.GameObject.AddComponent<VFXCategory>();
             entry.Category.SetCategory(entry.CategoryType);
+
+            // Immediately disable if startAllDisabled is true
+            if (startAllDisabled)
+            {
+                entry.GameObject.SetActive(false);
+                entry.VFX.enabled = false;
+            }
 
             return entry;
         }
@@ -740,6 +870,7 @@ namespace MetavidoVFX.VFX
             {
                 SetVFXActive(entry, false);
             }
+            Debug.Log("[VFXLibrary] All VFX disabled");
         }
 
         public void EnableCategory(VFXCategoryType category)

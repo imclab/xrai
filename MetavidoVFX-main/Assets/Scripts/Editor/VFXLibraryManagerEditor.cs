@@ -22,11 +22,10 @@ namespace MetavidoVFX.Editor
         private SerializedProperty useExistingChildren;
         private SerializedProperty organizeByCategory;
         private SerializedProperty createCategoryContainers;
-        private SerializedProperty addVFXPropertyBinder;
-        private SerializedProperty addVFXARDataBinder;
-        private SerializedProperty addVFXCategory;
+        private SerializedProperty removeLegacyComponents;
         private SerializedProperty startAllDisabled;
         private SerializedProperty maxActiveVFX;
+        private SerializedProperty hologramVFX;
 
         void OnEnable()
         {
@@ -38,11 +37,10 @@ namespace MetavidoVFX.Editor
             useExistingChildren = serializedObject.FindProperty("useExistingChildren");
             organizeByCategory = serializedObject.FindProperty("organizeByCategory");
             createCategoryContainers = serializedObject.FindProperty("createCategoryContainers");
-            addVFXPropertyBinder = serializedObject.FindProperty("addVFXPropertyBinder");
-            addVFXARDataBinder = serializedObject.FindProperty("addVFXARDataBinder");
-            addVFXCategory = serializedObject.FindProperty("addVFXCategory");
+            removeLegacyComponents = serializedObject.FindProperty("removeLegacyComponents");
             startAllDisabled = serializedObject.FindProperty("startAllDisabled");
             maxActiveVFX = serializedObject.FindProperty("maxActiveVFX");
+            hologramVFX = serializedObject.FindProperty("hologramVFX");
         }
 
         public override void OnInspectorGUI()
@@ -159,15 +157,21 @@ namespace MetavidoVFX.Editor
                 EditorGUILayout.PropertyField(createCategoryContainers);
 
                 EditorGUILayout.Space(3);
-                EditorGUILayout.LabelField("Default Components", EditorStyles.miniBoldLabel);
-                EditorGUILayout.PropertyField(addVFXPropertyBinder);
-                EditorGUILayout.PropertyField(addVFXARDataBinder);
-                EditorGUILayout.PropertyField(addVFXCategory);
+                EditorGUILayout.LabelField("Pipeline", EditorStyles.miniBoldLabel);
+                if (removeLegacyComponents != null)
+                    EditorGUILayout.PropertyField(removeLegacyComponents);
 
                 EditorGUILayout.Space(3);
                 EditorGUILayout.LabelField("Initial State", EditorStyles.miniBoldLabel);
-                EditorGUILayout.PropertyField(startAllDisabled);
-                EditorGUILayout.PropertyField(maxActiveVFX);
+                if (startAllDisabled != null)
+                    EditorGUILayout.PropertyField(startAllDisabled);
+                if (maxActiveVFX != null)
+                    EditorGUILayout.PropertyField(maxActiveVFX);
+
+                EditorGUILayout.Space(3);
+                EditorGUILayout.LabelField("Hologram", EditorStyles.miniBoldLabel);
+                if (hologramVFX != null)
+                    EditorGUILayout.PropertyField(hologramVFX);
 
                 EditorGUI.indentLevel--;
             }
@@ -300,22 +304,14 @@ namespace MetavidoVFX.Editor
 
             Debug.Log($"[VFXLibrary] Adding {newAssets.Count} new VFX...");
 
-            // Get settings for creating VFX
-            bool addBinder = (bool)typeof(VFXLibraryManager)
-                .GetField("addVFXPropertyBinder", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.GetValue(manager);
-            bool addARBinder = (bool)typeof(VFXLibraryManager)
-                .GetField("addVFXARDataBinder", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.GetValue(manager);
-            bool addCategory = (bool)typeof(VFXLibraryManager)
-                .GetField("addVFXCategory", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.GetValue(manager);
-            bool startDisabled = (bool)typeof(VFXLibraryManager)
-                .GetField("startAllDisabled", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.GetValue(manager);
-            bool createContainers = (bool)typeof(VFXLibraryManager)
-                .GetField("createCategoryContainers", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.GetValue(manager);
+            // Get settings for creating VFX (new pipeline - always add VFXARBinder and VFXCategory)
+            var startDisabledField = typeof(VFXLibraryManager)
+                .GetField("startAllDisabled", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            bool startDisabled = startDisabledField != null && (bool)startDisabledField.GetValue(manager);
+
+            var createContainersField = typeof(VFXLibraryManager)
+                .GetField("createCategoryContainers", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            bool createContainers = createContainersField != null && (bool)createContainersField.GetValue(manager);
 
             // Find or create category containers
             var categoryContainers = new System.Collections.Generic.Dictionary<VFXCategoryType, Transform>();
@@ -364,26 +360,17 @@ namespace MetavidoVFX.Editor
                 var vfx = go.AddComponent<UnityEngine.VFX.VisualEffect>();
                 vfx.visualEffectAsset = asset;
 
-                // Add optional components
-                if (addBinder)
-                {
-                    go.AddComponent<UnityEngine.VFX.Utility.VFXPropertyBinder>();
-                }
+                // New pipeline: always add VFXARBinder and VFXCategory
+                var arBinder = go.AddComponent<VFXARBinder>();
+                arBinder.AutoDetectBindings();
 
-                if (addARBinder)
-                {
-                    go.AddComponent<MetavidoVFX.VFX.Binders.VFXARDataBinder>();
-                }
-
-                if (addCategory)
-                {
-                    var catComp = go.AddComponent<VFXCategory>();
-                    catComp.SetCategory(category);
-                }
+                var catComp = go.AddComponent<VFXCategory>();
+                catComp.SetCategory(category);
 
                 // Start disabled if configured
                 if (startDisabled)
                 {
+                    go.SetActive(false);
                     vfx.enabled = false;
                 }
 
