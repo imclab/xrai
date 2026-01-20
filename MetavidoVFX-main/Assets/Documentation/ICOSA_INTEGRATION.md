@@ -6,6 +6,12 @@ The Icosa API Client enables voice-to-object functionality: users can speak comm
 
 **Integration Date**: January 17, 2026
 
+**Full Specification**: See `specs/009-icosa-sketchfab-integration/` for complete architecture including:
+- Unified search across Icosa + Sketchfab
+- Offline caching with LRU eviction
+- Attribution tracking for CC-licensed content
+- UI panels for browsing and preview
+
 ## Packages Installed
 
 | Package | Version/Source | Purpose |
@@ -232,3 +238,34 @@ Debug.Log(attributions);
 - `Assets/Scripts/Editor/EnableUnsafeCode.cs` - Unsafe code enabler
 - `Assets/Resources/PtSettings.asset` - API configuration
 - `Packages/com.icosa.icosa-api-client-unity/` - Local package copy
+
+## Roadmap (spec/009)
+
+See `specs/009-icosa-sketchfab-integration/` for planned enhancements:
+
+### Sprint 0: Foundation
+- [ ] SketchfabClient.cs - Sketchfab Download API wrapper
+- [ ] ModelCache.cs - LRU disk caching for downloaded models
+- [ ] Editor settings for Sketchfab API key
+
+### Sprint 1: Unified Search
+- [ ] UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
+- [ ] Cache integration before API calls
+- [ ] Source preference setting
+
+### Sprint 2: UI & Voice
+- [ ] ModelSearchUI panel with thumbnail grid
+- [ ] 3D model preview before placement
+- [ ] Attribution panel for CC compliance
+
+### Sprint 3: Polish
+- [ ] Error handling and retry logic
+- [ ] Performance optimization
+- [ ] Device testing on iPhone 15 Pro
+
+## References
+
+- [Icosa Gallery](https://icosa.gallery) - Open source 3D model hosting
+- [Icosa GitHub](https://github.com/icosa-foundation/icosa-gallery)
+- [Sketchfab Download API](https://sketchfab.com/blogs/community/announcing-the-sketchfab-download-api-a-search-bar-for-the-3d-world/)
+- [UnityGLTF](https://github.com/KhronosGroup/UnityGLTF) - glTF runtime loader

@@ -55,11 +55,21 @@ This document explains all systems and components in the MetavidoVFX project.
 | Document | Purpose |
 |----------|---------|
 | **[VFX_PIPELINE_FINAL_RECOMMENDATION.md](VFX_PIPELINE_FINAL_RECOMMENDATION.md)** | **Primary** - Hybrid Bridge architecture |
+| [ICOSA_INTEGRATION.md](ICOSA_INTEGRATION.md) | Voice-to-object, Icosa Gallery API |
 | [TESTING_CHECKLIST.md](TESTING_CHECKLIST.md) | Triple-verified testing workflow |
 | [QUICK_REFERENCE.md](QUICK_REFERENCE.md) | VFX properties cheat sheet + TryGetTexture pattern |
 | [CODEBASE_AUDIT_2026-01-15.md](CODEBASE_AUDIT_2026-01-15.md) | Bug fixes (6 bugs tracked, 4 fixed) |
 | [VFX_NAMING_CONVENTION.md](VFX_NAMING_CONVENTION.md) | Asset naming standards |
 | [VFX_INDEX.md](VFX_INDEX.md) | All 88 VFX assets indexed |
+
+### Specifications (in parent repo)
+
+| Spec | Status | Description |
+|------|--------|-------------|
+| [006-vfx-library-pipeline](../../../specs/006-vfx-library-pipeline/) | ✅ Implemented | VFX Library & Hybrid Bridge Pipeline |
+| [009-icosa-sketchfab-integration](../../../specs/009-icosa-sketchfab-integration/) | Draft | Voice-to-object, Icosa + Sketchfab search |
+| [005-ar-texture-safety](../../../specs/005-ar-texture-safety/) | ✅ Implemented | TryGetTexture pattern |
+| [004-metavidovfx-systems](../../../specs/004-metavidovfx-systems/) | ✅ Implemented | Core VFX systems |
 
 ---
 
@@ -437,6 +447,47 @@ ColorMap        // Texture2D - camera colors
 |------|-------------|
 | Copy More VFX to Resources | Copy VFX to Resources/VFX |
 | Cleanup Duplicate VFX Containers | Remove duplicate containers |
+
+---
+
+## Icosa & 3D Model Integration
+
+### Overview
+
+Voice-to-object functionality: users can speak commands like "Put a cat on the table" and the system searches the Icosa Gallery for 3D models and places them in AR.
+
+**Spec**: See `specs/009-icosa-sketchfab-integration/` for full architecture.
+
+### Quick Start
+
+1. **Setup PtSettings** (auto-created on Editor load):
+   ```
+   H3M > Icosa > Create PtSettings Asset
+   ```
+
+2. **Test voice-to-object** (context menu):
+   - Add `WhisperIcosaController` to a GameObject
+   - Right-click component → `Test: Search 'cat'`
+   - Model downloads and places in scene
+
+### Key Components
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| WhisperIcosaController | `H3M/Icosa/WhisperIcosaController.cs` | Voice → search → place |
+| IcosaAssetLoader | `H3M/Icosa/IcosaAssetLoader.cs` | glTF import + metadata |
+| IcosaSettingsCreator | `Scripts/Editor/IcosaSettingsCreator.cs` | PtSettings auto-creation |
+
+### Menu Commands
+
+| Menu | Description |
+|------|-------------|
+| `H3M > Icosa > Create PtSettings Asset` | Create required settings asset |
+| `H3M > Icosa > Select PtSettings` | Select existing settings |
+
+### Documentation
+
+- [ICOSA_INTEGRATION.md](ICOSA_INTEGRATION.md) - Full API reference and troubleshooting
 
 ---
 
