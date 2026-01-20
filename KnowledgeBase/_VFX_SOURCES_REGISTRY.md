@@ -109,6 +109,8 @@ Resources/VFX/
 ├── Splat/           (3)   Gaussian splatting
 ├── Tamagotchu/      (4)   Virtual pet
 ├── WebRTC/          (7)   Trails + SDF
+├── Essentials/     (22)   Boids, noise, waveform
+├── Dcam/           (13)   Depth camera vis
 └── (legacy)         (4)   Uncategorized
 ```
 
@@ -134,3 +136,28 @@ Resources/VFX/
 | 2026-01-20 | Portals6 | 22 | Portal effects |
 | 2026-01-20 | Buddha, Fluo, Khoreo, etc | 76 | Reference migration |
 | 2026-01-20 | _ref projects | 17 | Final migration |
+| 2026-01-20 | VFX-Essentials, Dcam2 | 35 | Final batch |
+
+## Original Names Registry
+
+All VFX retain their original names from source repos. No renames have been performed.
+
+**Naming Convention**: `name_type_source.vfx` (planned, not yet applied)
+- `name`: Descriptive effect name
+- `type`: people, env, audio, hand, face, hybrid
+- `source`: Origin project abbreviation
+
+**Documentation Generated**:
+- `Assets/Documentation/VFX_Bindings/` - Per-VFX binding docs
+- `_MASTER_VFX_BINDINGS.md` - Aggregated bindings reference
+- `_VFX_ORIGINAL_NAMES_REGISTRY.md` - Pre-rename tracking
+
+**Editor Tool**: `H3M > VFX Pipeline Master > Binding Docs > Generate All Binding Docs`
+
+## Auto-Binding Integration
+
+VFXLibraryManager integrates with VFXBindingDocGenerator:
+1. **Audit**: VFXCompatibilityAuditor scans exposed properties
+2. **Bind**: VFXARBinder auto-detects and binds AR properties
+3. **Document**: VFXBindingDocGenerator creates per-VFX docs
+4. **Track**: Original names preserved in registry
