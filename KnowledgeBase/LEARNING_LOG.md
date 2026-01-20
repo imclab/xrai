@@ -6,6 +6,41 @@
 
 ---
 
+## 2026-01-20 - Claude Code - AR Foundation Texture Access Crash Fix (BUG 6)
+
+**Discovery**: AR Foundation texture property getters (`humanDepthTexture`, `humanStencilTexture`, `environmentDepthTexture`) throw `NullReferenceException` **internally** when AR subsystem isn't ready. The `?.` null-coalescing operator does NOT protect because the exception happens inside the getter, not at property access level.
+
+**Impact**: App crash on startup before AR Foundation initializes
+
+**Solution - TryGetTexture Pattern**:
+```csharp
+// ❌ WRONG - crashes when AR isn't ready:
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// ✅ CORRECT:
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+```
+
+**Files Fixed (6)**:
+- `ARDepthSource.cs`, `SimpleHumanHologram.cs`, `DiagnosticOverlay.cs`
+- `DirectDepthBinder.cs`, `HumanParticleVFX.cs`, `DepthImageProcessor.cs`
+
+**Commits**: `ed280f8d2` (code), `945cfb8fa` (docs)
+
+**Deploy Note**: WiFi deploy via ios-deploy fails intermittently; use `--no-wifi` flag for USB-only
+
+**Cross-References**:
+- `KnowledgeBase/_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` (pattern added)
+- `MetavidoVFX-main/Assets/Documentation/CODEBASE_AUDIT_2026-01-15.md` (BUG 6)
+- `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` (Common Fixes)
+
+---
+
 ## 2026-01-17 (Session 2) - Claude Code - VFX Pattern Documentation & Bug Fixes
 
 **Discovery**: Created comprehensive KB pattern files documenting VFX patterns from new projects, fixed OpenXR sample installer bugs, and upgraded FaceTrackingVFX to AR Foundation 6.

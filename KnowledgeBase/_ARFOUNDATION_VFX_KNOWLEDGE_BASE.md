@@ -76,6 +76,28 @@ vfx.SetTexture("Position Map", positionTexture);  // From compute shader
 - Inverse view-projection matrix converts screen-space depth → world-space positions
 - Stencil texture masks non-human pixels (binary: 0 or 1)
 
+**⚠️ CRITICAL: Safe AR Texture Access (Added 2026-01-20)**
+
+AR Foundation texture property getters (`humanDepthTexture`, `humanStencilTexture`, `environmentDepthTexture`) throw `NullReferenceException` **internally** when the AR subsystem isn't ready. The `?.` null-coalescing operator does NOT protect because the exception happens inside the getter.
+
+```csharp
+// ❌ WRONG - crashes when AR isn't ready:
+var depth = occlusionManager?.humanDepthTexture;  // ?. doesn't help!
+
+// ✅ CORRECT - TryGetTexture pattern:
+Texture TryGetTexture(System.Func<Texture> getter)
+{
+    try { return getter?.Invoke(); }
+    catch { return null; }
+}
+var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
+var stencil = TryGetTexture(() => occlusionManager.humanStencilTexture);
+```
+
+**Crash Stack**: `UnityEngine.XR.ARFoundation.AROcclusionManager.get_humanDepthTexture()` → `UpdateExternalTexture()` → NullReferenceException
+
+**Source**: MetavidoVFX BUG 6 fix (2026-01-20), verified on device
+
 **Applications**:
 - Particle effects following body silhouette
 - Body-reactive VFX (fire, water, electricity around person)
