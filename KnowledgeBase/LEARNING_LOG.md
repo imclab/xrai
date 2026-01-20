@@ -3547,3 +3547,35 @@ Local Files:
 
 **Tags**: `vfx-graph` `ar-foundation` `keijiro` `depth-reconstruction` `rcam` `metavidovfx` `compute-shader` `binding-patterns` `property-aliases` `spatial-acceleration`
 
+
+## 2026-01-20: MyakuMyaku YOLO11 vs AR Foundation Segmentation
+
+**Source**: keijiro/MyakuMyakuAR migration
+
+### Two Segmentation Approaches
+
+| Approach | Detection Target | Runtime | Latency |
+|----------|-----------------|---------|---------|
+| YOLO11 (ONNX) | Any object (80 COCO classes) | com.github.asus4.onnxruntime | ~30-50ms |
+| AR Foundation | Human body only | Built-in ARKit/ARCore | ~16ms |
+
+### ONNX Runtime vs Unity Sentis
+
+| Aspect | ONNX Runtime | Unity Sentis |
+|--------|--------------|--------------|
+| Package | com.github.asus4.onnxruntime | com.unity.ai.inference |
+| Model Format | .onnx | .sentis / .onnx |
+| GPU Backend | CoreML/NNAPI/DirectML | Unity Compute |
+| Flexibility | Any ONNX model | Unity-optimized |
+| Size | ~15MB runtime | Built into Unity |
+
+### Key Files Added
+- `Assets/Scripts/ObjectDetection/Yolo11Seg.cs` - Core inference
+- `Assets/Scripts/ObjectDetection/Yolo11SegARController.cs` - AR integration
+- `Assets/Resources/VFX/Myaku/README.md` - Full documentation
+
+### Recommendation
+- **Mobile performance**: Use AR Foundation (native, faster)
+- **Object detection**: Use YOLO11 (more flexible, heavier)
+- **New ML projects**: Prefer Unity Sentis over ONNX Runtime
+

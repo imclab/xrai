@@ -4,7 +4,8 @@
       "name": "Keijiro",
       "url": "https://registry.npmjs.com",
       "scopes": [
-        "jp.keijiro"
+        "jp.keijiro",
+        "com.github.asus4"
       ]
     },
     {
@@ -16,8 +17,11 @@
     }
   ],
   "dependencies": {
+    "com.github.asus4.onnxruntime": "0.3.2",
+    "com.github.asus4.onnxruntime.unity": "0.3.2",
+    "com.github.asus4.texture-source": "0.3.4",
     "com.coplaydev.coplay": "https://github.com/CoplayDev/coplay-unity-plugin.git#beta",
-    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#v9.0.7",
+    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity",
     "com.github-glitchenzo.nugetforunity": "4.5.0",
     "com.kyrylokuzyk.arfoundationremote": "file:../Assets/Plugins/ARFoundationRemoteInstaller/com.kyrylokuzyk.arfoundationremote.tgz",
     "com.unity.ai.inference": "2.2.0",
