@@ -93,15 +93,18 @@ namespace MetavidoVFX.Segmentation
 #if BODYPIX_AVAILABLE
             if (_resourceSet == null)
             {
-                // Try to load default ResourceSet from package
-                _resourceSet = Resources.Load<ResourceSet>("MobileNetV1-x050-stride16");
-                if (_resourceSet == null)
-                {
-                    Debug.LogWarning("[BodyPartSegmenter] ResourceSet not assigned. Assign via Inspector or place in Resources folder.");
-                    Debug.LogWarning("[BodyPartSegmenter] Available in: Packages/jp.keijiro.bodypix/ResourceSet/");
-                    enabled = false;
-                    return;
-                }
+                Debug.LogWarning("[BodyPartSegmenter] ResourceSet not assigned. Disabling component.");
+                Debug.LogWarning("[BodyPartSegmenter] To enable: Drag ResourceSet from Packages/jp.keijiro.bodypix/ResourceSet/ to Inspector");
+                enabled = false;
+                return;
+            }
+
+            // Validate ResourceSet has required references
+            if (_resourceSet.model == null || _resourceSet.preprocess == null)
+            {
+                Debug.LogWarning("[BodyPartSegmenter] ResourceSet missing model or shaders. Use asset from package, not copied.");
+                enabled = false;
+                return;
             }
 
             // Find AR components if not assigned

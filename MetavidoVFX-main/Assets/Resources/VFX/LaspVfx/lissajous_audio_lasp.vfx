@@ -286,7 +286,7 @@ VisualEffectResource:
   m_Infos:
     m_RendererSettings:
       motionVectorGenerationMode: 0
-      shadowCastingMode: 0
+      shadowCastingMode: 1
       rayTracingMode: 0
       receiveShadows: 0
       reflectionProbeUsage: 0
@@ -1167,8 +1167,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614681}
   m_OutputSlots:
   - {fileID: 8926484042661614679}
-  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88,
-    type: 3}
+  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88, type: 3}
 --- !u!114 &8926484042661614677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,8 +1423,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614689}
   m_OutputSlots:
   - {fileID: 8926484042661614690}
-  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88,
-    type: 3}
+  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88, type: 3}
 --- !u!114 &8926484042661614687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2037,8 +2035,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614885}
   m_OutputSlots:
   - {fileID: 8926484042661614886}
-  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88,
-    type: 3}
+  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88, type: 3}
 --- !u!114 &8926484042661614882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2239,8 +2236,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614891}
   m_OutputSlots:
   - {fileID: 8926484042661614892}
-  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88,
-    type: 3}
+  m_Subgraph: {fileID: 5371698745253816930, guid: 7f3e35c57e2114b4d90dd54a7003db88, type: 3}
 --- !u!114 &8926484042661614888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4770,8 +4766,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615128}
   m_OutputSlots:
   - {fileID: 8926484042661615129}
-  m_Subgraph: {fileID: 5371698745253816930, guid: 478178caed73b44df9394a8c37b06d4e,
-    type: 3}
+  m_Subgraph: {fileID: 5371698745253816930, guid: 478178caed73b44df9394a8c37b06d4e, type: 3}
 --- !u!114 &8926484042661615125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5096,8 +5091,7 @@ MonoBehaviour:
   m_OutputSlots: []
   m_Disabled: 0
   m_ActivationSlot: {fileID: 8926484042661615142}
-  m_Subgraph: {fileID: 5371698748595113096, guid: 6ce2e86968caa430da9e59ecf946a438,
-    type: 3}
+  m_Subgraph: {fileID: 5371698748595113096, guid: 6ce2e86968caa430da9e59ecf946a438, type: 3}
 --- !u!114 &8926484042661615135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5413,6 +5407,7 @@ MonoBehaviour:
   sortingPriority: 0
   m_SubOutputs:
   - {fileID: 8926484042661615146}
+  - {fileID: 8926484042661615283}
   colorMapping: 0
   uvMode: 0
   flipbookLayout: 0
@@ -5447,8 +5442,7 @@ MonoBehaviour:
     - rid: 1001
       type: {class: ParticleShadingShaderGraph, ns: UnityEditor.VFX, asm: Unity.VisualEffectGraph.Editor}
       data:
-        shaderGraph: {fileID: 4333940904281232215, guid: 81157c131f7267c48b397ae46b051bf4,
-          type: 3}
+        shaderGraph: {fileID: 4333940904281232215, guid: 81157c131f7267c48b397ae46b051bf4, type: 3}
         materialSettings:
           m_PropertyNames:
           - _AlphaDstBlend
@@ -5471,14 +5465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 081ffb0090424ba4cb05370a42ead6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  opaqueRenderQueue: 0
-  transparentRenderQueue: 1
 --- !u!114 &8926484042661615147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8507,3 +8493,21 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
   m_LinkedSlots: []
+--- !u!114 &8926484042661615283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388ad3b1dc9c6ae45b630f914fab638f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.VFX.URP.VFXURPSubOutput
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0

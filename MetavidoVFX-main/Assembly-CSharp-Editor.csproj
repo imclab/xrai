@@ -209,6 +209,7 @@
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/OpenUrlLink.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/Samples/UnityLogo/VectorFields/Texture3DPreview/Editor/Helpers/PreviewRenderUtilityHelpers.cs" />
     <Compile Include="Assets/Scripts/Editor/HandVFXAutoSetup.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXBindingDocGenerator.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/InfiniNOTE/Editor/SceneInfiniNOTEEditor.cs" />
     <Compile Include="Assets/H3M/Network/Editor/H3MNetworkSetup.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/urptoon U2021/Graphics/Shaders/ToonShader/Editor/ToonShaderLiteEditor.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Assets/Scripts/Editor/HologramAutoSetup.cs" />
     <Compile Include="Assets/H3M/Editor/H3MPhase1Setup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Isoline/Editor/IsolineEditor.cs" />
+    <Compile Include="Assets/Scripts/Editor/OnnxImporterResolver.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequencerCanvas.cs" />
     <Compile Include="Assets/Scripts/Editor/ConfigureVoxelsMetavido.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/URP_Toon/ChiliMilkToonShader/Editor/ToonShaderGUI.cs" />
@@ -1250,6 +1252,9 @@
     <Reference Include="Klak.Vfx.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.Vfx.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.ARFoundation.VisualScripting">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARFoundation.VisualScripting.dll</HintPath>
     </Reference>
@@ -1297,6 +1302,9 @@
     </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
+    </Reference>
+    <Reference Include="TextureSource">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/TextureSource.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
@@ -1388,6 +1396,9 @@
     <Reference Include="Unity.AppUI.Redux">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.AppUI.Redux.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.unity">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.unity.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
@@ -1412,6 +1423,9 @@
     <Reference Include="VJUITK.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/VJUITK.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.ARKit.FaceTracking">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARKit.FaceTracking.dll</HintPath>
     </Reference>
@@ -1420,6 +1434,9 @@
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.Searcher.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.unity.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.unity.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.CoreUtils">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.CoreUtils.dll</HintPath>
@@ -1798,6 +1815,10 @@
     <ProjectReference Include="Metavido.Vfx.csproj">
       <Project>{e6587665-b3f1-105e-b54b-955eb1c69cb9}</Project>
       <Name>Metavido.Vfx</Name>
+    </ProjectReference>
+    <ProjectReference Include="Microsoft.ML.OnnxRuntime.UnityEx.csproj">
+      <Project>{154bcc92-3026-1e82-0a82-034c44c9660e}</Project>
+      <Name>Microsoft.ML.OnnxRuntime.UnityEx</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.DeviceSimulator.csproj">
       <Project>{14f25371-050e-f55f-b921-c1da5acf6670}</Project>

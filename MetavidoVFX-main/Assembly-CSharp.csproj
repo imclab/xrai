@@ -404,12 +404,14 @@
     <Compile Include="Assets/ARTnGAME/Common Tools/Unity_MetaBalls_Liquids/Scripts/ClayBlobProperties.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/InfiniNOTE/SceneInfiniNOTE.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/SHADING/GRAPHS/Lowpoly-Water-Unity/Scripts/Water.cs" />
+    <Compile Include="Assets/Scripts/VFX/Binders/Yolo11VFXBinder.cs" />
     <Compile Include="Assets/Scripts/UI/VFXToggleUI.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/Samples/UnityLogo/VectorFields/Texture3DPreviewInInspector.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_DigitValidator.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_FrameRateCounter.cs" />
     <Compile Include="Assets/Scripts/VFX/VFXCategory.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/SplineMesh/Scripts/MeshProcessing/ExtrusionSegment.cs" />
+    <Compile Include="Assets/Scripts/Debug/AudioMonitor.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/DepthBlit/DepthBlitEdgePass.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/DisplayDeviceInfoFromActionXRInput.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/PropertyAttributes/FloatSliderAttribute.cs" />
@@ -423,6 +425,7 @@
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/DistortTunnel/DistortTunnelPass_Tunnel.cs" />
     <Compile Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/EffectSettings/RFX4_EffectSettingsInspector.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Datamosh/Datamosh.cs" />
+    <Compile Include="Assets/Scripts/ObjectDetection/Yolo11SegVisualize.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/LightShaft/Scripts/LightShaftRenderFeature.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Feedback/Feedback.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/StarGen/Scripts/ScaleParticles.cs" />
@@ -465,6 +468,7 @@
     <Compile Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/DepthLine/Scripts/DepthLine.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/Shader Graph/Cliping Plane/ClipingPlane.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/TOON TOOLS/Wave function collapse TREE GENERATOR/Code/Trees/TreeGenerator.cs" />
+    <Compile Include="Assets/Scripts/VFX/Binders/MyakuMyakuBinder.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Motion/ConstantMotion.cs" />
     <Compile Include="Assets/H3M/Network/H3MSignalingClient.cs" />
     <Compile Include="Assets/Samples/Input System/1.16.0/Simple Demo/SimpleController_UsingActions.cs" />
@@ -507,6 +511,7 @@
     <Compile Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/StarGlow/Scripts/StarGlowRenderFeature.cs" />
     <Compile Include="Assets/Misc/CameraController.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToDeviceInfoXRInput.cs" />
+    <Compile Include="Assets/Scripts/ObjectDetection/RemoteFile.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/ObjectSpin.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeatDetection/Tutorials/MusicSyncVisualizer/AudioSyncer.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Obscurance/Obscurance.cs" />
@@ -522,8 +527,10 @@
     <Compile Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/Flare/Scripts/Flare.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ShaderID.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/AudioToTransform.cs" />
+    <Compile Include="Assets/Scripts/ObjectDetection/Yolo11SegARController.cs" />
     <Compile Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/CombineChildrenGIBLI.cs" />
     <Compile Include="Assets/Echovision/Scripts/PowerSaver.cs" />
+    <Compile Include="Assets/Scripts/ObjectDetection/Yolo11Seg.cs" />
     <Compile Include="Assets/Samples/HoloKit Unity SDK/0.5.6/Gaze Gesture Interaction/Scripts/CubeInteractableController.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/MobileSSPR/ReusableCore/MobileSSPRRendererFeature.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TextConsoleSimulator.cs" />
@@ -617,6 +624,7 @@
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/GRAPHS/SeamlessVoronoi/LICENSE.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/PaintingGIBLION.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Shaders/KnitwearUnlitInput.hlsl" />
+    <None Include="Assets/Shaders/AudioVFX_Examples.hlsl" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/Cel-shading-urp/LICENSE.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/urptoon U2021/Graphics/Shaders/ToonShader/Shaders/ToonShaderForwardPass.hlsl" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/GRAPHS/Noisy-Nodes/NoiseShader/HLSL/SimplexNoise2D.hlsl" />
@@ -803,6 +811,7 @@
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/MaskBody.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/Stylized-Sand/Stylized Sand/Shaders/Stylized_Sand (Simple).shader" />
     <None Include="Assets/link.xml" />
+    <None Include="Assets/Shaders/AudioVFX.hlsl" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/BROKEN OUTLINE A/Outline NEW BREAK LINE 1.hlsl" />
     <None Include="Assets/Shaders/DepthHueEncoder.compute" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON TOOLS/Normal-Mapping-for-a-Triplanar-Shader/LICENSE.txt" />
@@ -936,6 +945,7 @@
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/SBR.cginc" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/kShading/Shaders/ShaderLibrary/ToonLitInput.hlsl" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vignette/Shader/Vignette.shader" />
+    <None Include="Assets/Scripts/ObjectDetection/labels-coco.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON SHADERS/ColinLeung-NiloCat/UnityURPUnlitScreenSpaceDecalShader/LICENSE.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/TOON TOOLS/Normal-Mapping-for-a-Triplanar-Shader/TriplanarUDN.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/HatchingShader/HatchingShaderLerpTes.shader" />
@@ -988,6 +998,7 @@
     <None Include="Assets/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ScreenSpaceCavity/Shaders/Cavity.shader" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Shader/AnalogGlitch.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/smo-shaders_SRP/Shaders/Greyscale.shader" />
+    <None Include="Assets/Scripts/ObjectDetection/VisualizeSegmentations.compute" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/ChristopherSims/URPToonShader2/Graphics/Shaders/Custom Functions/MainLight.hlsl" />
     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Isoline/Shader/Isoline.shader" />
@@ -1191,6 +1202,7 @@
     <None Include="Assets/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/SkyBox/SkyBox.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/LICENSE 1.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Shaders/KnitwearLit.shader" />
+    <None Include="Assets/Resources/VFX/Anomask/AnomaskQuad.hlsl" />
     <None Include="Assets/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_ParallaxDecal.shader" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/LICENSE.txt" />
     <None Include="Assets/ARTnGAME/GIBLI/SHADING/GRAPHS/Noisy-Nodes/NoiseShader/HLSL/Voronoi3D.hlsl" />
@@ -2060,6 +2072,9 @@
     <Reference Include="Klak.Vfx.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.Vfx.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.ARFoundation.VisualScripting">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARFoundation.VisualScripting.dll</HintPath>
     </Reference>
@@ -2107,6 +2122,9 @@
     </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
+    </Reference>
+    <Reference Include="TextureSource">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/TextureSource.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
@@ -2198,6 +2216,9 @@
     <Reference Include="Unity.AppUI.Redux">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.AppUI.Redux.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.unity">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.unity.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
     </Reference>
@@ -2222,6 +2243,9 @@
     <Reference Include="VJUITK.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/VJUITK.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.ARKit.FaceTracking">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARKit.FaceTracking.dll</HintPath>
     </Reference>
@@ -2230,6 +2254,9 @@
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.Searcher.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="com.github.asus4.onnxruntime.unity.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.unity.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.CoreUtils">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.CoreUtils.dll</HintPath>
@@ -2604,6 +2631,10 @@
     <ProjectReference Include="Metavido.Vfx.csproj">
       <Project>{e6587665-b3f1-105e-b54b-955eb1c69cb9}</Project>
       <Name>Metavido.Vfx</Name>
+    </ProjectReference>
+    <ProjectReference Include="Microsoft.ML.OnnxRuntime.UnityEx.csproj">
+      <Project>{154bcc92-3026-1e82-0a82-034c44c9660e}</Project>
+      <Name>Microsoft.ML.OnnxRuntime.UnityEx</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.DeviceSimulator.csproj">
       <Project>{14f25371-050e-f55f-b921-c1da5acf6670}</Project>

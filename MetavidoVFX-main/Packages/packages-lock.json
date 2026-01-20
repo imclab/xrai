@@ -11,13 +11,13 @@
       "hash": "1e2b9040305fd551004f2e9346ca678cb578eea7"
     },
     "com.coplaydev.unity-mcp": {
-      "version": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#v9.0.7",
+      "version": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
-      "hash": "b611b268efc4e670ff3cd6e536766b4407dbe0a9"
+      "hash": "aaf6308b331f6cbcc2a41f11d90ac2109154343e"
     },
     "com.github-glitchenzo.nugetforunity": {
       "version": "4.5.0",
@@ -25,6 +25,31 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
+    },
+    "com.github.asus4.onnxruntime": {
+      "version": "0.3.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "com.github.asus4.onnxruntime.unity": {
+      "version": "0.3.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.github.asus4.onnxruntime": "0.3.2"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "com.github.asus4.texture-source": {
+      "version": "0.3.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.video": "1.0.0"
+      },
+      "url": "https://registry.npmjs.com"
     },
     "com.icosa.icosa-api-client-unity": {
       "version": "file:com.icosa.icosa-api-client-unity",

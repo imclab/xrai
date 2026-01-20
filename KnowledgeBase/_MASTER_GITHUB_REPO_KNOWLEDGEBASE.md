@@ -129,15 +129,33 @@
 | [asus4/WorldEnsemble](https://github.com/asus4/WorldEnsemble) | World tracking ensemble | ARKit world tracking | ✅ |
 | [marek-simonik/record3d_offline_unity_demo](https://github.com/marek-simonik/record3d_offline_unity_demo) | Record3D Unity integration | Volumetric capture | ✅ |
 
-## 🎵 Audio Reactive VFX (30+ Projects)
+## 🎵 Audio Reactive VFX (35+ Projects)
+
+**Research Report**: See `_KEIJIRO_AUDIO_VFX_RESEARCH.md` for comprehensive patterns
+
+### Keijiro Audio VFX Projects
+
+| Project | Description | Techniques | Unity | iOS Compatibility |
+|---------|-------------|------------|-------|-------------------|
+| [keijiro/Lasp](https://github.com/keijiro/Lasp) | Low-latency audio input (v2) | libsoundio native plugin | 2022.3+ | ❌ Desktop only (Win/Mac/Linux) |
+| [keijiro/LaspVfx](https://github.com/keijiro/LaspVfx) | VFX Graph property binders | 4 binders: Level/Gain/Spectrum/Waveform | 2022.3+ | ✅ Binder patterns iOS Metal compatible |
+| [keijiro/Grubo](https://github.com/keijiro/Grubo) | Audio-visual MIDI visualizer | Roland MC-101, Minis MIDI, VFX Graph | 2019.3 HDRP | ⚠️ MIDI desktop, VFX techniques universal |
+| [keijiro/Fluo](https://github.com/keijiro/Fluo) | Modern visualizer (2025) | Latest audio-visual work | Unity 6+ | 🔍 Investigation needed |
+| [keijiro/Reaktion](https://github.com/keijiro/Reaktion) | Legacy audio toolkit (archived) | Pre-VFX Graph era | <2015 | ❌ Obsolete |
+| [keijiro/unity-audio-spectrum](https://github.com/keijiro/unity-audio-spectrum) | Spectrum analyzer | FFT, octave bands | Legacy | ✅ |
+| [keijiro/unity-spectrum-analyzer](https://github.com/keijiro/unity-spectrum-analyzer) | Unity spectrum visualization | GetSpectrumData | Legacy | ✅ |
+
+**Key Insights**:
+- **LASP plugin**: Desktop-only (no iOS/Android/WebGL support)
+- **VFX Graph binders**: 100% iOS Metal compatible
+- **Mobile alternative**: Replace LASP with `AudioListener.GetSpectrumData()`
+- **Texture format**: `TextureFormat.RFloat` (256-512 width, height=1)
+- **Performance**: 1-2ms per frame @ 256 samples (iOS)
+
+### Other Audio VFX
 
 | Project | Description | Techniques | iOS Support |
 |---------|-------------|------------|-------------|
-| [keijiro/LaspVfx](https://github.com/keijiro/LaspVfx) | Low-latency audio → VFX | LASP, VFX Graph | ✅ |
-| [keijiro/Lasp](https://github.com/keijiro/Lasp) | Audio signal processing | Low-latency audio | ✅ |
-| [keijiro/Reaktion](https://github.com/keijiro/Reaktion) | Audio reactive toolkit | FFT, spectrum analysis | ✅ |
-| [keijiro/unity-audio-spectrum](https://github.com/keijiro/unity-audio-spectrum) | Spectrum analyzer | FFT, octave bands | ✅ |
-| [keijiro/unity-spectrum-analyzer](https://github.com/keijiro/unity-spectrum-analyzer) | Unity spectrum visualization | GetSpectrumData | ✅ |
 | [smaerdlatigid/VFXcubes-WASAPI](https://github.com/smaerdlatigid/VFXcubes-WASAPI) | Audio reactive cubes | WASAPI, VFX Graph | ❌ |
 | [tomer8007/real-time-audio-fft](https://github.com/tomer8007/real-time-audio-fft) | iOS FFT library | vDSP, real-time FFT | ✅ |
 | [jscalo/tempi-fft](https://github.com/jscalo/tempi-fft) | Swift FFT for iOS | Swift, FFT | ✅ |
