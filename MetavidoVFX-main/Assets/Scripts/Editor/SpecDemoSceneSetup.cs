@@ -80,7 +80,11 @@ namespace MetavidoVFX.Editor
             // Add HologramSource
             var sourceGO = new GameObject("HologramSource");
             SceneManager.MoveGameObjectToScene(sourceGO, scene);
-            sourceGO.AddComponent<HologramSource>();
+            var hologramSourceType = System.Type.GetType("H3M.Core.HologramSource, Assembly-CSharp");
+            if (hologramSourceType != null)
+            {
+                sourceGO.AddComponent(hologramSourceType);
+            }
 
             // Add info display
             AddDemoInfoUI(scene, "Spec 002: H3M Foundation Demo",
@@ -243,15 +247,23 @@ namespace MetavidoVFX.Editor
             var uiDoc = uiGO.AddComponent<UnityEngine.UIElements.UIDocument>();
             var toggleUI = uiGO.AddComponent<MetavidoVFX.UI.VFXToggleUI>();
 
-            // Add Pipeline Dashboard
+            // Add Pipeline Dashboard (global namespace)
             var dashboardGO = new GameObject("VFXPipelineDashboard");
             SceneManager.MoveGameObjectToScene(dashboardGO, scene);
-            dashboardGO.AddComponent<MetavidoVFX.VFX.VFXPipelineDashboard>();
+            var dashboardType = System.Type.GetType("VFXPipelineDashboard, Assembly-CSharp");
+            if (dashboardType != null)
+            {
+                dashboardGO.AddComponent(dashboardType);
+            }
 
-            // Add Test Harness
+            // Add Test Harness (global namespace)
             var harnessGO = new GameObject("VFXTestHarness");
             SceneManager.MoveGameObjectToScene(harnessGO, scene);
-            harnessGO.AddComponent<VFXTestHarness>();
+            var harnessType = System.Type.GetType("VFXTestHarness, Assembly-CSharp");
+            if (harnessType != null)
+            {
+                harnessGO.AddComponent(harnessType);
+            }
 
             // Add info display
             AddDemoInfoUI(scene, "Spec 006: VFX Library Pipeline Demo",
