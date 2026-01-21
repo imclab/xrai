@@ -132,8 +132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VFXARBinder
   _source: {fileID: 0}
   _bindDepthMap: 1
-  _bindStencilMap: 1
-  _bindPositionMap: 1
+  _bindStencilMap: 0
+  _bindPositionMap: 0
   _bindColorMap: 1
   _bindVelocityMap: 0
   _bindRayParams: 1
@@ -175,6 +175,9 @@ MonoBehaviour:
     m_Name: AnchorPos
   hologramScaleProperty:
     m_Name: HologramScale
+  _autoBindOnStart: 1
+  _useCategoryBindings: 1
+  _currentMode: 0
   _verboseLogging: 0
 --- !u!1 &4337270596484617006
 GameObject:
@@ -227,11 +230,13 @@ MonoBehaviour:
   _planeManager: {fileID: 0}
   _showReticle: 1
   _reticlePrefab: {fileID: 0}
+  _initialPlacementTarget: {fileID: 0}
   _minScale: 0.05
   _maxScale: 2
   _dragSpeed: 0.002
   _heightSpeed: 0.003
   _scaleSpeed: 0.01
+  _rotateSpeed: 0.5
 --- !u!114 &4191701366065536433
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -75,7 +75,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.14f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.14f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
     <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.dt.app-ui@7b87c8225c06/Runtime/SourceGenerators/netstandard2.0/EnumToLowerCase.dll" />
-    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.ai.inference@4ac711cab9a3/Runtime/Core/SourceGenerator/SourceGenerators.dll" />
+    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.ai.inference@8de2b073c584/Runtime/Core/SourceGenerator/SourceGenerators.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/Editor/External/CurveEditor.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Glitch/Editor/AnalogGlitchEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/GuiSectionBase.cs" />
     <Compile Include="Assets/Scripts/Editor/FileLoggerSetup.cs" />
+    <Compile Include="Assets/Scripts/Editor/MyakuMyakuSetup.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXARBinderEditor.cs" />
     <Compile Include="Assets/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/ProductWelcomeScreenBase.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fringe/Editor/FringeEditor.cs" />
@@ -298,6 +299,8 @@
     <Compile Include="Assets/Scripts/Editor/DebugVoxelsBinder.cs" />
     <Compile Include="Assets/Scripts/Editor/PostProcessingSetup.cs" />
     <Compile Include="Assets/Samples/App UI/1.3.1/StoryBook/Editor/MenuItem.stories.cs" />
+    <Compile Include="Assets/Editor/DisableAutoRecompile.cs" />
+    <Compile Include="Assets/Scripts/Editor/VFXCatalogEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/FrameProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/PremultiplyAlphaProcessor.cs" />
     <Compile Include="Assets/Stylized Character_Archer/ToonShader/Shader/Editor/ToonShaderGUI.cs" />
@@ -1258,9 +1261,6 @@
     <Reference Include="Unity.XR.ARFoundation.VisualScripting">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARFoundation.VisualScripting.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InferenceEngine.ONNX.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.ONNX.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.XR.ARFoundation.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARFoundation.Editor.dll</HintPath>
     </Reference>
@@ -1297,17 +1297,14 @@
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InferenceEngine.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
+    <Reference Include="TextureSource">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/TextureSource.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
-    <Reference Include="TextureSource">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/TextureSource.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    <Reference Include="Unity.InferenceEngine.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Pugrad.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Editor.dll</HintPath>
@@ -1317,6 +1314,9 @@
     </Reference>
     <Reference Include="glTFast.dots">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/glTFast.dots.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.ARKit">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.ARKit.dll</HintPath>
@@ -1395,6 +1395,9 @@
     </Reference>
     <Reference Include="Unity.AppUI.Redux">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.AppUI.Redux.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InferenceEngine.ONNX.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.ONNX.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.github.asus4.onnxruntime.unity">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/com.github.asus4.onnxruntime.unity.dll</HintPath>
@@ -1527,6 +1530,9 @@
     </Reference>
     <Reference Include="Klak.Motion.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.Motion.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InferenceEngine.Tokenization">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Tokenization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Interaction.Toolkit">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Interaction.Toolkit.dll</HintPath>
@@ -1816,6 +1822,10 @@
       <Project>{e6587665-b3f1-105e-b54b-955eb1c69cb9}</Project>
       <Name>Metavido.Vfx</Name>
     </ProjectReference>
+    <ProjectReference Include="ChatEditor.csproj">
+      <Project>{eb796d9f-752e-834f-d36b-02b193c59844}</Project>
+      <Name>ChatEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="Microsoft.ML.OnnxRuntime.UnityEx.csproj">
       <Project>{154bcc92-3026-1e82-0a82-034c44c9660e}</Project>
       <Name>Microsoft.ML.OnnxRuntime.UnityEx</Name>
@@ -1863,6 +1873,10 @@
     <ProjectReference Include="MyExercise_4s.csproj">
       <Project>{2169a846-4559-0952-143a-2e6089f2d59f}</Project>
       <Name>MyExercise_4s</Name>
+    </ProjectReference>
+    <ProjectReference Include="Chat.csproj">
+      <Project>{4bf35fd2-2efd-ddf3-5166-2098c4d2bfc7}</Project>
+      <Name>Chat</Name>
     </ProjectReference>
     <ProjectReference Include="MyExercise_3.csproj">
       <Project>{53ad99be-5199-77bb-c427-cc46b8d93be9}</Project>

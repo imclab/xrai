@@ -131,7 +131,7 @@ MonoBehaviour:
     x: -546
     y: 128
     width: 1372
-    height: 2008
+    height: 1990
 --- !u!114 &114350483966674978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3568,7 +3568,7 @@ MonoBehaviour:
     - outputSlot: {fileID: 114350483966675551}
       inputSlot: {fileID: 114350483966675553}
     - outputSlot: {fileID: 114350483966675551}
-      inputSlot: {fileID: 114350483966675576}
+      inputSlot: {fileID: 114350483966675580}
     position: {x: -546, y: 1041}
     expandedSlots: []
     expanded: 1
@@ -3608,7 +3608,7 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 114350483966675553}
-  - {fileID: 114350483966675576}
+  - {fileID: 114350483966675580}
 --- !u!114 &114350483966675552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3841,8 +3841,7 @@ MonoBehaviour:
       m_SerializableType: UnityEngine.Vector4, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 1
-  m_LinkedSlots:
-  - {fileID: 114350483966675579}
+  m_LinkedSlots: []
 --- !u!114 &114350483966675559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4093,8 +4092,7 @@ MonoBehaviour:
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
-  - {fileID: 114350483966675576}
-  - {fileID: 114350483966675579}
+  - {fileID: 114350483966675580}
   m_OutputSlots: []
   m_Disabled: 0
   m_ActivationSlot: {fileID: 114350483966675572}
@@ -4106,9 +4104,9 @@ MonoBehaviour:
     samplerAudioDataTexture);\n      float3 center = float3(0, 0, 0);\n      float3
     dir = normalize(attributes.position - center + 0.0001);\n      attributes.position
     = attributes.position + dir * beat * PulseStrength;\n  }"
-  m_ShaderFile: {fileID: 0}
+  m_ShaderFile: {fileID: 10900000, guid: 360480fcf7f494d81afb182902b814fa, type: 3}
   m_AvailableFunction:
-    selection: CustomHLSL
+    selection: SampleAudioPrimary
     selectedIndex: 0
 --- !u!114 &114350483966675572
 MonoBehaviour:
@@ -4144,7 +4142,7 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
   m_LinkedSlots: []
---- !u!114 &114350483966675576
+--- !u!114 &114350483966675580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4162,7 +4160,7 @@ MonoBehaviour:
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
-  m_MasterSlot: {fileID: 114350483966675576}
+  m_MasterSlot: {fileID: 114350483966675580}
   m_MasterData:
     m_Owner: {fileID: 114350483966675566}
     m_Value:
@@ -4172,45 +4170,10 @@ MonoBehaviour:
       m_SerializableObject: '{"obj":{"fileID":2800000,"guid":"276d9e395ae18fe40a9b4988549f2349","type":3}}'
     m_Space: -1
   m_Property:
-    name: _AudioDataTexture
+    name: _audioTex
     m_serializedType:
       m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   m_Direction: 0
   m_LinkedSlots:
   - {fileID: 114350483966675551}
---- !u!114 &114350483966675579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.VisualEffectGraph.Editor::UnityEditor.VFX.VFXSlotFloat
-  m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
-  m_Children: []
-  m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
-  m_UISuperCollapsed: 0
-  m_MasterSlot: {fileID: 114350483966675579}
-  m_MasterData:
-    m_Owner: {fileID: 114350483966675566}
-    m_Value:
-      m_Type:
-        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 
-    m_Space: -1
-  m_Property:
-    name: _PulseStrength
-    m_serializedType:
-      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-  m_Direction: 0
-  m_LinkedSlots:
-  - {fileID: 114350483966675558}
