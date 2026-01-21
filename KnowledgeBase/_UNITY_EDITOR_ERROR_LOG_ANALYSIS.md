@@ -59,7 +59,99 @@ if (!Application.isEditor)
 
 ---
 
-## 2. NullReferenceExceptions
+## 2. WebRTC Native Plugin Errors
+
+### Error Message
+```
+EntryPointNotFoundException: RegisterDebugLog
+assembly:<unknown assembly> type:<unknown type> member:(null)
+  at Unity.WebRTC.WebRTC.InitializeInternal()
+  at Unity.WebRTC.ContextManager.OnAfterAssemblyReload()
+```
+
+### Root Cause
+Unity WebRTC package initializes native plugins on assembly reload. The native library (`webrtccsharpwrap.dll` / `.dylib`) is platform-specific and may not be available in Editor.
+
+### Impact
+- **Severity**: Low (Editor-only warning)
+- **Runtime**: Works correctly on device
+
+### Recommended Fix
+The WebRTC package handles this internally. If persistent, add conditional:
+```csharp
+#if !UNITY_EDITOR || UNITY_WEBRTC_EDITOR_SUPPORT
+    WebRTC.Initialize();
+#endif
+```
+
+---
+
+## 3. ONNX Importer Conflict
+
+### Error Message
+```
+Multiple scripted importers are targeting the extension 'onnx' and have all been rejected:
+- Unity.InferenceEngine.Editor.Onnx.ONNXModelImporter
+- Microsoft.ML.OnnxRuntime.Unity.Editor.OrtImporter
+```
+
+### Root Cause
+Two packages both try to import `.onnx` files:
+1. **Sentis** (Unity.InferenceEngine) - Unity's official ML package
+2. **ONNX Runtime Unity** (com.github.asus4.onnxruntime) - Third-party runtime
+
+### Impact
+- **Severity**: Medium (ONNX models won't import)
+- **Solution Required**: Choose one importer
+
+### Recommended Fix
+
+**Option A: Keep Sentis (Recommended)**
+Remove ONNX Runtime Unity if not needed:
+1. Edit `Packages/manifest.json`
+2. Remove `"com.github.asus4.onnxruntime.unity": "..."`
+3. Delete `Packages/com.github.asus4.onnxruntime.unity/`
+
+**Option B: Use ONNX Runtime**
+If you need ONNX Runtime's features, remove Sentis importer:
+1. Create `Assets/Editor/DisableONNXImporter.cs`:
+```csharp
+// Requires package removal or ScriptedImporter override
+```
+
+**Option C: Use both with different extensions**
+Rename one set of models to `.onnxrt` and configure importer.
+
+---
+
+## 4. VFX HLSL Missing Include
+
+### Error Message
+```
+Shader error in 'Hidden/VFX/Bubbles/Balls/Output Particle URP Lit Mesh':
+undeclared identifier 'SampleBeatPulse' at Bubbles.vfx(4378)
+```
+
+### Root Cause
+VFX Graph Custom HLSL block calls `SampleBeatPulse()` without including `AudioVFX.hlsl`.
+
+### Fix Applied
+Inlined the function directly in Bubbles.vfx Custom HLSL block:
+```hlsl
+float SampleBeatPulseLocal(Texture2D tex, SamplerState samp) {
+    return tex.SampleLevel(samp, float2(0.75, 0.25), 0).g;
+}
+```
+
+### Prevention
+VFX Graph Custom HLSL blocks cannot use `#include` reliably. Options:
+1. **Inline the function** (simple, self-contained)
+2. **Use m_ShaderFile** to reference external .hlsl
+3. **Use VFX Graph operators** instead of Custom HLSL
+
+---
+
+## 5. NullReferenceExceptions
 
 ### Common Patterns Found
 

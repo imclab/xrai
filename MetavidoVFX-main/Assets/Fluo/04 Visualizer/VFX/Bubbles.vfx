@@ -4099,12 +4099,13 @@ MonoBehaviour:
   m_Disabled: 0
   m_ActivationSlot: {fileID: 114350483966675572}
   m_BlockName: Custom HLSL
-  m_HLSLCode: "void CustomHLSL(inout VFXAttributes attributes, Texture2D AudioDataTexture,
-    SamplerState samplerAudioDataTexture, in float PulseStrength)\n  {\n      float
-    beat = SampleBeatPulse(AudioDataTexture, samplerAudioDataTexture);\n      float3
-    center = float3(0, 0, 0);\n      float3 dir = normalize(attributes.position -
-    center + 0.0001);\n      attributes.position = attributes.position + dir * beat
-    * PulseStrength;\n  }"
+  m_HLSLCode: "float SampleBeatPulseLocal(Texture2D tex, SamplerState samp) { return
+    tex.SampleLevel(samp, float2(0.75, 0.25), 0).g; }\n\nvoid CustomHLSL(inout VFXAttributes
+    attributes, Texture2D AudioDataTexture, SamplerState samplerAudioDataTexture,
+    in float PulseStrength)\n  {\n      float beat = SampleBeatPulseLocal(AudioDataTexture,
+    samplerAudioDataTexture);\n      float3 center = float3(0, 0, 0);\n      float3
+    dir = normalize(attributes.position - center + 0.0001);\n      attributes.position
+    = attributes.position + dir * beat * PulseStrength;\n  }"
   m_ShaderFile: {fileID: 0}
   m_AvailableFunction:
     selection: CustomHLSL
