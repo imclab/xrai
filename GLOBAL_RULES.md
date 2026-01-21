@@ -11,9 +11,18 @@ Search KB → Act → Log discovery → Repeat
 ### Quick Reference
 - **Session start**: `mcp-kill-dupes`
 - **Before coding**: Search `KnowledgeBase/` first
-- **On error**: Check `_AUTO_FIX_PATTERNS.md`
+- **On error**: Check `_QUICK_FIX.md`
 - **Discovery**: Append to `LEARNING_LOG.md`
 - **User patterns**: See `_USER_PATTERNS_JAMES.md`
+
+### KB Search Commands (Zero Tokens)
+```bash
+kb "topic"      # Search all KB files
+kbfix "error"   # Quick fix lookup
+kbtag "vfx"     # Find pattern files by tag
+kbrepo "hand"   # Search 520+ GitHub repos
+```
+**Full reference**: `KnowledgeBase/_KB_SEARCH_COMMANDS.md`
 
 **Full docs**: `_SIMPLIFIED_INTELLIGENCE_CORE.md`
 

@@ -249,14 +249,20 @@ git status > /tmp/work_state.txt
 All tools can access the same knowledge:
 
 ```bash
-# From any tool's terminal:
-grep -r "pattern" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/
+# KB Search Commands (add to ~/.zshrc for all tools)
+kb() { grep -ri --include="*.md" "$1" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/; }
+kbfix() { grep -i "$1" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_QUICK_FIX.md; }
+kbtag() { grep -i "$1" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_PATTERN_TAGS.md; }
+kbrepo() { grep -i "$1" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md; }
 
-# Quick reference files
-cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_QUICK_FIX.md
-cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_PATTERN_TAGS.md
-cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/LEARNING_LOG.md
+# Usage (works in any tool/IDE terminal)
+kb "hologram"      # Search all KB files
+kbfix "CS0246"     # Quick fix lookup
+kbtag "vfx"        # Find pattern files
+kbrepo "hand"      # Search 520+ repos
 ```
+
+**Full reference**: `_KB_SEARCH_COMMANDS.md`
 
 ### For Gemini/Codex Initial Context
 

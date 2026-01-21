@@ -242,6 +242,7 @@ _WEBGL_INTELLIGENCE_PATTERNS
 - **_AI_CODING_BEST_PRACTICES.md**: ~12 patterns (MCP, research, code patterns)
 - **_UNITY_MCP_QUICK_REFERENCE.md**: ~15 patterns (token optimization, tools)
 - **_CROSS_TOOL_ROLLOVER_GUIDE.md**: ~5 patterns (gemini, codex, migration)
+- **_KB_SEARCH_COMMANDS.md**: ~10 commands (grep, aliases, IDE integration)
 
 ---
 
