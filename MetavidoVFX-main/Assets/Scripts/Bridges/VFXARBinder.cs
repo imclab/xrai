@@ -1,36 +1,94 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using MetavidoVFX.VFX;
+#if BODYPIX_AVAILABLE
+using MetavidoVFX.Segmentation;
+#endif
 
 /// <summary>
-/// Optimized Binder: Resolves aliases ONCE in Awake, then uses fast int IDs in Update.
+/// Maximally Flexible VFX Binder: Supports all common VFX properties with auto-detection.
+/// Resolves aliases ONCE in Awake, then uses fast int IDs in Update.
 /// Eliminates string lookups and redundant checks during runtime.
+///
+/// Supported Property Categories:
+/// - AR Textures: DepthMap, StencilMap, PositionMap, ColorMap, VelocityMap, MaskTexture, SDF
+/// - Camera: RayParams, InverseView, InverseProjection, DepthRange, FocusDistance
+/// - Camera Tracking: ReferencePosition, ReferenceVelocity, CameraPosition
+/// - Parameters: Throttle, Spawn/SpawnRate, HueShift, Brightness, Alpha, DepthOffset, Size, Color
+/// - Dimensions: MapWidth, MapHeight, Resolution, TextureWidth
+/// - Hand Tracking: HandPosition, HandVelocity, Interactable, InteractableRadius
+/// - ML: KeypointBuffer, KeypointBuffer2 (from BodyPartSegmenter)
+/// - Audio: AudioVolume, AudioBands (from global shader properties)
+/// - Transform: AnchorPos, HologramScale
 /// </summary>
 [RequireComponent(typeof(VisualEffect))]
 public class VFXARBinder : MonoBehaviour
 {
     VisualEffect _vfx;
 
-    // Cached Property IDs (0 means property not found)
+    // === Core Texture IDs (0 means property not found) ===
     int _idDepth, _idStencil, _idPosition, _idColor, _idVelocity;
-    int _idRayParams, _idInvView, _idInvProj, _idDepthRange;
-    int _idThrottle, _idAudioVol, _idAudioBands;
-    // Extended binding IDs (spec-007)
-    int _idHueShift, _idBrightness, _idAlpha, _idSpawnRate, _idDepthOffset;
-    int _idMapWidth, _idMapHeight;
+    int _idMaskTexture, _idSDF;
 
-    // Settings
+    // === Camera Param IDs ===
+    int _idRayParams, _idInvView, _idInvProj, _idDepthRange, _idFocusDistance;
+
+    // === Camera Tracking IDs ===
+    int _idRefPosition, _idRefVelocity, _idCameraPosition;
+
+    // === Scalar Parameter IDs ===
+    int _idThrottle, _idSpawn, _idSize;
+    int _idHueShift, _idBrightness, _idAlpha, _idSpawnRate, _idDepthOffset;
+    int _idColorTint;  // For "Color" or "Base Color" properties
+
+    // === Dimension IDs ===
+    int _idMapWidth, _idMapHeight, _idResolution, _idTextureWidth;
+
+    // === Hand Tracking IDs ===
+    int _idHandPosition, _idHandVelocity, _idInteractable, _idInteractableRadius;
+
+    // === Audio IDs ===
+    int _idAudioVol, _idAudioBands;
+
+    // === ML/Keypoint IDs ===
+    int _idKeypointBuffer, _idKeypointBuffer2;
+
+    // === Settings ===
+    [Header("Data Sources")]
     [Tooltip("ARDepthSource to read from. If null, uses ARDepthSource.Instance.")]
     [SerializeField] ARDepthSource _source;
 
+    [Tooltip("Optional: Transform to track for hand position binding")]
+    [SerializeField] Transform _handTransform;
+
+    [Tooltip("Optional: SDF texture for SDF-based VFX")]
+    [SerializeField] Texture _sdfTexture;
+
+    #if BODYPIX_AVAILABLE
+    [Tooltip("Optional: BodyPartSegmenter for KeypointBuffer binding")]
+    [SerializeField] BodyPartSegmenter _bodyPartSegmenter;
+    #endif
+
+    [Header("Core Parameters")]
     [Tooltip("Global intensity multiplier")]
     [Range(0f, 1f)]
     [SerializeField] float _throttle = 1f;
 
+    [Tooltip("Spawn rate multiplier (0-10)")]
+    [Range(0f, 10f)]
+    [SerializeField] float _spawn = 1f;
+
+    [Tooltip("Size multiplier")]
+    [Range(0.01f, 10f)]
+    [SerializeField] float _size = 1f;
+
     [Tooltip("Depth range for reconstruction")]
     [SerializeField] Vector2 _depthRange = new Vector2(0.1f, 10f);
 
-    [Header("Extended Bindings (spec-007)")]
+    [Tooltip("Focus distance for DOF effects")]
+    [SerializeField] float _focusDistance = 2f;
+
+    [Header("Color & Appearance")]
     [Tooltip("Hue shift for color effects (0-360)")]
     [Range(0f, 360f)]
     [SerializeField] float _hueShift = 0f;
@@ -43,33 +101,67 @@ public class VFXARBinder : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] float _alpha = 1f;
 
-    [Tooltip("Spawn rate multiplier")]
-    [Range(0f, 10f)]
-    [SerializeField] float _spawnRate = 1f;
+    [Tooltip("Color tint")]
+    [SerializeField] Color _colorTint = Color.white;
 
     [Tooltip("Depth offset adjustment")]
     [Range(-1f, 1f)]
     [SerializeField] float _depthOffset = 0f;
 
-    // Aliases for compatibility (Rcam, Metavido, H3M)
-    static readonly string[] DepthAliases = { "DepthMap", "DepthTexture", "_Depth" };
-    static readonly string[] StencilAliases = { "StencilMap", "HumanStencil", "_Stencil" };
-    static readonly string[] PosAliases = { "PositionMap", "Position", "WorldPosition" };
-    static readonly string[] ColorAliases = { "ColorMap", "ColorTexture", "_MainTex" };
-    static readonly string[] VelAliases = { "VelocityMap", "Velocity", "MotionVector" };
+    [Header("Interaction")]
+    [Tooltip("Interactable position for interaction-based VFX")]
+    [SerializeField] Vector3 _interactablePos;
+
+    [Tooltip("Interactable radius")]
+    [Range(0f, 2f)]
+    [SerializeField] float _interactableRadius = 0.1f;
+
+    // Legacy alias for backward compatibility
+    float _spawnRate { get => _spawn; set => _spawn = value; }
+
+    // === Comprehensive Aliases for Cross-Project Compatibility ===
+    // (Rcam, Metavido, H3M, NNCam, Akvfx, SdfVfx, Fluo)
+
+    // Texture Aliases
+    static readonly string[] DepthAliases = { "DepthMap", "DepthTexture", "_Depth", "Depth" };
+    static readonly string[] StencilAliases = { "StencilMap", "HumanStencil", "_Stencil", "Stencil" };
+    static readonly string[] PosAliases = { "PositionMap", "Position", "WorldPosition", "Positions" };
+    static readonly string[] ColorAliases = { "ColorMap", "ColorTexture", "_MainTex", "MainTex", "Background" };
+    static readonly string[] VelAliases = { "VelocityMap", "Velocity", "MotionVector", "Motion" };
+    static readonly string[] MaskAliases = { "MaskTexture", "Mask", "BodyMask", "SegmentationMask" };
+    static readonly string[] SDFAliases = { "SDF", "SDFTexture", "SignedDistanceField" };
+
+    // Camera Param Aliases
     static readonly string[] RayAliases = { "RayParams", "CameraParams", "RayParamsMatrix" };
     static readonly string[] InvViewAliases = { "InverseView", "InvView", "InverseViewMatrix" };
     static readonly string[] InvProjAliases = { "InverseProjection", "InvProj", "InverseProjectionMatrix" };
-    static readonly string[] RangeAliases = { "DepthRange", "ClipRange" };
-    static readonly string[] ThrottleAliases = { "Throttle", "Intensity", "Scale" };
+    static readonly string[] RangeAliases = { "DepthRange", "ClipRange", "NearFar" };
+    static readonly string[] FocusAliases = { "FocusDistance", "Focus", "FocalDistance" };
 
-    // Extended bindings (spec-007-vfx-multi-mode)
+    // Camera Tracking Aliases
+    static readonly string[] RefPosAliases = { "ReferencePosition", "CameraPosition", "ViewPosition" };
+    static readonly string[] RefVelAliases = { "ReferenceVelocity", "CameraVelocity", "ViewVelocity" };
+
+    // Scalar Parameter Aliases
+    static readonly string[] ThrottleAliases = { "Throttle", "Intensity", "Scale", "Amount" };
+    static readonly string[] SpawnAliases = { "Spawn", "SpawnRate", "Spawn Rate", "Spawn rate" };
+    static readonly string[] SizeAliases = { "Size", "PointSize", "ParticleSize", "Scale" };
     static readonly string[] HueShiftAliases = { "HueShift", "Hue" };
-    static readonly string[] BrightnessAliases = { "Brightness", "Exposure" };
+    static readonly string[] BrightnessAliases = { "Brightness", "Exposure", "Luminance" };
     static readonly string[] AlphaAliases = { "Alpha", "Opacity", "Alpha Scale" };
-    static readonly string[] SpawnRateAliases = { "SpawnRate", "Spawn Rate", "Spawn rate" };
     static readonly string[] DepthOffsetAliases = { "DepthOffset", "Depth Offset" };
-    static readonly string[] MapDimensionAliases = { "MapWidth", "MapHeight", "Resolution" };
+    static readonly string[] ColorTintAliases = { "Color", "Base Color", "Tint", "MainColor" };
+
+    // Dimension Aliases
+    static readonly string[] WidthAliases = { "MapWidth", "TextureWidth", "Width" };
+    static readonly string[] HeightAliases = { "MapHeight", "TextureHeight", "Height" };
+    static readonly string[] ResolutionAliases = { "Resolution", "Dimensions", "Size" };
+
+    // Hand Tracking Aliases
+    static readonly string[] HandPosAliases = { "Hand Position", "HandPosition", "HandPos" };
+    static readonly string[] HandVelAliases = { "Hand Velocity", "HandVelocity", "HandVel" };
+    static readonly string[] InteractAliases = { "Interactable", "InteractPosition", "PointerPosition" };
+    static readonly string[] InteractRadiusAliases = { "InteractableRadius", "InteractionRadius", "TouchRadius" };
 
     void Awake()
     {
@@ -224,7 +316,7 @@ public class VFXARBinder : MonoBehaviour
         _idHueShift = FindPropertyID(HueShiftAliases);
         _idBrightness = FindPropertyID(BrightnessAliases);
         _idAlpha = FindPropertyID(AlphaAliases);
-        _idSpawnRate = FindPropertyID(SpawnRateAliases);
+        _idSpawnRate = FindPropertyID(SpawnAliases);
         _idDepthOffset = FindPropertyID(DepthOffsetAliases);
         _idMapWidth = _vfx.HasFloat("MapWidth") ? Shader.PropertyToID("MapWidth") : 0;
         _idMapHeight = _vfx.HasFloat("MapHeight") ? Shader.PropertyToID("MapHeight") : 0;
