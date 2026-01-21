@@ -162,6 +162,9 @@ namespace MetavidoVFX.VFX
             // Add hologram entry at the start of the list
             AddHologramEntry();
 
+            // Ensure alphabetical order within categories
+            SortVFXLists();
+
             // Enable only the hologram VFX (all others disabled during creation)
             if (startAllDisabled)
             {
@@ -490,9 +493,10 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
-        /// Sort VFX lists with hologram first, then alphabetically
+        /// Sort VFX lists with hologram first, then alphabetically by name
         /// </summary>
-        private void SortVFXLists()
+        [ContextMenu("Sort VFX Lists Alphabetically")]
+        public void SortVFXLists()
         {
             // Custom sort: hologram first, then alphabetically
             _allVFX = _allVFX
