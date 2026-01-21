@@ -319,6 +319,139 @@ binder.Refresh(); // Binds ColorMap, DepthMap, PositionMap, etc.
 
 ---
 
+## Hologram Integration
+
+### Single User Mode (Self-Hologram)
+
+The HiFi VFX integrates with the local AR pipeline for self-viewing:
+
+```
+AR Foundation → ARDepthSource → HiFiHologramController → VFX
+                     ↓
+              PositionMap, ColorMap, DepthMap
+                     ↓
+        hifi_hologram_people.vfx → RGB Point Cloud
+```
+
+**Setup Steps**:
+1. Add `hifi_hologram_people.vfx` to scene
+2. Add `HiFiHologramController` component to VFX GameObject
+3. Add `VFXARBinder` to bind ARDepthSource outputs
+4. Configure quality preset based on device
+
+**Key Bindings**:
+| Component | Provides | Consumes |
+|-----------|----------|----------|
+| ARDepthSource | ColorMap, DepthMap, PositionMap | AR Foundation |
+| VFXARBinder | (binding) | ARDepthSource outputs |
+| HiFiHologramController | Quality control | VFX properties |
+| hifi_hologram_people.vfx | Rendered particles | All above |
+
+### Conference Mode (Multi-Hologram)
+
+For WebRTC conferencing, each remote peer gets their own HiFi hologram:
+
+```
+WebRTC Stream → MetavidoWebRTCDecoder → HiFiHologramController → VFX
+                        ↓
+              ColorTexture, DepthTexture, Metadata
+                        ↓
+          hifi_hologram_people.vfx → Remote Hologram
+```
+
+**Multi-Hologram Architecture**:
+```
+┌────────────────────────────────────────────────────────────────┐
+│                   ConferenceLayoutManager                       │
+│    Manages seat poses, spatial layout, peer tracking           │
+└───────────────────────┬────────────────────────────────────────┘
+                        ↓
+┌────────────────────────────────────────────────────────────────┐
+│               HologramConferenceManager                         │
+│    Creates/destroys hologram instances per peer                │
+└───────────────────────┬────────────────────────────────────────┘
+                        ↓
+┌──────────────────────────────────────────────────────────────────┐
+│ For Each Remote Peer:                                            │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │ MetavidoWebRTC  │  │ HiFiHologram    │  │ hifi_hologram   │  │
+│  │ Decoder         │→ │ Controller      │→ │ _people.vfx     │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+**Dynamic Quality Scaling**:
+```csharp
+// Auto-adjust quality based on peer count
+public HologramQuality GetQualityForPeerCount(int peerCount)
+{
+    return peerCount switch
+    {
+        1 => HologramQuality.Ultra,   // 1 peer: max quality
+        2 => HologramQuality.High,    // 2 peers: high quality
+        <= 4 => HologramQuality.Medium, // 3-4 peers: balanced
+        _ => HologramQuality.Low      // 5+ peers: performance
+    };
+}
+```
+
+---
+
+## Testing Procedures
+
+### Test Suite 1: Single User Mode
+
+**Prerequisites**:
+- iOS device with LiDAR (iPhone Pro/iPad Pro)
+- ARDepthSource in scene
+- HiFi VFX with VFXARBinder
+
+| Test | Steps | Expected Result |
+|------|-------|-----------------|
+| **T1.1: Basic Rendering** | 1. Open HOLOGRAM.unity<br>2. Add hifi_hologram_people VFX<br>3. Add HiFiHologramController<br>4. Run on device | Hologram renders with colored particles |
+| **T1.2: Color Accuracy** | 1. Hold red object in frame<br>2. Observe hologram colors | Red object appears red in hologram |
+| **T1.3: Skin Tones** | 1. Point camera at face<br>2. Observe hologram | Skin tones are natural, not tinted |
+| **T1.4: Quality Switching** | 1. Set Quality to Low<br>2. Observe particle count<br>3. Set Quality to Ultra | Low: sparse, Ultra: dense |
+| **T1.5: Auto Quality** | 1. Enable auto quality<br>2. Add heavy post-processing<br>3. Observe quality changes | Quality reduces when FPS drops |
+| **T1.6: Depth Culling** | 1. Set DepthRange to (0.5, 2.0)<br>2. Move camera | Objects outside range not rendered |
+
+### Test Suite 2: Conference Mode
+
+**Prerequisites**:
+- Two devices with builds
+- WebRTC signaling server running
+- EditorConferenceSimulator for Editor testing
+
+| Test | Steps | Expected Result |
+|------|-------|-----------------|
+| **T2.1: Simulated Conference** | 1. Open HOLOGRAM.unity<br>2. Add EditorConferenceSimulator<br>3. Set participant count to 4<br>4. Enter Play mode | 4 holograms render in grid layout |
+| **T2.2: WebRTC Connection** | 1. Launch app on Device A<br>2. Launch app on Device B<br>3. Join same room | Both see each other's hologram |
+| **T2.3: Multi-Peer Quality** | 1. Connect 4 peers<br>2. Check quality preset | All at Medium quality |
+| **T2.4: Layout Modes** | 1. With 2 peers, check layout<br>2. With 4 peers, check layout | 2: side-by-side, 4: grid |
+| **T2.5: Peer Disconnect** | 1. Connect 3 peers<br>2. Disconnect 1 peer | Hologram removed, quality adjusts |
+| **T2.6: Network Latency** | 1. Add simulated latency<br>2. Observe hologram updates | Smooth with <200ms latency |
+
+### Test Suite 3: Performance Benchmarks
+
+| Metric | Low | Medium | High | Ultra |
+|--------|-----|--------|------|-------|
+| **Particle Count** | 10K | 50K | 100K | 200K |
+| **GPU Time (1 hologram)** | <1ms | <2ms | <3ms | <5ms |
+| **FPS (1 hologram)** | >60 | >60 | >55 | >45 |
+| **FPS (4 holograms)** | >50 | >35 | >25 | N/A |
+| **Memory (per hologram)** | <30MB | <60MB | <80MB | <120MB |
+
+### Test Suite 4: Integration Verification
+
+| Test | Steps | Expected Result |
+|------|-------|-----------------|
+| **T4.1: ARDepthSource Binding** | 1. Check VFXARBinder properties<br>2. Verify binding status | All textures bound (green) |
+| **T4.2: WebRTC Decoder Binding** | 1. Connect remote peer<br>2. Check decoder output | ColorTexture/DepthTexture valid |
+| **T4.3: Quality Persistence** | 1. Set Quality to High<br>2. Reconnect peer | Quality remains High |
+| **T4.4: Memory Cleanup** | 1. Connect/disconnect peers<br>2. Monitor memory | Memory releases on disconnect |
+
+---
+
 ## Implementation Phases
 
 ### Phase 1: Core VFX (Sprint 1)
@@ -327,15 +460,24 @@ binder.Refresh(); // Binds ColorMap, DepthMap, PositionMap, etc.
 - [ ] Integrate with HiFiHologramController
 - [ ] Test quality presets on device
 - [ ] Verify color accuracy
+- [ ] **Single user mode testing (T1.1-T1.6)**
 
-### Phase 2: Optimization (Sprint 2)
+### Phase 2: Conference Integration (Sprint 2)
+
+- [ ] Integrate with MetavidoWebRTCDecoder
+- [ ] Connect to HologramConferenceManager
+- [ ] Add dynamic quality scaling by peer count
+- [ ] **Conference mode testing (T2.1-T2.6)**
+
+### Phase 3: Optimization (Sprint 3)
 
 - [ ] Implement auto quality adjustment
 - [ ] Add GPU instancing for multi-hologram
 - [ ] Profile memory usage
 - [ ] Add LOD system for distant holograms
+- [ ] **Performance benchmarks (Test Suite 3)**
 
-### Phase 3: Advanced Rendering (Sprint 3)
+### Phase 4: Advanced Rendering (Sprint 4)
 
 - [ ] Gaussian splatting variant
 - [ ] Temporal stability (reduce particle jitter)

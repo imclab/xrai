@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
+using Unity.XR.CoreUtils;
 using H3M.Core;
 
 namespace H3M.Editor
@@ -15,19 +16,19 @@ namespace H3M.Editor
             Debug.Log("[H3M Phase1] Validating scene setup...");
 
             // Check AR Session
-            var arSession = Object.FindObjectOfType<ARSession>();
+            var arSession = Object.FindFirstObjectByType<ARSession>();
             Log("AR Session", arSession != null);
 
-            // Check AR Session Origin
-            var arSessionOrigin = Object.FindObjectOfType<ARSessionOrigin>();
-            Log("AR Session Origin", arSessionOrigin != null);
+            // Check XR Origin (formerly AR Session Origin)
+            var xrOrigin = Object.FindFirstObjectByType<XROrigin>();
+            Log("XR Origin", xrOrigin != null);
 
             // Check AR Camera Manager
-            var arCameraManager = Object.FindObjectOfType<ARCameraManager>();
+            var arCameraManager = Object.FindFirstObjectByType<ARCameraManager>();
             Log("AR Camera Manager", arCameraManager != null);
 
             // Check AR Occlusion Manager
-            var arOcclusionManager = Object.FindObjectOfType<AROcclusionManager>();
+            var arOcclusionManager = Object.FindFirstObjectByType<AROcclusionManager>();
             Log("AR Occlusion Manager", arOcclusionManager != null);
 
             if (arOcclusionManager != null)
@@ -38,15 +39,15 @@ namespace H3M.Editor
             }
 
             // Check HologramSource
-            var hologramSource = Object.FindObjectOfType<HologramSource>();
+            var hologramSource = Object.FindFirstObjectByType<HologramSource>();
             Log("Hologram Source", hologramSource != null);
 
             // Check HologramRenderer
-            var hologramRenderer = Object.FindObjectOfType<HologramRenderer>();
+            var hologramRenderer = Object.FindFirstObjectByType<HologramRenderer>();
             Log("Hologram Renderer", hologramRenderer != null);
 
             // Check VFX
-            var vfx = Object.FindObjectOfType<VisualEffect>();
+            var vfx = Object.FindFirstObjectByType<VisualEffect>();
             Log("Visual Effect", vfx != null);
             if (vfx != null)
             {
@@ -59,7 +60,7 @@ namespace H3M.Editor
         [MenuItem("H3M/Phase 1 Hologram/Configure for LiDAR")]
         public static void ConfigureForLiDAR()
         {
-            var arOcclusionManager = Object.FindObjectOfType<AROcclusionManager>();
+            var arOcclusionManager = Object.FindFirstObjectByType<AROcclusionManager>();
             if (arOcclusionManager == null)
             {
                 Debug.LogError("[H3M Phase1] No AROcclusionManager found!");

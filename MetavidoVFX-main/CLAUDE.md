@@ -237,7 +237,7 @@ var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
 
 **Fixed files**: ARDepthSource.cs, SimpleHumanHologram.cs, DiagnosticOverlay.cs, DirectDepthBinder.cs, HumanParticleVFX.cs, DepthImageProcessor.cs (2026-01-20)
 
-**Spec**: `../specs/005-ar-texture-safety/spec.md`
+**Spec**: `Assets/Documentation/specs/005-ar-texture-safety/spec.md`
 
 ### VFX Custom HLSL Parameter Mismatch
 Custom HLSL blocks fail with "cannot implicitly convert from 'float' to 'SamplerState'" when the HLSL function signature has more parameters than VFX Graph provides input slots.
@@ -312,6 +312,20 @@ Editor utilities accessible via Unity menu bar:
 | `H3M > Network > Setup WebRTC Receiver` | Create WebRTC receiver for conferencing |
 | `H3M > Network > Add WebRTC Binder to Selected` | Add remote stream binder to VFX |
 | `H3M > Network > Verify Network Setup` | Check WebRTC configuration |
+| **HiFi Hologram** | |
+| `H3M > HiFi Hologram > Create HiFi Hologram VFX` | Create high-fidelity point cloud VFX from template |
+| `H3M > HiFi Hologram > Add HiFiHologramController to Selected` | Add quality controller to VFX |
+| `H3M > HiFi Hologram > Setup Complete HiFi Hologram Rig` | Create complete rig (VFX + controller + binder) |
+| `H3M > HiFi Hologram > Verify HiFi Setup` | Check HiFi hologram configuration |
+| **VFX Debug** | |
+| `H3M > VFX Debug > Add Property Inspector` | Runtime property viewer (F1 toggle, 1-9 select) |
+| `H3M > VFX Debug > Add Mock Texture Provider` | Procedural test textures for Editor |
+| `H3M > VFX Debug > Add All Debug Tools` | Property Inspector + Dashboard |
+| `H3M > VFX Debug > List All VFX Properties` | Log all exposed properties |
+| `H3M > VFX Debug > Validate All VFX Bindings` | Check binding status |
+| `H3M > VFX Debug > Open VFX Graph for Selected` | Open selected VFX in Graph editor |
+| `H3M > VFX Debug > Reinitialize All VFX` | Reset all VFX |
+| `H3M > VFX Debug > Stop All VFX` / `Play All VFX` | Control playback |
 | **Debug** | |
 | `H3M > Debug > Re-enable iOS Components` | Force re-enable HoloKit components after Play mode |
 | **Spec Demos** | |
@@ -670,7 +684,9 @@ Extended documentation in parent repo:
 ## Specifications
 
 Project specifications in parent repo:
-- `../specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror) ✅
-- `../specs/003-hologram-conferencing/` - Recording/playback/multiplayer (Draft)
-- `../specs/004-metavidovfx-systems/` - VFX systems implementation ✅
-- `../specs/005-ar-texture-safety/` - TryGetTexture pattern ✅
+- `Assets/Documentation/specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror) ✅
+- `Assets/Documentation/specs/003-hologram-conferencing/` - Recording/playback (In Progress), WebRTC pending
+- `Assets/Documentation/specs/004-metavidovfx-systems/` - VFX systems implementation ✅
+- `Assets/Documentation/specs/005-ar-texture-safety/` - TryGetTexture pattern ✅
+- `Assets/Documentation/specs/009-icosa-sketchfab-integration/` - 3D model search (In Progress)
+- `Assets/Documentation/specs/012-hand-tracking/` - Hand tracking + brush (In Progress)
