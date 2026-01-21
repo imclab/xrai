@@ -28,6 +28,189 @@ kbrepo "hand"   # Search 520+ GitHub repos
 
 **Full docs**: `_SIMPLIFIED_INTELLIGENCE_CORE.md`
 
+---
+
+## 🏗️ HOLISTIC ARCHITECTURE (How Everything Connects)
+
+### System Overview
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER (James)                              │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+         ┌────────────────────┼────────────────────┐
+         ▼                    ▼                    ▼
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│ Claude Code │      │   Gemini    │      │    Codex    │
+│  (Primary)  │      │   (FREE)    │      │   (Fast)    │
+└──────┬──────┘      └──────┬──────┘      └──────┬──────┘
+       │                    │                    │
+       └────────────────────┼────────────────────┘
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+     ┌────────────────┐          ┌────────────────┐
+     │  SHARED FILES  │          │   MCP SERVERS  │
+     │  (Memory Layer)│          │  (Tool Layer)  │
+     └────────────────┘          └────────────────┘
+              │                           │
+    ┌─────────┴─────────┐       ┌─────────┴─────────┐
+    ▼                   ▼       ▼                   ▼
+┌────────┐      ┌────────────┐ ┌────────┐    ┌──────────┐
+│GLOBAL  │      │KnowledgeBase│ │ Unity  │    │JetBrains │
+│RULES.md│      │ (116 files) │ │  MCP   │    │   MCP    │
+└────────┘      └────────────┘ └────────┘    └──────────┘
+                      │              │              │
+                      ▼              ▼              ▼
+               ┌───────────┐  ┌───────────┐  ┌───────────┐
+               │claude-mem │  │Unity Editor│  │   Rider   │
+               │ (ChromaDB)│  │  (6400)   │  │  (63342)  │
+               └───────────┘  └───────────┘  └───────────┘
+```
+
+### Layer Breakdown
+
+| Layer | Components | Purpose | Token Cost |
+|-------|------------|---------|------------|
+| **Rules** | GLOBAL_RULES.md, CLAUDE.md | Universal behavior | ~2K (loaded once) |
+| **Memory** | KnowledgeBase/, LEARNING_LOG.md | Persistent knowledge | 0 (grep) |
+| **Semantic** | claude-mem (ChromaDB) | Fuzzy recall | ~500/query |
+| **Tools** | Unity MCP, JetBrains MCP | IDE/Editor control | ~300/call |
+| **Context** | Project files, git status | Current state | Variable |
+
+### File-Based Memory (Primary - Zero Tokens)
+
+```
+~/GLOBAL_RULES.md                    ← Universal rules (this file)
+~/Documents/GitHub/Unity-XR-AI/
+├── KnowledgeBase/                   ← 116 pattern files
+│   ├── _QUICK_FIX.md               ← Error → Fix lookup
+│   ├── _PATTERN_TAGS.md            ← Find files by topic
+│   ├── _KB_SEARCH_COMMANDS.md      ← Search reference
+│   └── LEARNING_LOG.md             ← Discoveries journal
+├── CLAUDE.md                        ← Project context
+└── specs/                           ← Specifications
+```
+
+**Access from any tool**: `kb "topic"`, `kbfix "error"`, `kbtag "vfx"`
+
+### MCP Server Architecture
+
+| Server | Port | Purpose | When to Use |
+|--------|------|---------|-------------|
+| **UnityMCP** | 6400 | Editor automation | Scene, GameObject, VFX ops |
+| **JetBrains** | 63342 | Code intelligence | Search, refactor, symbols |
+| **claude-mem** | — | Semantic memory | Fuzzy recall, context |
+| **github** | — | Repo operations | PRs, issues, commits |
+
+**Startup**: `mcp-kill-dupes && unity-mcp-cleanup`
+
+### IDE/Tool Integration
+
+| Tool | Config Location | Reads GLOBAL_RULES | Has MCP |
+|------|-----------------|-------------------|---------|
+| Claude Code | `~/.claude/` | ✅ Yes | ✅ Full |
+| Gemini CLI | `~/.gemini/` | ✅ Via grep | ❌ No |
+| Codex CLI | `~/.codex/` | ✅ Via grep | ❌ No |
+| Cursor | `~/.cursor/` | ✅ Yes | ✅ Limited |
+| Windsurf | `~/.windsurf/` | ✅ Yes | ✅ Limited |
+| Rider | Built-in | ❌ No | ✅ Via MCP |
+| VS Code | `.vscode/` | ❌ No | ✅ Via extensions |
+
+### Context Sharing Between Tools
+
+**Shared (All Tools Access)**:
+- `~/GLOBAL_RULES.md` - Universal rules
+- `~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/` - Pattern library
+- `~/Documents/GitHub/Unity-XR-AI/CLAUDE.md` - Project context
+- Git repo state - Commits, branches, status
+- Filesystem - All source files
+
+**Tool-Specific (Not Shared)**:
+- Conversation history - Each session isolated
+- MCP connections - Claude Code only
+- claude-mem memories - Claude Code only (query via grep for others)
+
+### Agent Architecture
+
+| Agent Type | Purpose | Tokens | When to Use |
+|------------|---------|--------|-------------|
+| **Explore** | Codebase search | Independent | Open-ended queries |
+| **Plan** | Architecture design | Independent | Multi-file changes |
+| **Task** | Parallel execution | Independent | Background work |
+| **Subagent** | Verification | Independent | Code review, testing |
+
+**Key Insight**: Agents have independent token budgets - use them to offload work.
+
+### Plugin/Extension Ecosystem
+
+| Category | Examples | Integration Point |
+|----------|----------|-------------------|
+| **MCP Servers** | UnityMCP, JetBrains, github | `~/.claude/settings.json` |
+| **Claude Skills** | /commit, /review, custom | `~/.claude/commands/` |
+| **IDE Plugins** | Codeium, Tabnine, Copilot | IDE-specific |
+| **Shell Aliases** | kb, kbfix, kbtag | `~/.zshrc` |
+| **Git Hooks** | Pre-commit, post-merge | `.git/hooks/` |
+| **LaunchAgents** | MCP cleanup, backups | `~/Library/LaunchAgents/` |
+
+### Config File Hierarchy
+
+```
+Priority (highest to lowest):
+1. Command-line args          claude --model opus
+2. Environment vars           CLAUDE_MODEL=opus
+3. Project .claude/           ./project/.claude/settings.json
+4. User config                ~/.claude/settings.json
+5. GLOBAL_RULES.md            ~/GLOBAL_RULES.md
+6. Defaults                   Built-in Claude behavior
+```
+
+### Cross-Tool Workflows
+
+**Rollover (Token Limit)**:
+```
+Claude Code (200K) → Gemini (1M FREE) → Codex (128K)
+All read: GLOBAL_RULES.md, KnowledgeBase/, CLAUDE.md
+```
+
+**Parallel Work**:
+```
+Claude Code: Complex implementation
+Gemini: Research (FREE, 1M context)
+Rider: Code completion (local, fast)
+Unity: Play mode testing
+```
+
+**Handoff Pattern**:
+```
+1. Claude Code hits limit
+2. Export: git stash, summary to ROLLOVER_CHECKPOINT.md
+3. Switch: gemini or codex
+4. Import: "Read ~/GLOBAL_RULES.md and project/CLAUDE.md"
+```
+
+### Memory Hierarchy (Speed vs Persistence)
+
+| Type | Speed | Persistence | Token Cost | Best For |
+|------|-------|-------------|------------|----------|
+| **Conversation** | Instant | Session | Free | Current task |
+| **grep KB** | <1s | Permanent | 0 | Pattern lookup |
+| **claude-mem** | ~2s | Permanent | ~500 | Semantic recall |
+| **LEARNING_LOG** | Instant | Permanent | 0 | Discovery journal |
+| **Git history** | ~1s | Permanent | 0 | Code archaeology |
+
+### Automation Layer
+
+| Automation | Trigger | Purpose |
+|------------|---------|---------|
+| `mcp-kill-dupes` | Session start | Clean duplicate servers |
+| `unity-mcp-cleanup` | Session start | Remove stale Unity instances |
+| `pattern-indexer.sh` | Manual/cron | Rebuild _PATTERN_TAGS.md |
+| `ai-usage-advisor.sh` | Before task | Suggest AI vs manual |
+| LaunchAgent backups | Daily | Archive configs |
+
+---
+
 ## ⚠️ TOKEN LIMIT (CHECK EVERY RESPONSE)
 **Stay below 95% of weekly/session limits.** If approaching limit: stop non-essential work, summarize, end session.
 
