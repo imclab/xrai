@@ -10,14 +10,8 @@ using MetavidoVFX.VFX;
 [CustomEditor(typeof(VFXARBinder))]
 public class VFXARBinderEditor : Editor
 {
-    SerializedProperty _autoBindOnStart;
     bool _showAuditResults = false;
     VFXPipelineAuditResult _lastAuditResult;
-
-    void OnEnable()
-    {
-        _autoBindOnStart = serializedObject.FindProperty("_autoBindOnStart");
-    }
 
     public override void OnInspectorGUI()
     {
@@ -58,17 +52,11 @@ public class VFXARBinderEditor : Editor
                     VFXBindingSelectorWindow.ShowWindow(result);
                 }
 
-                // Auto-bind toggle
-                EditorGUI.BeginChangeCheck();
-                bool newValue = EditorGUILayout.ToggleLeft("Auto-Bind", _autoBindOnStart.boolValue, GUILayout.Width(80));
-                if (EditorGUI.EndChangeCheck())
+                // Auto-bind button
+                if (GUILayout.Button("Re-Detect", GUILayout.Width(70), GUILayout.Height(25)))
                 {
-                    _autoBindOnStart.boolValue = newValue;
-                    if (newValue)
-                    {
-                        binder.AutoDetectBindings();
-                        AuditPipeline(binder, vfx, fix: false);
-                    }
+                    binder.AutoDetectBindings();
+                    AuditPipeline(binder, vfx, fix: false);
                 }
             }
 
