@@ -1,6 +1,6 @@
 # Spec-Kit: Unity-XR-AI Feature Specifications
 
-**Last Updated**: 2026-01-20
+**Last Updated**: 2026-01-21
 **Triple Verified**: All specs cross-referenced with KB, docs, and online research
 
 ---
@@ -44,16 +44,18 @@
 | ID | Name | Status | Priority | Tasks |
 |----|------|--------|----------|-------|
 | 002 | [H3M Hologram Foundation](./002-h3m-foundation/spec.md) | ✅ Complete (Legacy) | P1 | Done |
-| 003 | [Hologram Conferencing](./003-hologram-conferencing/spec.md) | Draft | P2 | Pending |
+| **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **🚧 In Progress** | **P2** | Recording ✅, WebRTC ⬜ |
 | 004 | [MetavidoVFX Systems](./004-metavidovfx-systems/spec.md) | ✅ Complete | P1 | Done |
 | 005 | [AR Texture Safety](./005-ar-texture-safety/spec.md) | ✅ Complete | P1 | Done |
 | 006 | [VFX Library & Pipeline](./006-vfx-library-pipeline/spec.md) | ✅ Complete | P1 | Done |
 | 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
 | **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **Architecture Approved** | **P0** | **67 tasks** |
-| 009 | [Icosa & Sketchfab 3D Model Integration](./009-icosa-sketchfab-integration/spec.md) | Draft | P1 | 14 tasks |
+| **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **🚧 In Progress** | **P1** | Core ✅, Voice/glTF ⬜ |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
-| **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **Draft** | **P0** | **24 tasks (8 phases)** |
+| **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **🚧 In Progress** | **P0** | Providers ✅, Brush ⬜ |
+| **013** | [**UI/UX Conferencing System**](./013-ui-ux-conferencing/spec.md) | **Planning** | **P0** | Auth, HUD, Styles ⬜ |
+| **014** | [**High-Fidelity Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | **Planning** | **P0** | Controller ✅, VFX ⬜ |
 
 ### Hologram Implementation Note
 
@@ -167,6 +169,10 @@ specs/
 ├── 012-hand-tracking/                # P0 (24 tasks)
 │   ├── spec.md                  # Hand tracking + brush painting
 │   └── tasks.md                 # 8 phases, ~32 hours
+├── 013-ui-ux-conferencing/           # P0 (UI/UX)
+│   └── spec.md                  # Auth, HUD, glassmorphism design
+├── 014-hifi-hologram-vfx/            # P0 (Visual fidelity)
+│   └── spec.md                  # RGB color sampling, quality presets
 ```
 
 ## Usage

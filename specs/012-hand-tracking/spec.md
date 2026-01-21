@@ -1,8 +1,19 @@
-# Spec 012: Hand Tracking Implementation & Verification
+# Feature Specification: Hand Tracking Implementation & Verification
 
-**Status**: Draft
+**Status**: In Progress (Providers implemented 2026-01-21)
 **Created**: 2026-01-20
 **Sprint**: 3 (estimated)
+**Implementation**:
+- ✅ IHandTrackingProvider.cs - Unified interface (26 joints)
+- ✅ HandTrackingProviderManager.cs - Auto-discovery, fallback chain
+- ✅ HoloKitHandTrackingProvider.cs - Priority 100, native iOS
+- ✅ XRHandsTrackingProvider.cs - Priority 80, AR Foundation
+- ✅ MediaPipeHandTrackingProvider.cs - Priority 60, ML-based
+- ✅ BodyPixHandTrackingProvider.cs - Priority 40, wrist fallback
+- ✅ TouchInputHandTrackingProvider.cs - Priority 10, Editor
+- ✅ VFXHandBinder.cs - Hand→VFX property binding
+- ⬜ BrushController for stroke management
+- ⬜ Two-hand palette gesture
 
 ## Overview
 

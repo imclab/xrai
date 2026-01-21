@@ -6,6 +6,20 @@ This document explains optimal low-memory approaches for recording and playing b
 
 ---
 
+## Key Insight: Metavido vs Avfi (Package Separation)
+
+**Metavido** (jp.keijiro.metavido) handles **ENCODING**:
+- XRDataProvider collects AR textures (Y/CbCr, depth, stencil, pose)
+- FrameEncoder multiplexes into single 1920x1080 RenderTexture with metadata barcode
+
+**Avfi** (jp.keijiro.avfi) handles **RECORDING**:
+- ScreenRecorder writes RenderTexture frames to MP4 via AVFoundation
+- Native iOS plugin for hardware-accelerated H.264/HEVC encoding
+
+These are separate concerns - one encodes AR data into a frame format, the other writes frames to video.
+
+---
+
 ## Metavido: The Optimal Low-Memory Approach
 
 Metavido (formerly Bibcam) is a **video subformat** that embeds AR metadata directly into video frames using:
@@ -727,6 +741,93 @@ function relayToRoom(ws, msg) {
 | VFX Render | ~3ms/frame |
 | Total Frame | ~5ms @ 30fps |
 | Memory | ~120MB (video buffer + textures) |
+
+---
+
+## WebRTC Streaming Implementation (Spec 003 Phase 2)
+
+### Key Insight: Metavido + WebRTC Synergy
+
+**The genius of keijiro's Metavido format** is that all data (color + depth + camera pose) fits in a single standard H.264 video frame. The burnt-in barcode contains 12 floats (camera position, rotation, FOV, depth range) which are decoded via compute shader. Color occupies the left half, depth the right-bottom quadrant.
+
+**WebRTC Integration Advantage**: By encoding to Metavido format before WebRTC transmission, receivers automatically get synchronized camera pose data without needing a separate data channel. This eliminates the complexity of synchronizing metadata with video frames.
+
+### Implemented Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| `MetavidoWebRTCEncoder` | `Assets/H3M/Network/` | Encodes AR frames in Metavido format for WebRTC |
+| `MetavidoWebRTCDecoder` | `Assets/H3M/Network/` | Decodes Metavido frames, extracts color/depth/metadata |
+| `HologramConferenceManager` | `Assets/H3M/Network/` | High-level conference management using WebRtcVideoChat |
+| `ConferenceLayoutManager` | `Assets/H3M/Network/` | Vision Pro-style spatial positioning of holograms |
+| `SpatialAudioController` | `Assets/H3M/Network/` | 3D audio from hologram positions |
+| `EditorConferenceSimulator` | `Assets/H3M/Network/` | Mock testing (1-20 users) without network |
+
+### Metavido Frame Structure
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    Metavido Encoded Frame (1920×1080)              │
+├────────────────────────────────┬─────────────────────────────────┤
+│                                │                                  │
+│         COLOR (RGB)            │         DEPTH (RG16)            │
+│         960 × 1080             │         960 × 540               │
+│                                │                                  │
+│                                ├─────────────────────────────────┤
+│                                │         STENCIL (R8)            │
+│                                │         960 × 540               │
+│                                │                                  │
+├────────────────────────────────┴─────────────────────────────────┤
+│  BARCODE: px,py,pz | rx,ry,rz | sx,sy,fov | near,far,hash       │
+│           (12 floats = 48 bytes, encoded as visible pattern)     │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Encoding Flow (MetavidoWebRTCEncoder)
+
+```csharp
+// 1. Create metadata from camera transform
+var metadata = new Metadata(arCamera.transform, projMatrix, depthRange);
+
+// 2. Upload to GPU buffer
+metadataBuffer.SetData(new[] { metadata });
+
+// 3. Shader multiplexes color + depth + barcode
+Graphics.Blit(null, encodedTexture, encoderMaterial);
+
+// 4. Send via WebRTC video track
+webrtcVideoTrack.SendFrame(encodedTexture);
+```
+
+### Decoding Flow (MetavidoWebRTCDecoder)
+
+```csharp
+// 1. Receive WebRTC video frame
+var encodedFrame = webrtcVideoTrack.GetFrame();
+
+// 2. Decode barcode via compute shader → camera pose
+metadataDecoder.DecodeAsync(encodedFrame);
+
+// 3. Demux textures via shader passes
+demuxer.Demux(encodedFrame, metadata);
+// Pass 0: Color (left half)
+// Pass 1: Depth (right bottom quadrant)
+
+// 4. Bind to VFX
+vfx.SetTexture("ColorMap", demuxer.ColorTexture);
+vfx.SetTexture("DepthMap", demuxer.DepthTexture);
+vfx.SetMatrix4x4("InverseView", metadata.GetInverseView());
+```
+
+### Why No Separate Data Channel
+
+Traditional WebRTC setups use:
+- Video track → compressed pixels
+- Data channel → JSON metadata (position, rotation, etc.)
+
+**Problem**: Synchronizing video frames with metadata is error-prone. Frames may arrive out of order or with varying latency.
+
+**Metavido Solution**: Metadata is **burnt into the video frame itself** as a barcode pattern. When you receive a frame, the metadata is guaranteed to match that exact frame. No synchronization logic needed.
 
 ---
 

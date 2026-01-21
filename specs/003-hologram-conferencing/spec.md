@@ -2,8 +2,18 @@
 
 **Feature Branch**: `003-hologram-conferencing`
 **Created**: 2026-01-14
-**Updated**: 2026-01-20
-**Status**: Draft (Phase 1 Recording ready for implementation)
+**Updated**: 2026-01-21
+**Status**: In Progress (Phase 2 WebRTC in progress)
+**Implementation**:
+- ✅ RecordingController.cs - Avfi-based MP4 recording
+- ✅ RecordingUI.cs - UI Toolkit record button/timer
+- ✅ RECORDING_ARCHITECTURE.md - Metavido/Avfi separation docs
+- ✅ ConferenceLayoutManager.cs - Vision Pro-style spatial positioning
+- ✅ SpatialAudioController.cs - Point sounds from hologram positions
+- ✅ EditorConferenceSimulator.cs - Testing with mock users (1-20)
+- ✅ MetavidoWebRTCEncoder.cs - Encode frames for WebRTC streaming
+- ✅ MetavidoWebRTCDecoder.cs - Decode incoming Metavido streams
+- ✅ HologramConferenceManager.cs - High-level WebRTC conferencing
 **Input**: User description: "Optimal low memory way to record & playback holograms. Record person hologram, play it back & put it on desk. Use metavidovfx technique. Also multiplayer via webrtc video conferencing - streaming lidar depth info or metavidovfx encoded video live to drive vfx graph hologram of other connected users."
 
 ## Triple Verification (2026-01-20)
@@ -13,7 +23,7 @@
 | KB `_HOLOGRAM_RECORDING_PLAYBACK.md` | ✅ Verified | 40K detailed spec, Metavido format |
 | KB `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` | ✅ Verified | Photon/Normcore/coherence comparison |
 | Online: [keijiro/Metavido](https://github.com/keijiro/Metavido) | ✅ Verified | Burnt-in-barcode metadata + squeezed depth |
-| Online: [Unity WebRTC](https://github.com/Unity-Technologies/com.unity.webrtc) | ⚠️ Note | MR-WebRTC deprecated; use Unity official package |
+| Online: [Unity WebRTC](https://github.com/Unity-Technologies/com.unity.webrtc) | ⚠️ Conflict | Do NOT add - conflicts with WebRtcVideoChat plugin |
 | Online: [VideoSDK Guide](https://www.videosdk.live/developer-hub/webrtc/unity-webrtc-video-streaming-multiplayer-game) | ✅ Verified | Architecture for PC/mobile/VR streaming |
 
 ### Key Technical Findings
@@ -118,7 +128,7 @@ As a developer, I want recording and playback to use minimal memory (<150MB tota
 
 - **FR-001**: Recording MUST use **Metavido** format (color + depth + pose in single video).
 - **FR-002**: Recording MUST encode at **1920×1080 @ 30fps** using H.264/HEVC.
-- **FR-003**: Playback MUST use **VFX Graph** with `VFXMetavidoBinder`.
+- **FR-003**: Playback MUST use **VFX Graph** with `VFXARBinder` (via Hologram prefab).
 - **FR-004**: Playback MUST support AR plane detection for hologram placement.
 - **FR-005**: Multiplayer MUST use **WebRTC** for P2P video streaming.
 - **FR-006**: Multiplayer MUST support **2-6 simultaneous users**.
@@ -134,27 +144,28 @@ As a developer, I want recording and playback to use minimal memory (<150MB tota
 
 ### Key Entities
 
+**Implemented** (Hologram prefab - `Assets/Prefabs/Hologram/Hologram.prefab`):
 ```
-HologramRecording {
-  videoClip: VideoClip       // Metavido-encoded MP4
-  duration: float            // seconds
-  resolution: Vector2Int     // 1920×1080
-  frameRate: int             // 30
-}
+Hologram (root GameObject)
+├── HologramPlacer           // AR placement + gestures
+├── HologramController       // Mode switching (Live AR / Metavido)
+├── VideoPlayer              // Metavido video playback
+├── MetadataDecoder          // Camera matrix extraction
+├── TextureDemuxer           // RGB/Depth separation
+│
+└── HologramVFX (child, scale 0.15)
+    ├── VisualEffect         // VFX Graph renderer
+    ├── VFXARBinder          // Binds textures to VFX
+    └── VFXCategory          // Category tagging
+```
 
-HologramPlaybackController {
-  videoPlayer: VideoPlayer
-  metadataDecoder: MetadataDecoder
-  textureDemuxer: TextureDemuxer
-  vfxBinder: VFXMetavidoBinder
-  placementAnchor: Transform
-}
-
+**For Multiplayer** (Phase 2):
+```
 HologramConference {
   roomId: string
   localEncoder: FrameEncoder
   remoteHolograms: Dictionary<string, RemoteHologram>
-  signalingConnection: WebSocket
+  signalingConnection: WebSocket  // Use existing WebRtcVideoChat
 }
 
 RemoteHologram {
@@ -162,7 +173,7 @@ RemoteHologram {
   videoTrack: Texture
   decoder: MetadataDecoder
   demuxer: TextureDemuxer
-  vfx: VisualEffect
+  vfx: VisualEffect + VFXARBinder
 }
 ```
 
@@ -178,13 +189,17 @@ ARKit LiDAR → XRDataProvider → FrameEncoder → iOS Recording API → Camera
 [256×192 Depth] [1920×1080 Color] [Metavido Frame 1920×1080]
 ```
 
-### Playback Pipeline
+### Playback Pipeline (Implemented in Hologram Prefab)
 
 ```
-VideoPlayer → MetadataDecoder → TextureDemuxer → VFXMetavidoBinder → VFX Graph
-     ↓              ↓                ↓                   ↓
-[MP4 Frame] [Camera Pose] [Color + Depth RT] [Hologram Particles]
+VideoPlayer → MetadataDecoder → TextureDemuxer → HologramController → VFXARBinder → VFX Graph
+     ↓              ↓                ↓                  ↓                  ↓
+[MP4 Frame] [Camera Pose] [Color + Depth RT] [Mode Switch] [Hologram Particles]
 ```
+
+**HologramController** handles mode switching:
+- `SourceMode.LiveAR` - Uses ARDepthSource textures
+- `SourceMode.MetavidoVideo` - Uses VideoPlayer → TextureDemuxer textures
 
 ### Multiplayer Pipeline
 
@@ -192,6 +207,85 @@ VideoPlayer → MetadataDecoder → TextureDemuxer → VFXMetavidoBinder → VFX
 Local:  FrameEncoder → WebRTC Video Track → Network
 Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer → VFX
 ```
+
+---
+
+## Multi-User Spatial Architecture (Vision Pro Inspired)
+
+### Research: Apple Vision Pro Spatial Personas (visionOS 26)
+
+Based on [WWDC25 Session 318](https://developer.apple.com/videos/play/wwdc2025/318/) and [Apple Developer Documentation](https://developer.apple.com/documentation/groupactivities/adding-spatial-persona-support-to-an-activity):
+
+| Feature | Vision Pro Implementation | Our Implementation |
+|---------|---------------------------|-------------------|
+| **Optimal Placement** | System finds gaps around shared content | `ConferenceLayoutManager.FindNextAvailableSeat()` |
+| **Seat Poses** | Fixed positions relative to app | `SeatPose` struct with Position/Rotation |
+| **Context-Aware Layout** | Movie=side-by-side, Game=facing | `ConferenceLayoutMode` enum (Theater/Table/Grid) |
+| **Directional Presence** | Pointing and gaze preserved | Hologram faces center or camera |
+| **Spatial Audio** | Voice from persona position | `SpatialAudioController` per-hologram AudioSource |
+
+### Layout Modes
+
+| Mode | Use Case | Layout Pattern |
+|------|----------|----------------|
+| **Table** | Collaboration, meetings | Semi-circle facing center (like sitting at round table) |
+| **Theater** | Shared viewing, presentations | Side-by-side rows facing content |
+| **Grid** | Stress testing, large groups | N×M grid facing camera |
+| **Freeform** | AR passthrough | Users stay where they joined |
+
+### Multi-User Components
+
+```
+ConferenceLayoutManager
+├── SeatPose[] _seats           // Pre-generated positions
+├── Dictionary<peerId, state>   // Hologram states
+├── RegisterHologram(id, transform)  // Join conference
+├── UnregisterHologram(id)      // Leave conference
+└── Events: OnHologramSeated, OnLayoutChanged
+
+SpatialAudioController
+├── AudioSource per hologram    // Positioned at head
+├── Voice activity detection    // RMS threshold
+├── Active speaker boosting     // 1.2x volume
+├── Inactive ducking            // 0.7x volume
+└── Events: OnActiveSpeakerChanged
+
+EditorConferenceSimulator
+├── Mock hologram spawning      // 1-20 users
+├── Simulated voice activity    // Random speaking patterns
+├── Idle movement animation     // Subtle sway + head bob
+├── Layout mode testing         // All modes accessible via GUI
+└── Stress test mode            // 20 users, grid layout
+```
+
+### Scalability Limits
+
+| Users | Architecture | Expected FPS | Notes |
+|-------|-------------|--------------|-------|
+| 2-4 | P2P WebRTC | 60 FPS | Full mesh, each user sends to all |
+| 5-8 | SFU (WebRTC) | 45 FPS | Server relays streams |
+| 9-20 | SFU + Adaptive Quality | 30 FPS | Resolution scaling per user |
+| 20+ | Selective Forwarding | 30 FPS | Only active speakers full quality |
+
+### Testing Infrastructure
+
+**Editor Testing** (no network required):
+1. Add `EditorConferenceSimulator` to scene
+2. Press "Start Simulation" in GUI
+3. Use layout mode buttons to test arrangements
+4. Observe spatial audio visualization
+
+**Device Testing** (2 devices):
+1. Build to 2 iOS devices on same WiFi
+2. Both join same room code
+3. Verify hologram appears at seat position
+4. Wave - should see movement on other device
+
+**Stress Testing** (simulated):
+1. Start simulation with 20 users
+2. Enable Grid layout mode
+3. Monitor FPS in Dashboard
+4. Verify no memory leaks after 5 minutes
 
 ---
 
@@ -239,8 +333,9 @@ Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer �
 ### Packages Required
 
 - `jp.keijiro.metavido` v5.1.1 (already installed)
-- `com.unity.webrtc` (add for Phase 2)
+- ~~`com.unity.webrtc`~~ ⚠️ **DO NOT ADD** - conflicts with WebRtcVideoChat plugin (duplicate frameworks on iOS)
 - `jp.keijiro.vfxgraphassets` v3.10.1 (already installed)
+- **WebRtcVideoChat** (already in `Assets/3rdparty/WebRtcVideoChat/`) - use for Phase 2
 
 ### Infrastructure Required
 
