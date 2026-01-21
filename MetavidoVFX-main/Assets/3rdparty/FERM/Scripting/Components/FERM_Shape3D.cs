@@ -1,0 +1,1 @@
+public abstract class FERM_Shape3D : FERM_Shape { }
