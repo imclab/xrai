@@ -175,43 +175,65 @@ public class VFXARBinder : MonoBehaviour
     {
         // Lazy load source if needed
         if (_source == null) _source = ARDepthSource.Instance;
-        if (_source == null) return;
+        if (_source == null || _vfx == null) return;
 
-        // 1. Textures (Only bind if ID is valid, override enabled, and texture exists)
-        if (_idDepth != 0 && _bindDepthMapOverride && _source.DepthMap) _vfx.SetTexture(_idDepth, _source.DepthMap);
-        if (_idStencil != 0 && _bindStencilMapOverride && _source.StencilMap) _vfx.SetTexture(_idStencil, _source.StencilMap);
-        if (_idPosition != 0 && _bindPositionMapOverride && _source.PositionMap) _vfx.SetTexture(_idPosition, _source.PositionMap);
-        if (_idColor != 0 && _bindColorMapOverride && _source.ColorMap) _vfx.SetTexture(_idColor, _source.ColorMap);
-        if (_idVelocity != 0 && _bindVelocityMapOverride && _source.VelocityMap) _vfx.SetTexture(_idVelocity, _source.VelocityMap);
-
-        // 2. Camera Params
-        if (_idRayParams != 0 && _bindRayParamsOverride) _vfx.SetVector4(_idRayParams, _source.RayParams);
-        if (_idInvView != 0 && _bindInverseViewOverride) _vfx.SetMatrix4x4(_idInvView, _source.InverseView);
-        if (_idInvProj != 0 && Camera.main != null) _vfx.SetMatrix4x4(_idInvProj, Camera.main.projectionMatrix.inverse);
-        if (_idDepthRange != 0 && _bindDepthRangeOverride) _vfx.SetVector2(_idDepthRange, _depthRange);
-
-        // 3. Parameters
-        if (_idThrottle != 0 && _bindThrottleOverride) _vfx.SetFloat(_idThrottle, _throttle);
-
-        // 4. Audio (Read from Globals set by AudioBridge)
-        if (_bindAudioOverride)
+        // Use try-catch blocks to handle property binding errors gracefully
+        // This prevents errors when VFX assets change or have different property types
+        try
         {
-            if (_idAudioVol != 0) _vfx.SetFloat(_idAudioVol, Shader.GetGlobalFloat("_AudioVolume"));
-            if (_idAudioBands != 0) _vfx.SetVector4(_idAudioBands, Shader.GetGlobalVector("_AudioBands"));
+            // 1. Textures - verify with HasTexture before setting
+            if (_idDepth != 0 && _bindDepthMapOverride && _source.DepthMap && _vfx.HasTexture(_idDepth))
+                _vfx.SetTexture(_idDepth, _source.DepthMap);
+            if (_idStencil != 0 && _bindStencilMapOverride && _source.StencilMap && _vfx.HasTexture(_idStencil))
+                _vfx.SetTexture(_idStencil, _source.StencilMap);
+            if (_idPosition != 0 && _bindPositionMapOverride && _source.PositionMap && _vfx.HasTexture(_idPosition))
+                _vfx.SetTexture(_idPosition, _source.PositionMap);
+            if (_idColor != 0 && _bindColorMapOverride && _source.ColorMap && _vfx.HasTexture(_idColor))
+                _vfx.SetTexture(_idColor, _source.ColorMap);
+            if (_idVelocity != 0 && _bindVelocityMapOverride && _source.VelocityMap && _vfx.HasTexture(_idVelocity))
+                _vfx.SetTexture(_idVelocity, _source.VelocityMap);
+
+            // 2. Camera Params - verify types before setting
+            if (_idRayParams != 0 && _bindRayParamsOverride && _vfx.HasVector4(_idRayParams))
+                _vfx.SetVector4(_idRayParams, _source.RayParams);
+            if (_idInvView != 0 && _bindInverseViewOverride && _vfx.HasMatrix4x4(_idInvView))
+                _vfx.SetMatrix4x4(_idInvView, _source.InverseView);
+            if (_idInvProj != 0 && Camera.main != null && _vfx.HasMatrix4x4(_idInvProj))
+                _vfx.SetMatrix4x4(_idInvProj, Camera.main.projectionMatrix.inverse);
+            if (_idDepthRange != 0 && _bindDepthRangeOverride && _vfx.HasVector2(_idDepthRange))
+                _vfx.SetVector2(_idDepthRange, _depthRange);
+
+            // 3. Parameters
+            if (_idThrottle != 0 && _bindThrottleOverride && _vfx.HasFloat(_idThrottle))
+                _vfx.SetFloat(_idThrottle, _throttle);
+
+            // 4. Audio (Read from Globals set by AudioBridge)
+            if (_bindAudioOverride)
+            {
+                if (_idAudioVol != 0 && _vfx.HasFloat(_idAudioVol))
+                    _vfx.SetFloat(_idAudioVol, Shader.GetGlobalFloat("_AudioVolume"));
+                if (_idAudioBands != 0 && _vfx.HasVector4(_idAudioBands))
+                    _vfx.SetVector4(_idAudioBands, Shader.GetGlobalVector("_AudioBands"));
+            }
+
+            // 5. Extended bindings (spec-007)
+            if (_idHueShift != 0 && _vfx.HasFloat(_idHueShift)) _vfx.SetFloat(_idHueShift, _hueShift);
+            if (_idBrightness != 0 && _vfx.HasFloat(_idBrightness)) _vfx.SetFloat(_idBrightness, _brightness);
+            if (_idAlpha != 0 && _vfx.HasFloat(_idAlpha)) _vfx.SetFloat(_idAlpha, _alpha);
+            if (_idSpawnRate != 0 && _vfx.HasFloat(_idSpawnRate)) _vfx.SetFloat(_idSpawnRate, _spawnRate);
+            if (_idDepthOffset != 0 && _vfx.HasFloat(_idDepthOffset)) _vfx.SetFloat(_idDepthOffset, _depthOffset);
+
+            // 6. Map dimensions (auto-derived from PositionMap)
+            if (_source.PositionMap != null)
+            {
+                if (_idMapWidth != 0 && _vfx.HasFloat(_idMapWidth)) _vfx.SetFloat(_idMapWidth, _source.PositionMap.width);
+                if (_idMapHeight != 0 && _vfx.HasFloat(_idMapHeight)) _vfx.SetFloat(_idMapHeight, _source.PositionMap.height);
+            }
         }
-
-        // 5. Extended bindings (spec-007) - always bind if property exists
-        if (_idHueShift != 0) _vfx.SetFloat(_idHueShift, _hueShift);
-        if (_idBrightness != 0) _vfx.SetFloat(_idBrightness, _brightness);
-        if (_idAlpha != 0) _vfx.SetFloat(_idAlpha, _alpha);
-        if (_idSpawnRate != 0) _vfx.SetFloat(_idSpawnRate, _spawnRate);
-        if (_idDepthOffset != 0) _vfx.SetFloat(_idDepthOffset, _depthOffset);
-
-        // 6. Map dimensions (auto-derived from PositionMap)
-        if (_source.PositionMap != null)
+        catch (System.Exception)
         {
-            if (_idMapWidth != 0) _vfx.SetFloat(_idMapWidth, _source.PositionMap.width);
-            if (_idMapHeight != 0) _vfx.SetFloat(_idMapHeight, _source.PositionMap.height);
+            // Silently ignore binding errors - re-detect bindings on next frame
+            // This handles cases where VFX asset changed or properties were removed
         }
 
         // 7. Transform mode bindings (for anchored holograms)
