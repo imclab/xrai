@@ -75,10 +75,6 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.14f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.14f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
     <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.dt.app-ui@874541faca7e/Runtime/SourceGenerators/netstandard2.0/EnumToLowerCase.dll" />
-    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Assets/3rdparty/WebRtcVideoChat/Plugins/Byn.Awrtc.dll" />
-    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Assets/3rdparty/WebRtcVideoChat/Plugins/ios/cs/WebRtcCSharp.dll" />
-    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Assets/3rdparty/WebRtcVideoChat/Plugins/Byn.Awrtc.Native.dll" />
-    <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Assets/3rdparty/WebRtcVideoChat/Plugins/WebRtcCSharp.dll" />
     <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.ai.inference@587873fd5e1b/Runtime/Core/SourceGenerator/SourceGenerators.dll" />
     <Analyzer Include="/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/PackageCache/com.unity.dt.app-ui@874541faca7e/Runtime/MVVM/SourceGenerators/netstandard2.0/MVVMSourceGenerators.dll" />
   </ItemGroup>
@@ -129,8 +125,8 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/Utilities/AssetPathResolver.cs" />
     <Compile Include="Assets/Scripts/Editor/FileLoggerSetup.cs" />
     <Compile Include="Assets/Scripts/Editor/MyakuMyakuSetup.cs" />
-    <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/AQUA/jp.keijiro.kino.aqua.universal/Editor/Utils.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/AQUA/jp.keijiro.kino.aqua.universal/Editor/AquaEffectEditor.cs" />
+    <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/AQUA/jp.keijiro.kino.aqua.universal/Editor/Utils.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXARBinderEditor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Editor/ShaderGUI/Shaders/KnitwearUnlitShader.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fringe/Editor/FringeEditor.cs" />
@@ -138,8 +134,8 @@
     <Compile Include="Library/PackageCache/jp.keijiro.kino.feedback.universal@fe8f1d133b1f/Editor/FeedbackEffectInspector.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Editor/FERM_Generator.cs" />
     <Compile Include="Assets/3rdparty/Mirza Beig/Editor Extensions/_Common/Editor/ParticleEditorUtility.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/PremultiplyAlphaProcessorSettings.cs" />
     <Compile Include="Assets/3rdparty/HOLO_FX_PACK/Editor/Welcome.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/PremultiplyAlphaProcessorSettings.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/WelcomeScreenInitializerBase.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/Editor/Canvas/VFXToolboxCanvas.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/RemoveBackgroundBlendingProcessor.cs" />
@@ -160,8 +156,8 @@
     <Compile Include="Assets/Samples/Shader Graph/17.2.0/Custom Material Property Drawers/Editor/RemapDrawer.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Intercept Feature/Editor/InterceptCreateSessionFeatureEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/ImageSequenceAssetEditor.cs" />
-    <Compile Include="Assets/Scripts/Debug/Editor/DebugDefinesSetup.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Mask Texture Painter/Editor/ShapeFoliageInfiniGRASSGIBLIEditor.cs" />
+    <Compile Include="Assets/Scripts/Debug/Editor/DebugDefinesSetup.cs" />
     <Compile Include="Assets/Scripts/VFX/Editor/VFXProxSetup.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXCompatibilityAuditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/LoopingProcessorSettings.cs" />
@@ -169,8 +165,8 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Motion/Editor/ConstantMotionEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/AssembleProcessorSettings.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ScreenSpaceCavity/Editor/ScreenSpaceCavityEditor.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/AlphaFromRGBProcessorSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/Samples/UnityLogo/VectorFields/Texture3DPreview/Editor/Drawers/Texture3DPreviewDrawer.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/AlphaFromRGBProcessorSettings.cs" />
     <Compile Include="Assets/Scripts/Editor/BodyPixDefineSetup.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/Editor/Utility/FloatSliderPropertyDrawer.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/Editor/RFX4_ReplaceDistortionForMobile.cs" />
@@ -182,10 +178,10 @@
     <Compile Include="Assets/Scripts/Editor/AROcclusionDebugSetup.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/OpenUrlLink.cs" />
     <Compile Include="Assets/Scripts/Performance/Editor/VFXAutoOptimizerEditor.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Editor/MotionEditor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Cloth/Editor/ClothSpawnerEditor.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/FadeProcessor.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Editor/MotionEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Obscurance/Editor/Obscurance2Editor.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/FadeProcessor.cs" />
     <Compile Include="Assets/Scripts/Editor/EditorPlayModeHelper.cs" />
     <Compile Include="Assets/NNCam/Scripts/Editor/NNCamVFXValidator.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/ClickableElement.cs" />
@@ -204,8 +200,8 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/RemoveBackgroundSettings.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/AssembleProcessor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ShaderPack/Editor/SavedParameter.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Ramp/Editor/RampEditor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/PreferenceDefinition/ToggleProjectEditorPreferenceDefinition.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Ramp/Editor/RampEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/DecimateProcessor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/BreakFilpbookProcessor.cs" />
     <Compile Include="Assets/Scripts/Editor/DebugARDepthSource.cs" />
@@ -294,10 +290,10 @@
     <Compile Include="Assets/3rdparty/Mirza Beig/Editor Extensions/Utilities/Particle Playback/Editor/ParticlePlaybackEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXPipelineAuditor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/effectsControllerGIBLI/Editor/effectsControllerGIBLIEditor.cs" />
+    <Compile Include="Assets/3rdparty/FERM/Scripting/Editor/FERM_RendererEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Bloom/Editor/BloomEditor.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/Editor/VFXVolumeMixerSettings.cs" />
     <Compile Include="Assets/Scripts/Editor/InstantiateVFXFromResources.cs" />
-    <Compile Include="Assets/3rdparty/FERM/Scripting/Editor/FERM_RendererEditor.cs" />
     <Compile Include="Assets/Scripts/Editor/VFXRenameUtility.cs" />
     <Compile Include="Assets/Scripts/Editor/Rcam4SceneSetup.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Editor/SplineEditor.cs" />
@@ -309,8 +305,8 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/ProcessorInfo.cs" />
     <Compile Include="Assets/Scripts/Editor/LegacyComponentCleanup.cs" />
     <Compile Include="Assets/3rdparty/HOLO_FX_PACK/Editor/AssetPostImportProcess_HOLOFX.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/CustomMaterialProcessorSettings.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ShaderPack/Editor/ToonyLitShader.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Serialization/Processors/CustomMaterialProcessorSettings.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Editor/FERM_ParamExposerEditor.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Editor/FERM_ParamAudioEditor.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/unity-procedural-cables/Editor/ProceduralCableInspector.cs" />
@@ -319,8 +315,8 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/ImageSequencer/Editor/Processors/FixBordersProcessor.cs" />
     <Compile Include="Assets/Scripts/Editor/IcosaSettingsCreator.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/WelcomeScreen/Editor/WelcomeScreen/GuiElements/OpenUrlButton.cs" />
-    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/Editor/Utility/CurveDrawer.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/kShading/Editor/BaseGUI.cs" />
+    <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/Editor/Utility/CurveDrawer.cs" />
     <Compile Include="Assets/NNCam/Scripts/Editor/NNCamVFXSubgraphSwapper.cs" />
     <Compile Include="Assets/Scripts/Editor/DebugVoxelsBinder.cs" />
     <Compile Include="Assets/Scripts/Editor/PostProcessingSetup.cs" />
@@ -1381,9 +1377,6 @@
     <Reference Include="Pugrad.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Pugrad.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.WebRTC">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.WebRTC.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Shaders">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
     </Reference>
@@ -1399,11 +1392,11 @@
     <Reference Include="Klak.NNUtils.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Klak.NNUtils.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.WebRTC.Editor">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.WebRTC.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.OpenXR.Features.ConformanceAutomation">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.OpenXR.Features.ConformanceAutomation.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Config.Runtime">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Config.Runtime.dll</HintPath>
@@ -1413,9 +1406,6 @@
     </Reference>
     <Reference Include="Unity.AppUI">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.AppUI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.XR.OpenXR.Features.ConformanceAutomation">
-      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.OpenXR.Features.ConformanceAutomation.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor.Shared">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.Shared.dll</HintPath>
@@ -1688,13 +1678,13 @@
       <Project>{674c132f-1d0b-87ea-2f2b-cd65ff8a6648}</Project>
       <Name>MyExercise_2</Name>
     </ProjectReference>
-    <ProjectReference Include="Tests_1s.csproj">
-      <Project>{2013285e-b513-c89e-bec7-834d2cac757b}</Project>
-      <Name>Tests_1s</Name>
-    </ProjectReference>
     <ProjectReference Include="awrtc_common.csproj">
       <Project>{80ac5b6a-3b3c-c0bf-8f30-9d93934d3561}</Project>
       <Name>awrtc_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="Tests_1s.csproj">
+      <Project>{2013285e-b513-c89e-bec7-834d2cac757b}</Project>
+      <Name>Tests_1s</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj">
       <Project>{4764d47f-27d8-11c3-1382-d6b379752457}</Project>
@@ -1708,9 +1698,17 @@
       <Project>{8d44d599-9d99-741b-61d4-30757b1ba827}</Project>
       <Name>Unity.XR.Interaction.Toolkit.Samples.InteractionSimulator</Name>
     </ProjectReference>
+    <ProjectReference Include="awrtc.csproj">
+      <Project>{c32b69e0-14a5-0568-f795-ca4f73f7bd72}</Project>
+      <Name>awrtc</Name>
+    </ProjectReference>
     <ProjectReference Include="Tests_2.csproj">
       <Project>{737ab12a-8f72-375c-29f2-b0457f74b5ff}</Project>
       <Name>Tests_2</Name>
+    </ProjectReference>
+    <ProjectReference Include="Chat.csproj">
+      <Project>{4bf35fd2-2efd-ddf3-5166-2098c4d2bfc7}</Project>
+      <Name>Chat</Name>
     </ProjectReference>
     <ProjectReference Include="MyExercise_3s.csproj">
       <Project>{b7219916-4654-dcbd-fcab-e869f7d45723}</Project>
@@ -1720,17 +1718,13 @@
       <Project>{2db1f119-cc9c-57aa-2d8d-7dcc24a13a4e}</Project>
       <Name>Unity.UI.Shaders.Sample.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="awrtc.csproj">
-      <Project>{c32b69e0-14a5-0568-f795-ca4f73f7bd72}</Project>
-      <Name>awrtc</Name>
-    </ProjectReference>
     <ProjectReference Include="MyExercise_4.csproj">
       <Project>{6776d9a2-40a9-5c6f-8f88-e22e46dc1f9d}</Project>
       <Name>MyExercise_4</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.WebRTC.Samples.csproj">
-      <Project>{5dca48bf-7e9e-2174-aab3-a4549cb538ce}</Project>
-      <Name>Unity.WebRTC.Samples</Name>
+    <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj">
+      <Project>{95b9db07-a835-272d-8de6-4c69f1eabbf9}</Project>
+      <Name>Unity.XR.Interaction.Toolkit.Samples.Hands</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Hands.Samples.VisualizerSample.csproj">
       <Project>{8071b4a1-8ea4-0306-a821-7fd563c1406b}</Project>
@@ -1740,17 +1734,9 @@
       <Project>{e37f3bab-f57b-6263-7230-3850c2ea5d3e}</Project>
       <Name>Tests_6s</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj">
-      <Project>{95b9db07-a835-272d-8de6-4c69f1eabbf9}</Project>
-      <Name>Unity.XR.Interaction.Toolkit.Samples.Hands</Name>
-    </ProjectReference>
     <ProjectReference Include="MyExercise_5s.csproj">
       <Project>{14497523-910d-50e2-1182-4327b8993b88}</Project>
       <Name>MyExercise_5s</Name>
-    </ProjectReference>
-    <ProjectReference Include="Chat.csproj">
-      <Project>{4bf35fd2-2efd-ddf3-5166-2098c4d2bfc7}</Project>
-      <Name>Chat</Name>
     </ProjectReference>
     <ProjectReference Include="ARFoundationRemote.Installer.Editor.csproj">
       <Project>{5a97078b-c408-e9a5-64ce-9d2de6a3374b}</Project>
@@ -1775,10 +1761,6 @@
     <ProjectReference Include="MyGame_15s.csproj">
       <Project>{cd20c8a4-47b6-5a30-e4fb-fe2d87bebced}</Project>
       <Name>MyGame_15s</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.WebRTC.Samples.Editror.csproj">
-      <Project>{a21348b7-bef5-f265-de10-fb54cf289235}</Project>
-      <Name>Unity.WebRTC.Samples.Editror</Name>
     </ProjectReference>
     <ProjectReference Include="CameraTextureUtils.Editor.csproj">
       <Project>{c40862da-40d1-b197-4cd7-fc0b7b44694d}</Project>
@@ -1816,13 +1798,13 @@
       <Project>{4b9382b0-e437-451b-0796-cd54cffe308d}</Project>
       <Name>Icosa API Client for Unity-runtime</Name>
     </ProjectReference>
-    <ProjectReference Include="audio_output.csproj">
-      <Project>{88dd4218-b810-653e-d63f-5ba423cab9c9}</Project>
-      <Name>audio_output</Name>
-    </ProjectReference>
     <ProjectReference Include="ChatEditor.csproj">
       <Project>{eb796d9f-752e-834f-d36b-02b193c59844}</Project>
       <Name>ChatEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="audio_output.csproj">
+      <Project>{88dd4218-b810-653e-d63f-5ba423cab9c9}</Project>
+      <Name>audio_output</Name>
     </ProjectReference>
     <ProjectReference Include="MyGame_16s.csproj">
       <Project>{253d09fc-af52-673a-6dba-f6d711e3475b}</Project>
@@ -1892,17 +1874,17 @@
       <Project>{2ab0c7b2-22d0-d185-4d86-58b493492cfc}</Project>
       <Name>InputSystem.Samples.Visualizers</Name>
     </ProjectReference>
-    <ProjectReference Include="ControllerSample.csproj">
-      <Project>{2ad8938d-2aab-770a-b7a6-1ad1cfcf5680}</Project>
-      <Name>ControllerSample</Name>
+    <ProjectReference Include="DevDunk.ShadowReceiver.Editor.csproj">
+      <Project>{b542c8d3-ea72-b44c-0dd8-b377756de3d2}</Project>
+      <Name>DevDunk.ShadowReceiver.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.WorldSpaceUI.csproj">
       <Project>{71814771-3f96-88f3-466f-30ebc9e27bf7}</Project>
       <Name>Unity.XR.Interaction.Toolkit.Samples.WorldSpaceUI</Name>
     </ProjectReference>
-    <ProjectReference Include="DevDunk.ShadowReceiver.Editor.csproj">
-      <Project>{b542c8d3-ea72-b44c-0dd8-b377756de3d2}</Project>
-      <Name>DevDunk.ShadowReceiver.Editor</Name>
+    <ProjectReference Include="ControllerSample.csproj">
+      <Project>{2ad8938d-2aab-770a-b7a6-1ad1cfcf5680}</Project>
+      <Name>ControllerSample</Name>
     </ProjectReference>
     <ProjectReference Include="SampleAssembly.csproj">
       <Project>{295822eb-b127-d576-d7c4-fd6d136025ba}</Project>
@@ -1936,13 +1918,13 @@
       <Project>{07e061f0-2523-2170-2ef4-5f6a42f21f36}</Project>
       <Name>Unity.ShaderGraph.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="MyExercise_6s.csproj">
-      <Project>{00d30075-61bf-6b82-4cfa-0b5d31fcb9a6}</Project>
-      <Name>MyExercise_6s</Name>
-    </ProjectReference>
     <ProjectReference Include="awrtc_browser.csproj">
       <Project>{5ec8354e-6128-f437-b09a-ec5d4a93c1b0}</Project>
       <Name>awrtc_browser</Name>
+    </ProjectReference>
+    <ProjectReference Include="MyExercise_6s.csproj">
+      <Project>{00d30075-61bf-6b82-4cfa-0b5d31fcb9a6}</Project>
+      <Name>MyExercise_6s</Name>
     </ProjectReference>
     <ProjectReference Include="awrtc_editor.csproj">
       <Project>{29cbca60-2b14-c3ba-ed12-5f947ad9fb12}</Project>
@@ -1952,13 +1934,13 @@
       <Project>{cf36f499-c168-2e8e-37c0-61e105cb26b8}</Project>
       <Name>Tests_2s</Name>
     </ProjectReference>
-    <ProjectReference Include="MyExercise_1.csproj">
-      <Project>{fae6531e-60ec-ed05-7d0d-10f1f4781af5}</Project>
-      <Name>MyExercise_1</Name>
-    </ProjectReference>
     <ProjectReference Include="audio_input.csproj">
       <Project>{926084b3-8696-7a76-e9a4-ff48f62dde0a}</Project>
       <Name>audio_input</Name>
+    </ProjectReference>
+    <ProjectReference Include="MyExercise_1.csproj">
+      <Project>{fae6531e-60ec-ed05-7d0d-10f1f4781af5}</Project>
+      <Name>MyExercise_1</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
