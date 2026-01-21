@@ -728,8 +728,8 @@ namespace MetavidoVFX.UI
             }
             _categoryContainers[category] = container;
 
-            // Add VFX items
-            foreach (var entry in entries)
+            // Add VFX items (alphabetically sorted)
+            foreach (var entry in entries.OrderBy(e => e.AssetName))
             {
                 var item = CreateVFXItem(entry);
                 container.Add(item);
