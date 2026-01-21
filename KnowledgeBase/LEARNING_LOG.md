@@ -6,6 +6,211 @@
 
 ---
 
+## 2026-01-21 - Claude Code - AI Coding Productivity Research Integration
+
+**Discovery**: Integrated findings from 4 RCT studies into KB and GLOBAL_RULES.
+
+**Key Research Findings**:
+
+| Study | Sample | Finding |
+|-------|--------|---------|
+| METR RCT (arXiv:2507.09089) | 16 devs, 246 tasks | Expert devs **19% slower** with AI |
+| Microsoft/Accenture RCT (SSRN:4945566) | 4,867 devs | Junior devs **35-39% faster**, seniors **8-16%** |
+| Google Internal RCT | ~100 engineers | **21% faster** on enterprise tasks |
+| GitHub Copilot (arXiv:2302.06590) | 95 devs | **55.8% faster** on HTTP server task |
+
+**Why Experts Slow Down**:
+1. <44% AI suggestion acceptance rate in mature codebases
+2. Tacit knowledge AI can't access
+3. Review/edit overhead exceeds generation benefits
+4. Context-switching between thinking modes
+
+**Implication for James**:
+- Familiar code (VFX, AR, MetavidoVFX) → Type directly
+- New integrations (Icosa, WebRTC) → Use AI extensively
+- Debugging → Use MCP rapid loop (30-60% faster)
+
+**Files Updated**:
+- `GLOBAL_RULES.md` - Added experience-level decision matrix
+- `_SIMPLIFIED_INTELLIGENCE_CORE.md` - Added research-backed AI usage
+- `_USER_PATTERNS_JAMES.md` - Added AI optimization strategies
+- `_QUICK_FIX.md` - Added rapid debug loop and AI decision table
+- `_AI_CODING_BEST_PRACTICES.md` - Created with full research synthesis
+
+**New Automation**:
+- `Scripts/automation/ai-usage-advisor.sh` - Determines when to use AI vs type
+
+**Tags**: `research` `ai-productivity` `rct` `optimization`
+
+---
+
+## 2026-01-21 - Claude Code - Unity MCP GitHub Repos Deep Analysis
+
+**Discovery**: Analyzed 5 Unity MCP implementations to extract best practices.
+
+**Key GitHub Repos**:
+| Repo | Tools | Unique Feature |
+|------|-------|----------------|
+| CoplayDev/unity-mcp | 24 | batch_execute, Roslyn validation |
+| CoderGamester/mcp-unity | 31 | Multi-client, .windsurfrules |
+| IvanMurzak/Unity-MCP | 50+ | **Runtime AI** (in-game LLM) |
+| notargs/UnityNaturalMCP | - | Natural UX focus |
+| mika-f/uMCP | - | Security-focused |
+
+**Best Practices Extracted**:
+1. `Undo.RecordObject()` before modifying scene/assets
+2. `Undo.RegisterCreatedObjectUndo()` for new objects
+3. Single Responsibility - one tool, one task
+4. `MainThread.Instance.Run()` for Unity API in async
+5. Return `SuccessResponse/ErrorResponse` (not exceptions)
+6. `[ToolParameter]` descriptions help AI understand params
+
+**Custom Tool Patterns**:
+```csharp
+// CoplayDev pattern
+[McpForUnityTool("tool_name")]
+public static class MyTool {
+    public static object HandleCommand(JObject @params) { }
+}
+
+// IvanMurzak pattern (supports runtime)
+[McpPluginToolType]
+public class GameAI {
+    [McpPluginTool("action")]
+    public static string DoAction() { }
+}
+```
+
+**Roslyn Validation Setup**:
+1. Install NuGetForUnity
+2. Add Microsoft.CodeAnalysis v4.14.0
+3. Add `USE_ROSLYN` to Scripting Define Symbols
+4. `validate_script(uri, level="standard")` uses Roslyn
+
+**Runtime AI (IvanMurzak only)**:
+- LLM can call methods in compiled game
+- Dynamic code compilation without restart
+- Reflection-based method discovery
+
+**Files Updated**:
+- `_UNITY_MCP_QUICK_REFERENCE.md` - Added custom tool guide, Roslyn, runtime AI
+- `GLOBAL_RULES.md` - Added validate_script, editor state check
+
+**Tags**: `unity-mcp` `github` `best-practices` `custom-tools`
+
+---
+
+## 2026-01-21 - Claude Code - Tool Selection Token Hierarchy
+
+**Discovery**: Established definitive tool selection order based on token cost analysis.
+
+**Token Cost by Tool**:
+| Tool | Tokens | Use Case |
+|------|--------|----------|
+| grep + _QUICK_FIX.md | **0** | KB search |
+| JetBrains MCP | ~200 | C# code (Rider indexed) |
+| Unity MCP | ~300 | Editor operations |
+| ChromaDB (claude-mem) | ~500 | Semantic fallback |
+| WebSearch | ~1000+ | Last resort |
+
+**Key Insight**: ChromaDB uses MORE tokens than grep. Only use for fuzzy/conceptual queries when grep fails.
+
+**Rule Established**: Exhaust zero-token options (grep, _QUICK_FIX.md, _PATTERN_TAGS.md) before any MCP calls.
+
+**Files Updated**:
+- `_SIMPLIFIED_INTELLIGENCE_CORE.md` - Added tool selection matrix
+- `_PATTERN_ARCHITECTURE.md` - Updated search priority table
+- `_AI_CODING_BEST_PRACTICES.md` - Added token-optimized tool selection
+
+**Tags**: `token-optimization` `tool-selection` `efficiency`
+
+---
+
+## 2026-01-21 - Claude Code - Unity MCP Deep Dive
+
+**Discovery**: Comprehensive analysis of Unity MCP tools reveals significant token optimization opportunities.
+
+**Key Token Savings**:
+| Default | Optimized | Savings |
+|---------|-----------|---------|
+| Individual calls | `batch_execute` | **10-100x** |
+| `include_properties=true` | `=false` | **5-10x** |
+| `generate_preview=true` | `=false` | **10x+** |
+| Polling tests | `wait_timeout=60` | **10x fewer calls** |
+
+**Resources vs Tools Pattern**:
+- Resources (read-only): `editor_state`, `project_info`, `gameobject/{id}`
+- Tools (mutations): `manage_*`, `script_apply_edits`, `batch_execute`
+
+**VFX Management Prefixes**:
+- `particle_*` → ParticleSystem
+- `vfx_*` → VisualEffect (VFX Graph)
+- `line_*` → LineRenderer
+- `trail_*` → TrailRenderer
+
+**Files Created**:
+- `_UNITY_MCP_QUICK_REFERENCE.md` - Comprehensive MCP patterns
+- `_ADVANCED_AI_INFRASTRUCTURE_GUIDE.md` - vLLM/Dify/RAGFlow upgrade path
+
+**Tags**: `unity-mcp` `token-optimization` `infrastructure`
+
+---
+
+## 2026-01-21 - Claude Code - Unity MCP Rapid Debug Loop
+
+**Discovery**: Unity MCP batch operations provide 10-100x speedup for multi-file fixes.
+
+**Pattern**:
+```
+read_console → find_in_file → Edit → refresh_unity → verify
+```
+
+**Key Insight**: Use `batch_execute` for multiple operations instead of individual calls.
+
+**GitHub Repos Analyzed**:
+- CoplayDev/unity-mcp (24 tools, batch_execute, Roslyn validation)
+- CoderGamester/mcp-unity (31 tools, multi-client support)
+- IvanMurzak/Unity-MCP (50+ tools, **runtime AI** unique feature)
+
+**Tags**: `unity-mcp` `debugging` `automation`
+
+---
+
+## 2026-01-21 - Claude Code - Hand Tracking Provider Priority Chain
+
+**Discovery**: Established correct hand tracking fallback chain based on research docs.
+
+**Priority Order** (higher = preferred):
+| Priority | Provider | Latency | Accuracy | Notes |
+|----------|----------|---------|----------|-------|
+| 100 | HoloKit/ARKit | <2ms | 95%+ | Native iOS, 21 joints |
+| 80 | XR Hands | 2-5ms | 90%+ | AR Foundation cross-platform |
+| 60 | MediaPipe | 8-12ms | 92% | ML-based, 21 joints |
+| 40 | BodyPix | ~16ms | ~70% | Wrist-only fallback |
+| 10 | Touch | 0ms | N/A | Editor/Desktop mouse |
+
+**Key Insight**: BodyPix is for segmentation, NOT hand tracking. Use MediaPipe for ML-based hand tracking.
+
+**Reference**: `TRACKING_SYSTEMS_DEEP_DIVE.md`, `_OPENCV_VS_MEDIAPIPE_UNITY_RESEARCH.md`
+
+---
+
+## 2026-01-21 - Claude Code - AR Recording System Comparison
+
+**Discovery**: Metavido vs Rerun.io represent fundamentally different approaches to AR recording.
+
+**Key Insight**:
+- **Metavido** = Video-centric (MP4 with embedded metadata barcode) - compact, hardware-accelerated, but no WebGL player
+- **Rerun** = Data-centric (.rrd Apache Arrow) - web-native viewer, but version-locked, larger files
+
+**WebGL Feasibility**:
+- Metavido WebGL: Requires custom decoder (~2-4 weeks work)
+- Rerun WebGL: Native support via `@rerun-io/web-viewer` npm
+
+**Documentation**: `_AR_RECORDING_COMPARISON_METAVIDO_VS_RERUN.md`
+
+---
+
 ## 2026-01-20 (Session 3) - Claude Code - Rcam Series Deep Research
 
 **Discovery**: Completed comprehensive research of Keijiro's Rcam2/3/4 repositories. Uncovered critical VFX property naming conventions, depth reconstruction patterns, and production-proven architecture evolution from HDRP→URP.
@@ -3653,3 +3858,120 @@ Local Files:
 - `MetavidoVFX-main/CLAUDE.md` - Project Statistics section
 - `CLAUDE.md` - Root statistics section
 - `specs/*/tasks.md` - Phase completion status
+
+---
+
+## 2026-01-21 - Consolidation - Merged from Multiple Logs
+
+**Context**: Simplified intelligence system - one log instead of six.
+
+### Failures Learned
+
+**MCP Server Timeout** (Tool):
+- Unity MCP calls failed silently due to duplicate servers
+- Prevention: `mcp-kill-dupes` at session start
+- Added to: GLOBAL_RULES.md, _AUTO_FIX_PATTERNS.md
+
+### Successes to Replicate
+
+**Agent Consolidation**:
+- Consolidated 14 agents with shared rules file
+- Single source of truth reduces maintenance
+- Pattern: _AGENT_SHARED_RULES.md referenced by all
+
+**Continuous Learning System**:
+- Systematic extraction → log → improve → accelerate
+- Then simplified to one loop: Search KB → Act → Log → Repeat
+
+### Anti-Patterns to Avoid
+
+| Pattern | Why Bad | Do Instead |
+|---------|---------|------------|
+| Read before search | Token waste | Grep/Glob first |
+| Grep for filenames | Wrong tool | Use Glob |
+| Write instead of Edit | Higher cost | Edit for changes |
+| String VFX props | Silent failures | ExposedProperty |
+| Skip AR null checks | Crashes | TryGetTexture pattern |
+| Full file reads | Token waste | Use offset/limit |
+
+### Persistent Issue
+
+**MCP Server Timeouts** (PI-001):
+- Duplicate servers block ports
+- Workaround: `mcp-kill-dupes`
+- Blocker: MCP spawns per-app by design
+
+---
+
+
+## 2026-01-21 - Claude Code - Production Code Patterns from Unity MCP
+
+**Discovery**: Extracted 7 production-ready code patterns from CoderGamester/mcp-unity.
+
+**Patterns Documented**:
+1. **McpToolBase** - Sync/async execution with `IsAsync` flag
+2. **Response Format** - JSON-RPC 2.0 with typed error codes
+3. **Component Update** - Reflection-based property setting with type conversion
+4. **Console Log Service** - Thread-safe capture with auto-cleanup (1000 max)
+5. **Undo Integration** - `RecordObject`, `RegisterCreatedObjectUndo`, `CollapseUndoOperations`
+6. **Main Thread Dispatcher** - Async Unity API calls with `ManualResetEvent`
+7. **Parameter Validation** - Multi-layer validation with early returns
+
+**Key Error Types** (standardized):
+- `invalid_json`, `invalid_request`, `unknown_method`
+- `validation_error`, `not_found_error`
+- `tool_execution_error`, `internal_error`
+
+**Unity Type Conversion** (for MCP):
+- Vector3: `{x, y, z}` → `new Vector3()`
+- Color: `{r, g, b, a}` → `new Color()` (a defaults to 1)
+- Quaternion: `{x, y, z, w}` → `new Quaternion()` (w defaults to 1)
+- Enum: String name → `Enum.Parse()`
+
+**Files Updated**:
+- `_AI_CODING_BEST_PRACTICES.md` - Added "Production Code Patterns" section
+
+**Tags**: `mcp` `code-patterns` `unity` `reflection` `threading`
+
+---
+
+## 2026-01-21 - Claude Code - Cross-Tool Rollover Guide
+
+**Discovery**: Created seamless rollover guide for switching between Claude Code, Gemini, and Codex.
+
+**Core Insight**: Files are memory. All AI tools share the same filesystem.
+
+**Rollover Workflow**:
+1. When Claude Code hits token limits → switch to `gemini` or `codex`
+2. Both tools can read: `GLOBAL_RULES.md`, `CLAUDE.md`, `KnowledgeBase/`
+3. Paste context block to restore state
+
+**Context Block** (paste in new tool):
+```
+Read these for context:
+1. ~/GLOBAL_RULES.md - Universal rules
+2. ~/Documents/GitHub/Unity-XR-AI/CLAUDE.md - Project overview
+3. ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_QUICK_FIX.md - Error fixes
+```
+
+**Tool Comparison**:
+| Tool | Context | Cost | Best For |
+|------|---------|------|----------|
+| Claude Code | 200K | $$$ | Complex code, planning |
+| Gemini CLI | 1M | FREE | Research, large docs |
+| Codex CLI | 128K | $$ | Refactors, quick fixes |
+
+**MCP Workarounds** (for Gemini/Codex):
+- Unity console: `cat ~/Library/Logs/Unity/Editor.log | grep error`
+- JetBrains search: `grep -r "pattern" project/`
+- claude-mem: Reference `LEARNING_LOG.md` directly
+
+**Files Created**:
+- `_CROSS_TOOL_ROLLOVER_GUIDE.md` - Full rollover documentation
+
+**Files Updated**:
+- `GLOBAL_RULES.md` - Added rollover section
+
+**Tags**: `rollover` `gemini` `codex` `migration` `token-efficiency`
+
+---
