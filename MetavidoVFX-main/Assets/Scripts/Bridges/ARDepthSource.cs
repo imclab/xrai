@@ -224,6 +224,8 @@ public class ARDepthSource : MonoBehaviour
             float tanH = tanV * _arCamera.aspect;
 
             _depthToWorld.SetTexture(_kernel, "_Depth", _mockDepthMap);
+            _depthToWorld.SetTexture(_kernel, "_Stencil", Texture2D.whiteTexture); // Mock: no stencil filtering
+            _depthToWorld.SetInt("_UseStencil", 0);
             _depthToWorld.SetTexture(_kernel, "_PositionRT", PositionMap);
             _depthToWorld.SetMatrix("_InvVP", (_arCamera.projectionMatrix * _arCamera.worldToCameraMatrix).inverse);
 
