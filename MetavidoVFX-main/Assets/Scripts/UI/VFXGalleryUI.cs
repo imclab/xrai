@@ -9,6 +9,7 @@
 // Setup: Use H3M > HoloKit > Setup Camera Rig with Hand Tracking menu
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using TMPro;
@@ -161,8 +162,8 @@ namespace MetavidoVFX.UI
             var loadedAssets = Resources.LoadAll<VisualEffectAsset>(vfxResourceFolder);
             if (loadedAssets.Length > 0)
             {
-                vfxAssets = loadedAssets;
-                Debug.Log($"[VFXGallery] Loaded {loadedAssets.Length} VFX assets from Resources/{vfxResourceFolder}");
+                vfxAssets = loadedAssets.OrderBy(a => a.name).ToArray();
+                Debug.Log($"[VFXGallery] Loaded {loadedAssets.Length} VFX assets from Resources/{vfxResourceFolder} (sorted)");
             }
         }
 

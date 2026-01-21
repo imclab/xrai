@@ -108,7 +108,7 @@ public class VFXTestHarness : MonoBehaviour
         _categories.Clear();
 
         var vfxArray = FindObjectsByType<VisualEffect>(FindObjectsSortMode.None);
-        _allVFX.AddRange(vfxArray);
+        _allVFX.AddRange(vfxArray.OrderBy(v => v.name));
 
         // Categorize by naming convention: {effect}_{datasource}_{target}_{origin}
         foreach (var vfx in _allVFX)

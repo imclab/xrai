@@ -114,7 +114,7 @@ public class VFXPipelineDashboard : MonoBehaviour
         _binders.AddRange(FindObjectsByType<VFXARBinder>(FindObjectsSortMode.None));
 
         _allVFX.Clear();
-        _allVFX.AddRange(FindObjectsByType<VisualEffect>(FindObjectsSortMode.None));
+        _allVFX.AddRange(FindObjectsByType<VisualEffect>(FindObjectsSortMode.None).OrderBy(v => v.name));
 
         _totalVFXCount = _allVFX.Count;
         _activeVFXCount = _allVFX.Count(v => v.enabled && v.gameObject.activeInHierarchy);
