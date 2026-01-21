@@ -123,35 +123,7 @@
 *.rar       binary
 
 # ==============================================================================
-# GIT LFS (large files - reduces clone/fetch time)
+# GIT LFS - DISABLED (budget exceeded)
 # ==============================================================================
-
-# ML Models (can be huge)
-*.onnx      filter=lfs diff=lfs merge=lfs -text
-*.ort       filter=lfs diff=lfs merge=lfs -text
-*.sentis    filter=lfs diff=lfs merge=lfs -text
-*.bytes     filter=lfs diff=lfs merge=lfs -text
-
-# Large media (>1MB typically)
-*.psd       filter=lfs diff=lfs merge=lfs -text
-*.tga       filter=lfs diff=lfs merge=lfs -text
-*.exr       filter=lfs diff=lfs merge=lfs -text
-*.hdr       filter=lfs diff=lfs merge=lfs -text
-
-# 3D Models (often large)
-*.fbx       filter=lfs diff=lfs merge=lfs -text
-*.blend     filter=lfs diff=lfs merge=lfs -text
-*.abc       filter=lfs diff=lfs merge=lfs -text
-
-# Video
-*.mp4       filter=lfs diff=lfs merge=lfs -text
-*.mov       filter=lfs diff=lfs merge=lfs -text
-
-# Unity packages
-*.unitypackage filter=lfs diff=lfs merge=lfs -text
-
-# Native plugins (can be large)
-*.dll       filter=lfs diff=lfs merge=lfs -text
-*.so        filter=lfs diff=lfs merge=lfs -text
-*.dylib     filter=lfs diff=lfs merge=lfs -text
-*.bundle    filter=lfs diff=lfs merge=lfs -text
+# LFS tracking removed to allow push without LFS budget.
+# To re-enable, uncomment the patterns below and run: git lfs track "*.fbx" etc.
