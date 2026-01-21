@@ -455,18 +455,28 @@ namespace MetavidoVFX.VFX
                     ? entry.Category.Category
                     : DetectCategory(entry.AssetName);
 
-                // Immediately disable if startAllDisabled is true
-                if (startAllDisabled)
-                {
-                    entry.GameObject.SetActive(false);
-                    entry.VFX.enabled = false;
-                }
-
                 _allVFX.Add(entry);
                 _vfxByCategory[entry.CategoryType].Add(entry);
 
-                // Only track as active if not disabled at start
-                if (!startAllDisabled && entry.IsActive)
+                // Disable all VFX except hologram if startAllDisabled is true
+                if (startAllDisabled)
+                {
+                    bool isHologram = IsHologramVFX(entry);
+                    if (isHologram)
+                    {
+                        // Keep hologram enabled
+                        entry.GameObject.SetActive(true);
+                        entry.VFX.enabled = true;
+                        _activeVFX.Add(entry);
+                        Debug.Log($"[VFXLibrary] Hologram VFX enabled: {entry.AssetName}");
+                    }
+                    else
+                    {
+                        entry.GameObject.SetActive(false);
+                        entry.VFX.enabled = false;
+                    }
+                }
+                else if (entry.IsActive)
                 {
                     _activeVFX.Add(entry);
                 }
@@ -801,11 +811,15 @@ namespace MetavidoVFX.VFX
             entry.Category = entry.GameObject.AddComponent<VFXCategory>();
             entry.Category.SetCategory(entry.CategoryType);
 
-            // Immediately disable if startAllDisabled is true
+            // Disable all VFX except hologram if startAllDisabled is true
             if (startAllDisabled)
             {
-                entry.GameObject.SetActive(false);
-                entry.VFX.enabled = false;
+                bool isHologram = IsHologramVFX(entry);
+                if (!isHologram)
+                {
+                    entry.GameObject.SetActive(false);
+                    entry.VFX.enabled = false;
+                }
             }
 
             return entry;
