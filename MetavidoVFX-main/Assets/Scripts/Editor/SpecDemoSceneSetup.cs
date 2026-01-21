@@ -21,6 +21,230 @@ namespace MetavidoVFX.Editor
 
         #region Menu Items
 
+        [MenuItem("H3M/Spec Demos/Wire All Demo Scenes", priority = 1)]
+        public static void WireAllDemoScenes()
+        {
+            var sceneFiles = new[]
+            {
+                "Spec002_H3M_Foundation",
+                "Spec003_Hologram_Conferencing",
+                "Spec004_MetavidoVFX_Systems",
+                "Spec005_AR_Texture_Safety",
+                "Spec006_VFX_Library_Pipeline",
+                "Spec008_ML_Foundations",
+                "Spec009_Icosa_Sketchfab",
+                "Spec012_Hand_Tracking"
+            };
+
+            int wiredCount = 0;
+            foreach (var sceneName in sceneFiles)
+            {
+                string scenePath = $"{DemoScenePath}/{sceneName}.unity";
+                if (!System.IO.File.Exists(scenePath.Replace("Assets/", "").Insert(0, Application.dataPath + "/")))
+                {
+                    Debug.LogWarning($"[SpecDemo] Scene not found: {scenePath}");
+                    continue;
+                }
+
+                var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+                WireSceneComponents(scene, sceneName);
+                EditorSceneManager.SaveScene(scene);
+                wiredCount++;
+            }
+
+            Debug.Log($"[SpecDemo] Wired {wiredCount} demo scenes successfully!");
+        }
+
+        private static void WireSceneComponents(Scene scene, string sceneName)
+        {
+            // Find key components
+            var arDepthSource = Object.FindAnyObjectByType<ARDepthSource>();
+            var audioBridge = Object.FindAnyObjectByType<AudioBridge>();
+            var xrOrigin = FindXROrigin();
+            var mainCamera = Camera.main;
+
+            // 1. Wire XROrigin camera reference
+            if (xrOrigin != null && mainCamera != null)
+            {
+                var cameraProperty = xrOrigin.GetType().GetProperty("Camera");
+                if (cameraProperty != null && cameraProperty.CanWrite)
+                {
+                    cameraProperty.SetValue(xrOrigin, mainCamera);
+                    Debug.Log($"[SpecDemo] Wired XROrigin.Camera in {sceneName}");
+                }
+            }
+
+            // 2. Connect all VFXARBinders to ARDepthSource
+            var vfxBinders = Object.FindObjectsByType<VFXARBinder>(FindObjectsSortMode.None);
+            foreach (var binder in vfxBinders)
+            {
+                // VFXARBinder auto-finds ARDepthSource via singleton, but verify it exists
+                if (arDepthSource == null)
+                {
+                    // Create ARDepthSource if missing
+                    var depthGO = new GameObject("ARDepthSource");
+                    SceneManager.MoveGameObjectToScene(depthGO, scene);
+                    arDepthSource = depthGO.AddComponent<ARDepthSource>();
+                    Debug.Log($"[SpecDemo] Created ARDepthSource in {sceneName}");
+                }
+                EditorUtility.SetDirty(binder);
+            }
+
+            // 3. Load appropriate VFX assets for VisualEffect components without assets
+            var vfxComponents = Object.FindObjectsByType<VisualEffect>(FindObjectsSortMode.None);
+            foreach (var vfx in vfxComponents)
+            {
+                if (vfx.visualEffectAsset == null)
+                {
+                    var vfxAsset = GetVFXAssetForScene(sceneName, vfx.gameObject.name);
+                    if (vfxAsset != null)
+                    {
+                        vfx.visualEffectAsset = vfxAsset;
+                        Debug.Log($"[SpecDemo] Assigned VFX '{vfxAsset.name}' to '{vfx.gameObject.name}' in {sceneName}");
+                        EditorUtility.SetDirty(vfx);
+                    }
+                }
+            }
+
+            // 4. Wire AudioBridge to AudioSource
+            if (audioBridge != null)
+            {
+                var audioSource = audioBridge.GetComponent<AudioSource>();
+                if (audioSource == null)
+                {
+                    audioSource = audioBridge.gameObject.AddComponent<AudioSource>();
+                }
+
+                // Use reflection to set the audioSource field
+                var audioSourceField = typeof(AudioBridge).GetField("audioSource",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (audioSourceField != null)
+                {
+                    audioSourceField.SetValue(audioBridge, audioSource);
+                    Debug.Log($"[SpecDemo] Wired AudioBridge.audioSource in {sceneName}");
+                    EditorUtility.SetDirty(audioBridge);
+                }
+            }
+
+            // 5. Scene-specific wiring
+            WireSceneSpecificComponents(scene, sceneName, arDepthSource, mainCamera);
+        }
+
+        private static Component FindXROrigin()
+        {
+            var originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+            if (originType != null)
+            {
+                return Object.FindAnyObjectByType(originType) as Component;
+            }
+            return null;
+        }
+
+        private static VisualEffectAsset GetVFXAssetForScene(string sceneName, string vfxObjectName)
+        {
+            // Map scene names to appropriate VFX assets
+            // VFX naming convention: {name}_{datatype}_{category}_{source}.vfx
+            VisualEffectAsset asset = null;
+
+            switch (sceneName)
+            {
+                case "Spec002_H3M_Foundation":
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/H3M/VFX/hologram_depth_people_metavido.vfx");
+                    if (asset == null) asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/particles_depth_people_metavido.vfx");
+                    break;
+
+                case "Spec003_Hologram_Conferencing":
+                    if (vfxObjectName.Contains("Local"))
+                        asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/particles_depth_people_metavido.vfx");
+                    else if (vfxObjectName.Contains("Remote"))
+                        asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/glitch_depth_people_metavido.vfx");
+                    else
+                        asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/pointcloud_depth_people_metavido.vfx");
+                    break;
+
+                case "Spec004_MetavidoVFX_Systems":
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/bodyparticles_depth_people_metavido.vfx");
+                    break;
+
+                case "Spec006_VFX_Library_Pipeline":
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/H3M/VFX/hologram_depth_people_metavido.vfx");
+                    break;
+
+                case "Spec012_Hand_Tracking":
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/NNCam2/particle_any_nncam2.vfx");
+                    break;
+
+                default:
+                    // Try to find any suitable VFX
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/particles_depth_people_metavido.vfx");
+                    break;
+            }
+
+            // Fallback: try common paths
+            if (asset == null)
+            {
+                var fallbackPaths = new[]
+                {
+                    "Assets/H3M/VFX/hologram_depth_people_metavido.vfx",
+                    "Assets/VFX/particles_depth_people_metavido.vfx",
+                    "Assets/VFX/pointcloud_depth_people_metavido.vfx"
+                };
+
+                foreach (var path in fallbackPaths)
+                {
+                    asset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>(path);
+                    if (asset != null) break;
+                }
+            }
+
+            return asset;
+        }
+
+        private static void WireSceneSpecificComponents(Scene scene, string sceneName, ARDepthSource arDepthSource, Camera mainCamera)
+        {
+            switch (sceneName)
+            {
+                case "Spec005_AR_Texture_Safety":
+                    // Ensure mock data flag is set for Editor testing
+                    if (arDepthSource != null)
+                    {
+                        var useMockField = typeof(ARDepthSource).GetField("useMockDataInEditor",
+                            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        if (useMockField != null)
+                        {
+                            useMockField.SetValue(arDepthSource, true);
+                            EditorUtility.SetDirty(arDepthSource);
+                        }
+                    }
+                    break;
+
+                case "Spec006_VFX_Library_Pipeline":
+                    // Ensure VFXLibraryManager has populated VFX list
+                    var libraryMgr = Object.FindAnyObjectByType<MetavidoVFX.VFX.VFXLibraryManager>();
+                    if (libraryMgr != null)
+                    {
+                        // Trigger population via reflection or mark dirty
+                        EditorUtility.SetDirty(libraryMgr);
+                    }
+                    break;
+
+                case "Spec008_ML_Foundations":
+                case "Spec012_Hand_Tracking":
+                    // Ensure hand tracking components are properly linked
+                    // HandTrackingProviderManager auto-discovers, just mark dirty
+                    var htpmType = System.Type.GetType("MetavidoVFX.HandTracking.HandTrackingProviderManager, Assembly-CSharp");
+                    if (htpmType != null)
+                    {
+                        var htpm = Object.FindAnyObjectByType(htpmType);
+                        if (htpm != null)
+                        {
+                            EditorUtility.SetDirty(htpm as Component);
+                        }
+                    }
+                    break;
+            }
+        }
+
         [MenuItem("H3M/Spec Demos/Create All Demo Scenes", priority = 0)]
         public static void CreateAllDemoScenes()
         {
@@ -71,7 +295,8 @@ namespace MetavidoVFX.Editor
                 var vfx = hologramVFX.AddComponent<VisualEffect>();
 
                 // Try to load a VFX asset
-                var vfxAsset = Resources.Load<VisualEffectAsset>("VFX/People/Metavido-people-particles");
+                var vfxAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/H3M/VFX/hologram_depth_people_metavido.vfx");
+                if (vfxAsset == null) vfxAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/particles_depth_people_metavido.vfx");
                 if (vfxAsset != null) vfx.visualEffectAsset = vfxAsset;
 
                 hologramVFX.AddComponent<VFXARBinder>();
