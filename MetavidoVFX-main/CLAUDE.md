@@ -224,6 +224,13 @@ var depth = TryGetTexture(() => occlusionManager.humanDepthTexture);
 
 **Spec**: `../specs/005-ar-texture-safety/spec.md`
 
+### VFX Custom HLSL Parameter Mismatch
+Custom HLSL blocks fail with "cannot implicitly convert from 'float' to 'SamplerState'" when the HLSL function signature has more parameters than VFX Graph provides input slots.
+
+**Fix**: Match HLSL function parameters to VFX Graph input slots. Use `Texture2D.Load(int3(x,y,mip))` instead of `SampleLevel()` to avoid needing a SamplerState parameter.
+
+**Fixed files**: Bubbles.vfx (2026-01-21)
+
 ### HologramRenderer Binding Conflict
 HologramRenderer.cs must NOT bind PositionMap to DepthMap property. VFX expecting raw depth would receive computed positions, causing particles to fail. Fixed by removing fallback (2026-01-14).
 
