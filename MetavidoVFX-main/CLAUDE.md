@@ -268,6 +268,34 @@ Editor utilities accessible via Unity menu bar:
 | `H3M > Network > Verify Network Setup` | Check WebRTC configuration |
 | **Debug** | |
 | `H3M > Debug > Re-enable iOS Components` | Force re-enable HoloKit components after Play mode |
+| **Spec Demos** | |
+| `H3M > Spec Demos > Create All Demo Scenes` | Create demo scenes for all specs |
+| `H3M > Spec Demos > Wire All Demo Scenes` | Wire components, load VFX, connect references |
+| `H3M > Spec Demos > 002 - H3M Foundation Demo` | Create Spec 002 demo scene |
+| `H3M > Spec Demos > 003 - Hologram Conferencing Demo` | Create Spec 003 demo scene |
+| `H3M > Spec Demos > 004 - MetavidoVFX Systems Demo` | Create Spec 004 demo scene |
+| `H3M > Spec Demos > 005 - AR Texture Safety Demo` | Create Spec 005 demo scene |
+| `H3M > Spec Demos > 006 - VFX Library Pipeline Demo` | Create Spec 006 demo scene |
+| `H3M > Spec Demos > 008 - ML Foundations Demo` | Create Spec 008 demo scene |
+| `H3M > Spec Demos > 009 - Icosa Sketchfab Demo` | Create Spec 009 demo scene |
+| `H3M > Spec Demos > 012 - Hand Tracking Demo` | Create Spec 012 demo scene |
+
+## Spec Demo Scenes
+
+Located in `Assets/Scenes/SpecDemos/`:
+
+| Scene | Purpose |
+|-------|---------|
+| `Spec002_H3M_Foundation` | Hologram rendering with depth-to-world |
+| `Spec003_Hologram_Conferencing` | Recording, playback & WebRTC multiplayer |
+| `Spec004_MetavidoVFX_Systems` | Hand tracking + audio-reactive VFX |
+| `Spec005_AR_Texture_Safety` | TryGetTexture pattern, mock data in Editor |
+| `Spec006_VFX_Library_Pipeline` | Hybrid Bridge Pipeline demo with Dashboard |
+| `Spec008_ML_Foundations` | ITrackingProvider abstraction layer |
+| `Spec009_Icosa_Sketchfab` | Voice-to-object 3D model integration |
+| `Spec012_Hand_Tracking` | Unified hand tracking with fallbacks |
+
+**Setup**: Run `H3M > Spec Demos > Wire All Demo Scenes` after creating scenes to ensure proper component wiring.
 
 ## H3M Hologram Prefabs
 
