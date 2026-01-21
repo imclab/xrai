@@ -493,7 +493,8 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
-        /// Sort VFX lists with hologram first, then alphabetically by name
+        /// Sort VFX lists with hologram first, then alphabetically by name.
+        /// Also reorders GameObjects in the scene hierarchy to match.
         /// </summary>
         [ContextMenu("Sort VFX Lists Alphabetically")]
         public void SortVFXLists()
@@ -510,6 +511,34 @@ namespace MetavidoVFX.VFX
                     .OrderByDescending(e => IsHologramVFX(e))
                     .ThenBy(e => e.AssetName)
                     .ToList();
+
+                // Reorder GameObjects in scene hierarchy to match sorted list
+                for (int i = 0; i < _vfxByCategory[cat].Count; i++)
+                {
+                    var entry = _vfxByCategory[cat][i];
+                    if (entry.GameObject != null)
+                    {
+                        entry.GameObject.transform.SetSiblingIndex(i);
+                    }
+                }
+            }
+
+            // Also sort category containers alphabetically in hierarchy
+            if (createCategoryContainers)
+            {
+                var categoryNames = System.Enum.GetValues(typeof(VFXCategoryType))
+                    .Cast<VFXCategoryType>()
+                    .OrderBy(c => c.ToString())
+                    .ToList();
+
+                for (int i = 0; i < categoryNames.Count; i++)
+                {
+                    var container = transform.Find($"[{categoryNames[i]}]");
+                    if (container != null)
+                    {
+                        container.SetSiblingIndex(i);
+                    }
+                }
             }
         }
 

@@ -728,8 +728,10 @@ namespace MetavidoVFX.UI
             }
             _categoryContainers[category] = container;
 
-            // Add VFX items (alphabetically sorted)
-            foreach (var entry in entries.OrderBy(e => e.AssetName))
+            // Add VFX items (hologram first, then alphabetically sorted)
+            foreach (var entry in entries
+                .OrderByDescending(e => e.AssetName.ToLowerInvariant().Contains("hologram"))
+                .ThenBy(e => e.AssetName))
             {
                 var item = CreateVFXItem(entry);
                 container.Add(item);
