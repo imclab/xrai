@@ -771,6 +771,12 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 
 **Default**: `MAX_THINKING_TOKENS=10000` (vs 31,999)
 
+**Smart Mode Auto-Escalation** (thinking + quality):
+- Spec/architecture tasks → Auto "think hard" + high quality
+- 2+ failed attempts → Auto "think harder" + extra validation
+- Complex debugging → Auto increased reasoning
+- Simple edits → Baseline thinking, low overhead
+
 ### Model Selection & Visibility
 - Haiku: Simple agents, checks (0.3x cost)
 - Sonnet: 95% of tasks (1x cost)
@@ -844,19 +850,32 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 - Edit over Write (smaller diffs)
 - Reuse existing patterns/utilities in codebase
 - Minimal whitespace changes
-- No "improvements" beyond request (unless quality mode)
 
-**Quality Mode** (say "quality mode" to enable):
-- Add docstrings for public APIs
-- Include type annotations
-- Add defensive null checks
-- Refactor if it improves clarity
+**Smart Mode** (DEFAULT - auto-adjusts quality by context):
 
-**Speed Mode** (default for token efficiency):
-- Skip comments unless complex logic
-- Skip type annotations unless project requires
-- Trust existing validation
-- Don't refactor adjacent code
+| Context | Quality Level | Behavior |
+|---------|---------------|----------|
+| Spec creation | **High** | Full docstrings, types, defensive checks |
+| Public APIs | **High** | Complete documentation, type annotations |
+| Persistent issues (3+ attempts) | **High** | Extra validation, verbose logging |
+| Architecture/refactors | **High** | Design comments, interface docs |
+| Complex algorithms | **High** | Step-by-step comments, edge case handling |
+| Bug fixes | **Medium** | Fix + minimal guard, brief comment |
+| Simple edits | **Low** | Minimal overhead, trust existing code |
+| Exploratory/prototyping | **Low** | Fast iteration, skip formalities |
+| Debugging/logging | **Low** | Quick checks, temporary code OK |
+
+**Auto-Triggers for High Quality**:
+- File contains `spec`, `interface`, `abstract`, `public class`
+- Task mentions "architecture", "design", "spec", "API"
+- Previous attempt failed (escalate quality)
+- Creating new files (vs editing existing)
+- User says "production", "ship", "release"
+
+**Manual Overrides**:
+- "quality mode" → Force high quality everything
+- "speed mode" → Force minimal overhead
+- "hybrid mode" → Explicit smart mode (same as default)
 
 ### Git/GitHub
 - Short commit messages (one line when possible)
