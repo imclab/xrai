@@ -256,6 +256,112 @@ On-device STT (Whisper) → Cloud LLM (GPT-4) → On-device TTS (local or stream
 
 ---
 
+## AR Foundation Native Tracking (Updated 2026-01-20)
+
+AR Foundation 6.2.1 provides **16 native tracking subsystems**. Use these BEFORE third-party ML.
+
+### AR Foundation Tracking Summary
+
+| Capability | Manager | iOS | Android | Speed | MetavidoVFX |
+|------------|---------|-----|---------|-------|-------------|
+| **Body 91 joints** | ARHumanBodyManager | ✅ | ❌ | ~2ms | ✅ Integrated |
+| **Human depth/stencil** | AROcclusionManager | ✅ | ✅ | ~0ms | ✅ PRIMARY |
+| **Environment depth** | AROcclusionManager | ✅ LiDAR | ❌ | ~0ms | ✅ |
+| **Face 468pt/52bs** | ARFaceManager | ✅ | ❌ | ~3ms | Research |
+| **AR mesh + classification** | ARMeshManager | ✅ LiDAR | ❌ | ~5ms | ✅ EchoVision |
+| **Hands 26 joints** | XR Hands 1.7.1 | ✅ | ✅ | ~3ms | ✅ |
+| **Image tracking** | ARTrackedImageManager | ✅ | ✅ | ~2ms | Available |
+| **Object tracking** | ARTrackedObjectManager | ✅ | ✅ | ~5ms | Available |
+| **Planes** | ARPlaneManager | ✅ | ✅ | ~1ms | Via raycast |
+| **Raycasting** | ARRaycastManager | ✅ | ✅ | <1ms | ✅ |
+| **Light estimation** | ARLightEstimationManager | ✅ | ✅ | ~0ms | Minimal |
+| **Camera textures** | ARCameraManager | ✅ | ✅ | ~0ms | ✅ |
+| **Anchors** | ARAnchorManager | ✅ | ✅ | ~0ms | ✅ |
+| **Scene semantics** | ARKit 6+ native | ✅ iOS15+ | ❌ | ~2ms | Research |
+
+### Key Insight: Native First, ML Second
+
+1. **AR Foundation already provides** body (91j), hands (26j), face (468pt), mesh, depth
+2. **Only use third-party ML** for: 24-part body segmentation, object detection, scene reasoning
+3. **iOS ARKit** has superior coverage vs Android ARCore
+
+### Full Reference
+
+See `KnowledgeBase/_ARFOUNDATION_TRACKING_CAPABILITIES.md` for complete API reference.
+
+---
+
+## ML Pipeline Comparison (Updated 2026-01-20)
+
+### Final Recommendation: Layered ML Stack
+
+For **maximum multimodal contextual awareness** with cross-platform compatibility:
+
+| Layer | Solution | Platforms | Speed | Notes |
+|-------|----------|-----------|-------|-------|
+| **L0: Hardware** | ARFoundation (depth, stencil, body91, hands26, face468) | iOS/Android | ~0-3ms | **FREE**, always use first |
+| **L1: Body Seg** | BodyPixSentis | iOS/Android/Quest | ~5-10ms | 24-part (beyond binary stencil) |
+| **L2: Pose/Hands** | ARFoundation native OR MediaPipe fallback | iOS native / All | ~3ms / ~15ms | Native preferred |
+| **L3: Objects** | YOLO11n via ONNX Runtime | All | ~15-25ms | 80 COCO classes |
+| **L4: Scene** | ARKit SceneUnderstanding + ARMeshManager classification | iOS 15+ | ~2-5ms | Room types, furniture |
+| **L5: Context** | LLaVA/ChatLLM via Sentis | iOS/Android | ~100-200ms | Reasoning, Q&A |
+
+### Implementation Priority
+
+| Priority | Package | Installation | LOC Impact |
+|----------|---------|--------------|------------|
+| **P0** | BodyPixSentis 4.0 | Already installed (`jp.keijiro.bodypix`) | 0 |
+| **P0** | ONNX Runtime 0.3.2 | Already installed (`com.github.asus4.onnxruntime`) | 0 |
+| **P1** | ChatLLM (Sentis) | Already installed (Assets/ChatLLM) | 0 |
+| **P2** | MediaPipeUnityPlugin | Optional - 100MB+ native libs | ~500 |
+
+### Why NOT install MediaPipeUnityPlugin now?
+
+1. **Binary size**: 100MB+ native libraries per platform
+2. **Overlap**: BodyPixSentis already provides body/pose
+3. **Complexity**: Requires model management, StreamingAssets
+4. **Maintenance**: Additional native build dependencies
+
+### When TO install MediaPipeUnityPlugin
+
+- Need holistic (face + hands + pose in one)
+- Targeting WebGL without Sentis
+- Need MediaPipe-specific features (selfie segmentation, objectron)
+
+### Contextual Awareness Stack (Recommended)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  CONTEXT (L5): ChatLLM + Sentis LLaVA OneVision                 │
+│  "What am I looking at?" → Reasoning about scene                │
+├─────────────────────────────────────────────────────────────────┤
+│  SCENE (L4): ARKit SceneUnderstanding / YOLO11-seg              │
+│  Room type, furniture, object classes                           │
+├─────────────────────────────────────────────────────────────────┤
+│  OBJECTS (L3): YOLO11n via ONNX Runtime                         │
+│  80 COCO classes with bounding boxes                            │
+├─────────────────────────────────────────────────────────────────┤
+│  BODY (L2): MediaPipe or BodyPixSentis                          │
+│  Pose keypoints, body part segmentation                         │
+├─────────────────────────────────────────────────────────────────┤
+│  HUMAN (L1): BodyPixSentis 24-part                              │
+│  Part-specific effects (hands, face, torso)                     │
+├─────────────────────────────────────────────────────────────────┤
+│  SILHOUETTE (L0): ARFoundation Stencil                          │
+│  Free, ~0ms, human vs background                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Futureproofing Notes
+
+- **Sentis** is Unity's official ML path → Long-term support
+- **ONNX Runtime** provides flexibility for custom models
+- **MediaPipeUnityPlugin** actively maintained (v0.16.3, Jan 2026)
+- **LLaVA/ChatLLM** enables voice-to-reasoning pipeline
+- Avoid: Barracuda (deprecated), TFLite (limited Unity support)
+
+---
+
 ## Testing Strategy
 
 ### 1. Unit Tests (Mock Provider)

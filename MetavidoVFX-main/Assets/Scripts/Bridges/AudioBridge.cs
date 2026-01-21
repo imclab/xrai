@@ -260,8 +260,10 @@ public class AudioBridge : MonoBehaviour
             Shader.SetGlobalFloat(_BeatPulseID, _beatDetector.BeatPulse);
             Shader.SetGlobalFloat(_BeatIntensityID, _beatDetector.BeatIntensity);
 
+            #if UNITY_EDITOR && DEBUG_AUDIO_VERBOSE
             if (_verboseLogging && _beatDetector.IsOnset)
                 Debug.Log($"[AudioBridge] BEAT! Intensity: {_beatDetector.BeatIntensity:F2}");
+            #endif
         }
         else
         {

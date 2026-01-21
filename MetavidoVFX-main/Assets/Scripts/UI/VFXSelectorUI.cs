@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
+using MetavidoVFX.VFX;
 
 namespace MetavidoVFX.UI
 {
@@ -20,6 +21,7 @@ namespace MetavidoVFX.UI
 
         [Header("VFX")]
         [SerializeField] private VisualEffect[] vfxList;
+        [SerializeField] private VFXCatalog vfxCatalog;
         [SerializeField] private string vfxResourceFolder = "VFX";
         [SerializeField] private bool autoPopulateFromResources = true;
 
@@ -51,7 +53,9 @@ namespace MetavidoVFX.UI
 
         void PopulateFromResources()
         {
-            var assets = Resources.LoadAll<VisualEffectAsset>(vfxResourceFolder);
+            var assets = vfxCatalog != null
+                ? vfxCatalog.GetAllAssets()
+                : Resources.LoadAll<VisualEffectAsset>(vfxResourceFolder);
             if (assets.Length > 0)
             {
                 // Create VFX instances from assets

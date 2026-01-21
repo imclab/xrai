@@ -31,8 +31,12 @@ namespace MetavidoVFX.VFX
     /// </summary>
     public class VFXLibraryManager : MonoBehaviour
     {
-        [Header("VFX Sources - Resources (Runtime Compatible)")]
-        [Tooltip("Folders inside Resources/ to load VFX from at runtime")]
+        [Header("VFX Sources - Catalog (Recommended)")]
+        [Tooltip("VFXCatalog ScriptableObject - fastest builds, no Resources folder")]
+        [SerializeField] private VFXCatalog vfxCatalog;
+
+        [Header("VFX Sources - Resources (Legacy)")]
+        [Tooltip("Folders inside Resources/ to load VFX from at runtime (slower builds)")]
         [SerializeField] private string[] resourceFolders = { "VFX" };
 
         [Header("VFX Sources - Direct References")]
@@ -666,6 +670,14 @@ namespace MetavidoVFX.VFX
             // Collect all VFX assets
             var allAssets = new List<VisualEffectAsset>();
 
+            // Source 0: VFXCatalog (preferred - no Resources folder overhead)
+            if (vfxCatalog != null)
+            {
+                var catalogAssets = vfxCatalog.GetAllAssets();
+                allAssets.AddRange(catalogAssets);
+                Debug.Log($"[VFXLibrary] Loaded {catalogAssets.Length} VFX from catalog");
+            }
+
             // Source 1: Direct references
             if (directVFXAssets != null)
             {
@@ -675,8 +687,8 @@ namespace MetavidoVFX.VFX
                 }
             }
 
-            // Source 2: Resources folders
-            if (resourceFolders != null)
+            // Source 2: Resources folders (legacy - slower builds)
+            if (vfxCatalog == null && resourceFolders != null)
             {
                 foreach (var folder in resourceFolders)
                 {
@@ -685,7 +697,7 @@ namespace MetavidoVFX.VFX
                     allAssets.AddRange(assets);
                     if (assets.Length > 0)
                     {
-                        Debug.Log($"[VFXLibrary] Loaded {assets.Length} VFX from Resources/{folder}");
+                        Debug.Log($"[VFXLibrary] Loaded {assets.Length} VFX from Resources/{folder} (consider using VFXCatalog)");
                     }
                 }
             }
