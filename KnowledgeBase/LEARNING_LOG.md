@@ -3975,3 +3975,17 @@ Read these for context:
 **Tags**: `rollover` `gemini` `codex` `migration` `token-efficiency`
 
 ---
+
+## 2026-01-21 15:43 - Commit feb7baa8a
+
+**Message**: docs: Add MCP code patterns and cross-tool rollover guide
+**Files Changed**: 5
+
+---
+
+## 2026-01-21 16:27 - Commit 139da9021
+
+**Message**: docs: Add KB search commands for all AI tools and IDEs
+**Files Changed**: 4
+
+---
