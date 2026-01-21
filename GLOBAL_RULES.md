@@ -771,11 +771,22 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 
 **Default**: `MAX_THINKING_TOKENS=10000` (vs 31,999)
 
-### Model Selection
+### Model Selection & Visibility
 - Haiku: Simple agents, checks (0.3x cost)
 - Sonnet: 95% of tasks (1x cost)
 - Opus: Complex architecture only (3-5x cost)
 - Use `/model` to switch mid-session
+
+**Show Current Model**: Run `/model` or check first response
+**Current Session**: Claude Opus 4.5 (claude-opus-4-5-20251101)
+
+**When to Use Each**:
+| Task | Model | Why |
+|------|-------|-----|
+| Quick fixes, simple edits | Haiku | Fast, cheap |
+| Standard coding, debugging | Sonnet | Best value |
+| Architecture, complex refactors | Opus | Highest quality |
+| Research, large context | Gemini | FREE, 1M context |
 
 ### Visual Communication
 - One image = 500-2000 words saved
@@ -831,13 +842,21 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 
 ### Code
 - Edit over Write (smaller diffs)
-- No unnecessary comments/docstrings
-- No "improvements" beyond request
-- Skip type annotations unless project requires them
-- Minimal whitespace changes
-- Don't refactor adjacent code
 - Reuse existing patterns/utilities in codebase
-- No defensive coding for impossible cases
+- Minimal whitespace changes
+- No "improvements" beyond request (unless quality mode)
+
+**Quality Mode** (say "quality mode" to enable):
+- Add docstrings for public APIs
+- Include type annotations
+- Add defensive null checks
+- Refactor if it improves clarity
+
+**Speed Mode** (default for token efficiency):
+- Skip comments unless complex logic
+- Skip type annotations unless project requires
+- Trust existing validation
+- Don't refactor adjacent code
 
 ### Git/GitHub
 - Short commit messages (one line when possible)
