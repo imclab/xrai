@@ -301,18 +301,28 @@ namespace MetavidoVFX.VFX
                 removed++;
             }
 
-            // Find and remove orphaned VFXPropertyBinder (Unity's built-in, but we don't need it)
+            // Find and remove VFXPropertyBinder and all dependent binders
+            // VFXAudioDataBinder etc. have [RequireComponent(typeof(VFXPropertyBinder))]
+            // so we must remove dependent binders FIRST
             var propertyBinders = FindObjectsByType<UnityEngine.VFX.Utility.VFXPropertyBinder>(FindObjectsSortMode.None);
-            foreach (var binder in propertyBinders)
+            foreach (var propertyBinder in propertyBinders)
             {
-                // Only remove if it has no active bindings
-                var bindings = binder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
-                if (bindings == null || !bindings.Any())
+                // First, remove all VFXBinderBase components on this GameObject
+                var dependentBinders = propertyBinder.GetComponents<UnityEngine.VFX.Utility.VFXBinderBase>();
+                foreach (var binder in dependentBinders)
                 {
-                    Debug.Log($"[VFXLibrary] Removing empty VFXPropertyBinder from {binder.gameObject.name}");
-                    RemoveComponent(binder);
-                    removed++;
+                    if (binder != null)
+                    {
+                        Debug.Log($"[VFXLibrary] Removing {binder.GetType().Name} from {propertyBinder.gameObject.name}");
+                        RemoveComponent(binder);
+                        removed++;
+                    }
                 }
+
+                // Now safe to remove VFXPropertyBinder
+                Debug.Log($"[VFXLibrary] Removing VFXPropertyBinder from {propertyBinder.gameObject.name}");
+                RemoveComponent(propertyBinder);
+                removed++;
             }
 
             Debug.Log($"[VFXLibrary] Removed {removed} legacy components");
@@ -333,16 +343,26 @@ namespace MetavidoVFX.VFX
                 RemoveComponent(oldBinder);
             }
 
-            // Remove empty VFXPropertyBinder
+            // Remove VFXPropertyBinder and all its dependent binders
+            // VFXAudioDataBinder etc. have [RequireComponent(typeof(VFXPropertyBinder))]
+            // so we must remove them FIRST before removing VFXPropertyBinder
             var propertyBinder = go.GetComponent<UnityEngine.VFX.Utility.VFXPropertyBinder>();
             if (propertyBinder != null)
             {
-                var bindings = propertyBinder.GetPropertyBinders<UnityEngine.VFX.Utility.VFXBinderBase>();
-                if (bindings == null || !bindings.Any())
+                // First, remove all VFXBinderBase components that depend on VFXPropertyBinder
+                var dependentBinders = go.GetComponents<UnityEngine.VFX.Utility.VFXBinderBase>();
+                foreach (var binder in dependentBinders)
                 {
-                    Debug.Log($"[VFXLibrary] Removing empty VFXPropertyBinder from {go.name}");
-                    RemoveComponent(propertyBinder);
+                    if (binder != null)
+                    {
+                        Debug.Log($"[VFXLibrary] Removing {binder.GetType().Name} from {go.name} (depends on VFXPropertyBinder)");
+                        RemoveComponent(binder);
+                    }
                 }
+
+                // Now safe to remove VFXPropertyBinder
+                Debug.Log($"[VFXLibrary] Removing VFXPropertyBinder from {go.name}");
+                RemoveComponent(propertyBinder);
             }
         }
 
