@@ -75,31 +75,8 @@ public class VFXARBinder : MonoBehaviour
     {
         _vfx = GetComponent<VisualEffect>();
 
-        // Resolve IDs once on startup
-        _idDepth = FindPropertyID(DepthAliases);
-        _idStencil = FindPropertyID(StencilAliases);
-        _idPosition = FindPropertyID(PosAliases);
-        _idColor = FindPropertyID(ColorAliases);
-        _idVelocity = FindPropertyID(VelAliases);
-
-        _idRayParams = FindPropertyID(RayAliases);
-        _idInvView = FindPropertyID(InvViewAliases);
-        _idInvProj = FindPropertyID(InvProjAliases);
-        _idDepthRange = FindPropertyID(RangeAliases);
-        _idThrottle = FindPropertyID(ThrottleAliases);
-
-        // Audio (Optional)
-        _idAudioVol = _vfx.HasFloat("AudioVolume") ? Shader.PropertyToID("AudioVolume") : 0;
-        _idAudioBands = _vfx.HasVector4("AudioBands") ? Shader.PropertyToID("AudioBands") : 0;
-
-        // Extended bindings (spec-007)
-        _idHueShift = FindPropertyID(HueShiftAliases);
-        _idBrightness = FindPropertyID(BrightnessAliases);
-        _idAlpha = FindPropertyID(AlphaAliases);
-        _idSpawnRate = FindPropertyID(SpawnRateAliases);
-        _idDepthOffset = FindPropertyID(DepthOffsetAliases);
-        _idMapWidth = _vfx.HasFloat("MapWidth") ? Shader.PropertyToID("MapWidth") : 0;
-        _idMapHeight = _vfx.HasFloat("MapHeight") ? Shader.PropertyToID("MapHeight") : 0;
+        // Auto-detect and enable all bindings on startup
+        AutoDetectBindings();
     }
 
     void LateUpdate()
@@ -108,27 +85,30 @@ public class VFXARBinder : MonoBehaviour
         if (_source == null) _source = ARDepthSource.Instance;
         if (_source == null) return;
 
-        // 1. Textures (Only bind if ID is valid and texture exists)
-        if (_idDepth != 0 && _source.DepthMap) _vfx.SetTexture(_idDepth, _source.DepthMap);
-        if (_idStencil != 0 && _source.StencilMap) _vfx.SetTexture(_idStencil, _source.StencilMap);
-        if (_idPosition != 0 && _source.PositionMap) _vfx.SetTexture(_idPosition, _source.PositionMap);
-        if (_idColor != 0 && _source.ColorMap) _vfx.SetTexture(_idColor, _source.ColorMap);
-        if (_idVelocity != 0 && _source.VelocityMap) _vfx.SetTexture(_idVelocity, _source.VelocityMap);
+        // 1. Textures (Only bind if ID is valid, override enabled, and texture exists)
+        if (_idDepth != 0 && _bindDepthMapOverride && _source.DepthMap) _vfx.SetTexture(_idDepth, _source.DepthMap);
+        if (_idStencil != 0 && _bindStencilMapOverride && _source.StencilMap) _vfx.SetTexture(_idStencil, _source.StencilMap);
+        if (_idPosition != 0 && _bindPositionMapOverride && _source.PositionMap) _vfx.SetTexture(_idPosition, _source.PositionMap);
+        if (_idColor != 0 && _bindColorMapOverride && _source.ColorMap) _vfx.SetTexture(_idColor, _source.ColorMap);
+        if (_idVelocity != 0 && _bindVelocityMapOverride && _source.VelocityMap) _vfx.SetTexture(_idVelocity, _source.VelocityMap);
 
         // 2. Camera Params
-        if (_idRayParams != 0) _vfx.SetVector4(_idRayParams, _source.RayParams);
-        if (_idInvView != 0) _vfx.SetMatrix4x4(_idInvView, _source.InverseView);
+        if (_idRayParams != 0 && _bindRayParamsOverride) _vfx.SetVector4(_idRayParams, _source.RayParams);
+        if (_idInvView != 0 && _bindInverseViewOverride) _vfx.SetMatrix4x4(_idInvView, _source.InverseView);
         if (_idInvProj != 0 && Camera.main != null) _vfx.SetMatrix4x4(_idInvProj, Camera.main.projectionMatrix.inverse);
-        if (_idDepthRange != 0) _vfx.SetVector2(_idDepthRange, _depthRange);
+        if (_idDepthRange != 0 && _bindDepthRangeOverride) _vfx.SetVector2(_idDepthRange, _depthRange);
 
         // 3. Parameters
-        if (_idThrottle != 0) _vfx.SetFloat(_idThrottle, _throttle);
+        if (_idThrottle != 0 && _bindThrottleOverride) _vfx.SetFloat(_idThrottle, _throttle);
 
         // 4. Audio (Read from Globals set by AudioBridge)
-        if (_idAudioVol != 0) _vfx.SetFloat(_idAudioVol, Shader.GetGlobalFloat("_AudioVolume"));
-        if (_idAudioBands != 0) _vfx.SetVector4(_idAudioBands, Shader.GetGlobalVector("_AudioBands"));
+        if (_bindAudioOverride)
+        {
+            if (_idAudioVol != 0) _vfx.SetFloat(_idAudioVol, Shader.GetGlobalFloat("_AudioVolume"));
+            if (_idAudioBands != 0) _vfx.SetVector4(_idAudioBands, Shader.GetGlobalVector("_AudioBands"));
+        }
 
-        // 5. Extended bindings (spec-007)
+        // 5. Extended bindings (spec-007) - always bind if property exists
         if (_idHueShift != 0) _vfx.SetFloat(_idHueShift, _hueShift);
         if (_idBrightness != 0) _vfx.SetFloat(_idBrightness, _brightness);
         if (_idAlpha != 0) _vfx.SetFloat(_idAlpha, _alpha);
@@ -140,6 +120,20 @@ public class VFXARBinder : MonoBehaviour
         {
             if (_idMapWidth != 0) _vfx.SetFloat(_idMapWidth, _source.PositionMap.width);
             if (_idMapHeight != 0) _vfx.SetFloat(_idMapHeight, _source.PositionMap.height);
+        }
+
+        // 7. Transform mode bindings (for anchored holograms)
+        if (_useTransformMode)
+        {
+            if (_bindAnchorPos && _anchorTransform != null)
+            {
+                _anchorPos = _anchorTransform.position;
+                if (_vfx.HasVector3("AnchorPos")) _vfx.SetVector3("AnchorPos", _anchorPos);
+            }
+            if (_bindHologramScale && _vfx.HasFloat("HologramScale"))
+            {
+                _vfx.SetFloat("HologramScale", _hologramScale);
+            }
         }
     }
 
@@ -186,23 +180,45 @@ public class VFXARBinder : MonoBehaviour
     public bool BindAudio { get => (_idAudioVol != 0 || _idAudioBands != 0) && _bindAudioOverride; set => _bindAudioOverride = value; }
 
     // Re-detect bindings (call after VFX asset changes)
+    // Auto-enables bindings for all detected properties
     public void AutoDetectBindings()
     {
         if (_vfx == null) _vfx = GetComponent<VisualEffect>();
         if (_vfx == null) return;
 
+        // Detect and auto-enable bindings
         _idDepth = FindPropertyID(DepthAliases);
+        _bindDepthMapOverride = _idDepth != 0;
+
         _idStencil = FindPropertyID(StencilAliases);
+        _bindStencilMapOverride = _idStencil != 0;
+
         _idPosition = FindPropertyID(PosAliases);
+        _bindPositionMapOverride = _idPosition != 0;
+
         _idColor = FindPropertyID(ColorAliases);
+        _bindColorMapOverride = _idColor != 0;
+
         _idVelocity = FindPropertyID(VelAliases);
+        _bindVelocityMapOverride = _idVelocity != 0;
+
         _idRayParams = FindPropertyID(RayAliases);
+        _bindRayParamsOverride = _idRayParams != 0;
+
         _idInvView = FindPropertyID(InvViewAliases);
+        _bindInverseViewOverride = _idInvView != 0;
+
         _idInvProj = FindPropertyID(InvProjAliases);
+
         _idDepthRange = FindPropertyID(RangeAliases);
+        _bindDepthRangeOverride = _idDepthRange != 0;
+
         _idThrottle = FindPropertyID(ThrottleAliases);
+        _bindThrottleOverride = _idThrottle != 0;
+
         _idAudioVol = _vfx.HasFloat("AudioVolume") ? Shader.PropertyToID("AudioVolume") : 0;
         _idAudioBands = _vfx.HasVector4("AudioBands") ? Shader.PropertyToID("AudioBands") : 0;
+        _bindAudioOverride = _idAudioVol != 0 || _idAudioBands != 0;
 
         // Extended bindings (spec-007)
         _idHueShift = FindPropertyID(HueShiftAliases);
@@ -212,6 +228,13 @@ public class VFXARBinder : MonoBehaviour
         _idDepthOffset = FindPropertyID(DepthOffsetAliases);
         _idMapWidth = _vfx.HasFloat("MapWidth") ? Shader.PropertyToID("MapWidth") : 0;
         _idMapHeight = _vfx.HasFloat("MapHeight") ? Shader.PropertyToID("MapHeight") : 0;
+
+        // Transform mode bindings (check for hologram properties)
+        bool hasAnchor = _vfx.HasVector3("AnchorPos");
+        bool hasScale = _vfx.HasFloat("HologramScale");
+        _bindAnchorPos = hasAnchor;
+        _bindHologramScale = hasScale;
+        _useTransformMode = hasAnchor || hasScale;
     }
 
     // =========================================================================
