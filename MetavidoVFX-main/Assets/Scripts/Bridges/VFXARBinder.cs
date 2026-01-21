@@ -242,6 +242,19 @@ public class VFXARBinder : MonoBehaviour
         return 0; // 0 is safe "null" for PropertyID
     }
 
+    // Type-specific property finder for Matrix4x4 (avoids type mismatch errors)
+    int FindMatrix4x4PropertyID(string[] aliases)
+    {
+        foreach (var name in aliases)
+        {
+            if (_vfx.HasMatrix4x4(name))
+            {
+                return Shader.PropertyToID(name);
+            }
+        }
+        return 0;
+    }
+
     // Public API for external controllers
     public void SetThrottle(float val) => _throttle = val;
 
@@ -297,10 +310,11 @@ public class VFXARBinder : MonoBehaviour
         _idRayParams = FindPropertyID(RayAliases);
         _bindRayParamsOverride = _idRayParams != 0;
 
-        _idInvView = FindPropertyID(InvViewAliases);
+        // Matrix4x4 properties need type-specific check to avoid binding errors
+        _idInvView = FindMatrix4x4PropertyID(InvViewAliases);
         _bindInverseViewOverride = _idInvView != 0;
 
-        _idInvProj = FindPropertyID(InvProjAliases);
+        _idInvProj = FindMatrix4x4PropertyID(InvProjAliases);
 
         _idDepthRange = FindPropertyID(RangeAliases);
         _bindDepthRangeOverride = _idDepthRange != 0;
