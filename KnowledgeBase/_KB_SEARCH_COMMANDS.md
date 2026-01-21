@@ -1,8 +1,36 @@
 # KnowledgeBase Search Commands
 
-**Tags**: `search` `grep` `knowledgebase` `all-tools`
+**Tags**: `search` `grep` `knowledgebase` `all-tools` `holistic`
 **Updated**: 2026-01-21
 **Purpose**: Universal search commands for all AI tools and IDEs
+
+---
+
+## Decision Flow (Holistic - Always Check KB First)
+
+```
+Error/Question arrives
+        │
+        ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ 1. kbfix/kbtag  │────▶│ 2. Found?       │────▶│ 3. Apply direct │
+│    (0 tokens)   │ No  │    grep KB      │ Yes │    (done)       │
+└─────────────────┘     └────────┬────────┘     └─────────────────┘
+                                 │ No
+                                 ▼
+                        ┌─────────────────┐
+                        │ 4. MCP/Agent?   │
+                        │ JetBrains/Unity │
+                        └────────┬────────┘
+                                 │
+              ┌──────────────────┼──────────────────┐
+              ▼                  ▼                  ▼
+     ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+     │ JetBrains MCP  │ │ Unity MCP      │ │ Explore Agent  │
+     │ C# code search │ │ Editor state   │ │ Multi-file     │
+     │ (~100 tokens)  │ │ (~50 tokens)   │ │ (independent)  │
+     └────────────────┘ └────────────────┘ └────────────────┘
+```
 
 ---
 
@@ -181,6 +209,41 @@ grep -ri "topic" ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/
 | GitHub repos | `cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md` |
 | Token tips | `cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_TOKEN_EFFICIENCY_COMPLETE.md` |
 | Tool rollover | `cat ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/_CROSS_TOOL_ROLLOVER_GUIDE.md` |
+
+---
+
+---
+
+## Screenshot Commands (Visual Context)
+
+```bash
+# Automated screenshot capture (then Ctrl+V to paste in Claude Code)
+ss                    # Interactive screenshot → clipboard
+ssu                   # Unity window screenshot → clipboard
+ai-screenshot         # Full version with notification
+ai-screenshot-unity   # Unity-specific capture
+```
+
+**Saves**: ~500-2000 tokens vs describing visually
+
+**Best for**: Errors, UI issues, visual bugs, design references
+
+---
+
+## Priority Order (Fastest First)
+
+| Priority | Command | Tokens | Speed | Use Case |
+|----------|---------|--------|-------|----------|
+| 1 | `kbfix "error"` | **0** | Instant | Known errors |
+| 2 | `kbtag "topic"` | **0** | Instant | Find pattern files |
+| 3 | `kb "search"` | **0** | <1s | Full KB search |
+| 4 | `kbrepo "topic"` | **0** | <1s | GitHub repos |
+| 5 | `ss` / `ssu` | **0** | 2s | Visual context |
+| 6 | JetBrains MCP | ~100 | 1s | C# code search |
+| 7 | Unity MCP | ~50 | 1s | Editor state |
+| 8 | Explore agent | Independent | 5s | Multi-file search |
+| 9 | claude-mem | ~500 | 2s | Semantic recall |
+| 10 | WebSearch | ~1000 | 3s | External info |
 
 ---
 

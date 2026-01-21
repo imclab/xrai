@@ -17,13 +17,43 @@ Explore → Plan → Code → Commit → Log discovery
 - **Discovery**: Append to `LEARNING_LOG.md`
 - **User patterns**: See `_USER_PATTERNS_JAMES.md`
 
-### KB Search Commands (Zero Tokens)
+### KB Search Commands (Zero Tokens - Always Try First)
+
 ```bash
-kb "topic"      # Search all KB files
-kbfix "error"   # Quick fix lookup
-kbtag "vfx"     # Find pattern files by tag
-kbrepo "hand"   # Search 520+ GitHub repos
+# Priority order (fastest to slowest, all zero main tokens)
+kbfix "CS0246"        # 1. Error → Fix lookup (instant)
+kbtag "vfx"           # 2. Find pattern files by tag
+kb "hologram depth"   # 3. Search all 116 KB files
+kbrepo "hand track"   # 4. Search 520+ GitHub repos
+ss                    # 5. Screenshot for visual context (→ paste)
+ssu                   # 6. Unity window screenshot
 ```
+
+**KB + Tool Integration** (holistic decision flow):
+```
+Error/Question arrives
+        │
+        ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ 1. kbfix/kbtag  │────▶│ 2. Found?       │────▶│ 3. Apply direct │
+│    (0 tokens)   │ No  │    grep KB      │ Yes │    (done)       │
+└─────────────────┘     └────────┬────────┘     └─────────────────┘
+                                 │ No
+                                 ▼
+                        ┌─────────────────┐
+                        │ 4. MCP/Agent?   │
+                        │ JetBrains/Unity │
+                        └────────┬────────┘
+                                 │
+              ┌──────────────────┼──────────────────┐
+              ▼                  ▼                  ▼
+     ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+     │ JetBrains MCP  │ │ Unity MCP      │ │ Explore Agent  │
+     │ C# code search │ │ Editor state   │ │ Multi-file     │
+     │ (~100 tokens)  │ │ (~50 tokens)   │ │ (independent)  │
+     └────────────────┘ └────────────────┘ └────────────────┘
+```
+
 **Full reference**: `KnowledgeBase/_KB_SEARCH_COMMANDS.md`
 
 **Full docs**: `_SIMPLIFIED_INTELLIGENCE_CORE.md`
@@ -140,32 +170,73 @@ kbrepo "hand"   # Search 520+ GitHub repos
 | **Task** | Parallel execution | Independent | Parallel | Background work, research |
 | **Subagent** | Verification | Independent | Parallel | Code review, testing |
 
-**Agent Offloading Rules** (saves main context, often faster):
+**Agent Offloading Decision Matrix** (holistic - considers all tools):
 
-| Task | Use Agent? | Why |
-|------|------------|-----|
-| Find 3+ files by pattern | ✅ **Explore** | Single call vs multiple grep |
-| Research unknown topic | ✅ **Task** | Independent budget, web access |
-| Verify code after changes | ✅ **Subagent** | Parallel, no main context |
-| Open-ended "how does X work" | ✅ **Explore** | May need 5-10 searches |
-| Read 1 specific file | ❌ Direct | Faster than agent overhead |
-| Simple edit | ❌ Direct | Agent spawn slower |
-| Grep 1 pattern | ❌ Direct | Instant, no overhead |
+| Task | Best Approach | Tool Chain | Tokens |
+|------|---------------|------------|--------|
+| Find 3+ files | ✅ **Explore** agent | Agent → grep | Independent |
+| Research topic | ✅ **Task** agent | Agent → WebSearch | Independent |
+| Verify code | ✅ **Subagent** | Agent → Read/Grep | Independent |
+| KB pattern lookup | ❌ **Direct** `kbfix` | Shell alias | **0** |
+| Unity console check | ❌ **Direct** MCP | read_console | ~50 |
+| 1 C# file search | ❌ **Direct** JetBrains | search_in_files | ~100 |
+| Simple edit | ❌ **Direct** Edit | Claude Edit | ~50 |
+| Multi-file refactor | ✅ **Plan** agent | Agent → Edit × N | Independent |
+| Scene exploration | ❌ **Direct** MCP | find_gameobjects | ~100 |
+| claude-mem query | ❌ **Direct** MCP | chroma_query | ~500 |
 
-**Parallel Agent Pattern** (10x throughput):
+**Optimal Tool Selection by Context**:
 ```
-# Launch 3 agents simultaneously (single message, multiple Task calls)
-Agent 1: Explore "find auth files"
-Agent 2: Task "research OAuth patterns"
-Agent 3: Subagent "review security"
-→ All run in parallel, results combine
+                    ┌─────────────────────────────────────┐
+                    │         TASK ARRIVES                │
+                    └──────────────┬──────────────────────┘
+                                   │
+              ┌────────────────────┼────────────────────┐
+              ▼                    ▼                    ▼
+     ┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+     │ Known Pattern? │   │ Multi-step?    │   │ Need Research? │
+     │ Check KB first │   │ Use Agent      │   │ Use Agent      │
+     └───────┬────────┘   └───────┬────────┘   └───────┬────────┘
+             │                    │                    │
+             ▼                    ▼                    ▼
+     ┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+     │ kbfix/kbtag    │   │ Explore/Plan   │   │ Task agent     │
+     │ (0 tokens)     │   │ (independent)  │   │ (background)   │
+     └────────────────┘   └────────────────┘   └────────────────┘
 ```
 
-**Agent Speed Tips**:
-- Use `model: "haiku"` for Explore agents (0.3x cost, 3x speed)
-- Use `run_in_background: true` for non-blocking work
-- Resume agents with `resume: <agent_id>` (preserves context)
-- Max 10 concurrent agents (additional queue)
+**Parallel Agent Patterns**:
+
+| Pattern | Agents | Use Case | Speedup |
+|---------|--------|----------|---------|
+| **Fan-out search** | 3× Explore | Find files across domains | 3x |
+| **Research + Code** | Task + Plan | Learn then implement | 2x |
+| **Verify pipeline** | 3× Subagent | Review, test, security | 3x |
+| **Full spec** | Explore + Plan + Task | New feature design | 5x |
+
+```
+# Example: Full feature implementation (parallel)
+Agent 1: Explore (haiku) "find existing patterns"     ─┐
+Agent 2: Task "research best practices"               ─┼─ Parallel
+Agent 3: Plan "design implementation"                 ─┘
+→ Results combine → Code with full context
+```
+
+**Agent + MCP + Memory Integration**:
+
+| Scenario | Agent | MCP Tools | Memory | Total Tokens |
+|----------|-------|-----------|--------|--------------|
+| Debug Unity error | — | read_console, get_file | — | ~150 |
+| Find & fix pattern | Explore | JetBrains search | grep KB | ~0 main |
+| New feature | Plan | Unity hierarchy | claude-mem | Independent |
+| Code review | Subagent | — | LEARNING_LOG | Independent |
+
+**Speed Tips**:
+- `model: "haiku"` for Explore = 0.3x cost, 3x speed
+- `run_in_background: true` = non-blocking, continue working
+- `resume: <agent_id>` = preserves context, no re-explain
+- Parallel agents = single message with multiple Task calls
+- Max 10 concurrent (additional queue)
 
 ### Plugin/Extension Ecosystem
 
@@ -987,12 +1058,13 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 - Complex debugging → Auto increased reasoning
 - Simple edits → Baseline thinking, low overhead
 
-**Token-Free Quality Wins** (from Anthropic official):
+**Token-Free Quality Wins** (from Anthropic official + automation):
 - Use `/clear` between distinct tasks (saves 10-50K tokens)
 - Explore→Plan→Code→Commit workflow (prevents rework)
 - Subagent verification instead of re-reading (parallel, no main context)
 - CLAUDE.md ≤200 lines (move details to per-folder files)
-- Paste screenshots instead of describing visuals (cmd+ctrl+shift+4)
+- Screenshots: `ss` or `ssu` (automated, then Ctrl+V to paste)
+- KB first: `kbfix "error"` before any MCP/agent call (0 tokens)
 
 ### Model Selection & Visibility
 - Haiku: Simple agents, checks (0.3x cost)
