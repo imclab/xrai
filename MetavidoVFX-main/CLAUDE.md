@@ -231,6 +231,13 @@ Custom HLSL blocks fail with "cannot implicitly convert from 'float' to 'Sampler
 
 **Fixed files**: Bubbles.vfx (2026-01-21)
 
+### Duplicate WebRTC Frameworks on iOS
+Having both `com.unity.webrtc` and third-party `WebRtcVideoChat` plugin causes duplicate Objective-C class warnings (RTCVideoFrame, RTCDispatcher, etc.) that can lead to crashes.
+
+**Fix**: Remove `com.unity.webrtc` from Packages/manifest.json. The `WebRtcVideoChat` plugin provides its own `webrtccsharpwrap.framework`.
+
+**Fixed**: Removed com.unity.webrtc (2026-01-21)
+
 ### HologramRenderer Binding Conflict
 HologramRenderer.cs must NOT bind PositionMap to DepthMap property. VFX expecting raw depth would receive computed positions, causing particles to fail. Fixed by removing fallback (2026-01-14).
 
