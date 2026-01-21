@@ -149,11 +149,25 @@ DepthRange    - Depth clipping (default 0.1-10m)
 - `Assets/Resources/SegmentedDepthToWorld.compute` - GPU segmented position maps
 - `Assets/Scripts/Editor/BodyPixDefineSetup.cs` - Auto-setup scripting define
 
+## Scenes
+
+| Scene | Purpose |
+|-------|---------|
+| `Assets/HOLOGRAM.unity` | **Active development** - current working scene |
+| `Assets/HOLOGRAM_Mirror_MVP.unity` | Main build scene (production) |
+| `Assets/HOLOGRAM 1.unity` | Variant scene 1 |
+| `Assets/HOLOGRAM 2.unity` | Variant scene 2 (added 2026-01-21) |
+| `Assets/HOLOGRAM 3.unity` | Variant scene 3 (added 2026-01-21) |
+| `Assets/Player.unity` | Player-focused scene |
+| `Assets/Plex2.unity` | Plex variant |
+| `Assets/RC2.unity` | Rcam2 test scene |
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `Assets/Scenes/HOLOGRAM_Mirror_MVP.unity` | Main build scene |
+| `Assets/HOLOGRAM.unity` | Active development scene |
+| `Assets/HOLOGRAM_Mirror_MVP.unity` | Main build scene |
 | `Assets/Editor/BuildScript.cs` | Build automation entry point |
 | `Packages/manifest.json` | Package dependencies |
 | `Assets/URP/` | URP renderer configurations |
@@ -173,6 +187,7 @@ Scopes: `jp.keijiro`
 ### External Dependencies
 - **AR Foundation Remote 2**: Asset Store package, not in version control. Install via `Assets/Plugins/ARFoundationRemoteInstaller/`
 - **Unity MCP**: `com.coplaydev.unity-mcp` (Git dependency)
+- **WebRtcVideoChat**: Third-party WebRTC plugin in `Assets/3rdparty/WebRtcVideoChat/`. ⚠️ Do NOT add `com.unity.webrtc` - causes duplicate framework conflicts on iOS.
 
 ## Editor Testing
 
@@ -240,6 +255,23 @@ Having both `com.unity.webrtc` and third-party `WebRtcVideoChat` plugin causes d
 
 ### HologramRenderer Binding Conflict
 HologramRenderer.cs must NOT bind PositionMap to DepthMap property. VFX expecting raw depth would receive computed positions, causing particles to fail. Fixed by removing fallback (2026-01-14).
+
+### Unity Editor VFX Crash (SIGSEGV)
+Unity Editor may crash with `EXC_BAD_ACCESS` / `SIGSEGV` at `0x0000000000000000` during VFX cleanup. Stack trace shows:
+```
+VFXValueContainer::ClearValue() → VisualEffect::DestroyData() → delete_object_internal_step1()
+```
+
+**Cause**: Unity internal bug in VFX memory management during object destruction.
+
+**Triggers**: Scene close with many VFX, domain reload after script changes, VFX asset deletion.
+
+**Workarounds**:
+- Stop VFX before quitting (`OnApplicationQuit`)
+- Disable VFX before script recompilation
+- Report to Unity: Help > Report a Bug
+
+**Note**: This is a Unity bug, not user code. Crash logs at `~/Library/Logs/DiagnosticReports/Unity-*.ips`
 
 ## H3M Menu Commands
 
@@ -578,12 +610,13 @@ vfxARDataBinder.SetGravityEnabled(bool)
 vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 ```
 
-## Project Statistics (2026-01-20)
+## Project Statistics (2026-01-21)
 
 | Metric | Count |
 |--------|-------|
 | C# Scripts | 458 |
 | VFX Assets | 88 |
+| Scenes | 8 (5 HOLOGRAM variants) |
 | Unity Version | 6000.2.14f1 |
 | iOS Minimum | 15.0 |
 | Performance | 353 FPS @ 10 VFX |
