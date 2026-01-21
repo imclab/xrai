@@ -242,7 +242,55 @@ public class VFXARBinder : MonoBehaviour
         return 0; // 0 is safe "null" for PropertyID
     }
 
-    // Type-specific property finder for Matrix4x4 (avoids type mismatch errors)
+    // Type-specific property finders (avoids type mismatch errors)
+    int FindTexturePropertyID(string[] aliases)
+    {
+        foreach (var name in aliases)
+        {
+            if (_vfx.HasTexture(name))
+            {
+                return Shader.PropertyToID(name);
+            }
+        }
+        return 0;
+    }
+
+    int FindVector4PropertyID(string[] aliases)
+    {
+        foreach (var name in aliases)
+        {
+            if (_vfx.HasVector4(name))
+            {
+                return Shader.PropertyToID(name);
+            }
+        }
+        return 0;
+    }
+
+    int FindVector2PropertyID(string[] aliases)
+    {
+        foreach (var name in aliases)
+        {
+            if (_vfx.HasVector2(name))
+            {
+                return Shader.PropertyToID(name);
+            }
+        }
+        return 0;
+    }
+
+    int FindFloatPropertyID(string[] aliases)
+    {
+        foreach (var name in aliases)
+        {
+            if (_vfx.HasFloat(name))
+            {
+                return Shader.PropertyToID(name);
+            }
+        }
+        return 0;
+    }
+
     int FindMatrix4x4PropertyID(string[] aliases)
     {
         foreach (var name in aliases)
@@ -286,52 +334,56 @@ public class VFXARBinder : MonoBehaviour
 
     // Re-detect bindings (call after VFX asset changes)
     // Auto-enables bindings for all detected properties
+    // Uses type-specific finders to avoid "Value type incorrect" errors
     public void AutoDetectBindings()
     {
         if (_vfx == null) _vfx = GetComponent<VisualEffect>();
         if (_vfx == null) return;
 
-        // Detect and auto-enable bindings
-        _idDepth = FindPropertyID(DepthAliases);
+        // Texture bindings (type-safe)
+        _idDepth = FindTexturePropertyID(DepthAliases);
         _bindDepthMapOverride = _idDepth != 0;
 
-        _idStencil = FindPropertyID(StencilAliases);
+        _idStencil = FindTexturePropertyID(StencilAliases);
         _bindStencilMapOverride = _idStencil != 0;
 
-        _idPosition = FindPropertyID(PosAliases);
+        _idPosition = FindTexturePropertyID(PosAliases);
         _bindPositionMapOverride = _idPosition != 0;
 
-        _idColor = FindPropertyID(ColorAliases);
+        _idColor = FindTexturePropertyID(ColorAliases);
         _bindColorMapOverride = _idColor != 0;
 
-        _idVelocity = FindPropertyID(VelAliases);
+        _idVelocity = FindTexturePropertyID(VelAliases);
         _bindVelocityMapOverride = _idVelocity != 0;
 
-        _idRayParams = FindPropertyID(RayAliases);
+        // Vector4 bindings (type-safe)
+        _idRayParams = FindVector4PropertyID(RayAliases);
         _bindRayParamsOverride = _idRayParams != 0;
 
-        // Matrix4x4 properties need type-specific check to avoid binding errors
+        // Matrix4x4 bindings (type-safe)
         _idInvView = FindMatrix4x4PropertyID(InvViewAliases);
         _bindInverseViewOverride = _idInvView != 0;
 
         _idInvProj = FindMatrix4x4PropertyID(InvProjAliases);
 
-        _idDepthRange = FindPropertyID(RangeAliases);
+        // Vector2 bindings (stored as Vector4 in VFX Graph)
+        _idDepthRange = FindVector2PropertyID(RangeAliases);
         _bindDepthRangeOverride = _idDepthRange != 0;
 
-        _idThrottle = FindPropertyID(ThrottleAliases);
+        // Float bindings (type-safe)
+        _idThrottle = FindFloatPropertyID(ThrottleAliases);
         _bindThrottleOverride = _idThrottle != 0;
 
         _idAudioVol = _vfx.HasFloat("AudioVolume") ? Shader.PropertyToID("AudioVolume") : 0;
         _idAudioBands = _vfx.HasVector4("AudioBands") ? Shader.PropertyToID("AudioBands") : 0;
         _bindAudioOverride = _idAudioVol != 0 || _idAudioBands != 0;
 
-        // Extended bindings (spec-007)
-        _idHueShift = FindPropertyID(HueShiftAliases);
-        _idBrightness = FindPropertyID(BrightnessAliases);
-        _idAlpha = FindPropertyID(AlphaAliases);
-        _idSpawnRate = FindPropertyID(SpawnAliases);
-        _idDepthOffset = FindPropertyID(DepthOffsetAliases);
+        // Extended bindings (spec-007) - all floats
+        _idHueShift = FindFloatPropertyID(HueShiftAliases);
+        _idBrightness = FindFloatPropertyID(BrightnessAliases);
+        _idAlpha = FindFloatPropertyID(AlphaAliases);
+        _idSpawnRate = FindFloatPropertyID(SpawnAliases);
+        _idDepthOffset = FindFloatPropertyID(DepthOffsetAliases);
         _idMapWidth = _vfx.HasFloat("MapWidth") ? Shader.PropertyToID("MapWidth") : 0;
         _idMapHeight = _vfx.HasFloat("MapHeight") ? Shader.PropertyToID("MapHeight") : 0;
 
