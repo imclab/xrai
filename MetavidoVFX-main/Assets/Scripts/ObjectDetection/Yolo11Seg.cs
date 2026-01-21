@@ -47,7 +47,7 @@ namespace Microsoft.ML.OnnxRuntime.Examples
             public float maskThreshold = 0.5f;
         }
 
-        public readonly struct Detection : IDetection<Detection>
+        public readonly struct Detection : Microsoft.ML.OnnxRuntime.UnityEx.IDetection<Detection>
         {
             public readonly Rect rect;
             public readonly int label;
@@ -213,7 +213,7 @@ namespace Microsoft.ML.OnnxRuntime.Examples
 
             // Run Non-Maximum Suppression
             proposalList.Sort();
-            IDetection<Detection>.NMS(proposalList, detectionList, options.nmsThreshold);
+            Microsoft.ML.OnnxRuntime.UnityEx.IDetection<Detection>.NMS(proposalList, detectionList, options.nmsThreshold);
 
             // Post process
             segmentationMarker.Begin();
