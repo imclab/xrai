@@ -2,11 +2,13 @@
 
 **Applies To**: Claude Code, Windsurf, Cursor, Gemini, Codex, Rider, Unity, ALL AI tools
 
-## ⚠️ CORE LOOP (Simple)
+## ⚠️ CORE LOOP (Anthropic-Aligned)
 
 ```
-Search KB → Act → Log discovery → Repeat
+Explore → Plan → Code → Commit → Log discovery
 ```
+
+**Shortcut for simple tasks**: Search KB → Act → Done
 
 ### Quick Reference
 - **Session start**: `mcp-kill-dupes`
@@ -776,6 +778,13 @@ Use PreToolUse hooks to filter verbose output BEFORE Claude sees it:
 - 2+ failed attempts → Auto "think harder" + extra validation
 - Complex debugging → Auto increased reasoning
 - Simple edits → Baseline thinking, low overhead
+
+**Token-Free Quality Wins** (from Anthropic official):
+- Use `/clear` between distinct tasks (saves 10-50K tokens)
+- Explore→Plan→Code→Commit workflow (prevents rework)
+- Subagent verification instead of re-reading (parallel, no main context)
+- CLAUDE.md ≤200 lines (move details to per-folder files)
+- Paste screenshots instead of describing visuals (cmd+ctrl+shift+4)
 
 ### Model Selection & Visibility
 - Haiku: Simple agents, checks (0.3x cost)
