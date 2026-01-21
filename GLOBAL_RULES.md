@@ -133,14 +133,39 @@ kbrepo "hand"   # Search 520+ GitHub repos
 
 ### Agent Architecture
 
-| Agent Type | Purpose | Tokens | When to Use |
-|------------|---------|--------|-------------|
-| **Explore** | Codebase search | Independent | Open-ended queries |
-| **Plan** | Architecture design | Independent | Multi-file changes |
-| **Task** | Parallel execution | Independent | Background work |
-| **Subagent** | Verification | Independent | Code review, testing |
+| Agent Type | Purpose | Tokens | Speed | When to Use |
+|------------|---------|--------|-------|-------------|
+| **Explore** (haiku) | Codebase search | Independent | **Fastest** | Find files, grep patterns |
+| **Plan** | Architecture design | Independent | Medium | Multi-file changes |
+| **Task** | Parallel execution | Independent | Parallel | Background work, research |
+| **Subagent** | Verification | Independent | Parallel | Code review, testing |
 
-**Key Insight**: Agents have independent token budgets - use them to offload work.
+**Agent Offloading Rules** (saves main context, often faster):
+
+| Task | Use Agent? | Why |
+|------|------------|-----|
+| Find 3+ files by pattern | ✅ **Explore** | Single call vs multiple grep |
+| Research unknown topic | ✅ **Task** | Independent budget, web access |
+| Verify code after changes | ✅ **Subagent** | Parallel, no main context |
+| Open-ended "how does X work" | ✅ **Explore** | May need 5-10 searches |
+| Read 1 specific file | ❌ Direct | Faster than agent overhead |
+| Simple edit | ❌ Direct | Agent spawn slower |
+| Grep 1 pattern | ❌ Direct | Instant, no overhead |
+
+**Parallel Agent Pattern** (10x throughput):
+```
+# Launch 3 agents simultaneously (single message, multiple Task calls)
+Agent 1: Explore "find auth files"
+Agent 2: Task "research OAuth patterns"
+Agent 3: Subagent "review security"
+→ All run in parallel, results combine
+```
+
+**Agent Speed Tips**:
+- Use `model: "haiku"` for Explore agents (0.3x cost, 3x speed)
+- Use `run_in_background: true` for non-blocking work
+- Resume agents with `resume: <agent_id>` (preserves context)
+- Max 10 concurrent agents (additional queue)
 
 ### Plugin/Extension Ecosystem
 
