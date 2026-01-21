@@ -2,7 +2,7 @@
 
 **Purpose**: Track insights, patterns, and techniques learned from analyzing the 520+ GitHub repos in [_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md](_MASTER_GITHUB_REPO_KNOWLEDGEBASE.md)
 
-**Last Updated**: 2026-01-15 (Triple Verified)
+**Last Updated**: 2026-01-21 (VFXBinderManager deprecated, Hybrid Bridge is current)
 
 ---
 
@@ -29,8 +29,12 @@
 
 ### Multi-Hologram Scalability
 
-**VFXBinderManager pattern** (centralized) is optimal:
-- Single compute dispatch for ALL VFX → O(1) compute cost
+> ⚠️ **UPDATED 2026-01-21**: VFXBinderManager is **DEPRECATED**. Use **ARDepthSource + VFXARBinder** (Hybrid Bridge Pipeline) instead.
+> See `MetavidoVFX-main/Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md`
+
+**Hybrid Bridge Pattern** (current recommendation):
+- `ARDepthSource.cs` - Single compute dispatch for ALL VFX → O(1) compute cost
+- `VFXARBinder.cs` - Lightweight per-VFX binding (SetTexture only)
 - Same PositionMap shared by all holograms
 - Each additional hologram = ~0.3ms binding cost only
 

@@ -10,7 +10,7 @@ This repository contains production-ready code patterns, 520+ GitHub repo refere
 
 ```
 Unity-XR-AI/
-├── KnowledgeBase/           # 75+ knowledge files, patterns, references
+├── KnowledgeBase/           # 116 knowledge files, patterns, references
 ├── AgentBench/              # Unity research workbench (source code access)
 ├── Vis/                     # 10 3D visualization frontends
 │
@@ -63,18 +63,19 @@ Unity-XR-AI/
 
 ---
 
-## 📊 Statistics
+## 📊 Statistics (Updated 2026-01-21)
 
-- **KnowledgeBase**: 1,043 markdown files (658MB after cleanup)
+- **KnowledgeBase**: 116 markdown files (658MB)
 - **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
 - **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
 - **Platform Coverage**: iOS 15+, Android, Quest 3/Pro, WebGL, Vision Pro
-- **MetavidoVFX Scripts**: 458 C# scripts (core + H3M + Echovision + NNCam)
-- **VFX Assets**: 235 total (73 in Resources/VFX organized by category)
-- **Specs**: 11 active (002-012), 6 complete, 5 in draft
+- **MetavidoVFX Scripts**: 179 C# scripts (129 runtime + 50 editor)
+- **VFX Assets**: 432 total (292 primary in Assets/VFX)
+- **Scenes**: 25 custom (5 HOLOGRAM + 10 spec demos + 10 other)
+- **Specs**: 8 active (002-009), 5 complete, 3 in progress/draft
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
-- **Performance**: 353 FPS @ 10 VFX (verified Jan 16, 2026)
+- **Performance**: 353 FPS @ 10 VFX (verified Jan 21, 2026)
 
 ---
 

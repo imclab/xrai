@@ -614,21 +614,33 @@ vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 
 | Metric | Count |
 |--------|-------|
-| C# Scripts | 458 |
-| VFX Assets | 88 |
-| Scenes | 8 (5 HOLOGRAM variants) |
+| C# Scripts | 179 (129 runtime + 50 editor) |
+| VFX Assets | 432 (292 primary in Assets/VFX) |
+| Scenes | 25 custom (5 HOLOGRAM + 10 spec demos + 10 other) |
+| H3M Prefabs | 4 core |
 | Unity Version | 6000.2.14f1 |
 | iOS Minimum | 15.0 |
 | Performance | 353 FPS @ 10 VFX |
 
-**VFX by Category**:
-- Rcam2: 20 (HDRP→URP converted Jan 14)
-- Rcam4: 14
-- NNCam2: 9 (keypoint-driven, added Jan 16)
-- Rcam3: 8
-- Akvfx: 7
-- Resources/VFX: 14 (core Metavido)
-- Environment/SDF/Other: 16
+**VFX by Category (Assets/VFX - 292)**:
+- Portals6: 22 (portal/vortex effects)
+- Essentials: 22 (core spark/smoke/fire)
+- Buddha: 21 (from TouchingHologram)
+- UnitySamples: 20 (training assets)
+- Rcam2: 20 (HDRP→URP converted)
+- Keijiro: 16 (kinetic/generative)
+- Rcam4: 14 (NDI streaming)
+- Dcam: 13 (LiDAR depth)
+- NNCam2: 9 (keypoint-driven)
+- Rcam3: 8 (depth variant)
+- Fluo: 8 (brush/visualizer)
+- WebRTC: 7 (network streaming)
+- Khoreo: 7 (motion capture)
+- Akvfx: 7 (point clouds)
+- SdfVfx: 5 (ray marching)
+- People: 5 (human effects)
+- Environment: 5 (world effects)
+- Other: 39 (compute, anomask, geovfx, etc.)
 
 **Conditional Compilation**:
 - `HOLOKIT_AVAILABLE` - HoloKit hand tracking (15 uses)

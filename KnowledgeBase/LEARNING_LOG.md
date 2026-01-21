@@ -3579,3 +3579,77 @@ Local Files:
 - **Object detection**: Use YOLO11 (more flexible, heavier)
 - **New ML projects**: Prefer Unity Sentis over ONNX Runtime
 
+
+---
+
+## 2026-01-21 (Session 1) - Claude Code - Deep Project Audit
+
+**Discovery**: Completed comprehensive audit of entire MetavidoVFX project and KnowledgeBase. Corrected documentation statistics and identified outdated references.
+
+**Audit Results**:
+
+### 1. Corrected Project Statistics
+
+| Metric | Old Value | Correct Value |
+|--------|-----------|---------------|
+| C# Scripts | 458 | **179** (129 runtime + 50 editor) |
+| VFX Assets | 235 | **432** (292 primary in Assets/VFX) |
+| Custom Scenes | 8 | **25** (5 HOLOGRAM + 10 spec demos + 10 other) |
+| KB Files | 75+ | **116** markdown files |
+
+### 2. VFX Asset Breakdown (Assets/VFX - 292 total)
+
+| Category | Count | Description |
+|----------|-------|-------------|
+| Portals6 | 22 | Portal/vortex effects |
+| Essentials | 22 | Core spark/smoke/fire |
+| Buddha | 21 | From TouchingHologram |
+| UnitySamples | 20 | Training assets |
+| Rcam2 | 20 | HDRP→URP converted |
+| Keijiro | 16 | Kinetic/generative |
+| Rcam4 | 14 | NDI streaming |
+| Dcam | 13 | LiDAR depth |
+| NNCam2 | 9 | Keypoint-driven |
+| Other | 135 | Various categories |
+
+### 3. Spec Completion Status
+
+| Spec | Status | Completion |
+|------|--------|------------|
+| 002 | ✅ Complete | 100% (superseded by Hybrid Bridge) |
+| 003 | 📋 Draft | ~10% (design only) |
+| 004 | ✅ Complete | 100% |
+| 005 | ✅ Complete | 100% (TryGetTexture pattern) |
+| 006 | ✅ Complete | 100% (Hybrid Bridge Pipeline) |
+| 007 | ⚠️ In Progress | ~85% (testing pending) |
+| 008 | 📋 Architecture | ~5% (debug infra done) |
+| 009 | 📋 Draft | 0% (spec complete, no implementation) |
+
+### 4. KB Files Needing Updates
+
+| File | Issue | Priority |
+|------|-------|----------|
+| `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | VFXBinderManager not marked deprecated | HIGH |
+| `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` | numthreads(8,8,1) → should be (32,32,1) | HIGH |
+| `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` | com.unity.webrtc removed | MEDIUM |
+| Create `_HYBRID_BRIDGE_PIPELINE_PATTERN.md` | New primary system not documented | HIGH |
+
+### 5. Recent Critical Fixes (2026-01-21)
+
+- ✅ WebRTC duplicate framework conflict fixed (removed com.unity.webrtc)
+- ✅ Bubbles.vfx HLSL parameter mismatch fixed (Texture2D.Load pattern)
+- ✅ IosPostBuild.cs framework path updated for 3rdparty folder
+- ⚠️ Unity Editor VFX crash documented (internal bug in VFXValueContainer::ClearValue)
+
+### 6. Legacy Systems (in _Legacy folder)
+
+- `VFXBinderManager.cs` - Replaced by ARDepthSource
+- `VFXARDataBinder.cs` - Replaced by VFXARBinder
+- `PeopleOcclusionVFXManager.cs` - Replaced by ARDepthSource
+
+**Impact**: Documentation accuracy improved significantly. All CLAUDE.md files updated with correct statistics.
+
+**Cross-References**:
+- `MetavidoVFX-main/CLAUDE.md` - Project Statistics section
+- `CLAUDE.md` - Root statistics section
+- `specs/*/tasks.md` - Phase completion status
