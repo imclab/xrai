@@ -2,12 +2,12 @@
 
 **Input**: Design documents from `/specs/002-h3m-foundation/`
 **Prerequisites**: plan.md, spec.md
-**Last Updated**: 2026-01-20
+**Last Updated**: 2026-01-21
 **Status**: ✅ Complete (See Architecture Update below)
 
 ---
 
-## ⚠️ Architecture Update (2026-01-20)
+## ⚠️ Architecture Update (2026-01-21)
 
 **The H3M components created in this spec are now LEGACY.**
 
@@ -18,7 +18,19 @@ The Hybrid Bridge Pipeline (ARDepthSource + VFXARBinder) supersedes:
 - `VFXBinderManager.cs` → Use `ARDepthSource.cs` + `VFXARBinder.cs`
 
 **Recommended Prefab**: `Assets/Prefabs/Hologram/Hologram.prefab`
-- Components: `HologramPlacer` + `HologramController` + `VFXARBinder`
+
+```
+Hologram                         ← Root
+├── HologramPlacer               ← AR placement + gestures
+├── HologramController           ← Mode switching (Live AR / Metavido)
+├── VideoPlayer                  ← Metavido playback
+├── MetadataDecoder              ← Camera matrix extraction
+├── TextureDemuxer               ← RGB/Depth separation
+│
+└── HologramVFX                  ← Child (scale 0.15)
+    ├── VisualEffect + VFXARBinder + VFXCategory
+```
+
 - Supports: Live AR mode AND Metavido playback mode
 - Gestures: Tap (place), drag (XZ), two-finger height (Y), pinch (scale), twist (rotate)
 

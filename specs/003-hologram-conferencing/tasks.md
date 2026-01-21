@@ -2,6 +2,7 @@
 
 **Spec**: 003-hologram-conferencing
 **Created**: 2026-01-15
+**Updated**: 2026-01-21
 
 ---
 
@@ -15,14 +16,14 @@
 - [ ] Save to Camera Roll via iOS Photos API
 - [ ] Test: Record 10s video, verify file size ~17MB
 
-### Playback System
-- [ ] Create `HologramPlayback` scene
-- [ ] Implement `PlaybackController.cs`
-- [ ] Integrate `MetadataDecoder` + `TextureDemuxer`
-- [ ] Create `VFXMetavidoBinder` for playback
-- [ ] Add AR plane detection for placement
-- [ ] Implement tap-to-place hologram
-- [ ] Test: Load recorded video, place on desk
+### Playback System ✅ INTEGRATED (via Hologram Prefab)
+- [x] ~~Create `HologramPlayback` scene~~ → Use HOLOGRAM.unity with Hologram prefab
+- [x] ~~Implement `PlaybackController.cs`~~ → `HologramController.cs` handles mode switching
+- [x] ~~Integrate `MetadataDecoder` + `TextureDemuxer`~~ → Built into Hologram prefab
+- [x] ~~Create `VFXMetavidoBinder` for playback~~ → `VFXARBinder` used instead
+- [x] ~~Add AR plane detection for placement~~ → `HologramPlacer` handles this
+- [x] ~~Implement tap-to-place hologram~~ → `HologramPlacer` gestures
+- [ ] Test: Load recorded video, place on desk (needs video asset)
 
 ### Memory Optimization
 - [ ] Profile recording memory usage (target <100MB)
@@ -43,8 +44,9 @@
 - [ ] Document API in infrastructure.md
 
 ### Unity WebRTC Integration
-- [ ] Add com.unity.webrtc package ✅ (done in manifest.json)
-- [ ] Create `HologramConferenceManager.cs`
+- ~~[ ] Add com.unity.webrtc package~~ ⚠️ **DO NOT ADD** - conflicts with WebRtcVideoChat
+- [x] WebRtcVideoChat plugin available in `Assets/3rdparty/WebRtcVideoChat/`
+- [ ] Create `HologramConferenceManager.cs` (use WebRtcVideoChat API)
 - [ ] Implement WebSocket signaling client
 - [ ] Implement RTCPeerConnection setup
 - [ ] Create video track from FrameEncoder output
@@ -105,10 +107,10 @@ Each task is complete when:
 | Task | Blocked By |
 |------|------------|
 | Recording | AR Foundation 6.x ✅ |
-| Playback | jp.keijiro.metavido ✅ |
-| Multiplayer | com.unity.webrtc ✅ |
+| Playback | jp.keijiro.metavido ✅, Hologram prefab ✅ |
+| Multiplayer | WebRtcVideoChat plugin ✅ (NOT com.unity.webrtc) |
 | SFU | Phase 2 completion |
 
 ---
 
-*Last Updated: 2026-01-15*
+*Last Updated: 2026-01-21*

@@ -27,7 +27,7 @@ Unity-XR-AI/
 │
 ├── mcp-server/              # MCP KB Server (TypeScript)
 ├── Scripts/                 # Utility scripts
-├── specs/                   # Spec-Kit specifications
+├── specs/                   # ⚠️ DEPRECATED - Use MetavidoVFX-main/Assets/Documentation/specs/
 └── xrai-speckit/            # Specify.ai templates
 ```
 
@@ -56,10 +56,10 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
 | `MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md` | Voice-to-object 3D model integration |
-| `specs/README.md` | Spec-Kit index (002-012) |
-| `specs/MASTER_DEVELOPMENT_PLAN.md` | 17-sprint implementation roadmap |
-| `specs/009-icosa-sketchfab-integration/spec.md` | 3D model search & placement spec |
-| `specs/012-hand-tracking/spec.md` | Hand tracking + brush painting spec |
+| `MetavidoVFX-main/Assets/Documentation/specs/README.md` | Spec-Kit index (002-012) |
+| `MetavidoVFX-main/Assets/Documentation/specs/MASTER_DEVELOPMENT_PLAN.md` | 17-sprint implementation roadmap |
+| `MetavidoVFX-main/Assets/Documentation/specs/009-icosa-sketchfab-integration/spec.md` | 3D model search & placement spec |
+| `MetavidoVFX-main/Assets/Documentation/specs/012-hand-tracking/spec.md` | Hand tracking + brush painting spec |
 
 ---
 
@@ -191,16 +191,19 @@ Unity source code research workbench from keijiro/AgentBench.
 - ⬜ AR mesh collision for particles
 
 **Sprint 13-14** (P0 priority): Hand Tracking + Brush Painting (Spec 012)
-- ⬜ IHandTrackingProvider unified interface
-- ⬜ HoloKit/XRHands/BodyPix/Touch providers
-- ⬜ VFXHandBinder for hand→VFX properties
+- ✅ IHandTrackingProvider unified interface
+- ✅ HoloKit/XRHands/MediaPipe/BodyPix/Touch providers (5 total)
+- ✅ VFXHandBinder for hand→VFX properties
 - ⬜ BrushController, GestureInterpreter, StrokeManager
 - ⬜ 8 brush VFX types with pinch→draw control
 
-**Sprint 8-10** (planned): Icosa/Sketchfab Integration (Spec 009)
-- ⬜ SketchfabClient.cs - Sketchfab Download API wrapper
-- ⬜ ModelCache.cs - LRU disk caching for models
-- ⬜ UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
+**Sprint 8-10** (in progress): Icosa/Sketchfab Integration (Spec 009)
+- ✅ SketchfabClient.cs - Sketchfab Download API wrapper
+- ✅ ModelCache.cs - LRU disk caching for models
+- ✅ UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
+- ✅ ModelSearchUI.cs, ModelPlacer.cs, IcosaAssetMetadata.cs
+- ⬜ Voice integration (WhisperIcosaController wiring)
+- ⬜ GLTFast runtime loading
 
 ### Completed Specs
 - ✅ Spec 002 - H3M Hologram Foundation (Legacy, use Hologram.prefab)
@@ -236,4 +239,4 @@ MIT License - Knowledge bases and code snippets attributed to original repos.
 
 **Maintained by**: James Tunick
 
-**Last Updated**: 2026-01-20
+**Last Updated**: 2026-01-21

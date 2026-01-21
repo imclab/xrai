@@ -543,18 +543,19 @@ namespace MetavidoVFX.VFX
         }
 
         /// <summary>
-        /// Check if VFX entry is the hologram VFX
+        /// Check if VFX entry is the hologram VFX.
+        /// ONLY matches by direct reference, not name pattern.
+        /// Name pattern is only used during initial lookup to populate hologramVFX reference.
         /// </summary>
         private bool IsHologramVFX(VFXEntry entry)
         {
-            // Priority 1: Direct reference match
+            // ONLY use direct reference match - name pattern matching caused false positives
+            // (e.g., hifi_hologram_pointcloud was being enabled when it shouldn't be)
             if (hologramVFX != null && entry.VFX == hologramVFX) return true;
 
-            // Priority 2: Name pattern match
-            if (!string.IsNullOrEmpty(hologramVFXName))
-            {
-                return entry.AssetName.ToLowerInvariant().Contains(hologramVFXName.ToLowerInvariant());
-            }
+            // Check cached entry reference as backup
+            if (_hologramEntry != null && entry.VFX == _hologramEntry.VFX) return true;
+
             return false;
         }
 

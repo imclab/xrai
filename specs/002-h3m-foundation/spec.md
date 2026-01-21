@@ -2,7 +2,7 @@
 
 **Feature Branch**: `002-h3m-foundation`
 **Created**: 2025-12-06
-**Updated**: 2026-01-20
+**Updated**: 2026-01-21
 **Status**: ✅ Complete (Superseded by Hybrid Bridge Pipeline)
 **Input**: User description: "Focus on holograms. MVP is 'Man in the Mirror' - see myself as a mini hologram on the table. Use RGBD video, segmentation (body/face/hands), and VFX Graph. Look at MetavidoVFX/Rcam/Bibcam/Kamm examples. Decouple LLM/Voice stuff (deferred)."
 
@@ -12,20 +12,44 @@
 
 **This spec's H3M components are now LEGACY.** The Hybrid Bridge Pipeline (ARDepthSource + VFXARBinder) supersedes the original H3M architecture.
 
-### Recommended Setup: Hologram Prefab
+### Recommended Setup: Hologram Prefab (Active in HOLOGRAM.unity)
 
 **Location**: `Assets/Prefabs/Hologram/Hologram.prefab`
 
-| Component | Purpose |
-|-----------|---------|
-| `HologramPlacer` | AR placement + gestures (tap, drag, pinch, rotate, height) |
-| `HologramController` | Mode switching (Live AR / Metavido playback) |
-| `VFXARBinder` | Lightweight VFX binding via ARDepthSource |
-
 **Hierarchy**:
 ```
-Hologram                    ← HologramPlacer + HologramController
-└── HologramVFX             ← VisualEffect + VFXARBinder
+Hologram                         ← Root GameObject
+├── HologramPlacer               ← AR placement + gestures (tap, drag, pinch, rotate, height)
+├── HologramController           ← Mode switching (Live AR / Metavido playback)
+├── VideoPlayer                  ← Metavido video playback
+├── MetadataDecoder              ← Camera matrix extraction from video
+├── TextureDemuxer               ← RGB/Depth texture separation
+│
+└── HologramVFX                  ← Child (scale 0.15 = "mini me")
+    ├── VisualEffect             ← VFX Graph renderer
+    ├── VFXARBinder              ← Binds ARDepthSource textures to VFX
+    └── VFXCategory              ← Category tagging (People)
+```
+
+**Data Flow**:
+- **Live AR Mode**: ARDepthSource → VFXARBinder → VisualEffect
+- **Metavido Mode**: VideoPlayer → TextureDemuxer → MetadataDecoder → HologramController → VFXARBinder
+
+### Demo Scene: HOLOGRAM.unity
+
+```
+HOLOGRAM.unity
+├── Directional Light
+├── Global Volume
+├── AR Session
+├── XR Origin                    ← ARRaycastManager, ARPlaneManager
+├── ARDepthSource                ← Singleton compute (shared by all VFX)
+├── Hologram                     ← ✅ NEW ARCHITECTURE (see above)
+│   └── HologramVFX
+├── HologramRig                  ← Legacy reference (for comparison)
+│   ├── Source, Renderer, Anchor, DebugUI
+├── HologramSource               ← Legacy compute (reference only)
+└── DemoInfoCanvas
 ```
 
 ### Legacy Setup: H3M_HologramRig
