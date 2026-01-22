@@ -727,3 +727,50 @@ All specs consolidated in `Assets/Documentation/specs/`:
 | 015 | VFX Binding Architecture | ✅ Complete |
 
 See `Assets/Documentation/specs/README.md` for full index.
+
+## Unity AI Workflows
+
+### Magic Keywords for Unity Tasks
+
+| Keyword | Effect | Unity Use Case |
+|---------|--------|----------------|
+| `persist` | Continue until done | Multi-file VFX setup, pipeline debugging |
+| `deep` | Opus + extended thinking | Architecture decisions, shader debugging |
+| `ultrawork` | All capabilities | New feature implementation (spec 007+) |
+| `quick` | Haiku for speed | Console error checks, quick fixes |
+
+**Example**: `ultrawork: setup NNCam keypoint VFX with all 17 landmarks`
+
+### Unity-Specific Agents
+
+| Agent | Use For |
+|-------|---------|
+| `unity-error-fixer` | CS0246, NullRef, compilation errors |
+| `unity-error-fixer-deep` | Persistent or complex Unity errors |
+| `mcp-tools-specialist` | Scene, GameObject, VFX Graph operations |
+| `vfx-tuner` | Adjust VFX properties via MCP |
+| `unity-console-checker` | Quick console status check |
+
+### Fast Unity Workflows
+
+**Fix Compilation Error** (3 calls):
+```
+1. read_console(types=["error"], count=5)
+2. get_file_text_by_path(error_file)
+3. Edit(fix)
+```
+
+**Setup VFX Pipeline** (use ultrawork):
+```
+ultrawork: setup complete VFX pipeline with ARDepthSource + VFXARBinder
+```
+
+**Debug Runtime Issue** (use persist):
+```
+persist: find and fix the NullReferenceException in HandVFXController
+```
+
+### Reference
+
+- `~/GLOBAL_RULES.md` - Full magic keywords & hooks reference
+- `../KnowledgeBase/_OH_MY_CLAUDECODE_PATTERNS.md` - Agent patterns

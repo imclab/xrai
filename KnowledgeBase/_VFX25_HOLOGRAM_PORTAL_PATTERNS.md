@@ -415,5 +415,31 @@ All projects located in:
 
 ---
 
+## 🔗 CROSS-REFERENCES
+
+### Auto-Fix Patterns (106 total)
+See `_AUTO_FIX_PATTERNS.md` for auto-applicable VFX fixes:
+- **VFX Custom HLSL**: `void Func(inout VFXAttributes)` signature
+- **SampleLevel vs Sample**: Use `SampleLevel(tex, uv, 0)` in compute
+- **Global Texture Limitation**: VFX can't read Shader.SetGlobalTexture
+- **VFXEventAttribute Pooling**: Cache in Start(), reuse
+- **RayParams Calculation**: From projection matrix
+
+### Quick Fixes
+```bash
+kbfix "VFX HLSL"       # Custom function fixes
+kbfix "SampleLevel"    # Texture sampling in compute
+kbfix "VFX event"      # Event attribute issues
+```
+
+### Related KB Files
+- `_ARFOUNDATION_VFX_KNOWLEDGE_BASE.md` - AR + VFX integration
+- `_RCAM_VFX_BINDING_SPECIFICATION.md` - Rcam depth binding
+- `_LASPVFX_AUDIO_BINDING_PATTERNS.md` - Audio-reactive VFX
+- `_INTELLIGENCE_SYSTEMS_INDEX.md` - Central reference
+
+---
+
 **Maintainer**: James Tunick
+**Last Updated**: 2026-01-22
 **Confidence**: 100% (extracted from actual source code)
