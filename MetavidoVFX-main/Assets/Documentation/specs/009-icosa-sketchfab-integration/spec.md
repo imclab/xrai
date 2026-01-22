@@ -2,7 +2,8 @@
 
 **Feature Branch**: `009-icosa-sketchfab-integration`
 **Created**: 2026-01-20
-**Status**: In Progress (Core implemented 2026-01-21)
+**Updated**: 2026-01-22
+**Status**: Complete (Voice wiring verified)
 **Implementation**:
 - ✅ UnifiedModelSearch.cs - Dual-source search aggregation
 - ✅ SketchfabClient.cs - Sketchfab API wrapper
@@ -10,8 +11,10 @@
 - ✅ ModelSearchUI.cs - UI Toolkit search panel
 - ✅ ModelPlacer.cs - AR placement on planes
 - ✅ IcosaAssetMetadata.cs - CC attribution tracking
-- ⬜ Voice integration (WhisperIcosaController wiring)
-- ⬜ GLTFast runtime loading
+- ✅ WhisperIcosaController.cs - Voice-to-object integration (530 LOC)
+- ✅ VoiceProviderManager.cs - Hot-swappable voice providers (370 LOC)
+- ✅ LLMVoiceProvider.cs, GeminiVoiceProvider.cs - Voice backends
+- ⬜ GLTFast runtime loading (deferred - requires package)
 **Input**: Voice-to-object and search-to-placement for 3D models from Icosa Gallery and Sketchfab
 
 ## Triple Verification
