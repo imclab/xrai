@@ -95,7 +95,9 @@ Unity-XR-AI/
 
 ## 🎮 MetavidoVFX Unity Project
 
-AR Foundation VFX project with H3M Hologram system.
+AR Foundation VFX project with XRRAI (XR Real-time AI) systems.
+
+**Brand Migration**: H3M → XRRAI (namespace consolidation for easy feature migration)
 
 **Build**: `./build_ios.sh`
 **Deploy**: `./deploy_ios.sh`
@@ -116,7 +118,7 @@ AR Foundation VFX project with H3M Hologram system.
 - **Audio**: AudioBridge (FFT frequency bands to global shader props), SoundWaveEmitter
 - **Performance**: VFXAutoOptimizer (FPS-adaptive), VFXLODController, VFXProfiler
 - **EchoVision**: MeshVFX (AR mesh → GraphicsBuffers), HumanParticleVFX
-- **H3M Hologram**: HologramSource, HologramRenderer, HologramAnchor
+- **XRRAI.Hologram**: HologramSource, HologramRenderer, HologramAnchor (formerly H3M)
 - **NNCam**: NNCamKeypointBinder, NNCamVFXSwitcher (9 keypoint-driven VFX)
 - **Body Segmentation**: BodyPartSegmenter (24-part BodyPixSentis)
 - **3D Model Integration**: WhisperIcosaController (voice-to-object), IcosaAssetLoader (glTF import)

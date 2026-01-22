@@ -440,6 +440,39 @@ H3M_HologramRig
 **Setup**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
 **Verify**: `H3M > VFX Pipeline Master > Testing > Validate All Bindings`
 
+## XRRAI Namespace Migration (2026-01-22)
+
+**Brand**: H3M → XRRAI (XR Real-time AI)
+
+Namespace consolidation for easy feature migration to other Unity projects:
+
+| Old Namespace | New Namespace | Purpose |
+|---------------|---------------|---------|
+| MetavidoVFX.HandTracking.* | XRRAI.HandTracking | 5 providers, gestures, mappers |
+| MetavidoVFX.Painting | XRRAI.BrushPainting | Brush strokes, painting |
+| MetavidoVFX.Icosa | XRRAI.VoiceToObject | Voice→3D model search |
+| MetavidoVFX.VFX.* | XRRAI.VFXBinders | AR→VFX data binding |
+| MetavidoVFX.H3M.*, H3M.* | XRRAI.Hologram | Hologram core & network |
+| MetavidoVFX.Tracking.* | XRRAI.ARTracking | Tracking providers |
+| MetavidoVFX.Audio | XRRAI.Audio | Audio processing |
+| MetavidoVFX.Performance | XRRAI.Performance | FPS/LOD optimization |
+| MetavidoVFX.Testing | XRRAI.Testing | Test harnesses |
+| MetavidoVFX | XRRAI | Core types |
+
+**Migration Tool**: `H3M > Refactor > Execute Namespace Consolidation`
+**Preview**: `H3M > Refactor > Preview Namespace Changes`
+**Fix Usings**: `H3M > Refactor > Fix Missing Usings After Refactor`
+
+**Assembly Definitions** (planned):
+- `XRRAI.HandTracking.asmdef`
+- `XRRAI.BrushPainting.asmdef`
+- `XRRAI.VoiceToObject.asmdef`
+- `XRRAI.VFXBinders.asmdef`
+- `XRRAI.Hologram.asmdef`
+- `XRRAI.ARTracking.asmdef`
+
+**Files Affected**: ~40 C# files across HandTracking (15), Painting (6), VFX (14), Testing (2), Recording (3)
+
 ## New Systems
 
 ### VFX Pipeline Tools (2026-01-16)

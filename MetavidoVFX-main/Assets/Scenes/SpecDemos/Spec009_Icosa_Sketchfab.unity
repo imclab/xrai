@@ -582,6 +582,11 @@ MonoBehaviour:
   _mockResolution: {x: 256, y: 192}
   _colorResolution: {x: 1920, y: 1080}
   _verboseLogging: 0
+  _isReadyDisplay: 0
+  _usingMockDataDisplay: 0
+  _depthResolutionDisplay: N/A
+  _computeTimeDisplay: 0
+  _colorMapAllocatedDisplay: 0
   _colorProvider: {fileID: 0}
   _enableVelocity: 0
 --- !u!4 &343363208
@@ -591,6 +596,56 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343363206}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &470080774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 470080776}
+  - component: {fileID: 470080775}
+  m_Layer: 0
+  m_Name: ModelSearch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &470080775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470080774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cc62aa3dd894113b43f934f83fb5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Icosa.UnifiedModelSearch
+  _sketchfabApiToken: 
+  _enableIcosa: 1
+  _enableSketchfab: 1
+  _resultsPerSource: 12
+  _searchTimeout: 10
+  _maxCacheMB: 500
+--- !u!4 &470080776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470080774}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -774,6 +829,58 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304465025}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1327040731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1327040733}
+  - component: {fileID: 1327040732}
+  m_Layer: 0
+  m_Name: ModelPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1327040732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327040731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f0538133ff043dd8f569d17987d324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Icosa.ModelPlacer
+  _raycastManager: {fileID: 0}
+  _arCamera: {fileID: 0}
+  _defaultDistance: 1.5
+  _modelScale: 0.3
+  _placementLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _searchManager: {fileID: 0}
+--- !u!4 &1327040733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327040731}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1039,6 +1146,65 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1940012586
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1940012588}
+  - component: {fileID: 1940012587}
+  m_Layer: 0
+  m_Name: VoiceModelController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1940012587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940012586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0825212fab7144d4fa2885d1bb3c4ce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.Icosa.WhisperIcosaController
+  _searchManager: {fileID: 0}
+  _placer: {fileID: 0}
+  _raycastManager: {fileID: 0}
+  _voiceProvider: 0
+  _useVoiceProviderManager: 1
+  _minConfidence: 0.5
+  _commandCooldown: 2
+  _maxSearchResults: 5
+  _defaultPlacementDistance: 1.5
+  _defaultModelScale: 0.1
+  _searchingSound: {fileID: 0}
+  _foundSound: {fileID: 0}
+  _placedSound: {fileID: 0}
+  _errorSound: {fileID: 0}
+  _debugMode: 1
+--- !u!4 &1940012588
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940012586}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2013311364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,3 +1425,6 @@ SceneRoots:
   - {fileID: 1455339245}
   - {fileID: 187389117}
   - {fileID: 220513093}
+  - {fileID: 1940012588}
+  - {fileID: 1327040733}
+  - {fileID: 470080776}
