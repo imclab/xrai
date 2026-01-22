@@ -218,6 +218,43 @@ Unity source code research workbench from keijiro/AgentBench.
 
 ---
 
+## 🔌 API Access
+
+### REST API
+```bash
+node api/kb-api.js  # Start on port 3847
+
+# Endpoints
+GET /api/search?q=query  # Search KB
+GET /api/files           # List files
+GET /api/file/:name      # Get file
+GET /api/patterns        # Auto-fix patterns
+GET /api/stats           # Statistics
+```
+
+### MCP Server
+```bash
+cd mcp-server && npm start  # KB semantic search
+# Tools: kb_search, kb_get_repo, kb_get_snippet, kb_stats
+```
+
+### GitHub Raw Access
+```
+https://raw.githubusercontent.com/imclab/Unity-XR-AI/main/KnowledgeBase/_AUTO_FIX_PATTERNS.md
+```
+
+### Symlinks (AI CLIs)
+```
+~/.claude/knowledgebase → KnowledgeBase/
+~/.windsurf/knowledgebase → KnowledgeBase/
+~/.cursor/knowledgebase → KnowledgeBase/
+~/.codex/knowledgebase → KnowledgeBase/
+```
+
+**Full Guide**: `KnowledgeBase/_KB_ACCESS_GUIDE.md`
+
+---
+
 ## 🔍 For AI Assistants
 
 1. **Search KB first** before implementing new features
