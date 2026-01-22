@@ -443,6 +443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 660380285}
   - component: {fileID: 660380286}
+  - component: {fileID: 660380287}
   m_Layer: 0
   m_Name: SpecSceneUI
   m_TagString: Untagged
@@ -483,11 +484,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74108b74051dd40828ece0411a016e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.UI.Navigation.SpecSceneUI
-  _titleText: {fileID: 783443960}
-  _backButton: {fileID: 801121302}
-  _debugHUD: {fileID: 0}
   _autoSetTitle: 1
-  _autoCreateDebugHUD: 1
+  _showDebugStats: 1
+--- !u!114 &660380287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660380284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 0}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &730073814
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1434,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1469766977}
   - component: {fileID: 1469766976}
+  - component: {fileID: 1469766978}
   m_Layer: 0
   m_Name: '[DebugStatsHUD]'
   m_TagString: Untagged
@@ -1435,11 +1457,6 @@ MonoBehaviour:
   _showOnStart: 1
   _toggleKey: 9
   _updateInterval: 0.5
-  _fontSize: 14
-  _backgroundColor: {r: 0, g: 0, b: 0, a: 0.7}
-  _textColor: {r: 1, g: 1, b: 1, a: 1}
-  _warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _errorColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &1469766977
 Transform:
   m_ObjectHideFlags: 0
@@ -1455,6 +1472,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1469766978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469766975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 0}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 0}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &1566043190
 GameObject:
   m_ObjectHideFlags: 0
