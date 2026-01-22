@@ -1147,6 +1147,30 @@ public class NetworkedStroke : RealtimeComponent<NetworkedStrokeModel> {
 
 ---
 
-**Last Updated**: 2025-11-02
-**Status**: Knowledge base with quick implementation snippets
+## 🔗 CROSS-REFERENCES
+
+### Auto-Fix Patterns (106 total)
+See `_AUTO_FIX_PATTERNS.md` for auto-applicable fixes:
+- **AR Foundation**: TryGetTexture, depth scale (0.625), UV rotation
+- **VFX Graph**: ExposedProperty, global texture limitation, HLSL signatures
+- **Compute Shaders**: Thread group 32x32, CeilToInt dispatch
+- **Hand Tracking**: Hysteresis, velocity-driven emission
+
+### Quick Fixes
+See `_QUICK_FIX.md` for error→fix lookup:
+```bash
+kbfix "AR texture"     # AR texture null fixes
+kbfix "VFX property"   # VFX not updating
+kbfix "depth"          # Depth-related issues
+```
+
+### Intelligence Systems
+- `_INTELLIGENCE_SYSTEMS_INDEX.md` - Central reference
+- `_CONTINUOUS_LEARNING_SYSTEM.md` - Pattern extraction workflow
+- `_SELF_HEALING_SYSTEM.md` - Auto-recovery patterns
+
+---
+
+**Last Updated**: 2026-01-22
+**Status**: Knowledge base with quick implementation snippets + auto-fix integration
 **Next**: Analyze repos as needed, add insights to relevant sections
