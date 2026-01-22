@@ -45,11 +45,11 @@
 |----|------|--------|----------|-------|
 | **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **✅ Complete** | P2 | Recording ✅, WebRTC ✅ |
 | 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
-| **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **🚧 In Progress** | **P0** | Core ✅, ARKit providers ✅ |
+| **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **✅ 90% Complete** | **P0** | Body ✅, Face ✅, Depth ✅, Mock ✅ |
 | **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **✅ Complete** | P1 | Voice ✅, glTF ⬜ |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
-| **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **🚧 In Progress** | **P0** | Providers ✅, Brush ⬜ |
+| **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **✅ Nearly Complete** | **P0** | Providers ✅, Brush ✅, Tests ⬜ |
 | **013** | [**UI/UX Conferencing**](./013-ui-ux-conferencing/spec.md) | Draft | P2 | TBD |
 | **014** | [**High-Fidelity Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | Planning | P0 | Controller ✅, VFX ⬜ |
 | **015** | [**VFX Binding Architecture**](./015-vfx-binding-architecture/spec.md) | ✅ Complete | P0 | Done |

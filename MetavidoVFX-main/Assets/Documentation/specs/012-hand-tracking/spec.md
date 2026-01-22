@@ -1,7 +1,8 @@
 # Spec 012: Hand Tracking Implementation & Verification
 
-**Status**: In Progress (Providers implemented 2026-01-21)
+**Status**: Nearly Complete (Brush painting implemented 2026-01-22)
 **Created**: 2026-01-20
+**Updated**: 2026-01-22
 **Sprint**: 3 (estimated)
 **Implementation**:
 - ✅ IHandTrackingProvider.cs - Unified interface (26 joints)
@@ -12,8 +13,11 @@
 - ✅ BodyPixHandTrackingProvider.cs - Priority 40, wrist fallback
 - ✅ TouchInputHandTrackingProvider.cs - Priority 10, Editor
 - ✅ VFXHandBinder.cs - Hand→VFX property binding
-- ⬜ BrushController for stroke management
-- ⬜ Two-hand palette gesture
+- ✅ BrushController.cs (~355 LOC) - 8 brush types, VFX binding, stroke recording
+- ✅ GestureInterpreter.cs (~200 LOC) - Pinch/grab with hysteresis, palette, swipe
+- ✅ StrokeManager.cs - Stroke recording and playback
+- ✅ H3MBrushCatalog.cs, H3MBrushUI.cs - Brush selection UI
+- ⬜ Unit tests (HandTrackingTests.cs, PlayModeTests)
 
 ## Overview
 
