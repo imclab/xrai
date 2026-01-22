@@ -2,7 +2,7 @@
 
 **Feature Branch**: `011-openbrush-integration`
 **Created**: 2026-01-20
-**Status**: Draft
+**Status**: Draft (Requires OpenBrush Migration Analysis)
 **Input**: Migrate Open Brush URP brushes, audio reactive system, save/load, mirror modes, and API painting to MetavidoVFX
 
 ## Triple Verification

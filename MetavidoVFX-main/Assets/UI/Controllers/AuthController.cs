@@ -7,9 +7,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using MetavidoVFX.Auth;
+using XRRAI.Auth;
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// Controls the AuthView UI for login/signup flows.

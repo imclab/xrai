@@ -2708,6 +2708,310 @@ try {
 
 ---
 
+## Device Orientation Patterns
+
+### Orientation Change UV Adjustment
+
+**Detection**: VFX particles appear rotated on device orientation change
+
+**Cause**: Depth texture UV mapping flips on device rotation
+
+**Pattern**:
+```csharp
+DeviceOrientation _lastOrientation;
+
+void HandleOrientationChange()
+{
+    if (Input.deviceOrientation == _lastOrientation) return;
+
+    if (Input.deviceOrientation == DeviceOrientation.LandscapeRight)
+    {
+        computeShader.SetFloat(_uvFlipID, 0);
+        computeShader.SetInt(_isWideID, 1);
+    }
+    else if (Input.deviceOrientation == DeviceOrientation.LandscapeLeft)
+    {
+        computeShader.SetFloat(_uvFlipID, 1);
+        computeShader.SetInt(_isWideID, 1);
+    }
+    else  // Portrait
+    {
+        computeShader.SetInt(_isWideID, 0);
+        computeShader.SetFloat(_uvFlipID, 0);
+    }
+
+    _lastOrientation = Input.deviceOrientation;
+}
+```
+
+**Auto-Apply**: Partial (requires VFX-specific UV handling)
+
+### iOS Portrait Mode Depth Rotation
+
+**Detection**: Depth misaligned 90° in portrait mode
+
+**Cause**: ARKit depth is always landscape orientation internally
+
+**Pattern**:
+```hlsl
+// Rotate UV 90° CW for portrait mode
+float2 rotatedUV = float2(1.0 - uv.y, uv.x);
+```
+
+```csharp
+// C# - negate tanH after rotation
+if (rotateDepthTexture) {
+    RayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
+}
+```
+
+**Auto-Apply**: Partial (add rotation in compute shader)
+
+---
+
+## Resource Management Patterns
+
+### Demand-Driven Resource Allocation
+
+**Detection**: Allocating expensive resources (ColorMap, VelocityMap) even when unused
+
+**Pattern** (Reference Counting):
+```csharp
+public class ARDepthSource : MonoBehaviour
+{
+    int _colorMapRequestCount;  // Reference counting
+    public RenderTexture ColorMap { get; private set; }
+
+    public void RequestColorMap(bool enable)
+    {
+        if (enable)
+        {
+            _colorMapRequestCount++;
+            if (ColorMap == null)
+                AllocateColorMap();  // Lazy allocation
+        }
+        else
+        {
+            _colorMapRequestCount--;
+            if (_colorMapRequestCount <= 0)
+                ReleaseColorMap();  // Cleanup when unused
+        }
+    }
+
+    public bool ColorMapAllocated => ColorMap != null && ColorMap.IsCreated();
+}
+
+// In consumer:
+void OnEnable()  => _source.RequestColorMap(true);
+void OnDisable() => _source.RequestColorMap(false);
+```
+
+**Auto-Apply**: Partial (architectural pattern)
+
+### AsyncGPUReadback for Non-Blocking Texture Read
+
+**Detection**: ReadPixels blocking main thread for texture data access
+
+**Pattern**:
+```csharp
+void RequestVelocityData()
+{
+    if (_velocityRT == null || !_velocityRT.IsCreated()) return;
+
+    AsyncGPUReadback.Request(_velocityRT, 0, TextureFormat.RGBAFloat,
+        OnReadbackComplete);
+}
+
+void OnReadbackComplete(AsyncGPUReadbackRequest request)
+{
+    if (request.hasError) return;
+
+    NativeArray<Color> data = request.GetData<Color>();
+    _cachedVelocity = new Vector3(data[0].r, data[0].g, data[0].b);
+}
+```
+
+**Auto-Apply**: Yes (replace ReadPixels with AsyncGPUReadback)
+
+---
+
+## VFX Output Event Patterns
+
+### VFX Output Events (GPU → CPU Callback)
+
+**Detection**: Need particle to trigger C# code (audio, effects)
+
+**Pattern**:
+```csharp
+void OnEnable()
+{
+    vfx.outputEventReceived += OnOutputEvent;
+}
+
+void OnDisable()
+{
+    vfx.outputEventReceived -= OnOutputEvent;
+}
+
+void OnOutputEvent(VFXOutputEventArgs args)
+{
+    Vector3 position = args.eventAttribute.GetVector3("position");
+    Vector4 color = args.eventAttribute.GetVector4("color");
+
+    // Spawn audio at particle position
+    AudioSource.PlayClipAtPoint(clip, position);
+}
+```
+
+**Source**: [Unity VFX Output Events](https://docs.unity3d.com/Packages/com.unity.visualeffectgraph@17.2/manual/OutputEvent.html)
+
+**Auto-Apply**: Partial (suggest output event pattern)
+
+### VFX Spawn Count Query
+
+**Detection**: Need to know how many particles spawned
+
+**Pattern**:
+```csharp
+// Get current alive particle count
+int aliveCount = vfx.aliveParticleCount;
+
+// Verify VFX is actually playing
+if (vfx.HasAnySystemAwake())
+{
+    // At least one system is active
+}
+```
+
+**Auto-Apply**: Yes (add aliveParticleCount check)
+
+---
+
+## Texture Format Optimization
+
+### ASTC Compression for Mobile AR
+
+**Detection**: Large texture memory on iOS/Android AR apps
+
+**Pattern** (TextureImporter settings):
+```csharp
+#if UNITY_EDITOR
+[MenuItem("Tools/Set Mobile Texture Compression")]
+static void SetMobileCompression()
+{
+    // ASTC 6x6 = good quality/size balance
+    // ASTC 8x8 = smaller, slight quality loss
+    var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+
+    var iosSettings = importer.GetPlatformTextureSettings("iPhone");
+    iosSettings.overridden = true;
+    iosSettings.format = TextureImporterFormat.ASTC_6x6;
+    importer.SetPlatformTextureSettings(iosSettings);
+
+    var androidSettings = importer.GetPlatformTextureSettings("Android");
+    androidSettings.overridden = true;
+    androidSettings.format = TextureImporterFormat.ASTC_6x6;
+    importer.SetPlatformTextureSettings(androidSettings);
+}
+#endif
+```
+
+**Auto-Apply**: Partial (suggest compression settings)
+
+### Point Filtering for Data Textures
+
+**Detection**: Data texture values interpolated incorrectly
+
+**Cause**: Bilinear filtering on discrete data (audio bands, keypoints)
+
+**Pattern**:
+```csharp
+// For data textures, ALWAYS use Point filtering
+_dataTexture = new Texture2D(width, height, TextureFormat.RFloat, false)
+{
+    filterMode = FilterMode.Point,  // No interpolation
+    wrapMode = TextureWrapMode.Clamp
+};
+```
+
+**Auto-Apply**: Yes (set FilterMode.Point for data textures)
+
+---
+
+## Editor Testing Patterns
+
+### Conditional Mock Data for Editor
+
+**Detection**: AR-dependent code crashes in Editor without device
+
+**Pattern**:
+```csharp
+[SerializeField] bool _useMockInEditor = true;
+
+Texture GetDepthTexture()
+{
+    #if UNITY_EDITOR
+    if (_useMockInEditor && !Application.isPlaying)
+        return _mockDepthTexture;
+    #endif
+
+    return TryGetARDepth();
+}
+
+#if UNITY_EDITOR
+void CreateMockTextures()
+{
+    _mockDepthTexture = new Texture2D(256, 192, TextureFormat.RFloat, false);
+    // Fill with gradient depth values
+    Color[] pixels = new Color[256 * 192];
+    for (int y = 0; y < 192; y++)
+        for (int x = 0; x < 256; x++)
+            pixels[y * 256 + x] = new Color(Mathf.Lerp(0.5f, 5f, (float)x / 256), 0, 0, 1);
+    _mockDepthTexture.SetPixels(pixels);
+    _mockDepthTexture.Apply();
+}
+#endif
+```
+
+**Auto-Apply**: Partial (add mock texture pattern)
+
+### ExecuteInEditMode for VFX Preview
+
+**Detection**: VFX binder not updating in Scene view
+
+**Pattern**:
+```csharp
+[ExecuteInEditMode]
+public class VFXBinder : MonoBehaviour
+{
+    void OnEnable()
+    {
+        #if UNITY_EDITOR
+        EditorApplication.update += EditorUpdate;
+        #endif
+    }
+
+    void OnDisable()
+    {
+        #if UNITY_EDITOR
+        EditorApplication.update -= EditorUpdate;
+        #endif
+    }
+
+    #if UNITY_EDITOR
+    void EditorUpdate()
+    {
+        if (!Application.isPlaying)
+            UpdateBinding();
+    }
+    #endif
+}
+```
+
+**Auto-Apply**: Yes (add ExecuteInEditMode + EditorApplication.update)
+
+---
+
 ## Adding New Patterns
 
 When adding new auto-fix patterns:
@@ -2724,9 +3028,9 @@ When adding new auto-fix patterns:
 ---
 
 **Last Updated**: 2026-01-22
-**Patterns**: 111 active (+22 from deep codebase analysis)
+**Patterns**: 121 active (+10 device/resource/VFX/editor patterns)
 **Auto-Apply Rate**: 85%
-**Categories**: Unity C#, AR Foundation, VFX Graph, Performance, Safety, Architecture
+**Categories**: Unity C#, AR Foundation, VFX Graph, Performance, Safety, Architecture, Device Orientation, Resource Management, Editor Testing
 
 ## Official Documentation
 - [Unity VFX Component API](https://docs.unity3d.com/Packages/com.unity.visualeffectgraph@7.1/manual/ComponentAPI.html)

@@ -277,3 +277,137 @@
     background-color: rgba(255, 59, 48, 0.2);
     color: rgba(255, 59, 48, 0.9);
 }
+
+/* ========================================
+   HUD Styles (Conference HUD)
+   ======================================== */
+
+/* HUD Button */
+.hud-btn {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background-color: transparent;
+    border-width: 0;
+    border-radius: 8px;
+    min-width: 56px;
+    transition-duration: 0.15s;
+}
+
+.hud-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hud-btn:active {
+    background-color: rgba(255, 255, 255, 0.05);
+    scale: 0.95;
+}
+
+.hud-btn-active {
+    background-color: rgba(255, 59, 48, 0.3);
+}
+
+.hud-btn-active:hover {
+    background-color: rgba(255, 59, 48, 0.4);
+}
+
+.hud-btn-danger {
+    background-color: rgba(255, 59, 48, 0.2);
+}
+
+.hud-btn-danger:hover {
+    background-color: rgba(255, 59, 48, 0.4);
+}
+
+.hud-btn-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+}
+
+/* HUD Icon */
+.hud-icon {
+    width: 24px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.9);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Control Divider */
+.control-divider {
+    width: 1px;
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 12px;
+}
+
+/* Status Dot */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+}
+
+.status-live {
+    background-color: rgba(255, 59, 48, 0.9);
+}
+
+.status-connected {
+    background-color: rgba(52, 199, 89, 0.9);
+}
+
+.status-connecting {
+    background-color: rgba(255, 204, 0, 0.9);
+}
+
+/* Reaction Button */
+.reaction-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    font-size: 24px;
+    background-color: rgba(60, 60, 60, 0.5);
+    border-width: 0;
+    margin: 0 4px;
+    transition-duration: 0.1s;
+}
+
+.reaction-btn:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+    scale: 1.1;
+}
+
+.reaction-btn:active {
+    scale: 0.9;
+}
+
+/* Flex Helpers */
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-shrink {
+    flex-shrink: 1;
+}
+
+/* Text Alignment */
+.text-center {
+    -unity-text-align: middle-center;
+}
+
+.text-left {
+    -unity-text-align: middle-left;
+}
+
+.text-right {
+    -unity-text-align: middle-right;
+}

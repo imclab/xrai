@@ -249,8 +249,10 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/Grass/TestScene/ApplicationFPS60.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Intercept Feature/InterceptCreateSessionFeature.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Example/ExampleContortAlong.cs" />
+    <Compile Include="Assets/Scripts/Brush/BrushStroke.cs" />
     <Compile Include="Assets/3rdparty/_Bad_Raccoon/_3D Music Visualizer Vu Meter/_Scripts/SpectrumLight.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/AutomaticTrackingModeChangerXRInput.cs" />
+    <Compile Include="Assets/UI/Controllers/SettingsController.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/DepthBlit/DepthBlitDepthOnlyPass.cs" />
     <Compile Include="Assets/Scripts/VFX/Binders/VFXKeypointBinder.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/Core/PostProcessOrderConfig.cs" />
@@ -326,6 +328,7 @@
     <Compile Include="Assets/Scripts/Tracking/Providers/ARKitFaceProvider.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Binary/Binary.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets/Scripts/Brush/BrushData.cs" />
     <Compile Include="Assets/H3M/Core/HologramSource.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/SimpleRaymarch/Scripts/SimpleRaymarchPass.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Scripts/Walker.cs" />
@@ -350,6 +353,7 @@
     <Compile Include="Assets/Fluo/06 Controller/Scripts/AppController.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextSelector_B.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_PhysXSetImpulse.cs" />
+    <Compile Include="Assets/Scripts/Brush/BrushManager.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/Core/Util_ReoederbleList.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ThemeController.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_EffectEvent.cs" />
@@ -638,6 +642,7 @@
     <Compile Include="Assets/H3M/Core/DiagnosticOverlay.cs" />
     <Compile Include="Assets/H3M/Network/SpatialAudioController.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_TornadoParticles.cs" />
+    <Compile Include="Assets/UI/Controllers/LobbyController.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ShaderID.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/StarGlow/Scripts/StarGlowRenderFeature.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/AudioToTransform.cs" />
@@ -721,6 +726,7 @@
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToControlXRInputHand.cs" />
     <Compile Include="Assets/Samples/Inference Engine/2.3.0/Convert tensors to textures/TensorToTexture.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ScreenSpaceCavity/Renders/ScreenSpaceCavity.cs" />
+    <Compile Include="Assets/UI/Controllers/ConferenceHUDController.cs" />
     <Compile Include="Assets/Fluo/02 Brush/Scripts/BrushController.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Cloth/Scripts/ClothSpawner.cs" />
     <Compile Include="Assets/Scripts/Debug/AROcclusionDebugController.cs" />
@@ -987,10 +993,12 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/DepthFlare/DepthFlare.shader" />
     <None Include="Assets/Packages/System.Composition.9.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Shaders/HumanDepthMapper.compute" />
+    <None Include="Assets/UI/Views/ConferenceHUD.uxml" />
     <None Include="Assets/3rdparty/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/Grass/Core2/InstancedIndirectGrass.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/PostEffects.shader" />
     <None Include="Assets/3rdparty/FERM/_Shaders/Include/Common.cginc" />
     <None Include="Assets/Shaders/Rcam/Recolor.shader" />
+    <None Include="Assets/UI/Views/SettingsView.uxml" />
     <None Include="Assets/Downloads/config.json" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/GRAPHS/Noisy-Nodes/NoiseShader/HLSL/Voronoi3DWATERA.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/Anaglyph3D.shader" />

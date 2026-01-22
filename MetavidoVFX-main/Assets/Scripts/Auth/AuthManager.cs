@@ -7,7 +7,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.Auth
+namespace XRRAI.Auth
 {
     /// <summary>
     /// Singleton that manages authentication state across the application.

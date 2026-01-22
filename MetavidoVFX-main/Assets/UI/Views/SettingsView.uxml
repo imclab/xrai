@@ -1,0 +1,157 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Common.uss" />
+
+    <!-- Root Container - Slide-in panel -->
+    <ui:VisualElement name="settings-root" class="full-screen" style="background-color: rgba(0,0,0,0.5);">
+
+        <!-- Settings Panel -->
+        <ui:VisualElement name="settings-panel" class="glass-modal" style="position: absolute; right: 0; top: 0; bottom: 0; width: 360px; padding: 0;">
+
+            <!-- Header -->
+            <ui:VisualElement name="settings-header" class="flex-row" style="justify-content: space-between; align-items: center; padding: 20px; border-bottom-width: 1px; border-bottom-color: rgba(255,255,255,0.1);">
+                <ui:Label text="Settings" class="h3" />
+                <ui:Button name="btn-close" text="X" class="btn btn-secondary" style="padding: 8px 12px;" />
+            </ui:VisualElement>
+
+            <!-- Scrollable Content -->
+            <ui:ScrollView name="settings-content" style="flex-grow: 1; padding: 20px;">
+
+                <!-- Profile Section -->
+                <ui:VisualElement name="section-profile" style="margin-bottom: 32px;">
+                    <ui:Label text="Profile" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:VisualElement class="flex-row" style="align-items: center; margin-bottom: 16px;">
+                        <ui:VisualElement name="profile-avatar" class="avatar-lg" style="margin-right: 16px;" />
+                        <ui:VisualElement style="flex-grow: 1;">
+                            <ui:Label name="profile-name" text="User Name" class="body" />
+                            <ui:Label name="profile-email" text="user@example.com" class="caption text-secondary" />
+                        </ui:VisualElement>
+                        <ui:Button name="btn-edit-profile" text="Edit" class="btn btn-secondary" style="padding: 8px 16px;" />
+                    </ui:VisualElement>
+
+                    <!-- Edit Profile Fields (hidden by default) -->
+                    <ui:VisualElement name="edit-profile-fields" style="display: none;">
+                        <ui:VisualElement class="form-group">
+                            <ui:Label text="Display Name" class="form-label" />
+                            <ui:TextField name="edit-name" class="form-input" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="flex-row" style="justify-content: flex-end;">
+                            <ui:Button name="btn-cancel-edit" text="Cancel" class="btn btn-secondary" style="margin-right: 8px;" />
+                            <ui:Button name="btn-save-profile" text="Save" class="btn btn-primary" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <!-- Audio Section -->
+                <ui:VisualElement name="section-audio" style="margin-bottom: 32px;">
+                    <ui:Label text="Audio" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Microphone" class="form-label" />
+                        <ui:DropdownField name="microphone-device" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="form-group">
+                        <ui:VisualElement class="flex-row" style="justify-content: space-between; align-items: center;">
+                            <ui:Label text="Microphone Volume" class="form-label" />
+                            <ui:Label name="mic-volume-label" text="100%" class="caption" />
+                        </ui:VisualElement>
+                        <ui:Slider name="mic-volume" low-value="0" high-value="100" value="100" class="settings-slider" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Speaker" class="form-label" />
+                        <ui:DropdownField name="speaker-device" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="form-group">
+                        <ui:VisualElement class="flex-row" style="justify-content: space-between; align-items: center;">
+                            <ui:Label text="Speaker Volume" class="form-label" />
+                            <ui:Label name="speaker-volume-label" text="100%" class="caption" />
+                        </ui:VisualElement>
+                        <ui:Slider name="speaker-volume" low-value="0" high-value="100" value="100" class="settings-slider" />
+                    </ui:VisualElement>
+
+                    <ui:Toggle name="noise-suppression" label="Noise Suppression" class="settings-toggle" />
+                    <ui:Toggle name="echo-cancellation" label="Echo Cancellation" class="settings-toggle" />
+                </ui:VisualElement>
+
+                <!-- Video Section -->
+                <ui:VisualElement name="section-video" style="margin-bottom: 32px;">
+                    <ui:Label text="Video" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Camera" class="form-label" />
+                        <ui:DropdownField name="camera-device" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Quality Preset" class="form-label" />
+                        <ui:DropdownField name="quality-preset" choices="Low (480p),Medium (720p),High (1080p),Ultra (4K)" index="1" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:Toggle name="mirror-video" label="Mirror My Video" class="settings-toggle" />
+                    <ui:Toggle name="hd-video" label="HD Video (uses more bandwidth)" class="settings-toggle" />
+                </ui:VisualElement>
+
+                <!-- Hologram Section -->
+                <ui:VisualElement name="section-hologram" style="margin-bottom: 32px;">
+                    <ui:Label text="Hologram" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Hologram Quality" class="form-label" />
+                        <ui:DropdownField name="hologram-quality" choices="Performance,Balanced,Quality" index="1" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="form-group">
+                        <ui:VisualElement class="flex-row" style="justify-content: space-between; align-items: center;">
+                            <ui:Label text="Particle Density" class="form-label" />
+                            <ui:Label name="particle-density-label" text="50%" class="caption" />
+                        </ui:VisualElement>
+                        <ui:Slider name="particle-density" low-value="10" high-value="100" value="50" class="settings-slider" />
+                    </ui:VisualElement>
+
+                    <ui:Toggle name="depth-occlusion" label="Depth Occlusion" class="settings-toggle" />
+                    <ui:Toggle name="hand-tracking" label="Hand Tracking (if available)" class="settings-toggle" />
+                </ui:VisualElement>
+
+                <!-- Appearance Section -->
+                <ui:VisualElement name="section-appearance" style="margin-bottom: 32px;">
+                    <ui:Label text="Appearance" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Theme" class="form-label" />
+                        <ui:DropdownField name="theme" choices="Auto,Light,Dark" index="0" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:Toggle name="show-hud" label="Show HUD Controls" class="settings-toggle" />
+                    <ui:Toggle name="show-voice-meter" label="Show Voice Activity" class="settings-toggle" />
+                </ui:VisualElement>
+
+                <!-- Notifications Section -->
+                <ui:VisualElement name="section-notifications" style="margin-bottom: 32px;">
+                    <ui:Label text="Notifications" class="h4" style="margin-bottom: 16px;" />
+
+                    <ui:Toggle name="notify-join" label="When someone joins" class="settings-toggle" />
+                    <ui:Toggle name="notify-leave" label="When someone leaves" class="settings-toggle" />
+                    <ui:Toggle name="notify-chat" label="New chat messages" class="settings-toggle" />
+                    <ui:Toggle name="notify-reactions" label="Reactions" class="settings-toggle" />
+                </ui:VisualElement>
+
+                <!-- About Section -->
+                <ui:VisualElement name="section-about" style="margin-bottom: 16px;">
+                    <ui:Label text="About" class="h4" style="margin-bottom: 16px;" />
+                    <ui:Label name="version-label" text="H3M Hologram v1.0.0" class="body-sm text-secondary" />
+                    <ui:Label text="Built with XRRAI" class="caption text-tertiary" style="margin-top: 4px;" />
+                </ui:VisualElement>
+
+            </ui:ScrollView>
+
+            <!-- Footer Actions -->
+            <ui:VisualElement name="settings-footer" style="padding: 16px; border-top-width: 1px; border-top-color: rgba(255,255,255,0.1);">
+                <ui:Button name="btn-sign-out" text="Sign Out" class="btn btn-danger" style="width: 100%;" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

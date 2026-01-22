@@ -1,0 +1,128 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Common.uss" />
+
+    <!-- Root Container - Full screen overlay -->
+    <ui:VisualElement name="hud-root" class="full-screen">
+
+        <!-- Top Bar - Room info and timer -->
+        <ui:VisualElement name="top-bar" class="flex-row glass-hud" style="padding: 8px 16px; justify-content: space-between; align-items: center; margin: 12px; position: absolute; top: 0; left: 0; right: 0;">
+
+            <!-- Left: Room Info -->
+            <ui:VisualElement name="room-info" class="flex-row" style="align-items: center;">
+                <ui:VisualElement class="status-dot status-live" style="margin-right: 8px;" />
+                <ui:Label name="room-name" text="Room Name" class="body" />
+                <ui:Label name="room-code" text="ABC123" class="caption text-secondary" style="margin-left: 8px;" />
+            </ui:VisualElement>
+
+            <!-- Center: Timer -->
+            <ui:VisualElement name="timer-container" class="flex-row" style="align-items: center;">
+                <ui:Label name="timer" text="00:00" class="h4" style="font-size: 18px; letter-spacing: 2px;" />
+            </ui:VisualElement>
+
+            <!-- Right: Participant Count -->
+            <ui:VisualElement name="participants-info" class="flex-row" style="align-items: center;">
+                <ui:Label name="participant-count" text="3/8" class="body" />
+                <ui:Label text="users" class="caption text-secondary" style="margin-left: 4px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Active Speaker Indicator -->
+        <ui:VisualElement name="speaker-indicator" class="glass-card" style="position: absolute; top: 70px; left: 50%; translate: -50% 0; padding: 6px 16px;">
+            <ui:Label name="active-speaker" text="Speaking: @alice" class="body-sm" />
+        </ui:VisualElement>
+
+        <!-- Voice Activity Meter -->
+        <ui:VisualElement name="voice-meter-container" class="glass-card" style="position: absolute; bottom: 100px; left: 50%; translate: -50% 0; padding: 8px 16px; width: 300px;">
+            <ui:VisualElement class="flex-row" style="justify-content: space-between; margin-bottom: 4px;">
+                <ui:Label text="Voice Activity" class="caption text-secondary" />
+                <ui:Label name="voice-level-text" text="0%" class="caption" />
+            </ui:VisualElement>
+            <ui:VisualElement name="voice-meter-bg" style="height: 4px; background-color: rgba(255,255,255,0.2); border-radius: 2px;">
+                <ui:VisualElement name="voice-meter-fill" style="height: 100%; width: 0%; background-color: rgba(0,122,255,0.8); border-radius: 2px; transition: width 0.1s;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Control Bar - Bottom -->
+        <ui:VisualElement name="control-bar" class="glass-hud" style="position: absolute; bottom: 24px; left: 50%; translate: -50% 0; padding: 12px 24px;">
+            <ui:VisualElement class="flex-row" style="align-items: center;">
+
+                <!-- Mute Button -->
+                <ui:Button name="btn-mute" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="mute-icon" class="hud-icon icon-mic" />
+                    <ui:Label text="Mute" class="hud-btn-label" />
+                </ui:Button>
+
+                <!-- Camera Button -->
+                <ui:Button name="btn-camera" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="camera-icon" class="hud-icon icon-camera" />
+                    <ui:Label text="Camera" class="hud-btn-label" />
+                </ui:Button>
+
+                <!-- Raise Hand Button -->
+                <ui:Button name="btn-raise-hand" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="hand-icon" class="hud-icon icon-hand" />
+                    <ui:Label text="Raise" class="hud-btn-label" />
+                </ui:Button>
+
+                <!-- Reactions Button -->
+                <ui:Button name="btn-reactions" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="reactions-icon" class="hud-icon icon-emoji" />
+                    <ui:Label text="React" class="hud-btn-label" />
+                </ui:Button>
+
+                <!-- Chat Button -->
+                <ui:Button name="btn-chat" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="chat-icon" class="hud-icon icon-chat" />
+                    <ui:Label text="Chat" class="hud-btn-label" />
+                </ui:Button>
+
+                <!-- Divider -->
+                <ui:VisualElement class="control-divider" />
+
+                <!-- Settings Button -->
+                <ui:Button name="btn-settings" class="hud-btn" style="margin-right: 12px;">
+                    <ui:VisualElement name="settings-icon" class="hud-icon icon-settings" />
+                </ui:Button>
+
+                <!-- Leave Button -->
+                <ui:Button name="btn-leave" class="hud-btn hud-btn-danger">
+                    <ui:VisualElement name="leave-icon" class="hud-icon icon-leave" />
+                    <ui:Label text="Leave" class="hud-btn-label" />
+                </ui:Button>
+
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Reactions Popup (hidden by default) -->
+        <ui:VisualElement name="reactions-popup" class="glass-modal" style="position: absolute; bottom: 120px; left: 50%; translate: -50% 0; padding: 12px; display: none;">
+            <ui:VisualElement class="flex-row" style="justify-content: center;">
+                <ui:Button name="react-thumbsup" class="reaction-btn" text="thumbsup" />
+                <ui:Button name="react-heart" class="reaction-btn" text="heart" />
+                <ui:Button name="react-clap" class="reaction-btn" text="clap" />
+                <ui:Button name="react-laugh" class="reaction-btn" text="laugh" />
+                <ui:Button name="react-surprised" class="reaction-btn" text="surprised" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Chat Panel (hidden by default) -->
+        <ui:VisualElement name="chat-panel" class="glass-modal" style="position: absolute; right: 16px; top: 80px; bottom: 100px; width: 320px; display: none;">
+            <ui:VisualElement class="flex-row" style="justify-content: space-between; padding: 12px; border-bottom-width: 1px; border-bottom-color: rgba(255,255,255,0.1);">
+                <ui:Label text="Chat" class="h4" />
+                <ui:Button name="btn-close-chat" text="X" class="btn btn-secondary" style="padding: 4px 8px;" />
+            </ui:VisualElement>
+            <ui:ScrollView name="chat-messages" style="flex-grow: 1; padding: 8px;">
+                <ui:Label text="No messages yet" class="body-sm text-secondary text-center" style="padding: 16px;" />
+            </ui:ScrollView>
+            <ui:VisualElement class="flex-row" style="padding: 8px; border-top-width: 1px; border-top-color: rgba(255,255,255,0.1);">
+                <ui:TextField name="chat-input" placeholder="Type a message..." class="form-input" style="flex-grow: 1; margin-right: 8px;" />
+                <ui:Button name="btn-send-chat" text="Send" class="btn btn-primary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Notification Toast -->
+        <ui:VisualElement name="toast" class="glass-card" style="position: absolute; top: 120px; left: 50%; translate: -50% 0; padding: 12px 24px; display: none;">
+            <ui:Label name="toast-message" text="Notification" class="body" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

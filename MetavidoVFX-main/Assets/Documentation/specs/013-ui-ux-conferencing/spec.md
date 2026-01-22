@@ -2,7 +2,7 @@
 
 **Feature Branch**: `013-ui-ux-conferencing`
 **Created**: 2026-01-21
-**Status**: In Progress (Phase 1 Complete)
+**Status**: In Progress (Phase 2 Complete)
 **Priority**: P0 (Required for user-facing product)
 
 ---
@@ -260,13 +260,14 @@ Adapt existing `VFXToggleUI` pattern with:
 - [x] Auth provider abstraction (IAuthProvider, MockAuthProvider, AuthManager)
 - [ ] Firebase Unity SDK integration (pending - using MockAuthProvider for now)
 
-### Phase 2: Core UI (Sprint 2)
+### Phase 2: Core UI (Sprint 2) ✅ COMPLETE
 
 - [x] Lobby screen with room code entry (LobbyView.uxml)
-- [ ] LobbyController.cs
-- [ ] Conference HUD with basic controls
-- [ ] Settings panel
-- [ ] Profile editing
+- [x] LobbyController.cs (room creation, joining, recent rooms)
+- [x] Conference HUD with basic controls (ConferenceHUD.uxml + Controller)
+- [x] Settings panel (SettingsView.uxml + SettingsController.cs)
+- [x] Profile editing (in SettingsController)
+- [x] XRRAI namespace migration (Auth, UI)
 
 ### Phase 3: Auth Providers (Sprint 3)
 
@@ -297,32 +298,33 @@ Adapt existing `VFXToggleUI` pattern with:
 Assets/
 ├── UI/
 │   ├── Styles/
-│   │   ├── Common.uss           # Shared styles
-│   │   ├── Glassmorphism.uss    # Glass effects
-│   │   ├── Typography.uss       # Text styles
-│   │   └── Colors.uss           # Color variables
+│   │   ├── Common.uss           # Shared styles + HUD styles ✅
+│   │   ├── Glassmorphism.uss    # Glass effects ✅
+│   │   ├── Typography.uss       # Text styles ✅
+│   │   └── Colors.uss           # Color variables ✅
 │   ├── Views/
-│   │   ├── AuthView.uxml        # Login/Signup
-│   │   ├── LobbyView.uxml       # Pre-conference
-│   │   ├── ConferenceHUD.uxml   # In-call HUD
-│   │   └── SettingsView.uxml    # Settings panel
+│   │   ├── AuthView.uxml        # Login/Signup ✅
+│   │   ├── LobbyView.uxml       # Pre-conference ✅
+│   │   ├── ConferenceHUD.uxml   # In-call HUD ✅
+│   │   └── SettingsView.uxml    # Settings panel ✅
 │   ├── Components/
-│   │   ├── Button.uxml          # Reusable button
-│   │   ├── Card.uxml            # Glass card
-│   │   ├── Avatar.uxml          # User avatar
-│   │   └── ControlBar.uxml      # Action bar
+│   │   ├── Button.uxml          # Reusable button (TODO)
+│   │   ├── Card.uxml            # Glass card (TODO)
+│   │   ├── Avatar.uxml          # User avatar (TODO)
+│   │   └── ControlBar.uxml      # Action bar (TODO)
 │   └── Controllers/
-│       ├── AuthController.cs
-│       ├── LobbyController.cs
-│       ├── ConferenceHUDController.cs
-│       └── SettingsController.cs
+│       ├── AuthController.cs    # XRRAI.UI namespace ✅
+│       ├── LobbyController.cs   # Room management ✅
+│       ├── ConferenceHUDController.cs # HUD controls ✅
+│       └── SettingsController.cs # User settings ✅
 ├── Scripts/
 │   └── Auth/
-│       ├── IAuthProvider.cs     # Auth provider interface
-│       ├── FirebaseAuthManager.cs
-│       ├── AppleSignInProvider.cs
-│       ├── GoogleSignInProvider.cs
-│       └── UserProfileManager.cs
+│       ├── IAuthProvider.cs     # XRRAI.Auth namespace ✅
+│       ├── AuthManager.cs       # Singleton manager ✅
+│       ├── MockAuthProvider.cs  # Dev/testing provider ✅
+│       ├── FirebaseAuthManager.cs (TODO)
+│       ├── AppleSignInProvider.cs (TODO)
+│       └── GoogleSignInProvider.cs (TODO)
 ```
 
 ---

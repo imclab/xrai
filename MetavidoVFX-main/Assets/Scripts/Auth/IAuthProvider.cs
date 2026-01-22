@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MetavidoVFX.Auth
+namespace XRRAI.Auth
 {
     /// <summary>
     /// Represents a signed-in user

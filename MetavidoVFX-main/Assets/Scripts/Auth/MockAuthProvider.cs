@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace MetavidoVFX.Auth
+namespace XRRAI.Auth
 {
     /// <summary>
     /// Mock authentication provider for development and testing.

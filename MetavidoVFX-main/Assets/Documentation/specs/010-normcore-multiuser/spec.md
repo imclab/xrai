@@ -2,7 +2,7 @@
 
 **Feature Branch**: `010-normcore-multiuser`
 **Created**: 2026-01-20
-**Status**: Draft
+**Status**: Draft (Blocked - Normcore SDK Required)
 **Input**: AR-only multiplayer drawing using Normcore + AR Spectator package
 
 ## Triple Verification
