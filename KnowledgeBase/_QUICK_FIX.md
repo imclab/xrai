@@ -31,6 +31,9 @@
 | AR session not ready | Wait for `ARSession.state == SessionTracking` |
 | Subsystem not found | Check XR Plugin Management settings |
 | Camera intrinsics null | Use `TryGetIntrinsics()` |
+| Depth rotated wrong | Rotate UV: `float2(1-uv.y, uv.x)` for portrait |
+| Depth distance wrong | Apply 0.625 scale factor for ARKit |
+| Depth → world mismatch | Use RayParams calculation from projection matrix |
 
 ## VFX Graph
 
@@ -40,6 +43,11 @@
 | VFX buffer mismatch | Match buffer count to VFX Capacity |
 | VFX not playing | Call `vfx.Play()`, check `enabled` |
 | VFX wrong color space | Check project color space settings |
+| VFX global texture null | Use `vfx.SetTexture()` per-VFX, not Shader.SetGlobal |
+| VFX event creating GC | Cache `VFXEventAttribute` in Start() |
+| Sample() not found in HLSL | Use `SampleLevel(tex, uv, 0)` instead |
+| VFX attribute error | Wrap with `#if VFX_HAS_ATTR_*` guards |
+| Custom HLSL not working | Use `void Func(inout VFXAttributes attrs)` signature |
 
 ## Compute Shaders
 
@@ -48,6 +56,33 @@
 | Dispatch size wrong | Use `CeilToInt(size / threadGroupSize)` |
 | Buffer not set | Call `SetBuffer` before Dispatch |
 | Thread group query | Use `GetKernelThreadGroupSizes()` |
+| Thread group exceeds max | Use `[numthreads(32,32,1)]` (1024 = Metal max) |
+| Integer division truncation | Use `CeilToInt()` not integer division |
+
+## Audio VFX
+
+| Error | Fix |
+|-------|-----|
+| SetPixels GC every frame | Use `NativeArray` + `LoadRawTextureData()` |
+| Audio texture wasteful | Use `TextureFormat.RFloat` (4x smaller) |
+| Audio data flicker | Set `filterMode = FilterMode.Point` |
+
+## Hand Tracking
+
+| Error | Fix |
+|-------|-----|
+| XR Hands joint null | Use `TryGetPose(out Pose pose)` |
+| Gesture flickering | Add hysteresis (different start/end thresholds) |
+| Velocity-driven VFX | `SpawnRate = Lerp(0, 1000, speed / maxSpeed)` |
+| Pinch edge detection | Track `wasPinching` state for rising edge |
+
+## WebXR
+
+| Error | Fix |
+|-------|-----|
+| WebXR session fails | Create context with `{ xrCompatible: true }` |
+| Context loss on XR | Handle `webglcontextlost` + `restored` events |
+| AR camera → WebRTC | Use `endCameraRendering` + `AsyncGPUReadback` |
 
 ## MCP / Tools
 
