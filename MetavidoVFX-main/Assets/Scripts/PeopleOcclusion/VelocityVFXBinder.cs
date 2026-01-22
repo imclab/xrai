@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 
-namespace MetavidoVFX
+namespace XRRAI
 {
     /// <summary>
     /// Binds velocity data from a RenderTexture to VFX Graph properties.

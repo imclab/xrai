@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Debug component that logs depth texture availability and VFX status every second.

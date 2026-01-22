@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Listens for voice commands via pluggable voice providers and triggers

@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Layout modes inspired by Apple Vision Pro Spatial Personas.

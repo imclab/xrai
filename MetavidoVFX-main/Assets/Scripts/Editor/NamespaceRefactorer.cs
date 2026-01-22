@@ -7,7 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class NamespaceRefactorer
     {
@@ -28,7 +28,7 @@ namespace MetavidoVFX.Editor
             { "H3M.Painting", "XRRAI.BrushPainting" },
 
             // VFXBinders consolidation → XRRAI.VFXBinders
-            { "MetavidoVFX.VFX.Binders", "XRRAI.VFXBinders" },
+            { "XRRAI.VFXBinders", "XRRAI.VFXBinders" },
             { "MetavidoVFX.VFX", "XRRAI.VFXBinders" },
 
             // Hologram consolidation → XRRAI.Hologram
@@ -43,13 +43,13 @@ namespace MetavidoVFX.Editor
 
             // Additional namespaces → XRRAI.*
             { "MetavidoVFX.Audio", "XRRAI.Audio" },
-            { "MetavidoVFX.Performance", "XRRAI.Performance" },
-            { "MetavidoVFX.Debugging", "XRRAI.Debug" },
+            { "XRRAI.Performance", "XRRAI.Performance" },
+            { "MetavidoVFX.Debugging", "XRRAI.Debugging" },
             { "MetavidoVFX.Recording", "XRRAI.Recording" },
             { "MetavidoVFX.Testing", "XRRAI.Testing" },
             { "MetavidoVFX.Editor", "XRRAI.Editor" },
             { "MetavidoVFX", "XRRAI" },
-            { "Metavido.Diagnostics", "XRRAI.Debug" },
+            { "Metavido.Diagnostics", "XRRAI.Debugging" },
         };
 
         [MenuItem("H3M/Refactor/Preview Namespace Changes")]

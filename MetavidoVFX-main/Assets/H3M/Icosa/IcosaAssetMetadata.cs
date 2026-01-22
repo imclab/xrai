@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Attribution metadata attached to imported 3D models.

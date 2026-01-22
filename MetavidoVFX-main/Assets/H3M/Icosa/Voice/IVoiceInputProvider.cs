@@ -5,7 +5,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Result from voice command processing.

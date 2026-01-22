@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking.Providers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Touch/mouse input provider for Editor testing.

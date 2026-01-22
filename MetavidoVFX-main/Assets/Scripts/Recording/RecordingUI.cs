@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MetavidoVFX.Recording
+namespace XRRAI.Recording
 {
     /// <summary>
     /// UI for hologram recording with record button, timer, and status display.

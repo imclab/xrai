@@ -5,7 +5,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.Tracking.Providers
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// Mock tracking provider for Editor testing.

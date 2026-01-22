@@ -5,9 +5,9 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
-using MetavidoVFX.HandTracking;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Binds physics data to VFX properties including:

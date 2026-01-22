@@ -4,10 +4,10 @@
 #if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-using MetavidoVFX.VFX;
-using MetavidoVFX.UI;
+using XRRAI.VFXBinders;
+using XRRAI.UI;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class VFXLibrarySetup
     {

@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Metavido;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     public class HologramSource : MonoBehaviour
     {

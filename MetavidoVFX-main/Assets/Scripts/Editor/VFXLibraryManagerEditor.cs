@@ -3,9 +3,9 @@
 
 using UnityEngine;
 using UnityEditor;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     [CustomEditor(typeof(VFXLibraryManager))]
     public class VFXLibraryManagerEditor : UnityEditor.Editor

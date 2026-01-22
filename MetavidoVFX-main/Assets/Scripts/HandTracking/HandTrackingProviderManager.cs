@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Singleton manager for hand tracking providers.

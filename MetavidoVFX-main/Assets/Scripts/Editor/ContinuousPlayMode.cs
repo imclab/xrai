@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Ensures Unity stays in Play mode without pausing for AR Foundation Remote testing.

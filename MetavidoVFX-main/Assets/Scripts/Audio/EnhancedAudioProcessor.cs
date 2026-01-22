@@ -4,9 +4,9 @@
 
 using UnityEngine;
 using System.Collections;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Audio
+namespace XRRAI.Audio
 {
     /// <summary>
     /// Enhanced audio analysis with FFT frequency band separation.

@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace MetavidoVFX.Tracking.Providers
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// ARKit native face tracking provider (52 blendshapes + mesh).

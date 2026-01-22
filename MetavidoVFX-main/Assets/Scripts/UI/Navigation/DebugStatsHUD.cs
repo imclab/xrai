@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
-namespace MetavidoVFX.UI.Navigation
+namespace XRRAI.UI.Navigation
 {
     /// <summary>
     /// UI Toolkit debug HUD showing key stats.

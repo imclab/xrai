@@ -3,9 +3,9 @@
 
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.HandTracking;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Binds hand tracking data from unified provider to VFX Graph.

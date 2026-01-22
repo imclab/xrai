@@ -4,7 +4,7 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace MetavidoVFX.Painting
+namespace XRRAI.BrushPainting
 {
     /// <summary>
     /// Represents a single point in a brush stroke.

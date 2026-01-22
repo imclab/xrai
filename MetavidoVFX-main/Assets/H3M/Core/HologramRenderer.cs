@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 using Metavido;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     [RequireComponent(typeof(VisualEffect))]
     public class HologramRenderer : MonoBehaviour

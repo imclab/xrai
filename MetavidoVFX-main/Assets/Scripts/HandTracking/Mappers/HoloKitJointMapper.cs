@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.HandTracking.Mappers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Maps HoloKit JointName enum values to unified HandJointID.

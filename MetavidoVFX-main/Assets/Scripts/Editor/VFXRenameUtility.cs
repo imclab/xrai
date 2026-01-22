@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public class VFXRenameUtility : EditorWindow
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using System;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Manages multiple VFX layers for the hologram, allowing toggling between

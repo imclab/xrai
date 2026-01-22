@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Editor utility to create demo scenes for each specification.
@@ -225,7 +225,7 @@ namespace MetavidoVFX.Editor
 
                 case "Spec006_VFX_Library_Pipeline":
                     // Ensure VFXLibraryManager has populated VFX list
-                    var libraryMgr = Object.FindAnyObjectByType<MetavidoVFX.VFX.VFXLibraryManager>();
+                    var libraryMgr = Object.FindAnyObjectByType<XRRAI.VFXBinders.VFXLibraryManager>();
                     if (libraryMgr != null)
                     {
                         // Trigger population via reflection or mark dirty
@@ -474,13 +474,13 @@ namespace MetavidoVFX.Editor
             // Add VFX Library Manager
             var libraryRoot = new GameObject("VFX_Library");
             SceneManager.MoveGameObjectToScene(libraryRoot, scene);
-            var library = libraryRoot.AddComponent<MetavidoVFX.VFX.VFXLibraryManager>();
+            var library = libraryRoot.AddComponent<XRRAI.VFXBinders.VFXLibraryManager>();
 
             // Add VFXToggleUI
             var uiGO = new GameObject("VFXToggleUI");
             SceneManager.MoveGameObjectToScene(uiGO, scene);
             var uiDoc = uiGO.AddComponent<UnityEngine.UIElements.UIDocument>();
-            var toggleUI = uiGO.AddComponent<MetavidoVFX.UI.VFXToggleUI>();
+            var toggleUI = uiGO.AddComponent<XRRAI.UI.VFXToggleUI>();
 
             // Add Pipeline Dashboard (global namespace)
             var dashboardGO = new GameObject("VFXPipelineDashboard");
@@ -625,7 +625,7 @@ namespace MetavidoVFX.Editor
             var vfx = handVFX.AddComponent<VisualEffect>();
 
             // Try to add VFXHandBinder
-            var handBinderType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandBinder, Assembly-CSharp");
+            var handBinderType = System.Type.GetType("XRRAI.VFXBinders.VFXHandBinder, Assembly-CSharp");
             if (handBinderType != null)
             {
                 handVFX.AddComponent(handBinderType);
@@ -669,7 +669,7 @@ namespace MetavidoVFX.Editor
             // Add VFXModeController
             var modeController = new GameObject("VFXModeController");
             SceneManager.MoveGameObjectToScene(modeController, scene);
-            var modeCtrlType = System.Type.GetType("MetavidoVFX.VFX.VFXModeController, Assembly-CSharp");
+            var modeCtrlType = System.Type.GetType("XRRAI.VFXBinders.VFXModeController, Assembly-CSharp");
             if (modeCtrlType != null)
             {
                 modeController.AddComponent(modeCtrlType);
@@ -880,7 +880,7 @@ namespace MetavidoVFX.Editor
             hifiVFX.AddComponent<VFXARBinder>();
 
             // Add HiFiHologramController
-            var controllerType = System.Type.GetType("MetavidoVFX.VFX.HiFiHologramController, Assembly-CSharp");
+            var controllerType = System.Type.GetType("XRRAI.VFXBinders.HiFiHologramController, Assembly-CSharp");
             if (controllerType != null)
             {
                 hifiVFX.AddComponent(controllerType);

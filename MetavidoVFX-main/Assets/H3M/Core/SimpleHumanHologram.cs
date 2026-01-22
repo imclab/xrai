@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Minimal ARKit Human Depth → VFX binding (20 lines of core logic)

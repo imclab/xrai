@@ -4,8 +4,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
+using XRRAI.Hologram;
 
-namespace MetavidoVFX.H3M.Network.Editor
+namespace XRRAI.Hologram.Editor
 {
     public static class H3MNetworkSetup
     {

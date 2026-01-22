@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Metavido.Common;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Decodes Metavido-encoded WebRTC frames.

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX
+namespace XRRAI
 {
     /// <summary>
     /// Binds MyakuMyaku VFX to our AR pipeline.

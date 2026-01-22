@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Debug = UnityEngine.Debug;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Automated AR Remote PlayMode test runner.

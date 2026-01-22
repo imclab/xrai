@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     public enum VFXBinderPreset
     {
@@ -103,7 +103,7 @@ namespace MetavidoVFX.VFX.Binders
             if (existing != null) return existing;
 
             // Remove legacy binder if present (using reflection to avoid compile dependency)
-            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            var legacyType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
             if (legacyType != null)
             {
                 var legacy = go.GetComponent(legacyType);
@@ -133,7 +133,7 @@ namespace MetavidoVFX.VFX.Binders
         public static Component AddHandBinder(GameObject go, bool leftHand = true)
         {
             // Use type name to avoid compile-order issues
-            var binderType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandDataBinder, Assembly-CSharp");
+            var binderType = System.Type.GetType("XRRAI.VFXBinders.VFXHandDataBinder, Assembly-CSharp");
             if (binderType == null) return null;
 
             var existing = go.GetComponent(binderType);
@@ -157,14 +157,14 @@ namespace MetavidoVFX.VFX.Binders
             foreach (var b in audioBinders) Object.Destroy(b);
 
             // Use reflection for legacy AR binder and hand binder to avoid compile-order issues
-            var legacyArType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            var legacyArType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
             if (legacyArType != null)
             {
                 var legacyArBinders = go.GetComponents(legacyArType);
                 foreach (var b in legacyArBinders) Object.Destroy(b);
             }
 
-            var handType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandDataBinder, Assembly-CSharp");
+            var handType = System.Type.GetType("XRRAI.VFXBinders.VFXHandDataBinder, Assembly-CSharp");
             if (handType != null)
             {
                 var handBinders = go.GetComponents(handType);

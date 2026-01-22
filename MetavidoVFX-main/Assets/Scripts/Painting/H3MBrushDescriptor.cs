@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace H3M.Painting
+namespace XRRAI.BrushPainting
 {
     public enum BrushType { Shuriken, VFXGraph, GeometryBased }
 

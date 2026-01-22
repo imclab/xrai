@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Metavido.Common;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Encodes AR frames in Metavido format for WebRTC streaming.

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Catalog of VFX assets with category organization.

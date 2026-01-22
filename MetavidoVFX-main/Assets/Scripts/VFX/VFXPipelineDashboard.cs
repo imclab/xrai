@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.InputSystem;
-using MetavidoVFX.VFX.Binders;
+using XRRAI.VFXBinders;
 
 /// <summary>
 /// Real-time pipeline visualization dashboard.

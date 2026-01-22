@@ -188,8 +188,8 @@ public class LegacyComponentCleanup : EditorWindow
         return typeName == "H3M.Core.HologramSource" ||
                typeName == "H3M.Core.HologramRenderer" ||
                typeName == "H3M.Core.HologramAnchor" ||
-               typeName == "MetavidoVFX.VFX.VFXBinderManager" ||
-               typeName == "MetavidoVFX.VFX.Binders.VFXARDataBinder" ||
+               typeName == "XRRAI.VFXBinders.VFXBinderManager" ||
+               typeName == "XRRAI.VFXBinders.VFXARDataBinder" ||
                typeName == "VFXBinderManager" ||
                typeName == "VFXARDataBinder";
     }
@@ -237,8 +237,8 @@ public class LegacyComponentCleanup : EditorWindow
             if (typeName == "H3M.Core.HologramSource" ||
                 typeName == "H3M.Core.HologramRenderer" ||
                 typeName == "H3M.Core.HologramAnchor" ||
-                typeName == "MetavidoVFX.VFX.VFXBinderManager" ||
-                typeName == "MetavidoVFX.VFX.Binders.VFXARDataBinder" ||
+                typeName == "XRRAI.VFXBinders.VFXBinderManager" ||
+                typeName == "XRRAI.VFXBinders.VFXARDataBinder" ||
                 typeName == "VFXBinderManager" ||
                 typeName == "VFXARDataBinder")
             {

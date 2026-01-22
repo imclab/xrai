@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.Tracking
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// Tracking capabilities bitmask for feature detection.

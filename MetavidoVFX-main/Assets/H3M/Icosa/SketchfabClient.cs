@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Sketchfab Download API client for searching and downloading 3D models.

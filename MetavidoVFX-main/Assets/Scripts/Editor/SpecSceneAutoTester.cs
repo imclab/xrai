@@ -6,7 +6,7 @@ using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class SpecSceneAutoTester
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace H3M.Painting
+namespace XRRAI.BrushPainting
 {
     public class H3MBrushUI : MonoBehaviour
     {

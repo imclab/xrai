@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Simulates a hologram conferencing session for Editor testing.

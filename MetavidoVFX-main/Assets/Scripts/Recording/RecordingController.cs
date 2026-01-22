@@ -7,7 +7,7 @@ using System.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Metavido.Encoder;
 
-namespace MetavidoVFX.Recording
+namespace XRRAI.Recording
 {
     /// <summary>
     /// Controls Metavido hologram recording using keijiro's Avfi package for iOS video encoding.

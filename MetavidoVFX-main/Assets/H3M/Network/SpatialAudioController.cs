@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Manages spatial audio for remote holograms in conference mode.

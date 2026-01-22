@@ -13,7 +13,7 @@ using HoloKit;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class HoloKitHandTrackingSetup
     {

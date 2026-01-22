@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 using System.Collections.Generic;
-using H3M.Core;
-using MetavidoVFX.VFX;
-using MetavidoVFX.Audio;
-using MetavidoVFX.HandTracking;
+using XRRAI.Hologram;
+using XRRAI.VFXBinders;
+using XRRAI.Audio;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class VFXPipelineCleanup
     {
@@ -206,7 +206,7 @@ namespace MetavidoVFX.Editor
             }
 
             // Use reflection for legacy binder
-            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            var legacyType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
             var legacyBinder = legacyType != null ? Object.FindFirstObjectByType(legacyType, FindObjectsInactive.Include) : null;
             
             if (legacyBinder != null)

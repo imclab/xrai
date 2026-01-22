@@ -11,7 +11,7 @@ using UnityEngine.XR.Hands;
 using UnityEngine.XR.Management;
 #endif
 
-namespace MetavidoVFX.HandTracking
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// ARKit hand tracking without HoloKit dependency.

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// UI Toolkit-based VFX selector matching original MetavidoVFX style.

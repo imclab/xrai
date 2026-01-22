@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// VFX property binder that connects H3MWebRTCReceiver output to VFX properties.

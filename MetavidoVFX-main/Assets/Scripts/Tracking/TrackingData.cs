@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace MetavidoVFX.Tracking
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// Body pose data (17-33 keypoints depending on provider).

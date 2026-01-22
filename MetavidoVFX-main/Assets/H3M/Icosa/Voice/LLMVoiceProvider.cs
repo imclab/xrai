@@ -9,7 +9,7 @@ using UnityEngine;
 using LLMUnity;
 #endif
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Voice command provider using local LLM inference.

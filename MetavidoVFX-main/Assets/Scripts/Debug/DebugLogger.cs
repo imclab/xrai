@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Metavido.Diagnostics
+namespace XRRAI.Debugging
 {
     public enum LogLevel { Verbose, Info, Warning, Error }
 

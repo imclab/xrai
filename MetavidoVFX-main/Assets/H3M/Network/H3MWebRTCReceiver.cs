@@ -13,7 +13,7 @@ using System.Text;
 using Unity.WebRTC;
 #endif
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// WebRTC receiver for hologram video streams.

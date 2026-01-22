@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Manages scripting defines based on installed packages.

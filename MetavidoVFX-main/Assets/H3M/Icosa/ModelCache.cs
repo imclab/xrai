@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// LRU cache for downloaded 3D models with automatic eviction.

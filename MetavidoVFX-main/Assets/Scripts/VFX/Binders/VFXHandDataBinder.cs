@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     [VFXBinder("Hand Tracking/Hand Data")]
     public class VFXHandDataBinder : VFXBinderBase

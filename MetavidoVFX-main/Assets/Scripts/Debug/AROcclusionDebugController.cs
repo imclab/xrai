@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Debugging
+namespace XRRAI.Debugging
 {
     /// <summary>
     /// Debug controller for toggling AR occlusion features.

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using Unity.WebRTC;
 #endif
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Signaling client for WebRTC peer connections.

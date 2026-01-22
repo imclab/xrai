@@ -3,9 +3,9 @@
 
 using System;
 using UnityEngine;
-using MetavidoVFX.HandTracking;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.Painting
+namespace XRRAI.BrushPainting
 {
     /// <summary>
     /// Interprets hand tracking data into painting gestures.

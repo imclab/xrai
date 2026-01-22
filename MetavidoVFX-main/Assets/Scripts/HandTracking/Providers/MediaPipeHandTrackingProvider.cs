@@ -10,7 +10,7 @@ using Mediapipe.Unity;
 using Mediapipe.Unity.HandTracking;
 #endif
 
-namespace MetavidoVFX.HandTracking.Providers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// MediaPipe Hands tracking provider (21 joints per hand).

@@ -6,7 +6,7 @@ using System;
 using UnityEngine;
 using MetavidoVFX.Segmentation;
 
-namespace MetavidoVFX.HandTracking.Providers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// BodyPix-based hand tracking fallback.

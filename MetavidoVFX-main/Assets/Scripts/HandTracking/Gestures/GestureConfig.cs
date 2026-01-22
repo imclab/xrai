@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking.Gestures
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Configurable gesture detection thresholds.

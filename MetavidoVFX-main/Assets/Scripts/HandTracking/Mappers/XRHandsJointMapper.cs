@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine.XR.Hands;
 #endif
 
-namespace MetavidoVFX.HandTracking.Mappers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Maps Unity XR Hands XRHandJointID enum values to unified HandJointID.

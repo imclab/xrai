@@ -8,9 +8,9 @@ using UnityEngine.VFX;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// Simple IMGUI-based VFX selector matching original Metavido style.

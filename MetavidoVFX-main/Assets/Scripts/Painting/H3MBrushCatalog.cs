@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace H3M.Painting
+namespace XRRAI.BrushPainting
 {
     [CreateAssetMenu(fileName = "BrushCatalog", menuName = "H3M/Painting/Brush Catalog")]
     public class H3MBrushCatalog : ScriptableObject

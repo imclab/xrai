@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking.Gestures
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Detects gestures from hand joint data with configurable thresholds and hysteresis.

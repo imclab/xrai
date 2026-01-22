@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Performance
+namespace XRRAI.Performance
 {
     /// <summary>
     /// Attach to individual VFX for distance-based LOD and culling.

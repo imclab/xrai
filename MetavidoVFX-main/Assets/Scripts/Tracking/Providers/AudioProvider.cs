@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.Tracking.Providers
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// Audio provider wrapping existing AudioBridge.

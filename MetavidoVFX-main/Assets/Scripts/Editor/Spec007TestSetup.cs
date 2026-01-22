@@ -8,7 +8,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class Spec007TestSetup
     {
@@ -64,7 +64,7 @@ namespace MetavidoVFX.Editor
 
             // Create test harness
             var harnessGO = new GameObject("VFX_Audio_Tests");
-            harnessGO.AddComponent<MetavidoVFX.Testing.AudioTestHarness>();
+            harnessGO.AddComponent<XRRAI.Testing.AudioTestHarness>();
 
             // Create directional light
             var lightGO = new GameObject("Directional Light");
@@ -120,7 +120,7 @@ namespace MetavidoVFX.Editor
 
             // Create test harness
             var harnessGO = new GameObject("VFX_Physics_Tests");
-            harnessGO.AddComponent<MetavidoVFX.Testing.PhysicsTestHarness>();
+            harnessGO.AddComponent<XRRAI.Testing.PhysicsTestHarness>();
 
             // Create ground plane for reference
             var groundGO = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -193,7 +193,7 @@ namespace MetavidoVFX.Editor
 
                     // Check children
                     var childComponent = go.GetComponentInChildren(System.Type.GetType(componentName) ??
-                        System.Type.GetType("MetavidoVFX.Testing." + componentName) ??
+                        System.Type.GetType("XRRAI.Testing." + componentName) ??
                         System.Type.GetType("MetavidoVFX.Audio." + componentName));
 
                     if (childComponent != null)

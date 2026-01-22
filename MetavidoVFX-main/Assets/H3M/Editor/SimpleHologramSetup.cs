@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
-using H3M.Core;
+using XRRAI.Hologram;
 
 namespace H3M.Editor
 {

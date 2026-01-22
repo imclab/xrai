@@ -3,8 +3,9 @@
 #if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using XRRAI.Debugging;
 
-namespace MetavidoVFX.Debugging.Editor
+namespace XRRAI.Debugging.Editor
 {
     public static class AROcclusionDebugSetup
     {

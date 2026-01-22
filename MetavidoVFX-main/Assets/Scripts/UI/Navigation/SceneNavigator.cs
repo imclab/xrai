@@ -6,7 +6,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MetavidoVFX.UI.Navigation
+namespace XRRAI.UI.Navigation
 {
     /// <summary>
     /// Singleton for navigating between spec demo scenes.

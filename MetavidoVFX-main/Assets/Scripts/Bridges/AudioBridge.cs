@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using MetavidoVFX.Audio;
+using XRRAI.Audio;
 
 /// <summary>
 /// FFT analysis → global audio properties for ALL VFX.

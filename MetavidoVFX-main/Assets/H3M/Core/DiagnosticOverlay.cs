@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Standaloee diagnostic overlay - doesn't depend on any other scripts

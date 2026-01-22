@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace MetavidoVFX.Audio
+namespace XRRAI.Audio
 {
     /// <summary>
     /// Spectral flux based beat detector.

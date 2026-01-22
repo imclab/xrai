@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Debugging
+namespace XRRAI.Debugging
 {
     /// <summary>
     /// Runtime VFX property inspector for debugging.

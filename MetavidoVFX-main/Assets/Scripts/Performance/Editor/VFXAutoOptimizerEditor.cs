@@ -3,8 +3,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
+using XRRAI.Performance;
 
-namespace MetavidoVFX.Performance.Editor
+namespace XRRAI.Performance.Editor
 {
     public static class VFXAutoOptimizerEditor
     {

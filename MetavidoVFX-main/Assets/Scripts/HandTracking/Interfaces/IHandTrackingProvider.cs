@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Unified hand tracking interface for all backends.

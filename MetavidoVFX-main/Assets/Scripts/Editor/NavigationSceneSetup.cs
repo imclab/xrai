@@ -10,7 +10,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Editor utility for setting up the navigation system across all scenes.

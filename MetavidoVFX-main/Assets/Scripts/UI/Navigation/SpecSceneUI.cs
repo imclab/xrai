@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MetavidoVFX.UI.Navigation
+namespace XRRAI.UI.Navigation
 {
     /// <summary>
     /// UI Toolkit overlay for spec demo scenes.

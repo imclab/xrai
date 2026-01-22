@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using MetavidoVFX.HandTracking;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.Painting
+namespace XRRAI.BrushPainting
 {
     /// <summary>
     /// Circular palette for brush selection.

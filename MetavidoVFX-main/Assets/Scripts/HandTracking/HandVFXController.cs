@@ -12,7 +12,7 @@ using MetavidoVFX.Segmentation;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.HandTracking
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Controls VFX effects attached to hands with support for:

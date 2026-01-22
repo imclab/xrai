@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Prevents common errors during Unity domain reload by properly

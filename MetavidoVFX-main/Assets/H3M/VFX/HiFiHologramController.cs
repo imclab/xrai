@@ -12,7 +12,7 @@ using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.H3M.VFX
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Quality presets for hologram rendering.

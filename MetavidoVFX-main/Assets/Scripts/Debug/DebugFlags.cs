@@ -14,7 +14,7 @@ using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Metavido.Diagnostics
+namespace XRRAI.Debugging
 {
     /// <summary>
     /// Category-based debug logging with compile-time stripping.

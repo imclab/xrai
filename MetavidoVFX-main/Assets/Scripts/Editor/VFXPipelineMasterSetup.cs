@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
 /// <summary>
 /// Unified VFX Pipeline setup automation.

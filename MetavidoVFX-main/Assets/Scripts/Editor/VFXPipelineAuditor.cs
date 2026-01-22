@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine.VFX;
 using System.Collections.Generic;
 using System.Text;
+using XRRAI.VFXBinders;
 
 /// <summary>
 /// Comprehensive audit result for a single VFX and its pipeline components
@@ -193,14 +194,14 @@ public static class VFXPipelineAuditor
 
         // Check required components
         result.HasVFXARBinder = go.TryGetComponent<VFXARBinder>(out var binder);
-        result.HasVFXCategory = go.TryGetComponent<MetavidoVFX.VFX.VFXCategory>(out var category);
+        result.HasVFXCategory = go.TryGetComponent<VFXCategory>(out var category);
         result.HasVFXNoCull = go.TryGetComponent<VFXNoCull>(out var noCull);
 
         // Check optional specialized binders
         result.HasNNCamBinder = go.GetComponent("NNCamKeypointBinder") != null;
         result.HasHandBinder = go.GetComponent("HandVFXController") != null;
-        result.HasAudioBinder = go.TryGetComponent<MetavidoVFX.VFX.Binders.VFXAudioDataBinder>(out _);
-        result.HasPhysicsBinder = go.TryGetComponent<MetavidoVFX.VFX.Binders.VFXPhysicsBinder>(out _);
+        result.HasAudioBinder = go.TryGetComponent<XRRAI.VFXBinders.VFXAudioDataBinder>(out _);
+        result.HasPhysicsBinder = go.TryGetComponent<XRRAI.VFXBinders.VFXPhysicsBinder>(out _);
 
         // Check visibility status
         if (go.TryGetComponent<VFXRenderer>(out var renderer))
@@ -580,8 +581,8 @@ public static class VFXPipelineAuditor
         var mode = DetectBindingMode(result.VFX);
 
         // For Audio/Standalone modes, only add VFXARBinder if AR pipeline is explicitly needed
-        bool needsARBinder = mode == MetavidoVFX.VFX.VFXBindingMode.AR ||
-                             mode == MetavidoVFX.VFX.VFXBindingMode.Keypoint;
+        bool needsARBinder = mode == VFXBindingMode.AR ||
+                             mode == VFXBindingMode.Keypoint;
 
         // Add VFXARBinder if needed (for AR/Keypoint modes or if VFX has bindable properties)
         if (!result.HasVFXARBinder && (needsARBinder || result.MissingBindings.Count > 0))
@@ -628,7 +629,7 @@ public static class VFXPipelineAuditor
         // Add VFXCategory if using VFXARBinder
         if (!result.HasVFXCategory && result.HasVFXARBinder)
         {
-            var category = Undo.AddComponent<MetavidoVFX.VFX.VFXCategory>(go);
+            var category = Undo.AddComponent<VFXCategory>(go);
             category.SetCategory(DetectCategoryFromName(result.VFX.name));
             category.SetBindingMode(mode);
             result.HasVFXCategory = true;
@@ -654,7 +655,7 @@ public static class VFXPipelineAuditor
     /// <summary>
     /// Add specialized binders based on VFX requirements
     /// </summary>
-    static int AddSpecializedBinders(VFXPipelineAuditResult result, GameObject go, MetavidoVFX.VFX.VFXBindingMode mode)
+    static int AddSpecializedBinders(VFXPipelineAuditResult result, GameObject go, VFXBindingMode mode)
     {
         int fixes = 0;
         var vfx = result.VFX;
@@ -678,13 +679,13 @@ public static class VFXPipelineAuditor
         }
 
         // VFXAudioDataBinder for audio-reactive VFX
-        if ((mode == MetavidoVFX.VFX.VFXBindingMode.Audio || result.ConfiguredBindings.Contains("Audio"))
+        if ((mode == VFXBindingMode.Audio || result.ConfiguredBindings.Contains("Audio"))
             && !result.HasAudioBinder)
         {
             // Ensure AudioBridge exists in scene (required for global audio properties)
             EnsureAudioBridgeExists();
 
-            var audioBinderType = FindType("MetavidoVFX.VFX.Binders.VFXAudioDataBinder");
+            var audioBinderType = FindType("XRRAI.VFXBinders.VFXAudioDataBinder");
             if (audioBinderType != null)
             {
                 Undo.AddComponent(go, audioBinderType);
@@ -720,7 +721,7 @@ public static class VFXPipelineAuditor
         // VFXPhysicsBinder for velocity/physics VFX
         if (result.ConfiguredBindings.Contains("VelocityMap") && !result.HasPhysicsBinder)
         {
-            var physicsBinderType = FindType("MetavidoVFX.VFX.Binders.VFXPhysicsBinder");
+            var physicsBinderType = FindType("XRRAI.VFXBinders.VFXPhysicsBinder");
             if (physicsBinderType != null)
             {
                 Undo.AddComponent(go, physicsBinderType);
@@ -748,7 +749,7 @@ public static class VFXPipelineAuditor
         }
 
         // FluoCanvas for Fluo audio VFX (if not already in scene)
-        if (mode == MetavidoVFX.VFX.VFXBindingMode.Audio)
+        if (mode == VFXBindingMode.Audio)
         {
             string name = vfx.name.ToLowerInvariant();
             if (name.Contains("fluo") || name.Contains("bubble") || name.Contains("stream"))
@@ -1069,47 +1070,47 @@ EXAMPLE USAGE:
     /// <summary>
     /// Detect VFX category from name
     /// </summary>
-    static MetavidoVFX.VFX.VFXCategoryType DetectCategoryFromName(string name)
+    static VFXCategoryType DetectCategoryFromName(string name)
     {
         name = name.ToLowerInvariant();
 
         if (name.Contains("hand") || name.Contains("pinch"))
-            return MetavidoVFX.VFX.VFXCategoryType.Hands;
+            return VFXCategoryType.Hands;
         if (name.Contains("face") || name.Contains("head"))
-            return MetavidoVFX.VFX.VFXCategoryType.Face;
+            return VFXCategoryType.Face;
         if (name.Contains("audio") || name.Contains("sound") || name.Contains("music"))
-            return MetavidoVFX.VFX.VFXCategoryType.Audio;
+            return VFXCategoryType.Audio;
         if (name.Contains("env") || name.Contains("world") || name.Contains("grid"))
-            return MetavidoVFX.VFX.VFXCategoryType.Environment;
+            return VFXCategoryType.Environment;
         if (name.Contains("body") || name.Contains("human") || name.Contains("people") || name.Contains("nncam"))
-            return MetavidoVFX.VFX.VFXCategoryType.People;
+            return VFXCategoryType.People;
 
-        return MetavidoVFX.VFX.VFXCategoryType.Hybrid;
+        return VFXCategoryType.Hybrid;
     }
 
     /// <summary>
     /// Detect binding mode from VFX properties (per source-bindings.md)
     /// </summary>
-    static MetavidoVFX.VFX.VFXBindingMode DetectBindingMode(VisualEffect vfx)
+    static VFXBindingMode DetectBindingMode(VisualEffect vfx)
     {
         if (vfx == null || vfx.visualEffectAsset == null)
-            return MetavidoVFX.VFX.VFXBindingMode.Standalone;
+            return VFXBindingMode.Standalone;
 
         // Check for keypoint buffer (NNCam)
         if (vfx.HasGraphicsBuffer("KeypointBuffer"))
-            return MetavidoVFX.VFX.VFXBindingMode.Keypoint;
+            return VFXBindingMode.Keypoint;
 
         // Check for AR depth (Rcam/Akvfx)
         if (vfx.HasTexture("DepthMap") || vfx.HasTexture("StencilMap") || vfx.HasTexture("PositionMap"))
-            return MetavidoVFX.VFX.VFXBindingMode.AR;
+            return VFXBindingMode.AR;
 
         // Check for audio-only (Fluo)
         string name = vfx.name.ToLowerInvariant();
         bool isFluo = name.Contains("fluo") || name.Contains("bubble") || name.Contains("sparkle");
         if ((vfx.HasFloat("Throttle") || vfx.HasFloat("AudioLevel") || isFluo) && !vfx.HasTexture("DepthMap"))
-            return MetavidoVFX.VFX.VFXBindingMode.Audio;
+            return VFXBindingMode.Audio;
 
-        return MetavidoVFX.VFX.VFXBindingMode.Standalone;
+        return VFXBindingMode.Standalone;
     }
 
     /// <summary>
@@ -1444,20 +1445,20 @@ EXAMPLE USAGE:
         // Apply mode override
         if (!string.IsNullOrEmpty(config.Mode))
         {
-            var category = go.GetComponent<MetavidoVFX.VFX.VFXCategory>();
+            var category = go.GetComponent<VFXCategory>();
             if (category == null)
             {
-                category = Undo.AddComponent<MetavidoVFX.VFX.VFXCategory>(go);
+                category = Undo.AddComponent<VFXCategory>(go);
                 fixes++;
             }
 
-            MetavidoVFX.VFX.VFXBindingMode mode = config.Mode.ToLower() switch
+            VFXBindingMode mode = config.Mode.ToLower() switch
             {
-                "ar" => MetavidoVFX.VFX.VFXBindingMode.AR,
-                "audio" => MetavidoVFX.VFX.VFXBindingMode.Audio,
-                "keypoint" => MetavidoVFX.VFX.VFXBindingMode.Keypoint,
-                "standalone" => MetavidoVFX.VFX.VFXBindingMode.Standalone,
-                _ => MetavidoVFX.VFX.VFXBindingMode.AR
+                "ar" => VFXBindingMode.AR,
+                "audio" => VFXBindingMode.Audio,
+                "keypoint" => VFXBindingMode.Keypoint,
+                "standalone" => VFXBindingMode.Standalone,
+                _ => VFXBindingMode.AR
             };
 
             Undo.RecordObject(category, "Apply custom binding mode");

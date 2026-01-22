@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class PostProcessingSetup
     {

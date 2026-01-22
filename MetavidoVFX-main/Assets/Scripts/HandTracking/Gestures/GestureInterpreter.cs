@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace MetavidoVFX.HandTracking.Gestures
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Interprets hand gestures into high-level actions for brush painting.

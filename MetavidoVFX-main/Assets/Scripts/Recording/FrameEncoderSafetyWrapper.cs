@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-namespace MetavidoVFX.Recording
+namespace XRRAI.Recording
 {
     /// <summary>
     /// Prevents FrameEncoder NullReferenceException by disabling it until AR is ready.

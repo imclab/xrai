@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     [InitializeOnLoad]
     public static class BodyPixDefineSetup
@@ -129,7 +129,7 @@ namespace MetavidoVFX.Editor
             }
 
             // Find existing or create new
-            var existing = Object.FindFirstObjectByType<Segmentation.BodyPartSegmenter>();
+            var existing = Object.FindFirstObjectByType<MetavidoVFX.Segmentation.BodyPartSegmenter>();
             if (existing != null)
             {
                 Selection.activeGameObject = existing.gameObject;
@@ -152,7 +152,7 @@ namespace MetavidoVFX.Editor
                 go = new GameObject("BodyPartSegmenter");
             }
 
-            var segmenter = go.AddComponent<Segmentation.BodyPartSegmenter>();
+            var segmenter = go.AddComponent<MetavidoVFX.Segmentation.BodyPartSegmenter>();
             Selection.activeGameObject = go;
 
             Debug.Log("[BodyPix Setup] Created BodyPartSegmenter");

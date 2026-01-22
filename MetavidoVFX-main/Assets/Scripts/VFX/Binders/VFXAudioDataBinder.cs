@@ -6,9 +6,9 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
-using MetavidoVFX.Audio;
+using XRRAI.Audio;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     [VFXBinder("Audio/Audio Data")]
     public class VFXAudioDataBinder : VFXBinderBase

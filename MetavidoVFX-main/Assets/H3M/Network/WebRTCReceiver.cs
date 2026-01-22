@@ -1,7 +1,7 @@
 using UnityEngine;
 // using Unity.WebRTC;
 
-namespace H3M.Network
+namespace XRRAI.Hologram
 {
     public class WebRTCReceiver : MonoBehaviour
     {

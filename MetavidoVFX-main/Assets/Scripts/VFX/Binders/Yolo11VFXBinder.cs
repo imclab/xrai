@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using MyakuMyakuAR;
 
-namespace MetavidoVFX
+namespace XRRAI
 {
     /// <summary>
     /// Binds YOLO11 segmentation output to VFX Graph.

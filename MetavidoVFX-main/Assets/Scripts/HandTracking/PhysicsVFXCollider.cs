@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
-namespace MetavidoVFX.HandTracking
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// Provides physics collision data to VFX Graph from AR mesh.

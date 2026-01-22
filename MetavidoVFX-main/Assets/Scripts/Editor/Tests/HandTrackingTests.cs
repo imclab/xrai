@@ -4,8 +4,7 @@
 #if UNITY_EDITOR
 using NUnit.Framework;
 using UnityEngine;
-using MetavidoVFX.HandTracking;
-using MetavidoVFX.HandTracking.Gestures;
+using XRRAI.HandTracking;
 
 namespace MetavidoVFX.Editor.Tests
 {

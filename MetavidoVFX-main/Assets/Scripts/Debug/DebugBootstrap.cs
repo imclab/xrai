@@ -3,9 +3,9 @@
 
 using UnityEngine;
 
-using Metavido.Diagnostics;
+using XRRAI.Debugging;
 
-namespace Metavido.Diagnostics
+namespace XRRAI.Debugging
 {
     /// <summary>
     /// Bootstraps debug infrastructure at scene start.

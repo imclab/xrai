@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
 
-namespace MetavidoVFX.VFX.Binders
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Binds the KeypointBuffer from BodyPartSegmenter to VFX Graph.
@@ -33,7 +33,7 @@ namespace MetavidoVFX.VFX.Binders
 
 #if BODYPIX_AVAILABLE
         [Tooltip("Reference to BodyPartSegmenter that provides keypoint data")]
-        public Segmentation.BodyPartSegmenter Target = null;
+        public MetavidoVFX.Segmentation.BodyPartSegmenter Target = null;
 
         public override bool IsValid(VisualEffect component)
             => Target != null &&

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Performance
+namespace XRRAI.Performance
 {
     /// <summary>
     /// Profiles VFX in scene and identifies performance issues.

@@ -2,8 +2,9 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using System.Collections.Generic;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Testing
+namespace XRRAI.Testing
 {
     public class PhysicsTestHarness : MonoBehaviour
     {
@@ -101,7 +102,7 @@ namespace MetavidoVFX.Testing
                     var vfx = go.AddComponent<VisualEffect>();
                     vfx.visualEffectAsset = asset;
                     go.AddComponent<VFXARBinder>();
-                    go.AddComponent<VFX.Binders.VFXPhysicsBinder>();
+                    go.AddComponent<VFXPhysicsBinder>();
                     vfx.Stop(); go.SetActive(false);
                     _loadedVFX.Add(vfx);
                 }

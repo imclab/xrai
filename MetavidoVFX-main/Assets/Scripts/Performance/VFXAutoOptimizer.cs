@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Performance
+namespace XRRAI.Performance
 {
     /// <summary>
     /// Automatically optimizes VFX performance to maintain target FPS.

@@ -6,7 +6,7 @@ using UnityEditor.Build;
 using UnityEngine;
 using System.Collections.Generic;
 
-using Metavido.Diagnostics;
+using XRRAI.Debugging;
 
 namespace Metavido.Diagnostics.Editor
 {
@@ -196,7 +196,7 @@ namespace Metavido.Diagnostics.Editor
             // VFXProfiler
             var profiler = new GameObject("VFXProfiler");
             profiler.transform.SetParent(pipelineParent.transform);
-            profiler.AddComponent<MetavidoVFX.Performance.VFXProfiler>();
+            profiler.AddComponent<XRRAI.Performance.VFXProfiler>();
 
             // === Test VFX (placeholder cube) ===
             var testVFX = GameObject.CreatePrimitive(PrimitiveType.Cube);

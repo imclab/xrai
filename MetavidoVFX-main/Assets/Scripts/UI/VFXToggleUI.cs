@@ -13,9 +13,9 @@ using UnityEngine.UIElements;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// Flexible UI Toolkit-based VFX toggle panel.

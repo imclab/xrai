@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Binding mode determines which data sources are used (from source-bindings.md)

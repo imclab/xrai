@@ -8,9 +8,9 @@ using UnityEngine.VFX;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public class VFXCompatibilityAuditor : EditorWindow
     {

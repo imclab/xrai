@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using System.Collections.Generic;
 
-namespace MetavidoVFX.Testing
+namespace XRRAI.Testing
 {
     public class AudioTestHarness : MonoBehaviour
     {

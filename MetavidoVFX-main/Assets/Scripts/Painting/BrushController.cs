@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.HandTracking;
+using XRRAI.HandTracking;
 
-namespace MetavidoVFX.Painting
+namespace XRRAI.BrushPainting
 {
     /// <summary>
     /// Central controller for brush painting system.

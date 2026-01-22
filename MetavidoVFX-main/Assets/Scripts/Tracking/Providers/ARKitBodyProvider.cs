@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace MetavidoVFX.Tracking.Providers
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// ARKit native body tracking provider (91 joints).

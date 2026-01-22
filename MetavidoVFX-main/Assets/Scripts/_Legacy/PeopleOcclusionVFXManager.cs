@@ -17,7 +17,7 @@
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
 /// <summary>
 /// DEPRECATED: Use ARDepthSource + VFXARBinder + VFXLibraryManager instead.

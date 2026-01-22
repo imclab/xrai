@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Available voice provider types.

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     // DISABLED: Auto-setup was creating duplicate objects in scene
     // Use manual menu: H3M > Run Full Auto-Setup Now

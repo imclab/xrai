@@ -18,7 +18,7 @@ using TMPro;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// VisionOS-style floating gallery UI for VFX selection.

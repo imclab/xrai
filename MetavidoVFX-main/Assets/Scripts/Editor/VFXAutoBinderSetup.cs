@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 using UnityEngine.VFX.Utility;
-using MetavidoVFX.VFX.Binders;
+using XRRAI.VFXBinders;
 using System.Collections.Generic;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public class VFXAutoBinderSetup : EditorWindow
     {
@@ -85,7 +85,7 @@ namespace MetavidoVFX.Editor
                 bool hasAR = vfx.GetComponent<VFXARBinder>() != null;
                 
                 // Use reflection for legacy binder to avoid compile dependency
-                var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+                var legacyType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
                 bool hasLegacyAR = legacyType != null && vfx.GetComponent(legacyType) != null;
                 
                 bool hasAudio = vfx.GetComponent<VFXAudioDataBinder>() != null;
@@ -349,7 +349,7 @@ namespace MetavidoVFX.Editor
             a.hasARBinder = vfx.GetComponent<VFXARBinder>() != null;
             
             // Use reflection for legacy binder
-            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            var legacyType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
             a.hasLegacyARBinder = legacyType != null && vfx.GetComponent(legacyType) != null;
             
             a.hasAudioBinder = vfx.GetComponent<VFXAudioDataBinder>() != null;
@@ -360,7 +360,7 @@ namespace MetavidoVFX.Editor
             }
 
             // Check for hand binder via reflection (compilation order issue)
-            var handType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandDataBinder, Assembly-CSharp");
+            var handType = System.Type.GetType("XRRAI.VFXBinders.VFXHandDataBinder, Assembly-CSharp");
             if (handType != null)
             {
                 a.hasHandBinder = vfx.GetComponent(handType) != null;
@@ -385,7 +385,7 @@ namespace MetavidoVFX.Editor
             if (a.needsAR && !a.hasARBinder)
             {
                 // Use reflection for legacy binder
-                var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+                var legacyType = System.Type.GetType("XRRAI.VFXBinders.VFXARDataBinder, Assembly-CSharp");
                 var legacy = legacyType != null ? a.vfx.GetComponent(legacyType) : null;
                 
                 if (legacy != null)

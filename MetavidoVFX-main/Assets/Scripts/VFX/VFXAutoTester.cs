@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Auto-tests VFX by cycling through each child VFX for a specified duration.

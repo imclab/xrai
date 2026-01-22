@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.Debugging;
+using XRRAI.Debugging;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Editor utilities for VFX Graph debugging and development.

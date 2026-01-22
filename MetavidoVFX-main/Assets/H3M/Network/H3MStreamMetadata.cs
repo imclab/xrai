@@ -8,7 +8,7 @@ using System;
 using System.Text;
 using System.Xml;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Metadata transmitted alongside hologram video streams.

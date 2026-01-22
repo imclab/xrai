@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Maps human depth to world positions for VFX particle effects.

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using Byn.Awrtc;
 using Byn.Awrtc.Unity;
 using Byn.Unity.Examples;
-using H3M.Network;
+using XRRAI.Hologram;
 
-namespace MetavidoVFX.H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// High-level manager for hologram video conferencing.

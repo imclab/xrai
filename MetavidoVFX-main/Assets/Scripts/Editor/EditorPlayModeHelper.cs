@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     [InitializeOnLoad]
     public static class EditorPlayModeHelper

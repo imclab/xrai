@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.XR.Hands;
 #endif
 
-namespace MetavidoVFX.HandTracking.Providers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// XR Hands subsystem provider (26 joints).

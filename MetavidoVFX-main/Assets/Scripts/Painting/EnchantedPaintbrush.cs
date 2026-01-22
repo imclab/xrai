@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace H3M.Painting
+namespace XRRAI.BrushPainting
 {
     public class EnchantedPaintbrush : MonoBehaviour
     {

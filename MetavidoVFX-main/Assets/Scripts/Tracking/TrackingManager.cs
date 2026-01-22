@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace MetavidoVFX.Tracking
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// Central manager for discovering, initializing, and routing tracking data.

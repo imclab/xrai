@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Creates and manages global GraphicsBuffers for VFX proximity lookups.

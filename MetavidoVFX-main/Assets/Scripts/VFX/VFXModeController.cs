@@ -3,7 +3,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
 /// <summary>
 /// Centralized controller for VFX mode switching.

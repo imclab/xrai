@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.UI.Editor
+namespace XRRAI.UI.Editor
 {
     public static class VFXGallerySetup
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class SimpleVFXUISetup
     {

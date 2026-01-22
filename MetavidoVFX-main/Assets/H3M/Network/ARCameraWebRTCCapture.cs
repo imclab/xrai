@@ -6,7 +6,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.UI;
 
-namespace H3M.Network
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Captures AR camera frames and depth data for WebRTC hologram streaming.

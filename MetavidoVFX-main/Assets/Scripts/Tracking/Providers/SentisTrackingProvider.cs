@@ -10,7 +10,7 @@ using UnityEngine;
 using MetavidoVFX.Segmentation;
 #endif
 
-namespace MetavidoVFX.Tracking.Providers
+namespace XRRAI.ARTracking
 {
     /// <summary>
     /// BodyPixSentis tracking provider for 24-part body segmentation.

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Setup and configuration helper for AR Foundation Remote testing.
@@ -193,7 +193,7 @@ namespace MetavidoVFX.Editor
             Debug.Log($"  [INFO] {vfxCount} VFX in scene");
 
             // Check HiFi Hologram
-            var hifiControllers = Object.FindObjectsByType<H3M.VFX.HiFiHologramController>(FindObjectsSortMode.None);
+            var hifiControllers = Object.FindObjectsByType<XRRAI.Hologram.HiFiHologramController>(FindObjectsSortMode.None);
             Debug.Log($"  [INFO] {hifiControllers.Length} HiFi Hologram Controllers");
 
             if (issues == 0)

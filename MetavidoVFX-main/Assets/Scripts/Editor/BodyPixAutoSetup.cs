@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     public static class BodyPixAutoSetup
     {
@@ -13,7 +13,7 @@ namespace MetavidoVFX.Editor
         public static void AutoSetup()
         {
             // Find all BodyPartSegmenters in scene
-            var segmenters = Object.FindObjectsByType<Segmentation.BodyPartSegmenter>(
+            var segmenters = Object.FindObjectsByType<MetavidoVFX.Segmentation.BodyPartSegmenter>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             if (segmenters.Length == 0)
@@ -42,7 +42,7 @@ namespace MetavidoVFX.Editor
             Debug.Log($"[BodyPix AutoSetup] Loaded ResourceSet: {path}");
 
             // Find the best segmenter (prefer one with AR camera assigned)
-            Segmentation.BodyPartSegmenter bestSegmenter = null;
+            MetavidoVFX.Segmentation.BodyPartSegmenter bestSegmenter = null;
             foreach (var seg in segmenters)
             {
                 var so = new SerializedObject(seg);
@@ -96,7 +96,7 @@ namespace MetavidoVFX.Editor
         [MenuItem("H3M/Body Segmentation/Verify Setup")]
         public static void VerifySetup()
         {
-            var segmenters = Object.FindObjectsByType<Segmentation.BodyPartSegmenter>(
+            var segmenters = Object.FindObjectsByType<MetavidoVFX.Segmentation.BodyPartSegmenter>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             Debug.Log("═══════════════════════════════════════════════════════════");

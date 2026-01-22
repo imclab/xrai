@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using System.Collections.Generic;
-using MetavidoVFX.VFX.Binders;
+using XRRAI.VFXBinders;
 
-namespace H3M.Painting
+namespace XRRAI.BrushPainting
 {
     public class H3MParticleBrushManager : MonoBehaviour
     {

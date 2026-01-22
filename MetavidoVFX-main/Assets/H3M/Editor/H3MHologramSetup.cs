@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.VFX;
-using H3M.Core;
+using XRRAI.Hologram;
 
 namespace H3M.Editor
 {

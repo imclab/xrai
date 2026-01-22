@@ -3,8 +3,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using System.IO;
+using XRRAI.Hologram;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.H3M.Editor
+namespace XRRAI.Hologram.Editor
 {
     /// <summary>
     /// Editor utilities to create and configure HiFi Hologram VFX assets.
@@ -87,18 +89,18 @@ namespace MetavidoVFX.H3M.Editor
             }
 
             // Add HiFiHologramController if not present
-            var controller = selected.GetComponent<VFX.HiFiHologramController>();
+            var controller = selected.GetComponent<HiFiHologramController>();
             if (controller == null)
             {
-                controller = selected.AddComponent<VFX.HiFiHologramController>();
+                controller = selected.AddComponent<HiFiHologramController>();
                 Debug.Log("[HiFi Hologram] Added HiFiHologramController");
             }
 
             // Add VFXARBinder if not present
-            var binder = selected.GetComponent<global::VFXARBinder>();
+            var binder = selected.GetComponent<VFXARBinder>();
             if (binder == null)
             {
-                binder = selected.AddComponent<global::VFXARBinder>();
+                binder = selected.AddComponent<VFXARBinder>();
                 Debug.Log("[HiFi Hologram] Added VFXARBinder");
             }
 
@@ -137,8 +139,8 @@ namespace MetavidoVFX.H3M.Editor
             }
 
             // Add components
-            vfxGO.AddComponent<VFX.HiFiHologramController>();
-            vfxGO.AddComponent<global::VFXARBinder>();
+            vfxGO.AddComponent<HiFiHologramController>();
+            vfxGO.AddComponent<VFXARBinder>();
 
             Selection.activeGameObject = rigGO;
             Debug.Log("[HiFi Hologram] Created HiFi Hologram Rig. Components:");
@@ -161,11 +163,11 @@ namespace MetavidoVFX.H3M.Editor
             Log("ARDepthSource", depthSource != null, depthSource != null ? "Found" : "Run 'H3M > VFX Pipeline Master > Setup Complete Pipeline'");
 
             // Check HiFiHologramController
-            var controller = Object.FindFirstObjectByType<VFX.HiFiHologramController>();
+            var controller = Object.FindFirstObjectByType<HiFiHologramController>();
             Log("HiFiHologramController", controller != null, controller != null ? "Found" : "Add to VFX GameObject");
 
             // Check VFXARBinder
-            var binder = Object.FindFirstObjectByType<global::VFXARBinder>();
+            var binder = Object.FindFirstObjectByType<VFXARBinder>();
             Log("VFXARBinder", binder != null, binder != null ? "Found" : "Add to VFX GameObject");
 
             Debug.Log("[HiFi Hologram] Verification complete.");

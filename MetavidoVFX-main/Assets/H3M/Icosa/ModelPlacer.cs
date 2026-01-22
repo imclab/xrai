@@ -3,7 +3,7 @@ using UnityEngine.XR.ARFoundation;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// AR placement for downloaded 3D models.

@@ -2,10 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using MyakuMyakuAR;
-using MetavidoVFX;
+using XRRAI;
 using TextureSource;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Editor utility to set up MyakuMyaku VFX in scene.

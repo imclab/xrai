@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
 [CustomEditor(typeof(VFXARBinder))]
 public class VFXARBinderEditor : Editor

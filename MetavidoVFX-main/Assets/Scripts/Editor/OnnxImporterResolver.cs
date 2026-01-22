@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     /// <summary>
     /// Resolves ONNX importer conflict between Unity Sentis and ONNX Runtime.

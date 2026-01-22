@@ -8,7 +8,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// UI Toolkit debug panel for HologramRenderer status.

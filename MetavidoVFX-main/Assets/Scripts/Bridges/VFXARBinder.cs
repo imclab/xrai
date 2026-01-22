@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 #if BODYPIX_AVAILABLE
 using MetavidoVFX.Segmentation;
 #endif

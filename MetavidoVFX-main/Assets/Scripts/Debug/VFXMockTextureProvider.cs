@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Debugging
+namespace XRRAI.Debugging
 {
     /// <summary>
     /// Provides mock textures for VFX testing in Editor without AR device.

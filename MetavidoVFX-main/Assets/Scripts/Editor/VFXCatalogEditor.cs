@@ -6,9 +6,9 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     [CustomEditor(typeof(VFXCatalog))]
     public class VFXCatalogEditor : UnityEditor.Editor

@@ -22,7 +22,7 @@ using UnityEngine.VFX;
 using UnityEditor;
 #endif
 
-namespace MetavidoVFX.VFX
+namespace XRRAI.VFXBinders
 {
     /// <summary>
     /// Manages a library of VFX with the Hybrid Bridge Pipeline.

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.VFX;
 
-namespace MetavidoVFX.Editor
+namespace XRRAI.Editor
 {
     [InitializeOnLoad]
     public static class HandVFXInitialSetup

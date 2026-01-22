@@ -10,7 +10,7 @@ using UnityEngine.VFX;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.UI
+namespace XRRAI.UI
 {
     /// <summary>
     /// Individual VFX card that supports HoloKit gaze+gesture interaction.

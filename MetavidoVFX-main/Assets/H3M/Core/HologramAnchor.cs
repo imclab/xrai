@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace H3M.Core
+namespace XRRAI.Hologram
 {
     /// <summary>
     /// Handles hologram placement and scaling via touch gestures.

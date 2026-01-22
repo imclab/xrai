@@ -8,7 +8,7 @@ using UnityEngine;
 using HoloKit.iOS;
 #endif
 
-namespace MetavidoVFX.HandTracking.Providers
+namespace XRRAI.HandTracking
 {
     /// <summary>
     /// HoloKit SDK hand tracking provider.

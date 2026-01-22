@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 using System.Collections.Generic;
-using MetavidoVFX.VFX;
+using XRRAI.VFXBinders;
 
 namespace MetavidoVFX.Fluo
 {

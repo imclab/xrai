@@ -10,7 +10,7 @@ using UnityEngine;
 using Icosa.Api;
 #endif
 
-namespace MetavidoVFX.Icosa
+namespace XRRAI.VoiceToObject
 {
     /// <summary>
     /// Unified search across Icosa Gallery and Sketchfab.
