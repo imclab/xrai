@@ -19,12 +19,44 @@ namespace MetavidoVFX.HandTracking
         public static HandTrackingProviderManager Instance { get; private set; }
 
         [Header("Configuration")]
+        [Tooltip("Initialize providers automatically on Awake")]
         [SerializeField] bool _autoInitialize = true;
+        [Tooltip("Automatically switch to next available provider if current becomes unavailable")]
         [SerializeField] bool _enableFallback = true;
+        [Tooltip("Preferred provider ID (leave empty for auto-select by priority)")]
+        [SerializeField] string _preferredProviderId = "";
+        [Tooltip("Minimum acceptable priority level (0 = accept any)")]
+        [SerializeField] int _minimumPriority = 0;
+
+        [Header("Debug")]
+        [Tooltip("Log provider discovery and switching")]
+        [SerializeField] bool _debugLogging = true;
+        [Tooltip("Show debug gizmos for hand positions")]
+        [SerializeField] bool _showDebugGizmos = false;
+
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Currently active provider")]
+        string _activeProviderDisplay = "None";
+        [SerializeField, Tooltip("Number of discovered providers")]
+        int _providerCount = 0;
+        [SerializeField, Tooltip("Is hand tracking currently active")]
+        bool _isTrackingActive = false;
+        [SerializeField, Tooltip("Left hand tracked")]
+        bool _leftHandTracked = false;
+        [SerializeField, Tooltip("Right hand tracked")]
+        bool _rightHandTracked = false;
 
         List<IHandTrackingProvider> _providers = new();
         IHandTrackingProvider _activeProvider;
         bool _initialized;
+
+        // Public accessors for configuration
+        public bool AutoInitialize { get => _autoInitialize; set => _autoInitialize = value; }
+        public bool EnableFallback { get => _enableFallback; set => _enableFallback = value; }
+        public string PreferredProviderId { get => _preferredProviderId; set => _preferredProviderId = value; }
+        public int MinimumPriority { get => _minimumPriority; set => _minimumPriority = value; }
+        public bool DebugLogging { get => _debugLogging; set => _debugLogging = value; }
+        public bool ShowDebugGizmos { get => _showDebugGizmos; set => _showDebugGizmos = value; }
 
         public IHandTrackingProvider ActiveProvider => _activeProvider;
         public IReadOnlyList<IHandTrackingProvider> AllProviders => _providers;
@@ -70,6 +102,38 @@ namespace MetavidoVFX.HandTracking
             {
                 SelectBestProvider();
             }
+
+            // Update runtime status display
+            UpdateRuntimeStatus();
+        }
+
+        void UpdateRuntimeStatus()
+        {
+            _activeProviderDisplay = _activeProvider?.Id ?? "None";
+            _providerCount = _providers.Count;
+            _isTrackingActive = _activeProvider?.IsAvailable == true;
+            _leftHandTracked = _activeProvider?.IsHandTracked(Hand.Left) ?? false;
+            _rightHandTracked = _activeProvider?.IsHandTracked(Hand.Right) ?? false;
+        }
+
+        void OnDrawGizmos()
+        {
+            if (!_showDebugGizmos || _activeProvider == null) return;
+
+            // Draw hand positions
+            if (_leftHandTracked)
+            {
+                Gizmos.color = Color.cyan;
+                var wrist = GetJointPosition(Hand.Left, HandJointID.Wrist);
+                Gizmos.DrawWireSphere(wrist, 0.02f);
+            }
+
+            if (_rightHandTracked)
+            {
+                Gizmos.color = Color.magenta;
+                var wrist = GetJointPosition(Hand.Right, HandJointID.Wrist);
+                Gizmos.DrawWireSphere(wrist, 0.02f);
+            }
         }
 
         public void Initialize()
@@ -78,10 +142,24 @@ namespace MetavidoVFX.HandTracking
 
             DiscoverProviders();
             InitializeAllProviders();
-            SelectBestProvider();
+
+            // Try preferred provider first if specified
+            if (!string.IsNullOrEmpty(_preferredProviderId))
+            {
+                SetActiveProvider(_preferredProviderId);
+            }
+
+            // Fall back to best available if preferred not set or unavailable
+            if (_activeProvider == null)
+            {
+                SelectBestProvider();
+            }
 
             _initialized = true;
-            Debug.Log($"[HandTrackingManager] Initialized with {_providers.Count} providers, active: {_activeProvider?.Id ?? "none"}");
+            UpdateRuntimeStatus();
+
+            if (_debugLogging)
+                Debug.Log($"[HandTrackingManager] Initialized with {_providers.Count} providers, active: {_activeProvider?.Id ?? "none"}");
         }
 
         public void Shutdown()
@@ -118,7 +196,8 @@ namespace MetavidoVFX.HandTracking
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[HandTrackingManager] Failed to create provider {type.Name}: {e.Message}");
+                    if (_debugLogging)
+                        Debug.LogWarning($"[HandTrackingManager] Failed to create provider {type.Name}: {e.Message}");
                 }
             }
 
@@ -136,14 +215,16 @@ namespace MetavidoVFX.HandTracking
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"[HandTrackingManager] Failed to init {provider.Id}: {e.Message}");
+                    if (_debugLogging)
+                        Debug.LogWarning($"[HandTrackingManager] Failed to init {provider.Id}: {e.Message}");
                 }
             }
         }
 
         void SelectBestProvider()
         {
-            var newProvider = _providers.FirstOrDefault(p => p.IsAvailable);
+            var newProvider = _providers.FirstOrDefault(p =>
+                p.IsAvailable && p.Priority >= _minimumPriority);
 
             if (newProvider != _activeProvider)
             {
@@ -156,7 +237,9 @@ namespace MetavidoVFX.HandTracking
                     SubscribeProvider(_activeProvider);
 
                 OnProviderChanged?.Invoke(_activeProvider);
-                Debug.Log($"[HandTrackingManager] Switched to: {_activeProvider?.Id ?? "none"}");
+
+                if (_debugLogging)
+                    Debug.Log($"[HandTrackingManager] Switched to: {_activeProvider?.Id ?? "none"} (priority: {_activeProvider?.Priority ?? 0})");
             }
         }
 

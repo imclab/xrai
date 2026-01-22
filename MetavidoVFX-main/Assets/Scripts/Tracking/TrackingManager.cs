@@ -16,8 +16,26 @@ namespace MetavidoVFX.Tracking
         public static TrackingManager Instance { get; private set; }
 
         [Header("Configuration")]
+        [Tooltip("Initialize providers automatically on Awake")]
         [SerializeField] bool _autoInitialize = true;
+        [Tooltip("Log provider discovery and status changes")]
         [SerializeField] bool _logProviders = true;
+        [Tooltip("Preferred provider ID (leave empty for auto-select by priority)")]
+        [SerializeField] string _preferredProviderId = "";
+        [Tooltip("Required capabilities mask (leave at None for any)")]
+        [SerializeField] TrackingCap _requiredCapabilities = TrackingCap.None;
+
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Detected platform")]
+        string _platformDisplay = "Unknown";
+        [SerializeField, Tooltip("Number of discovered providers")]
+        int _providerCount = 0;
+        [SerializeField, Tooltip("Number of registered consumers")]
+        int _consumerCount = 0;
+        [SerializeField, Tooltip("Currently available tracking capabilities")]
+        TrackingCap _availableCapabilitiesDisplay = TrackingCap.None;
+        [SerializeField, Tooltip("List of active provider IDs")]
+        string[] _activeProviderIds = new string[0];
 
         // Provider registry
         readonly List<ITrackingProvider> _providers = new();
@@ -28,6 +46,13 @@ namespace MetavidoVFX.Tracking
 
         // Current platform
         Platform _currentPlatform;
+
+        // Public accessors for configuration
+        public bool AutoInitialize { get => _autoInitialize; set => _autoInitialize = value; }
+        public bool LogProviders { get => _logProviders; set => _logProviders = value; }
+        public string PreferredProviderId { get => _preferredProviderId; set => _preferredProviderId = value; }
+        public TrackingCap RequiredCapabilities { get => _requiredCapabilities; set => _requiredCapabilities = value; }
+        public Platform CurrentPlatform => _currentPlatform;
 
         public IReadOnlyList<ITrackingProvider> Providers => _providers;
         public TrackingCap AvailableCapabilities { get; private set; }
@@ -43,12 +68,15 @@ namespace MetavidoVFX.Tracking
             DontDestroyOnLoad(gameObject);
 
             _currentPlatform = GetCurrentPlatform();
+            _platformDisplay = _currentPlatform.ToString();
 
             if (_autoInitialize)
             {
                 DiscoverProviders();
                 InitializeProviders();
             }
+
+            UpdateRuntimeStatus();
         }
 
         void Update()
@@ -71,6 +99,20 @@ namespace MetavidoVFX.Tracking
                     consumer.OnTrackingData(provider);
                 }
             }
+
+            // Update runtime status display
+            UpdateRuntimeStatus();
+        }
+
+        void UpdateRuntimeStatus()
+        {
+            _providerCount = _providers.Count;
+            _consumerCount = _consumers.Count;
+            _availableCapabilitiesDisplay = AvailableCapabilities;
+            _activeProviderIds = _providers
+                .Where(p => p.IsAvailable)
+                .Select(p => p.Id)
+                .ToArray();
         }
 
         void OnDestroy()

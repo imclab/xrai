@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -63,7 +64,20 @@ namespace MetavidoVFX.Icosa
         [SerializeField] private string _openAiApiKey;
 
         [Header("Debug")]
+        [Tooltip("Enable debug logging for voice operations")]
         [SerializeField] private bool _debugMode = true;
+
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Currently active provider name")]
+        private string _activeProviderDisplay = "None";
+        [SerializeField, Tooltip("Number of registered providers")]
+        private int _providerCount = 0;
+        [SerializeField, Tooltip("Is a provider currently initialized")]
+        private bool _isInitializedDisplay = false;
+        [SerializeField, Tooltip("Is currently recording audio")]
+        private bool _isRecordingDisplay = false;
+        [SerializeField, Tooltip("Available provider types on this platform")]
+        private string[] _availableProvidersDisplay = new string[0];
 
         #endregion
 
@@ -120,6 +134,23 @@ namespace MetavidoVFX.Icosa
             {
                 await InitializeAsync(_defaultProvider);
             }
+            UpdateRuntimeStatus();
+        }
+
+        private void Update()
+        {
+            UpdateRuntimeStatus();
+        }
+
+        private void UpdateRuntimeStatus()
+        {
+            _activeProviderDisplay = _activeProvider?.ProviderName ?? "None";
+            _providerCount = _providers.Count;
+            _isInitializedDisplay = _isInitialized;
+            _isRecordingDisplay = _activeProvider?.IsRecording ?? false;
+            _availableProvidersDisplay = GetAvailableProviders()
+                .Select(p => p.ToString())
+                .ToArray();
         }
 
         private void OnDestroy()

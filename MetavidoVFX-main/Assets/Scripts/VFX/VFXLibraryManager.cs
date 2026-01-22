@@ -80,6 +80,18 @@ namespace MetavidoVFX.VFX
         [Tooltip("ARDepthSource instance (auto-found if null)")]
         [SerializeField] private ARDepthSource _arDepthSource;
 
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Is the AR pipeline ready")]
+        private bool _pipelineReadyDisplay = false;
+        [SerializeField, Tooltip("Total VFX count in library")]
+        private int _totalVFXDisplay = 0;
+        [SerializeField, Tooltip("Currently active VFX count")]
+        private int _activeVFXDisplay = 0;
+        [SerializeField, Tooltip("VFX with bound properties")]
+        private int _boundVFXDisplay = 0;
+        [SerializeField, Tooltip("Currently active VFX names")]
+        private string[] _activeVFXNames = new string[0];
+
         // Runtime state
         private Dictionary<VFXCategoryType, List<VFXEntry>> _vfxByCategory = new();
         private List<VFXEntry> _allVFX = new();
@@ -170,6 +182,25 @@ namespace MetavidoVFX.VFX
             {
                 EnableHologramVFX();
             }
+
+            UpdateRuntimeStatus();
+        }
+
+        void LateUpdate()
+        {
+            UpdateRuntimeStatus();
+        }
+
+        void UpdateRuntimeStatus()
+        {
+            _pipelineReadyDisplay = IsPipelineReady;
+            _totalVFXDisplay = _allVFX.Count;
+            _activeVFXDisplay = _activeVFX.Count;
+            _boundVFXDisplay = _allVFX.Count(e => e.IsBound);
+            _activeVFXNames = _activeVFX
+                .Where(e => e != null && e.VFX != null)
+                .Select(e => e.AssetName ?? e.VFX.name)
+                .ToArray();
         }
 
         /// <summary>
