@@ -1,16 +1,18 @@
-// DebugStatsHUD.cs - Toggleable debug stats display (lower-left)
+// DebugStatsHUD.cs - UI Toolkit debug stats display (lower-left)
 // Shows FPS, memory, scene info, tracking status
+// Matches VFXToggleUI style for consistency
 
-using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.UIElements;
 
 namespace MetavidoVFX.UI.Navigation
 {
     /// <summary>
-    /// Toggleable debug HUD showing key stats.
+    /// UI Toolkit debug HUD showing key stats.
     /// Press Tab or tap bottom-left corner to toggle.
     /// </summary>
+    [RequireComponent(typeof(UIDocument))]
     public class DebugStatsHUD : MonoBehaviour
     {
         #region Serialized Fields
@@ -20,50 +22,41 @@ namespace MetavidoVFX.UI.Navigation
         [SerializeField] private KeyCode _toggleKey = KeyCode.Tab;
         [SerializeField] private float _updateInterval = 0.5f;
 
-        [Header("Style")]
-        [SerializeField] private int _fontSize = 14;
-        [SerializeField] private Color _backgroundColor = new Color(0, 0, 0, 0.7f);
-        [SerializeField] private Color _textColor = Color.white;
-        [SerializeField] private Color _warningColor = Color.yellow;
-        [SerializeField] private Color _errorColor = Color.red;
-
         #endregion
 
         #region Private Fields
 
+        private UIDocument _document;
+        private VisualElement _panel;
+        private Label _fpsLabel;
+        private Label _memLabel;
+        private Label _vfxLabel;
+        private Label _sceneLabel;
+        private Label _trackingLabel;
+        private Label _platformLabel;
+
         private bool _isVisible;
         private float _updateTimer;
-        private StringBuilder _displayText = new StringBuilder(512);
 
         // Cached stats
         private float _fps;
-        private float _frameTime;
-        private float _memoryUsedMB;
-        private float _memoryTotalMB;
-        private int _vfxCount;
-        private string _sceneName;
-        private string _trackingStatus;
-
-        // GUI styling
-        private GUIStyle _boxStyle;
-        private GUIStyle _textStyle;
-        private Rect _hudRect;
-        private bool _stylesInitialized;
-
-        // Touch toggle
-        private Rect _touchToggleZone;
+        private float[] _fpsBuffer = new float[30];
+        private int _fpsIndex;
 
         #endregion
 
         #region MonoBehaviour
 
+        private void Awake()
+        {
+            _document = GetComponent<UIDocument>();
+        }
+
         private void Start()
         {
+            CreateUI();
             _isVisible = _showOnStart;
-            _sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-
-            // Touch zone in bottom-left corner (100x100 pixels)
-            _touchToggleZone = new Rect(0, Screen.height - 100, 100, 100);
+            SetVisible(_isVisible);
         }
 
         private void Update()
@@ -78,15 +71,18 @@ namespace MetavidoVFX.UI.Navigation
             if (Input.touchCount == 1)
             {
                 var touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began && touch.position.x < 100 && touch.position.y < 100)
                 {
-                    Vector2 touchPos = new Vector2(touch.position.x, Screen.height - touch.position.y);
-                    if (_touchToggleZone.Contains(touchPos))
-                    {
-                        Toggle();
-                    }
+                    Toggle();
                 }
             }
+
+            // Update FPS buffer
+            _fpsBuffer[_fpsIndex] = 1f / Time.unscaledDeltaTime;
+            _fpsIndex = (_fpsIndex + 1) % _fpsBuffer.Length;
+            _fps = 0;
+            foreach (var f in _fpsBuffer) _fps += f;
+            _fps /= _fpsBuffer.Length;
 
             // Update stats periodically
             if (_isVisible)
@@ -100,18 +96,69 @@ namespace MetavidoVFX.UI.Navigation
             }
         }
 
-        private void OnGUI()
+        #endregion
+
+        #region UI Creation
+
+        private void CreateUI()
         {
-            if (!_isVisible) return;
+            if (_document == null || _document.rootVisualElement == null) return;
 
-            InitStyles();
+            var root = _document.rootVisualElement;
+            root.pickingMode = PickingMode.Ignore;
 
-            // Draw background box
-            GUI.Box(_hudRect, GUIContent.none, _boxStyle);
+            // Main panel - lower-left
+            _panel = new VisualElement { name = "debug-stats-panel" };
+            _panel.style.position = Position.Absolute;
+            _panel.style.left = 10;
+            _panel.style.bottom = 10;
+            _panel.style.width = 180;
+            _panel.style.backgroundColor = new Color(0, 0, 0, 0.85f);
+            _panel.style.borderTopLeftRadius = _panel.style.borderTopRightRadius =
+                _panel.style.borderBottomLeftRadius = _panel.style.borderBottomRightRadius = 6;
+            _panel.style.paddingTop = _panel.style.paddingBottom = 8;
+            _panel.style.paddingLeft = _panel.style.paddingRight = 10;
 
-            // Draw text
-            GUI.Label(new Rect(_hudRect.x + 8, _hudRect.y + 4, _hudRect.width - 16, _hudRect.height - 8),
-                _displayText.ToString(), _textStyle);
+            // Title
+            var title = CreateLabel("Debug Stats", 12, new Color(0.4f, 0.63f, 1f));
+            title.style.unityFontStyleAndWeight = FontStyle.Bold;
+            title.style.marginBottom = 6;
+            _panel.Add(title);
+
+            // Stats labels
+            _fpsLabel = CreateLabel("FPS: --", 11, Color.white);
+            _panel.Add(_fpsLabel);
+
+            _memLabel = CreateLabel("Mem: --", 11, Color.white);
+            _panel.Add(_memLabel);
+
+            _vfxLabel = CreateLabel("VFX: --", 11, Color.white);
+            _panel.Add(_vfxLabel);
+
+            _sceneLabel = CreateLabel("Scene: --", 11, Color.white);
+            _panel.Add(_sceneLabel);
+
+            _trackingLabel = CreateLabel("Tracking: --", 11, Color.white);
+            _panel.Add(_trackingLabel);
+
+            _platformLabel = CreateLabel("Platform: --", 11, new Color(1, 1, 1, 0.6f));
+            _panel.Add(_platformLabel);
+
+            // Hint
+            var hint = CreateLabel("[Tab] to hide", 10, new Color(1, 1, 1, 0.4f));
+            hint.style.marginTop = 6;
+            _panel.Add(hint);
+
+            root.Add(_panel);
+        }
+
+        private Label CreateLabel(string text, int fontSize, Color color)
+        {
+            var label = new Label(text);
+            label.style.fontSize = fontSize;
+            label.style.color = color;
+            label.style.marginTop = label.style.marginBottom = 1;
+            return label;
         }
 
         #endregion
@@ -120,136 +167,66 @@ namespace MetavidoVFX.UI.Navigation
 
         private void UpdateStats()
         {
-            // FPS
-            _fps = 1f / Time.unscaledDeltaTime;
-            _frameTime = Time.unscaledDeltaTime * 1000f;
+            if (_fpsLabel == null) return;
+
+            float frameTime = Time.unscaledDeltaTime * 1000f;
+            float memUsed = Profiler.GetTotalAllocatedMemoryLong() / (1024f * 1024f);
+            float memTotal = Profiler.GetTotalReservedMemoryLong() / (1024f * 1024f);
+            int vfxCount = FindObjectsByType<UnityEngine.VFX.VisualEffect>(FindObjectsSortMode.None).Length;
+            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+            // FPS with color coding
+            _fpsLabel.text = $"FPS: {_fps:F0} ({frameTime:F1}ms)";
+            _fpsLabel.style.color = _fps >= 55 ? Color.white : (_fps >= 30 ? Color.yellow : Color.red);
 
             // Memory
-            _memoryUsedMB = Profiler.GetTotalAllocatedMemoryLong() / (1024f * 1024f);
-            _memoryTotalMB = Profiler.GetTotalReservedMemoryLong() / (1024f * 1024f);
+            _memLabel.text = $"Mem: {memUsed:F0}MB / {memTotal:F0}MB";
+            _memLabel.style.color = memUsed < 200 ? Color.white : (memUsed < 400 ? Color.yellow : Color.red);
 
-            // VFX count
-            _vfxCount = FindObjectsByType<UnityEngine.VFX.VisualEffect>(FindObjectsSortMode.None).Length;
+            // VFX
+            _vfxLabel.text = $"VFX: {vfxCount} active";
 
             // Scene
-            _sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            _sceneLabel.text = $"Scene: {sceneName}";
 
-            // Tracking status
-            _trackingStatus = GetTrackingStatus();
+            // Tracking
+            _trackingLabel.text = $"Tracking: {GetTrackingStatus()}";
 
-            // Build display text
-            BuildDisplayText();
+            // Platform
+            _platformLabel.text = $"Platform: {Application.platform}";
         }
 
         private string GetTrackingStatus()
         {
 #if UNITY_IOS || UNITY_ANDROID
-            // Check AR session
             var arSession = FindAnyObjectByType<UnityEngine.XR.ARFoundation.ARSession>();
             if (arSession != null && arSession.enabled)
-            {
                 return "AR Active";
-            }
 #endif
             return "Editor";
-        }
-
-        private void BuildDisplayText()
-        {
-            _displayText.Clear();
-
-            // FPS with color coding
-            string fpsColor = _fps >= 55 ? "white" : (_fps >= 30 ? "yellow" : "red");
-            _displayText.AppendLine($"<color={fpsColor}>FPS: {_fps:F0} ({_frameTime:F1}ms)</color>");
-
-            // Memory
-            string memColor = _memoryUsedMB < 200 ? "white" : (_memoryUsedMB < 400 ? "yellow" : "red");
-            _displayText.AppendLine($"<color={memColor}>Mem: {_memoryUsedMB:F0}MB / {_memoryTotalMB:F0}MB</color>");
-
-            // VFX count
-            _displayText.AppendLine($"VFX: {_vfxCount} active");
-
-            // Scene
-            _displayText.AppendLine($"Scene: {_sceneName}");
-
-            // Tracking
-            _displayText.AppendLine($"Tracking: {_trackingStatus}");
-
-            // Platform
-            _displayText.AppendLine($"Platform: {Application.platform}");
-
-            // Hint
-            _displayText.Append("<color=#888888>[Tab] to hide</color>");
-        }
-
-        #endregion
-
-        #region Styling
-
-        private void InitStyles()
-        {
-            if (_stylesInitialized) return;
-
-            // Box style
-            _boxStyle = new GUIStyle(GUI.skin.box);
-            var bgTex = new Texture2D(1, 1);
-            bgTex.SetPixel(0, 0, _backgroundColor);
-            bgTex.Apply();
-            _boxStyle.normal.background = bgTex;
-
-            // Text style
-            _textStyle = new GUIStyle(GUI.skin.label);
-            _textStyle.fontSize = _fontSize;
-            _textStyle.normal.textColor = _textColor;
-            _textStyle.richText = true;
-            _textStyle.wordWrap = false;
-
-            // HUD rect (lower-left, auto-sized)
-            float width = 200;
-            float height = 140;
-            float margin = 10;
-            _hudRect = new Rect(margin, Screen.height - height - margin, width, height);
-
-            _stylesInitialized = true;
         }
 
         #endregion
 
         #region Public API
 
-        /// <summary>
-        /// Toggle HUD visibility.
-        /// </summary>
         public void Toggle()
         {
             _isVisible = !_isVisible;
-            if (_isVisible)
-            {
-                UpdateStats();
-            }
+            SetVisible(_isVisible);
+            if (_isVisible) UpdateStats();
         }
 
-        /// <summary>
-        /// Show the HUD.
-        /// </summary>
-        public void Show()
-        {
-            _isVisible = true;
-            UpdateStats();
-        }
+        public void Show() { _isVisible = true; SetVisible(true); UpdateStats(); }
+        public void Hide() { _isVisible = false; SetVisible(false); }
 
-        /// <summary>
-        /// Hide the HUD.
-        /// </summary>
-        public void Hide()
-        {
-            _isVisible = false;
-        }
-
-        /// <summary>
-        /// Check if HUD is visible.
-        /// </summary>
         public bool IsVisible => _isVisible;
+
+        private void SetVisible(bool visible)
+        {
+            if (_panel != null)
+                _panel.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
 
         #endregion
     }

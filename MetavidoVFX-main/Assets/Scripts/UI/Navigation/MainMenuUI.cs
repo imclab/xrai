@@ -1,143 +1,133 @@
-// MainMenuUI.cs - Main menu for spec scene selection
-// Displays grid of spec demo buttons
+// MainMenuUI.cs - UI Toolkit main menu for spec scene selection
+// Displays grid of spec demo buttons matching VFXToggleUI style
 
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.UIElements;
 
 namespace MetavidoVFX.UI.Navigation
 {
     /// <summary>
-    /// Main menu UI for selecting spec demo scenes.
+    /// UI Toolkit main menu for selecting spec demo scenes.
     /// Auto-generates buttons for all spec scenes.
     /// </summary>
+    [RequireComponent(typeof(UIDocument))]
     public class MainMenuUI : MonoBehaviour
     {
         #region Serialized Fields
 
         [Header("Layout")]
-        [SerializeField] private Transform _buttonContainer;
-        [SerializeField] private GameObject _buttonPrefab;
         [SerializeField] private int _columns = 2;
 
-        [Header("Styling")]
-        [SerializeField] private Color _buttonColor = new Color(0.2f, 0.4f, 0.8f, 1f);
-        [SerializeField] private Color _buttonHoverColor = new Color(0.3f, 0.5f, 0.9f, 1f);
-        [SerializeField] private float _buttonHeight = 60f;
-        [SerializeField] private float _buttonSpacing = 10f;
+        #endregion
 
-        [Header("References")]
-        [SerializeField] private TextMeshProUGUI _titleText;
-        [SerializeField] private TextMeshProUGUI _versionText;
+        #region Private Fields
+
+        private UIDocument _document;
+        private VisualElement _root;
 
         #endregion
 
         #region MonoBehaviour
 
+        private void Awake()
+        {
+            _document = GetComponent<UIDocument>();
+        }
+
         private void Start()
         {
-            // Set title
-            if (_titleText != null)
-                _titleText.text = "MetavidoVFX Spec Demos";
-
-            // Set version
-            if (_versionText != null)
-                _versionText.text = $"Unity {Application.unityVersion}";
-
-            // Generate buttons
-            GenerateSpecButtons();
+            CreateUI();
         }
 
         #endregion
 
-        #region Button Generation
+        #region UI Creation
 
-        private void GenerateSpecButtons()
+        private void CreateUI()
         {
-            if (_buttonContainer == null)
-            {
-                Debug.LogError("[MainMenuUI] Button container not assigned");
-                return;
-            }
+            if (_document == null || _document.rootVisualElement == null) return;
 
-            // Clear existing buttons
-            foreach (Transform child in _buttonContainer)
-            {
-                Destroy(child.gameObject);
-            }
+            _root = _document.rootVisualElement;
+            _root.style.flexDirection = FlexDirection.Column;
+            _root.style.alignItems = Align.Center;
+            _root.style.justifyContent = Justify.Center;
+            _root.style.backgroundColor = new Color(0.08f, 0.08f, 0.1f);
 
-            // Create button for each spec scene
+            // Container panel
+            var container = new VisualElement { name = "menu-container" };
+            container.style.width = new Length(90, LengthUnit.Percent);
+            container.style.maxWidth = 800;
+            container.style.paddingTop = container.style.paddingBottom = 30;
+            container.style.paddingLeft = container.style.paddingRight = 20;
+
+            // Title
+            var title = new Label("MetavidoVFX Spec Demos");
+            title.style.fontSize = 32;
+            title.style.color = Color.white;
+            title.style.unityFontStyleAndWeight = FontStyle.Bold;
+            title.style.unityTextAlign = TextAnchor.MiddleCenter;
+            title.style.marginBottom = 30;
+            container.Add(title);
+
+            // Button grid
+            var grid = new VisualElement { name = "button-grid" };
+            grid.style.flexDirection = FlexDirection.Row;
+            grid.style.flexWrap = Wrap.Wrap;
+            grid.style.justifyContent = Justify.Center;
+
+            // Create buttons for each spec scene
             for (int i = 0; i < SceneNavigator.SpecScenes.Length; i++)
             {
-                CreateSpecButton(i);
+                var btn = CreateSpecButton(i);
+                grid.Add(btn);
             }
 
-            // Setup grid layout if using GridLayoutGroup
-            var gridLayout = _buttonContainer.GetComponent<GridLayoutGroup>();
-            if (gridLayout != null)
-            {
-                gridLayout.constraintCount = _columns;
-                gridLayout.cellSize = new Vector2(
-                    (gridLayout.GetComponent<RectTransform>().rect.width - _buttonSpacing * (_columns + 1)) / _columns,
-                    _buttonHeight);
-                gridLayout.spacing = new Vector2(_buttonSpacing, _buttonSpacing);
-            }
+            container.Add(grid);
+
+            // Version text
+            var version = new Label($"Unity {Application.unityVersion}");
+            version.style.fontSize = 12;
+            version.style.color = new Color(1, 1, 1, 0.4f);
+            version.style.unityTextAlign = TextAnchor.MiddleCenter;
+            version.style.marginTop = 30;
+            container.Add(version);
+
+            _root.Add(container);
         }
 
-        private void CreateSpecButton(int specIndex)
+        private Button CreateSpecButton(int specIndex)
         {
-            GameObject buttonObj;
+            var btn = new Button(() => OnSpecButtonClick(specIndex));
+            btn.text = SceneNavigator.SpecDisplayNames[specIndex];
+            btn.name = $"spec-btn-{specIndex}";
 
-            if (_buttonPrefab != null)
+            // Styling
+            btn.style.width = new Length(100f / _columns - 2, LengthUnit.Percent);
+            btn.style.minWidth = 180;
+            btn.style.height = 50;
+            btn.style.marginTop = btn.style.marginBottom = 6;
+            btn.style.marginLeft = btn.style.marginRight = 6;
+            btn.style.fontSize = 13;
+            btn.style.color = Color.white;
+            btn.style.backgroundColor = new Color(0.2f, 0.35f, 0.6f);
+            btn.style.borderTopWidth = btn.style.borderBottomWidth =
+                btn.style.borderLeftWidth = btn.style.borderRightWidth = 0;
+            btn.style.borderTopLeftRadius = btn.style.borderTopRightRadius =
+                btn.style.borderBottomLeftRadius = btn.style.borderBottomRightRadius = 6;
+
+            // Hover effect via USS class manipulation
+            btn.RegisterCallback<MouseEnterEvent>(evt =>
             {
-                buttonObj = Instantiate(_buttonPrefab, _buttonContainer);
-            }
-            else
+                btn.style.backgroundColor = new Color(0.3f, 0.45f, 0.75f);
+                btn.style.scale = new Scale(new Vector2(1.02f, 1.02f));
+            });
+            btn.RegisterCallback<MouseLeaveEvent>(evt =>
             {
-                // Create button from scratch
-                buttonObj = new GameObject($"Button_Spec{specIndex:D3}");
-                buttonObj.transform.SetParent(_buttonContainer, false);
+                btn.style.backgroundColor = new Color(0.2f, 0.35f, 0.6f);
+                btn.style.scale = new Scale(Vector2.one);
+            });
 
-                // Add Image
-                var image = buttonObj.AddComponent<Image>();
-                image.color = _buttonColor;
-
-                // Add Button
-                var button = buttonObj.AddComponent<Button>();
-                var colors = button.colors;
-                colors.normalColor = _buttonColor;
-                colors.highlightedColor = _buttonHoverColor;
-                colors.pressedColor = _buttonColor * 0.8f;
-                button.colors = colors;
-
-                // Add Text
-                var textObj = new GameObject("Text");
-                textObj.transform.SetParent(buttonObj.transform, false);
-
-                var text = textObj.AddComponent<TextMeshProUGUI>();
-                text.alignment = TextAlignmentOptions.Center;
-                text.fontSize = 16;
-                text.color = Color.white;
-
-                var textRect = textObj.GetComponent<RectTransform>();
-                textRect.anchorMin = Vector2.zero;
-                textRect.anchorMax = Vector2.one;
-                textRect.offsetMin = new Vector2(10, 5);
-                textRect.offsetMax = new Vector2(-10, -5);
-            }
-
-            // Configure button
-            var btn = buttonObj.GetComponent<Button>();
-            var txt = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-
-            if (txt != null)
-            {
-                txt.text = SceneNavigator.SpecDisplayNames[specIndex];
-            }
-
-            // Add click handler
-            int index = specIndex; // Capture for closure
-            btn.onClick.AddListener(() => OnSpecButtonClick(index));
+            return btn;
         }
 
         private void OnSpecButtonClick(int specIndex)
