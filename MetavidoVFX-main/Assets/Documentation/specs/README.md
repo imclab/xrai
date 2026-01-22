@@ -1,6 +1,6 @@
 # Spec-Kit: Unity-XR-AI Feature Specifications
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-01-22
 **Triple Verified**: All specs cross-referenced with KB, docs, and online research
 
 ---
@@ -51,6 +51,7 @@
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
 | **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **🚧 In Progress** | **P0** | Providers ✅, Brush ⬜ |
 | **013** | [**UI/UX Conferencing**](./013-ui-ux-conferencing/spec.md) | Draft | P2 | TBD |
+<<<<<<< Updated upstream
 | **014b**| [**HiFi Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | Ready | P1 | Done |
 
 ## Completed & Legacy Specs (Moved to root `.deprecated/Specs/`)
@@ -63,6 +64,10 @@
 | 006 | VFX Library & Pipeline | ✅ Complete |
 | 014 | VFX Binding Architecture | ✅ Complete (Hybrid Bridge) |
 
+=======
+| **014** | [**High-Fidelity Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | Planning | P0 | Controller ✅, VFX ⬜ |
+| **015** | [**VFX Binding Architecture**](./015-vfx-binding-architecture/spec.md) | ✅ Complete | P0 | Done |
+>>>>>>> Stashed changes
 
 ### Hologram Implementation Note
 
@@ -178,7 +183,9 @@ specs/
 │   └── tasks.md                 # 8 phases, ~32 hours
 ├── 013-ui-ux-conferencing/           # P2 (UI/UX)
 │   └── spec.md                  # Conferencing UI/UX design
-├── 014-vfx-binding-architecture/     # ✅ COMPLETE
+├── 014-hifi-hologram-vfx/            # P0 (HiFi VFX)
+│   └── spec.md                  # RGB color sampling, quality presets
+├── 015-vfx-binding-architecture/     # ✅ COMPLETE
 │   └── spec.md                  # Hybrid Bridge Pattern documentation
 ```
 

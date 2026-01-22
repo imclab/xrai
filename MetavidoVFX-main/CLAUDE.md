@@ -707,10 +707,23 @@ Extended documentation in parent repo:
 
 ## Specifications
 
-Project specifications in parent repo:
-- `Assets/Documentation/specs/002-h3m-foundation/` - H3M MVP (Man in the Mirror) ✅
-- `Assets/Documentation/specs/003-hologram-conferencing/` - Recording/playback (In Progress), WebRTC pending
-- `Assets/Documentation/specs/004-metavidovfx-systems/` - VFX systems implementation ✅
-- `Assets/Documentation/specs/005-ar-texture-safety/` - TryGetTexture pattern ✅
-- `Assets/Documentation/specs/009-icosa-sketchfab-integration/` - 3D model search (In Progress)
-- `Assets/Documentation/specs/012-hand-tracking/` - Hand tracking + brush (In Progress)
+All specs consolidated in `Assets/Documentation/specs/`:
+
+| ID | Name | Status |
+|----|------|--------|
+| 002 | H3M Foundation | ✅ Complete (Legacy) |
+| 003 | Hologram Conferencing | 🚧 In Progress |
+| 004 | MetavidoVFX Systems | ✅ Complete |
+| 005 | AR Texture Safety | ✅ Complete |
+| 006 | VFX Library & Pipeline | ✅ Complete |
+| 007 | VFX Multi-Mode | Ready |
+| 008 | Multimodal ML Foundations | Architecture Approved |
+| 009 | Icosa/Sketchfab Integration | 🚧 In Progress |
+| 010 | Normcore AR Multiuser | Draft |
+| 011 | Open Brush Integration | Draft |
+| 012 | Hand Tracking + Brush | 🚧 In Progress |
+| 013 | UI/UX Conferencing | Draft |
+| 014 | HiFi Hologram VFX | Planning |
+| 015 | VFX Binding Architecture | ✅ Complete |
+
+See `Assets/Documentation/specs/README.md` for full index.

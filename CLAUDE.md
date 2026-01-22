@@ -56,16 +56,14 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
 | `MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md` | Voice-to-object 3D model integration |
-| `MetavidoVFX-main/Assets/Documentation/specs/README.md` | Spec-Kit index (002-012) |
+| `MetavidoVFX-main/Assets/Documentation/specs/README.md` | Spec-Kit index (002-015) |
 | `MetavidoVFX-main/Assets/Documentation/specs/MASTER_DEVELOPMENT_PLAN.md` | 17-sprint implementation roadmap |
-| `MetavidoVFX-main/Assets/Documentation/specs/009-icosa-sketchfab-integration/spec.md` | 3D model search & placement spec |
-| `MetavidoVFX-main/Assets/Documentation/specs/012-hand-tracking/spec.md` | Hand tracking + brush painting spec |
 
 ---
 
-## 📊 Statistics (Updated 2026-01-21)
+## 📊 Statistics (Updated 2026-01-22)
 
-- **KnowledgeBase**: 116 markdown files (658MB)
+- **KnowledgeBase**: 118 markdown files (cleaned 2026-01-22)
 - **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
 - **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
@@ -73,7 +71,7 @@ Unity-XR-AI/
 - **MetavidoVFX Scripts**: 179 C# scripts (129 runtime + 50 editor)
 - **VFX Assets**: 432 total (292 primary in Assets/VFX)
 - **Scenes**: 25 custom (5 HOLOGRAM + 10 spec demos + 10 other)
-- **Specs**: 8 active (002-009), 5 complete, 3 in progress/draft
+- **Specs**: 14 total (002-015), 6 complete, 4 in progress, 4 draft
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
 - **Performance**: 353 FPS @ 10 VFX (verified Jan 21, 2026)
 

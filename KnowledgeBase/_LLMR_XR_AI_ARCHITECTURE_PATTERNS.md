@@ -203,4 +203,4 @@ Wrap existing provider to add new capabilities without modification.
 
 ---
 
-*See also: `specs/008-cross-platform-ml-segmentation/MODULAR_TRACKING_ARCHITECTURE.md` for full implementation details.*
+*See also: `MetavidoVFX-main/Assets/Documentation/specs/008-crossplatform-multimodal-ml-foundations/MODULAR_TRACKING_ARCHITECTURE.md` for full implementation details.*

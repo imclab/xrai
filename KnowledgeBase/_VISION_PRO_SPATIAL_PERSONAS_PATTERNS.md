@@ -210,7 +210,7 @@ For Unity implementation, this suggests:
 - [Apple Developer: Adding spatial Persona support](https://developer.apple.com/documentation/groupactivities/adding-spatial-persona-support-to-an-activity)
 - [Apple Support: Use spatial Persona](https://support.apple.com/guide/apple-vision-pro/use-spatial-persona-tana1ea03f18/visionos)
 - [UploadVR: Spatial Personas Hands-On](https://www.uploadvr.com/apple-vision-pro-spatial-personas-hands-on/)
-- [Spec 003: Hologram Conferencing](../specs/003-hologram-conferencing/spec.md)
+- [Spec 003: Hologram Conferencing](../MetavidoVFX-main/Assets/Documentation/specs/003-hologram-conferencing/spec.md)
 
 ---
 

@@ -830,11 +830,11 @@ namespace MetavidoVFX.UI
 
         void UpdateCategoryHeader(VFXCategoryType category)
         {
-            var entries = libraryManager?.GetCategory(category);
-            if (entries == null) return;
-
             // Guard: UI may not be initialized yet (VFXLibraryManager fires events during Start)
             if (_categoriesContainer == null || !_isInitialized) return;
+
+            var entries = libraryManager?.GetCategory(category);
+            if (entries == null) return;
 
             int activeInCategory = entries.Count(e => e.IsActive);
             bool isExpanded = _categoryExpanded.TryGetValue(category, out bool exp) && exp;
