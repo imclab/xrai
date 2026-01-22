@@ -175,40 +175,41 @@ Unity source code research workbench from keijiro/AgentBench.
 
 ---
 
-## 📋 Next Steps
+## 📋 Next Steps (Updated 2026-01-22)
 
 ### Active Development (Spec-Driven)
 
-**Sprint 0** (in progress): Debug Infrastructure
+**Sprint 0** (✅ complete): Debug Infrastructure
 - ✅ DebugFlags.cs with conditional attributes
 - ✅ DebugConfig.cs with category filtering
-- ⬜ WebcamMockSource for Editor testing
+- ✅ WebcamMockSource for Editor testing
 
-**Sprint 1** (next): VFX Multi-Mode (Spec 007)
-- ⬜ VFXModeController for Screen/World/AR modes
-- ⬜ BeatDetector for audio-reactive effects
-- ⬜ AR mesh collision for particles
-
-**Sprint 13-14** (P0 priority): Hand Tracking + Brush Painting (Spec 012)
-- ✅ IHandTrackingProvider unified interface
-- ✅ HoloKit/XRHands/MediaPipe/BodyPix/Touch providers (5 total)
-- ✅ VFXHandBinder for hand→VFX properties
-- ⬜ BrushController, GestureInterpreter, StrokeManager
-- ⬜ 8 brush VFX types with pinch→draw control
-
-**Sprint 8-10** (in progress): Icosa/Sketchfab Integration (Spec 009)
+**Sprint 8-10** (in progress, 70%): Icosa/Sketchfab Integration (Spec 009)
 - ✅ SketchfabClient.cs - Sketchfab Download API wrapper
 - ✅ ModelCache.cs - LRU disk caching for models
 - ✅ UnifiedModelSearch.cs - Aggregate Icosa + Sketchfab results
 - ✅ ModelSearchUI.cs, ModelPlacer.cs, IcosaAssetMetadata.cs
-- ⬜ Voice integration (WhisperIcosaController wiring)
-- ⬜ GLTFast runtime loading
+- ✅ Voice integration (WhisperIcosaController)
+- ⬜ GLTFast runtime loading (pending)
 
-### Completed Specs
+**Spec 014** (in progress, 50%): HiFi Hologram VFX
+- ✅ HiFiHologramController for quality presets
+- ⬜ RGB color sampling refinement
+- ⬜ Quality preset profiles (Low/Medium/High/Ultra)
+
+**Spec 003** (in progress, 60%): Hologram Conferencing
+- ✅ Recording/playback
+- ⬜ WebRTC signaling server
+- ⬜ Multi-peer support
+
+### Completed Specs (6 total)
 - ✅ Spec 002 - H3M Hologram Foundation (Legacy, use Hologram.prefab)
 - ✅ Spec 004 - MetavidoVFX Systems
 - ✅ Spec 005 - AR Texture Safety
 - ✅ Spec 006 - VFX Library & Pipeline (73 VFX, 353 FPS)
+- ✅ **Spec 007 - VFX Multi-Mode** (all 6 phases, audio/physics)
+- ✅ **Spec 012 - Hand Tracking + Brush** (5 providers, gestures, tests)
+- ✅ Spec 015 - VFX Binding Architecture
 
 ### Integration Opportunities
 - **Voice-to-Object** - "Put a cat here" → Icosa/Sketchfab search → AR placement
