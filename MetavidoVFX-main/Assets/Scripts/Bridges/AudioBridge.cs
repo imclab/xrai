@@ -43,6 +43,20 @@ public class AudioBridge : MonoBehaviour
     [Header("Debug")]
     [SerializeField] bool _verboseLogging = false;
 
+    [Header("Runtime Status (Read-Only)")]
+    [SerializeField, Tooltip("Current audio volume level (0-1)")]
+    float _volumeDisplay = 0f;
+    [SerializeField, Tooltip("Current bass level (0-1)")]
+    float _bassDisplay = 0f;
+    [SerializeField, Tooltip("Current mids level (0-1)")]
+    float _midsDisplay = 0f;
+    [SerializeField, Tooltip("Current treble level (0-1)")]
+    float _trebleDisplay = 0f;
+    [SerializeField, Tooltip("Current beat pulse intensity")]
+    float _beatPulseDisplay = 0f;
+    [SerializeField, Tooltip("Beat detected this frame")]
+    bool _isOnsetDisplay = false;
+
     float[] _spectrum;
     float[] _samples; // For RMS volume calculation
     BeatDetector _beatDetector;
@@ -273,6 +287,19 @@ public class AudioBridge : MonoBehaviour
 
         // Update audio data texture for VFX without exposed properties
         UpdateAudioDataTexture();
+
+        // Update runtime status display
+        UpdateRuntimeStatus();
+    }
+
+    void UpdateRuntimeStatus()
+    {
+        _volumeDisplay = Volume;
+        _bassDisplay = Bass;
+        _midsDisplay = Mids;
+        _trebleDisplay = Treble;
+        _beatPulseDisplay = BeatPulse;
+        _isOnsetDisplay = IsOnset;
     }
 
     void UpdateAudioDataTexture()

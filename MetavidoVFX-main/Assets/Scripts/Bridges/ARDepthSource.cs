@@ -33,6 +33,18 @@ public class ARDepthSource : MonoBehaviour
     [SerializeField] Vector2Int _colorResolution = new Vector2Int(1920, 1080);
     [SerializeField] bool _verboseLogging = false;
 
+    [Header("Runtime Status (Read-Only)")]
+    [SerializeField, Tooltip("Is AR depth pipeline ready")]
+    bool _isReadyDisplay = false;
+    [SerializeField, Tooltip("Using mock data in Editor")]
+    bool _usingMockDataDisplay = false;
+    [SerializeField, Tooltip("Current depth texture resolution")]
+    string _depthResolutionDisplay = "N/A";
+    [SerializeField, Tooltip("Last compute dispatch time (ms)")]
+    float _computeTimeDisplay = 0f;
+    [SerializeField, Tooltip("Color map allocated")]
+    bool _colorMapAllocatedDisplay = false;
+
     // Mock textures for Editor testing
     Texture2D _mockDepthMap;
     Texture2D _mockStencilMap;
@@ -562,6 +574,18 @@ public class ARDepthSource : MonoBehaviour
 
         // Measure compute time for Dashboard
         LastComputeTimeMs = (Time.realtimeSinceStartup - startTime) * 1000f;
+
+        // Update runtime status display
+        UpdateRuntimeStatus();
+    }
+
+    void UpdateRuntimeStatus()
+    {
+        _isReadyDisplay = IsReady;
+        _usingMockDataDisplay = _usingMockData;
+        _depthResolutionDisplay = DepthMap != null ? $"{DepthMap.width}x{DepthMap.height}" : "N/A";
+        _computeTimeDisplay = LastComputeTimeMs;
+        _colorMapAllocatedDisplay = ColorMapAllocated;
     }
 
     void OnDestroy()
