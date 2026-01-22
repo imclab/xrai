@@ -10,7 +10,7 @@ This repository contains production-ready code patterns, 520+ GitHub repo refere
 
 ```
 Unity-XR-AI/
-├── KnowledgeBase/           # 116 knowledge files, patterns, references
+├── KnowledgeBase/           # 137 knowledge files, patterns, references
 ├── AgentBench/              # Unity research workbench (source code access)
 ├── Vis/                     # 10 3D visualization frontends
 │
@@ -63,7 +63,8 @@ Unity-XR-AI/
 
 ## 📊 Statistics (Updated 2026-01-22)
 
-- **KnowledgeBase**: 118 markdown files (cleaned 2026-01-22)
+- **KnowledgeBase**: 137 markdown files (updated 2026-01-22)
+- **Auto-Fix Patterns**: 106 (80% auto-apply rate)
 - **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
 - **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
