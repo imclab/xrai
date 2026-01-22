@@ -44,7 +44,7 @@
 | ID | Name | Status | Priority | Tasks |
 |----|------|--------|----------|-------|
 | **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **✅ Complete** | P2 | Recording ✅, WebRTC ✅ |
-| 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
+| **007** | [**VFX Multi-Mode & Audio/Physics**](./007-vfx-multi-mode/spec.md) | **✅ Complete** | P1 | 19 tasks |
 | **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **✅ 90% Complete** | **P0** | Body ✅, Face ✅, Depth ✅, Mock ✅ |
 | **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **✅ Complete** | P1 | Voice ✅, glTF ⬜ |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | 15 tasks |

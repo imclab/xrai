@@ -1,199 +1,109 @@
-// AudioTestHarness - Spec 007 T-017 Audio Test Scene Setup
-// Validates: Beat detection, frequency bands, audio-reactive VFX
-
-using System.Collections.Generic;
+// AudioTestHarness - Runtime test harness for Spec 007 audio reactive VFX
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX.Binders;
+using System.Collections.Generic;
 
 namespace MetavidoVFX.Testing
 {
-    /// <summary>
-    /// Test harness for audio-reactive VFX validation.
-    /// Creates multiple VFX instances responding to different audio bands.
-    /// Press Space to cycle test audio clips, M to toggle AudioMonitor.
-    /// </summary>
     public class AudioTestHarness : MonoBehaviour
     {
-        [Header("VFX Setup")]
-        [Tooltip("VFX assets to test (leave empty to auto-load from Resources)")]
-        [SerializeField] private VisualEffectAsset[] testVFXAssets;
-        [SerializeField] private int maxVFXCount = 5;
-        [SerializeField] private float vfxSpacing = 2f;
-
-        [Header("Audio")]
-        [SerializeField] private AudioClip[] testAudioClips;
-        [SerializeField] private AudioSource audioSource;
-
         [Header("Test Configuration")]
-        [SerializeField] private bool autoStart = true;
-        [SerializeField] private bool showBeatIndicator = true;
+        [SerializeField] private float cycleInterval = 5f;
 
-        [Header("Runtime Status (Read-Only)")]
-        [SerializeField] private int _currentClipIndex = 0;
-        [SerializeField] private int _activeVFXCount = 0;
-        [SerializeField] private float _currentVolume = 0f;
-        [SerializeField] private float _currentBeatPulse = 0f;
-        [SerializeField] private int _beatCount = 0;
+        [Header("Status")]
+        [SerializeField] private string currentVFXName;
+        [SerializeField] private int currentIndex;
+        [SerializeField] private float bassLevel;
+        [SerializeField] private float beatPulse;
 
-        private List<VisualEffect> _testVFX = new();
-        private AudioBridge _audioBridge;
-        private float _lastBeatPulse;
+        private List<VisualEffect> _loadedVFX = new();
+        private float _cycleTimer;
+        private AudioSource _audioSource;
 
-        void Start()
+        private void Start()
         {
-            _audioBridge = AudioBridge.Instance ?? FindFirstObjectByType<AudioBridge>();
-
-            if (audioSource == null)
-                audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
-
-            if (testVFXAssets == null || testVFXAssets.Length == 0)
-                LoadDefaultVFX();
-
-            SetupTestVFX();
-
-            if (autoStart && testAudioClips != null && testAudioClips.Length > 0)
-            {
-                PlayClip(0);
-            }
-
-            Debug.Log($"[AudioTestHarness] Initialized with {_testVFX.Count} VFX, {testAudioClips?.Length ?? 0} audio clips");
+            _audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+            LoadAudioReactiveVFX();
+            if (_loadedVFX.Count > 0) SetActiveVFX(0);
+            Debug.Log($"[AudioTestHarness] Loaded {_loadedVFX.Count} VFX. Space=Cycle, T=Tone");
         }
 
-        void Update()
+        private void Update()
         {
-            // Cycle audio clips with Space
-            if (Input.GetKeyDown(KeyCode.Space) && testAudioClips != null && testAudioClips.Length > 0)
-            {
-                _currentClipIndex = (_currentClipIndex + 1) % testAudioClips.Length;
-                PlayClip(_currentClipIndex);
-            }
+            if (Input.GetKeyDown(KeyCode.Space)) CycleToNextVFX();
+            if (Input.GetKeyDown(KeyCode.T)) PlayTestTone();
 
-            // Update runtime status
-            UpdateRuntimeStatus();
+            if (cycleInterval > 0)
+            {
+                _cycleTimer += Time.deltaTime;
+                if (_cycleTimer >= cycleInterval) { _cycleTimer = 0; CycleToNextVFX(); }
+            }
+            UpdateStatus();
         }
 
-        void UpdateRuntimeStatus()
+        private void LoadAudioReactiveVFX()
         {
-            _activeVFXCount = _testVFX.Count;
-
-            if (_audioBridge != null)
+            string[] names = { "bubbles", "particles", "trails", "swarm", "warp" };
+            foreach (var name in names)
             {
-                _currentVolume = _audioBridge.Volume;
-                _currentBeatPulse = _audioBridge.BeatPulse;
-
-                // Count beats (rising edge detection)
-                if (_currentBeatPulse > 0.5f && _lastBeatPulse <= 0.5f)
+                var asset = Resources.Load<VisualEffectAsset>($"VFX/People/{name}") 
+                         ?? Resources.Load<VisualEffectAsset>($"VFX/Environment/{name}");
+                if (asset != null)
                 {
-                    _beatCount++;
-                }
-                _lastBeatPulse = _currentBeatPulse;
-            }
-        }
-
-        void LoadDefaultVFX()
-        {
-            // Load a few VFX from Resources for testing
-            var allVFX = Resources.LoadAll<VisualEffectAsset>("VFX");
-            var selectedVFX = new List<VisualEffectAsset>();
-
-            // Pick VFX that work well for audio visualization
-            string[] preferredNames = { "particles", "spark", "flame", "point", "bubble" };
-
-            foreach (var vfx in allVFX)
-            {
-                if (selectedVFX.Count >= maxVFXCount) break;
-
-                foreach (var name in preferredNames)
-                {
-                    if (vfx.name.ToLower().Contains(name))
-                    {
-                        selectedVFX.Add(vfx);
-                        break;
-                    }
+                    var go = new GameObject($"VFX_{name}");
+                    go.transform.SetParent(transform);
+                    var vfx = go.AddComponent<VisualEffect>();
+                    vfx.visualEffectAsset = asset;
+                    go.AddComponent<VFXARBinder>();
+                    vfx.Stop(); go.SetActive(false);
+                    _loadedVFX.Add(vfx);
                 }
             }
-
-            // Fill with any VFX if not enough
-            foreach (var vfx in allVFX)
-            {
-                if (selectedVFX.Count >= maxVFXCount) break;
-                if (!selectedVFX.Contains(vfx))
-                    selectedVFX.Add(vfx);
-            }
-
-            testVFXAssets = selectedVFX.ToArray();
-            Debug.Log($"[AudioTestHarness] Loaded {testVFXAssets.Length} VFX from Resources");
         }
 
-        void SetupTestVFX()
+        private void SetActiveVFX(int index)
         {
-            float startX = -(testVFXAssets.Length - 1) * vfxSpacing / 2f;
-
-            for (int i = 0; i < testVFXAssets.Length; i++)
+            foreach (var vfx in _loadedVFX) { vfx.gameObject.SetActive(false); vfx.Stop(); }
+            currentIndex = index % Mathf.Max(1, _loadedVFX.Count);
+            if (_loadedVFX.Count > 0)
             {
-                var asset = testVFXAssets[i];
-                if (asset == null) continue;
-
-                // Create VFX GameObject
-                var go = new GameObject($"AudioVFX_{asset.name}");
-                go.transform.SetParent(transform);
-                go.transform.localPosition = new Vector3(startX + i * vfxSpacing, 0, 0);
-
-                // Add VisualEffect
-                var vfx = go.AddComponent<VisualEffect>();
-                vfx.visualEffectAsset = asset;
-
-                // Add VFXARBinder for depth/position data
-                var arBinder = go.AddComponent<VFXARBinder>();
-
-                // Add VFXAudioDataBinder for audio reactivity
-                var audioBinder = go.AddComponent<VFXAudioDataBinder>();
-                audioBinder.bindBeatDetection = true;
-
-                _testVFX.Add(vfx);
-
-                Debug.Log($"[AudioTestHarness] Created VFX: {asset.name} at ({go.transform.localPosition.x:F1}, 0, 0)");
+                var active = _loadedVFX[currentIndex];
+                active.gameObject.SetActive(true); active.Play();
+                currentVFXName = active.name;
             }
         }
 
-        void PlayClip(int index)
+        private void CycleToNextVFX() => SetActiveVFX(currentIndex + 1);
+
+        private void PlayTestTone()
         {
-            if (testAudioClips == null || index >= testAudioClips.Length) return;
-
-            var clip = testAudioClips[index];
-            if (clip == null) return;
-
-            audioSource.clip = clip;
-            audioSource.loop = true;
-            audioSource.Play();
-
-            // Wire to AudioBridge
-            if (_audioBridge != null)
+            int rate = 44100; float dur = 2f;
+            var clip = AudioClip.Create("TestTone", (int)(rate * dur), 1, rate, false);
+            float[] samples = new float[(int)(rate * dur)];
+            for (int i = 0; i < samples.Length; i++)
             {
-                // AudioBridge should auto-detect the AudioSource
+                float t = i / (float)rate;
+                samples[i] = 0.5f * Mathf.Sin(2 * Mathf.PI * 100f * t) + 0.3f * Mathf.Sin(2 * Mathf.PI * 1000f * t);
             }
-
-            Debug.Log($"[AudioTestHarness] Playing: {clip.name}");
+            clip.SetData(samples, 0);
+            _audioSource.clip = clip; _audioSource.Play();
         }
 
-        void OnGUI()
+        private void UpdateStatus()
         {
-            if (!showBeatIndicator) return;
+            var bands = Shader.GetGlobalVector("_AudioBands");
+            bassLevel = bands.x;
+            beatPulse = Shader.GetGlobalFloat("_BeatPulse");
+        }
 
-            // Beat indicator in top-left
-            var beatColor = Color.Lerp(Color.gray, Color.red, _currentBeatPulse);
-            GUI.backgroundColor = beatColor;
-            GUI.Box(new Rect(10, 10, 100, 30), $"Beat: {_beatCount}");
-
-            // Volume bar
-            GUI.backgroundColor = Color.green;
-            GUI.Box(new Rect(10, 50, _currentVolume * 200, 20), "");
-            GUI.backgroundColor = Color.white;
-            GUI.Label(new Rect(10, 50, 200, 20), $"Vol: {_currentVolume:F2}");
-
-            // Instructions
-            GUI.Label(new Rect(10, 80, 300, 20), "Space: Cycle audio | Tab: Dashboard | M: AudioMonitor");
+        private void OnGUI()
+        {
+            GUILayout.BeginArea(new Rect(10, 10, 250, 120));
+            GUILayout.Label($"=== Audio Test ===");
+            GUILayout.Label($"VFX: {currentVFXName}");
+            GUILayout.Label($"Bass: {bassLevel:F2} | Beat: {beatPulse:F2}");
+            GUILayout.Label($"Space=Cycle, T=Tone");
+            GUILayout.EndArea();
         }
     }
 }

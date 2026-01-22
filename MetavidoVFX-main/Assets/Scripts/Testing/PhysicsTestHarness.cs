@@ -1,283 +1,136 @@
-// PhysicsTestHarness - Spec 007 T-018 Physics Test Scene Setup
-// Validates: Camera velocity, gravity direction, AR mesh collision
-
-using System.Collections.Generic;
+// PhysicsTestHarness - Runtime test harness for Spec 007 physics VFX
 using UnityEngine;
 using UnityEngine.VFX;
-using MetavidoVFX.VFX.Binders;
+using System.Collections.Generic;
 
 namespace MetavidoVFX.Testing
 {
-    /// <summary>
-    /// Test harness for physics-driven VFX validation.
-    /// Tests camera velocity binding, gravity direction, and AR mesh collision.
-    /// Press G to cycle gravity direction, V to toggle velocity binding.
-    /// </summary>
     public class PhysicsTestHarness : MonoBehaviour
     {
-        [Header("VFX Setup")]
-        [Tooltip("VFX assets to test (leave empty to auto-load from Resources)")]
-        [SerializeField] private VisualEffectAsset[] testVFXAssets;
-        [SerializeField] private int maxVFXCount = 4;
-        [SerializeField] private float vfxSpacing = 2.5f;
+        [Header("Test Configuration")]
+        [SerializeField] private float cycleInterval = 5f;
 
-        [Header("Camera Movement")]
-        [SerializeField] private bool enableCameraMovement = true;
-        [SerializeField] private float moveSpeed = 3f;
-        [SerializeField] private float lookSpeed = 2f;
+        [Header("Physics Settings")]
+        [SerializeField] private Vector3 gravityDirection = new Vector3(0, -9.8f, 0);
+        [SerializeField] private float cameraSpeed = 5f;
 
-        [Header("Gravity Test")]
-        [SerializeField] private Vector3[] gravityDirections = new Vector3[]
-        {
-            new Vector3(0, -9.81f, 0),  // Default down
-            new Vector3(0, 9.81f, 0),   // Up
-            new Vector3(9.81f, 0, 0),   // Right
-            new Vector3(-9.81f, 0, 0),  // Left
-            new Vector3(0, 0, 9.81f),   // Forward
-            new Vector3(0, 0, -9.81f),  // Back
-        };
-        [SerializeField] private int currentGravityIndex = 0;
+        [Header("Status")]
+        [SerializeField] private string currentVFXName;
+        [SerializeField] private int currentIndex;
+        [SerializeField] private Vector3 cameraVelocity;
 
-        [Header("Runtime Status (Read-Only)")]
-        [SerializeField] private Vector3 _cameraVelocityDisplay = Vector3.zero;
-        [SerializeField] private float _cameraSpeedDisplay = 0f;
-        [SerializeField] private Vector3 _currentGravityDisplay = Vector3.zero;
-        [SerializeField] private int _activeVFXCount = 0;
-        [SerializeField] private int _bounceCollisionsDisplay = 0;
-
-        private List<VisualEffect> _testVFX = new();
-        private List<VFXPhysicsBinder> _physicsBinders = new();
-        private Vector3 _lastCameraPosition;
-        private Vector3 _cameraVelocity;
+        private List<VisualEffect> _loadedVFX = new();
+        private float _cycleTimer;
+        private Vector3 _lastCameraPos;
         private Camera _mainCamera;
 
-        void Start()
+        private void Start()
         {
             _mainCamera = Camera.main;
-            if (_mainCamera != null)
-                _lastCameraPosition = _mainCamera.transform.position;
-
-            if (testVFXAssets == null || testVFXAssets.Length == 0)
-                LoadDefaultVFX();
-
-            SetupTestVFX();
-            ApplyGravity(currentGravityIndex);
-
-            Debug.Log($"[PhysicsTestHarness] Initialized with {_testVFX.Count} VFX");
-            Debug.Log("[PhysicsTestHarness] Controls: WASD=Move, Mouse=Look, G=Cycle Gravity, V=Toggle Velocity");
+            if (_mainCamera != null) _lastCameraPos = _mainCamera.transform.position;
+            LoadPhysicsVFX();
+            if (_loadedVFX.Count > 0) SetActiveVFX(0);
+            Debug.Log($"[PhysicsTestHarness] Loaded {_loadedVFX.Count} VFX. WASD=Move, G=Gravity, Space=Cycle");
         }
 
-        void Update()
+        private void Update()
         {
-            // Camera movement
-            if (enableCameraMovement && _mainCamera != null)
-            {
-                UpdateCameraMovement();
-            }
+            HandleInput();
+            UpdateCameraVelocity();
+            UpdateGlobalShaderProps();
 
-            // Cycle gravity with G
+            if (cycleInterval > 0)
+            {
+                _cycleTimer += Time.deltaTime;
+                if (_cycleTimer >= cycleInterval) { _cycleTimer = 0; CycleToNextVFX(); }
+            }
+        }
+
+        private void HandleInput()
+        {
+            if (_mainCamera == null) return;
+
+            // WASD camera movement
+            Vector3 move = Vector3.zero;
+            if (Input.GetKey(KeyCode.W)) move += _mainCamera.transform.forward;
+            if (Input.GetKey(KeyCode.S)) move -= _mainCamera.transform.forward;
+            if (Input.GetKey(KeyCode.A)) move -= _mainCamera.transform.right;
+            if (Input.GetKey(KeyCode.D)) move += _mainCamera.transform.right;
+            if (Input.GetKey(KeyCode.Q)) move += Vector3.up;
+            if (Input.GetKey(KeyCode.E)) move -= Vector3.up;
+
+            _mainCamera.transform.position += move.normalized * cameraSpeed * Time.deltaTime;
+
+            // Toggle gravity direction
             if (Input.GetKeyDown(KeyCode.G))
             {
-                currentGravityIndex = (currentGravityIndex + 1) % gravityDirections.Length;
-                ApplyGravity(currentGravityIndex);
+                gravityDirection = gravityDirection.y < 0 
+                    ? new Vector3(0, 9.8f, 0) 
+                    : new Vector3(0, -9.8f, 0);
+                Debug.Log($"[PhysicsTestHarness] Gravity: {gravityDirection}");
             }
 
-            // Toggle velocity binding with V
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                ToggleVelocityBinding();
-            }
-
-            // Calculate camera velocity
-            if (_mainCamera != null)
-            {
-                Vector3 currentPos = _mainCamera.transform.position;
-                _cameraVelocity = (currentPos - _lastCameraPosition) / Time.deltaTime;
-                _lastCameraPosition = currentPos;
-            }
-
-            UpdateRuntimeStatus();
+            if (Input.GetKeyDown(KeyCode.Space)) CycleToNextVFX();
         }
 
-        void UpdateCameraMovement()
+        private void UpdateCameraVelocity()
         {
-            var t = _mainCamera.transform;
-
-            // WASD movement
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
-            Vector3 move = (t.right * h + t.forward * v) * moveSpeed * Time.deltaTime;
-            t.position += move;
-
-            // Q/E for up/down
-            if (Input.GetKey(KeyCode.Q)) t.position += Vector3.down * moveSpeed * Time.deltaTime;
-            if (Input.GetKey(KeyCode.E)) t.position += Vector3.up * moveSpeed * Time.deltaTime;
-
-            // Mouse look (hold right mouse button)
-            if (Input.GetMouseButton(1))
-            {
-                float mouseX = Input.GetAxis("Mouse X") * lookSpeed;
-                float mouseY = Input.GetAxis("Mouse Y") * lookSpeed;
-                t.Rotate(Vector3.up, mouseX, Space.World);
-                t.Rotate(Vector3.right, -mouseY, Space.Self);
-            }
+            if (_mainCamera == null) return;
+            cameraVelocity = (_mainCamera.transform.position - _lastCameraPos) / Time.deltaTime;
+            _lastCameraPos = _mainCamera.transform.position;
         }
 
-        void UpdateRuntimeStatus()
+        private void UpdateGlobalShaderProps()
         {
-            _cameraVelocityDisplay = _cameraVelocity;
-            _cameraSpeedDisplay = _cameraVelocity.magnitude;
-            _currentGravityDisplay = gravityDirections[currentGravityIndex];
-            _activeVFXCount = _testVFX.Count;
+            Shader.SetGlobalVector("_CameraVelocity", cameraVelocity);
+            Shader.SetGlobalVector("_GravityDirection", gravityDirection);
+            Shader.SetGlobalFloat("_CameraSpeed", cameraVelocity.magnitude);
+        }
 
-            // Count bounce collisions from physics binders
-            _bounceCollisionsDisplay = 0;
-            foreach (var binder in _physicsBinders)
+        private void LoadPhysicsVFX()
+        {
+            string[] names = { "swarm", "warp", "particles", "trails", "ribbons" };
+            foreach (var name in names)
             {
-                if (binder != null)
+                var asset = Resources.Load<VisualEffectAsset>($"VFX/Environment/{name}")
+                         ?? Resources.Load<VisualEffectAsset>($"VFX/People/{name}");
+                if (asset != null)
                 {
-                    // Note: Would need to track collisions in VFXPhysicsBinder
+                    var go = new GameObject($"VFX_{name}");
+                    go.transform.SetParent(transform);
+                    var vfx = go.AddComponent<VisualEffect>();
+                    vfx.visualEffectAsset = asset;
+                    go.AddComponent<VFXARBinder>();
+                    go.AddComponent<VFX.Binders.VFXPhysicsBinder>();
+                    vfx.Stop(); go.SetActive(false);
+                    _loadedVFX.Add(vfx);
                 }
             }
         }
 
-        void LoadDefaultVFX()
+        private void SetActiveVFX(int index)
         {
-            var allVFX = Resources.LoadAll<VisualEffectAsset>("VFX");
-            var selectedVFX = new List<VisualEffectAsset>();
-
-            // Pick VFX that work well for physics visualization
-            string[] preferredNames = { "spark", "particles", "flame", "point", "trail" };
-
-            foreach (var vfx in allVFX)
+            foreach (var vfx in _loadedVFX) { vfx.gameObject.SetActive(false); vfx.Stop(); }
+            currentIndex = index % Mathf.Max(1, _loadedVFX.Count);
+            if (_loadedVFX.Count > 0)
             {
-                if (selectedVFX.Count >= maxVFXCount) break;
-
-                foreach (var name in preferredNames)
-                {
-                    if (vfx.name.ToLower().Contains(name))
-                    {
-                        selectedVFX.Add(vfx);
-                        break;
-                    }
-                }
-            }
-
-            // Fill with any VFX if not enough
-            foreach (var vfx in allVFX)
-            {
-                if (selectedVFX.Count >= maxVFXCount) break;
-                if (!selectedVFX.Contains(vfx))
-                    selectedVFX.Add(vfx);
-            }
-
-            testVFXAssets = selectedVFX.ToArray();
-            Debug.Log($"[PhysicsTestHarness] Loaded {testVFXAssets.Length} VFX from Resources");
-        }
-
-        void SetupTestVFX()
-        {
-            float startX = -(testVFXAssets.Length - 1) * vfxSpacing / 2f;
-
-            for (int i = 0; i < testVFXAssets.Length; i++)
-            {
-                var asset = testVFXAssets[i];
-                if (asset == null) continue;
-
-                // Create VFX GameObject
-                var go = new GameObject($"PhysicsVFX_{asset.name}");
-                go.transform.SetParent(transform);
-                go.transform.localPosition = new Vector3(startX + i * vfxSpacing, 1, 0);
-
-                // Add VisualEffect
-                var vfx = go.AddComponent<VisualEffect>();
-                vfx.visualEffectAsset = asset;
-
-                // Add VFXARBinder for depth/position data
-                var arBinder = go.AddComponent<VFXARBinder>();
-
-                // Add VFXPhysicsBinder for physics
-                var physicsBinder = go.AddComponent<VFXPhysicsBinder>();
-                physicsBinder.enableVelocity = true;
-                physicsBinder.enableGravity = true;
-
-                _testVFX.Add(vfx);
-                _physicsBinders.Add(physicsBinder);
-
-                Debug.Log($"[PhysicsTestHarness] Created VFX: {asset.name} with physics binder");
+                var active = _loadedVFX[currentIndex];
+                active.gameObject.SetActive(true); active.Play();
+                currentVFXName = active.name;
             }
         }
 
-        void ApplyGravity(int index)
+        private void CycleToNextVFX() => SetActiveVFX(currentIndex + 1);
+
+        private void OnGUI()
         {
-            Vector3 gravity = gravityDirections[index];
-            foreach (var binder in _physicsBinders)
-            {
-                if (binder != null)
-                {
-                    binder.gravityDirection = gravity.normalized;
-                    binder.gravityStrength = gravity.magnitude;
-                }
-            }
-
-            string dirName = index switch
-            {
-                0 => "Down",
-                1 => "Up",
-                2 => "Right",
-                3 => "Left",
-                4 => "Forward",
-                5 => "Back",
-                _ => "Custom"
-            };
-
-            Debug.Log($"[PhysicsTestHarness] Gravity: {dirName} ({gravity})");
-        }
-
-        void ToggleVelocityBinding()
-        {
-            bool newState = !(_physicsBinders.Count > 0 && _physicsBinders[0] != null && _physicsBinders[0].enableVelocity);
-
-            foreach (var binder in _physicsBinders)
-            {
-                if (binder != null)
-                    binder.enableVelocity = newState;
-            }
-
-            Debug.Log($"[PhysicsTestHarness] Velocity binding: {(newState ? "ON" : "OFF")}");
-        }
-
-        void OnGUI()
-        {
-            // Velocity display
-            GUI.Label(new Rect(10, 10, 300, 20), $"Camera Speed: {_cameraSpeedDisplay:F2} m/s");
-            GUI.Label(new Rect(10, 30, 300, 20), $"Velocity: {_cameraVelocityDisplay}");
-            GUI.Label(new Rect(10, 50, 300, 20), $"Gravity [{currentGravityIndex}]: {_currentGravityDisplay}");
-
-            // Velocity indicator bar
-            float barWidth = Mathf.Clamp(_cameraSpeedDisplay * 20, 0, 200);
-            GUI.backgroundColor = Color.Lerp(Color.green, Color.red, _cameraSpeedDisplay / 10f);
-            GUI.Box(new Rect(10, 75, barWidth, 15), "");
-            GUI.backgroundColor = Color.white;
-
-            // Instructions
-            GUI.Label(new Rect(10, 100, 400, 20), "WASD: Move | Mouse+RMB: Look | G: Gravity | V: Velocity | Tab: Dashboard");
-        }
-
-        void OnDrawGizmos()
-        {
-            // Draw gravity direction
-            Gizmos.color = Color.yellow;
-            Vector3 gravity = gravityDirections[Mathf.Clamp(currentGravityIndex, 0, gravityDirections.Length - 1)];
-            Gizmos.DrawRay(transform.position, gravity.normalized * 2);
-            Gizmos.DrawWireSphere(transform.position + gravity.normalized * 2, 0.1f);
-
-            // Draw velocity direction
-            if (Application.isPlaying)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawRay(transform.position, _cameraVelocity.normalized * Mathf.Min(_cameraSpeedDisplay, 3));
-            }
+            GUILayout.BeginArea(new Rect(10, 10, 250, 140));
+            GUILayout.Label($"=== Physics Test ===");
+            GUILayout.Label($"VFX: {currentVFXName}");
+            GUILayout.Label($"Velocity: {cameraVelocity.magnitude:F1} m/s");
+            GUILayout.Label($"Gravity: {gravityDirection.y:F1}");
+            GUILayout.Label($"WASD=Move, G=Gravity, Space=Cycle");
+            GUILayout.EndArea();
         }
     }
 }
