@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -26,6 +27,18 @@ namespace MetavidoVFX.Debugging
         [SerializeField] private Color _boundColor = new Color(0.3f, 0.9f, 0.3f);
         [SerializeField] private Color _unboundColor = new Color(0.5f, 0.5f, 0.5f);
         [SerializeField] private Color _errorColor = new Color(0.9f, 0.3f, 0.3f);
+
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Total VFX count in scene")]
+        private int _totalVFXDisplay = 0;
+        [SerializeField, Tooltip("Currently selected VFX index")]
+        private int _selectedIndexDisplay = 0;
+        [SerializeField, Tooltip("Selected VFX name")]
+        private string _selectedVFXNameDisplay = "None";
+        [SerializeField, Tooltip("Property count for selected VFX")]
+        private int _propertyCountDisplay = 0;
+        [SerializeField, Tooltip("Bound properties count")]
+        private int _boundPropertiesDisplay = 0;
 
         private VisualEffect[] _allVFX;
         private int _selectedIndex = 0;
@@ -85,6 +98,19 @@ namespace MetavidoVFX.Debugging
                 RefreshProperties();
                 _lastRefreshTime = Time.time;
             }
+
+            UpdateRuntimeStatus();
+        }
+
+        private void UpdateRuntimeStatus()
+        {
+            _totalVFXDisplay = _allVFX?.Length ?? 0;
+            _selectedIndexDisplay = _selectedIndex;
+            _selectedVFXNameDisplay = (_allVFX != null && _selectedIndex < _allVFX.Length && _allVFX[_selectedIndex] != null)
+                ? _allVFX[_selectedIndex].name
+                : "None";
+            _propertyCountDisplay = _propertyCache.Count;
+            _boundPropertiesDisplay = _propertyCache.Count(p => p.IsBound);
         }
 
         private void RefreshVFXList()

@@ -55,6 +55,18 @@ namespace MetavidoVFX.H3M.Network
         [SerializeField] private bool _logDebugInfo = true;
         [SerializeField] private bool _showDebugGUI = false;
 
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Currently in a room")]
+        private bool _isInRoomDisplay = false;
+        [SerializeField, Tooltip("Current room name")]
+        private string _currentRoomDisplay = "None";
+        [SerializeField, Tooltip("Number of connected peers")]
+        private int _peerCountDisplay = 0;
+        [SerializeField, Tooltip("Local peer ID")]
+        private string _localPeerIdDisplay = "";
+        [SerializeField, Tooltip("WebRTC initialized")]
+        private bool _isInitializedDisplay = false;
+
         #endregion
 
         #region Public Properties
@@ -136,6 +148,17 @@ namespace MetavidoVFX.H3M.Network
             {
                 _call.Update();
             }
+
+            UpdateRuntimeStatus();
+        }
+
+        private void UpdateRuntimeStatus()
+        {
+            _isInRoomDisplay = IsInRoom;
+            _currentRoomDisplay = IsInRoom ? _roomName : "None";
+            _peerCountDisplay = _remoteHolograms.Count;
+            _localPeerIdDisplay = _localPeerId ?? "";
+            _isInitializedDisplay = _isInitialized;
         }
 
         private void OnDestroy()

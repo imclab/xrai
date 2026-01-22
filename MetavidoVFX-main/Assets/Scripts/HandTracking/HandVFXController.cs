@@ -71,6 +71,22 @@ namespace MetavidoVFX.HandTracking
         [SerializeField] private float pinchToBrushWidth = 0.1f;
         [SerializeField] private float audioToEmissionRate = 100f;
 
+        [Header("Runtime Status (Read-Only)")]
+        [SerializeField, Tooltip("Left hand tracking active")]
+        private bool _leftHandActiveDisplay = false;
+        [SerializeField, Tooltip("Right hand tracking active")]
+        private bool _rightHandActiveDisplay = false;
+        [SerializeField, Tooltip("Left hand velocity magnitude")]
+        private float _leftHandSpeedDisplay = 0f;
+        [SerializeField, Tooltip("Right hand velocity magnitude")]
+        private float _rightHandSpeedDisplay = 0f;
+        [SerializeField, Tooltip("Left hand pinching")]
+        private bool _leftPinchingDisplay = false;
+        [SerializeField, Tooltip("Right hand pinching")]
+        private bool _rightPinchingDisplay = false;
+        [SerializeField, Tooltip("Current tracking source")]
+        private string _trackingSourceDisplay = "None";
+
         // Runtime state
         private Vector3 leftHandPrevPos;
         private Vector3 rightHandPrevPos;
@@ -143,6 +159,28 @@ namespace MetavidoVFX.HandTracking
             UpdateVelocity();
             UpdateGestures();
             PushVFXParameters();
+            UpdateRuntimeStatus();
+        }
+
+        void UpdateRuntimeStatus()
+        {
+            _leftHandActiveDisplay = leftHandRoot != null && leftHandRoot.gameObject.activeInHierarchy;
+            _rightHandActiveDisplay = rightHandRoot != null && rightHandRoot.gameObject.activeInHierarchy;
+            _leftHandSpeedDisplay = leftHandVelocity.magnitude;
+            _rightHandSpeedDisplay = rightHandVelocity.magnitude;
+            _leftPinchingDisplay = leftPinching;
+            _rightPinchingDisplay = rightPinching;
+
+            // Determine tracking source
+            #if HOLOKIT_AVAILABLE && !UNITY_EDITOR
+            if (useHoloKitHandTracking && handTrackingManager != null && handTrackingManager.HandCount > 0)
+                _trackingSourceDisplay = "HoloKit";
+            else
+            #endif
+            if (useBodyPixFallback && bodyPartSegmenter != null && bodyPartSegmenter.IsReady)
+                _trackingSourceDisplay = "BodyPix";
+            else
+                _trackingSourceDisplay = "None";
         }
 
         void UpdateHandTracking()

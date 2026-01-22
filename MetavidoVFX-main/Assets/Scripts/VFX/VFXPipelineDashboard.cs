@@ -42,6 +42,20 @@ public class VFXPipelineDashboard : MonoBehaviour
     [SerializeField] Color _warningColor = new Color(0.9f, 0.7f, 0.2f);
     [SerializeField] Color _errorColor = new Color(0.9f, 0.3f, 0.3f);
 
+    [Header("Runtime Status (Read-Only)")]
+    [SerializeField, Tooltip("Current FPS")]
+    float _currentFpsDisplay = 0f;
+    [SerializeField, Tooltip("Average FPS over history")]
+    float _avgFpsDisplay = 0f;
+    [SerializeField, Tooltip("Active VFX count")]
+    int _activeVFXCountDisplay = 0;
+    [SerializeField, Tooltip("Total particle count")]
+    int _totalParticlesDisplay = 0;
+    [SerializeField, Tooltip("Pipeline ready (ARDepthSource)")]
+    bool _pipelineReadyDisplay = false;
+    [SerializeField, Tooltip("Bound binders count")]
+    int _boundBindersDisplay = 0;
+
     // FPS tracking
     float[] _fpsHistory = new float[60];
     int _fpsHistoryIndex = 0;
@@ -131,6 +145,19 @@ public class VFXPipelineDashboard : MonoBehaviour
 
         // Physics tracking (spec-007 T-016)
         UpdatePhysicsStats();
+
+        // Update runtime status display
+        UpdateRuntimeStatus();
+    }
+
+    void UpdateRuntimeStatus()
+    {
+        _currentFpsDisplay = _currentFps;
+        _avgFpsDisplay = _avgFps;
+        _activeVFXCountDisplay = _activeVFXCount;
+        _totalParticlesDisplay = _totalParticles;
+        _pipelineReadyDisplay = ARDepthSource.Instance != null && ARDepthSource.Instance.IsReady;
+        _boundBindersDisplay = _binders.Count(b => b != null && b.IsBound);
     }
 
     void UpdatePhysicsStats()
