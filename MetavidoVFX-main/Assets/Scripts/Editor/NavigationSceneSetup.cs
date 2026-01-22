@@ -21,6 +21,7 @@ namespace MetavidoVFX.Editor
         private const string ScenesPath = "Assets/Scenes";
         private const string SpecDemosPath = "Assets/Scenes/SpecDemos";
         private const string MainMenuScenePath = "Assets/Scenes/MainMenu.unity";
+        private const string PanelSettingsPath = "Assets/UI Toolkit/PanelSettings.asset";
 
         #region Menu Items
 
@@ -82,6 +83,46 @@ namespace MetavidoVFX.Editor
             Debug.Log("[NavigationSceneSetup] Build settings updated");
         }
 
+        [MenuItem("Tools/MetavidoVFX/Navigation/Fix Current Scene", priority = 104)]
+        public static void FixCurrentScene()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            int fixes = FixSceneComponents();
+            EditorSceneManager.MarkSceneDirty(scene);
+            Debug.Log($"[NavigationSceneSetup] Fixed {fixes} issues in {scene.name}");
+        }
+
+        [MenuItem("Tools/MetavidoVFX/Navigation/Fix All Scenes", priority = 105)]
+        public static void FixAllScenes()
+        {
+            EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+
+            int totalFixes = 0;
+
+            // Fix MainMenu
+            if (File.Exists(MainMenuScenePath))
+            {
+                EditorSceneManager.OpenScene(MainMenuScenePath, OpenSceneMode.Single);
+                totalFixes += FixSceneComponents();
+                EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+            }
+
+            // Fix all spec scenes
+            if (Directory.Exists(SpecDemosPath))
+            {
+                var files = Directory.GetFiles(SpecDemosPath, "*.unity", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    string normalizedPath = file.Replace("\\", "/");
+                    EditorSceneManager.OpenScene(normalizedPath, OpenSceneMode.Single);
+                    totalFixes += FixSceneComponents();
+                    EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+                }
+            }
+
+            Debug.Log($"[NavigationSceneSetup] Fixed {totalFixes} issues across all scenes");
+        }
+
         #endregion
 
         #region Scene Creation
@@ -112,7 +153,8 @@ namespace MetavidoVFX.Editor
 
             // Add MainMenuUI with UIDocument (creates UI programmatically in Start)
             var mainMenuObj = new GameObject("[MainMenuUI]");
-            mainMenuObj.AddComponent<UIDocument>();
+            var mainMenuDoc = mainMenuObj.AddComponent<UIDocument>();
+            mainMenuDoc.panelSettings = GetOrCreatePanelSettings();
             mainMenuObj.AddComponent<UI.Navigation.MainMenuUI>();
 
             // Save scene
@@ -143,7 +185,8 @@ namespace MetavidoVFX.Editor
 
             // Add SpecSceneUI with UIDocument (creates UI programmatically in Start)
             var specSceneObj = new GameObject("[SpecSceneUI]");
-            specSceneObj.AddComponent<UIDocument>();
+            var specSceneDoc = specSceneObj.AddComponent<UIDocument>();
+            specSceneDoc.panelSettings = GetOrCreatePanelSettings();
             specSceneObj.AddComponent<UI.Navigation.SpecSceneUI>();
 
             Debug.Log($"[NavigationSceneSetup] Added SpecSceneUI to {scene.name}");
@@ -235,6 +278,75 @@ namespace MetavidoVFX.Editor
 
             EditorBuildSettings.scenes = scenes.ToArray();
             Debug.Log($"[NavigationSceneSetup] Updated build settings with {scenes.Count} scenes");
+        }
+
+        #endregion
+
+        #region Component Fixes
+
+        /// <summary>
+        /// Fixes missing components and references in the current scene.
+        /// Returns the number of issues fixed.
+        /// </summary>
+        private static int FixSceneComponents()
+        {
+            int fixes = 0;
+            var panelSettings = GetOrCreatePanelSettings();
+
+            // Fix: Add SceneNavigator if missing
+            if (Object.FindAnyObjectByType<UI.Navigation.SceneNavigator>() == null)
+            {
+                var obj = new GameObject("[SceneNavigator]");
+                obj.AddComponent<UI.Navigation.SceneNavigator>();
+                fixes++;
+                Debug.Log("[NavigationSceneSetup] Added missing SceneNavigator");
+            }
+
+            // Fix: Assign PanelSettings to all UIDocuments
+            var uiDocs = Object.FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+            foreach (var doc in uiDocs)
+            {
+                if (doc.panelSettings == null && panelSettings != null)
+                {
+                    doc.panelSettings = panelSettings;
+                    EditorUtility.SetDirty(doc);
+                    fixes++;
+                    Debug.Log($"[NavigationSceneSetup] Assigned PanelSettings to {doc.gameObject.name}");
+                }
+            }
+
+            return fixes;
+        }
+
+        /// <summary>
+        /// Gets existing PanelSettings or creates a default one.
+        /// </summary>
+        private static PanelSettings GetOrCreatePanelSettings()
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelSettingsPath);
+            if (settings != null) return settings;
+
+            // Try alternate path
+            settings = AssetDatabase.LoadAssetAtPath<PanelSettings>("Assets/UI/PanelSettings.asset");
+            if (settings != null) return settings;
+
+            // Create new PanelSettings if none exist
+            string dir = Path.GetDirectoryName(PanelSettingsPath);
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            settings = ScriptableObject.CreateInstance<PanelSettings>();
+            settings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            settings.referenceResolution = new Vector2Int(1920, 1080);
+            settings.match = 0.5f;
+
+            AssetDatabase.CreateAsset(settings, PanelSettingsPath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[NavigationSceneSetup] Created PanelSettings at {PanelSettingsPath}");
+
+            return settings;
         }
 
         #endregion
