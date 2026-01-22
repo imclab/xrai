@@ -705,26 +705,28 @@ Extended documentation in parent repo:
 - `../KnowledgeBase/_HOLOGRAM_RECORDING_PLAYBACK.md` - Recording/playback specs
 - `../KnowledgeBase/_CLAUDE_CODE_UNITY_WORKFLOW.md` - Claude Code + Unity MCP workflow patterns
 
-## Specifications
+## Specifications (Updated 2026-01-22)
 
 All specs consolidated in `Assets/Documentation/specs/`:
 
-| ID | Name | Status |
-|----|------|--------|
-| 002 | H3M Foundation | ✅ Complete (Legacy) |
-| 003 | Hologram Conferencing | 🚧 In Progress |
-| 004 | MetavidoVFX Systems | ✅ Complete |
-| 005 | AR Texture Safety | ✅ Complete |
-| 006 | VFX Library & Pipeline | ✅ Complete |
-| 007 | VFX Multi-Mode | Ready |
-| 008 | Multimodal ML Foundations | Architecture Approved |
-| 009 | Icosa/Sketchfab Integration | 🚧 In Progress |
-| 010 | Normcore AR Multiuser | Draft |
-| 011 | Open Brush Integration | Draft |
-| 012 | Hand Tracking + Brush | 🚧 In Progress |
-| 013 | UI/UX Conferencing | Draft |
-| 014 | HiFi Hologram VFX | Planning |
-| 015 | VFX Binding Architecture | ✅ Complete |
+| ID | Name | Status | Notes |
+|----|------|--------|-------|
+| 002 | H3M Foundation | ✅ Complete | Legacy - use Hologram prefab |
+| 003 | Hologram Conferencing | **60%** | Recording ✅, WebRTC partial, Multiplayer ⬜ |
+| 004 | MetavidoVFX Systems | ✅ Complete | |
+| 005 | AR Texture Safety | ✅ Complete | |
+| 006 | VFX Library & Pipeline | ✅ Complete | |
+| **007** | **VFX Multi-Mode** | **✅ Complete** | All 6 phases, 19 tasks, audio/physics |
+| 008 | Multimodal ML Foundations | Phase 0 (15%) | Debug ✅, Tracking interfaces ⬜ |
+| 009 | Icosa/Sketchfab Integration | **70%** | Search ✅, Voice ✅, glTF ⬜ |
+| 010 | Normcore AR Multiuser | Draft | Architecture only |
+| 011 | Open Brush Integration | Draft | Architecture only |
+| **012** | **Hand Tracking + Brush** | **✅ Complete** | 5 providers, gestures, tests |
+| 013 | UI/UX Conferencing | Draft | Design only |
+| **014** | **HiFi Hologram VFX** | **50%** | Controller ✅, VFX quality ⬜ |
+| 015 | VFX Binding Architecture | ✅ Complete | Hybrid Bridge documented |
+
+**Test Scenes**: 12 spec demo scenes verified (0 missing)
 
 See `Assets/Documentation/specs/README.md` for full index.
 

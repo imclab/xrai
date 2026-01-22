@@ -134,20 +134,23 @@ Assets/Scenes/
 └── EditorTestScene.unity   # MCP testing scene
 ```
 
-### Sprint 1: Spec 007 - VFX Multi-Mode (5 days)
+### Sprint 1: Spec 007 - VFX Multi-Mode (5 days) ✅ COMPLETE
 
 **Dependency**: Spec 006 [COMPLETE]
+**Status**: All 6 phases complete (2026-01-22)
 
-| Day | Tasks | Test |
-|-----|-------|------|
-| 1 | T-001: VFXCategory integration | Unit: mode binding |
-| 1 | T-002: VFXModeController | Editor: mode switch |
-| 2 | T-004: BeatDetector | Unit: onset detection |
-| 2 | T-005: AudioBridge beat | Editor: audio → VFX |
-| 3 | T-008: AR mesh collision | Editor: particle bounce |
-| 3 | T-010: Hand velocity | Editor: velocity binding |
-| 4 | T-011-T-013: VFX audit | Matrix: 73 VFX × modes |
-| 5 | T-017-T-019: Device testing | Device: performance |
+| Day | Tasks | Test | Status |
+|-----|-------|------|--------|
+| 1 | T-001: VFXCategory integration | Unit: mode binding | ✅ |
+| 1 | T-002: VFXModeController | Editor: mode switch | ✅ |
+| 2 | T-004: BeatDetector | Unit: onset detection | ✅ |
+| 2 | T-005: AudioBridge beat | Editor: audio → VFX | ✅ |
+| 3 | T-008: AR mesh collision | Editor: particle bounce | ✅ |
+| 3 | T-010: Hand velocity | Editor: velocity binding | ✅ |
+| 4 | T-011-T-013: VFX audit | Matrix: 73 VFX × modes | ✅ |
+| 5 | T-017-T-019: Device testing | Device: performance | ✅ |
+
+**Test Scenes**: `Spec007_Audio_Test.unity`, `Spec007_Physics_Test.unity`
 
 ### Sprint 2: Spec 008 Core - Tracking Interfaces (5 days)
 
@@ -323,41 +326,43 @@ Assets/Scenes/
 | Audio latency | <20ms | Waveform brush |
 | Save 500 strokes | <2s | JSON serialization |
 
-### Sprint 13: Spec 012 - Hand Tracking + Brush Painting (5 days)
+### Sprint 13: Spec 012 - Hand Tracking + Brush Painting (5 days) ✅ COMPLETE
 
 **Dependency**: Sprint 1 (VFX Multi-Mode), existing HandVFXController/ARKitHandTracking code
+**Status**: All phases complete (2026-01-22)
 
-| Day | Tasks | Test |
-|-----|-------|------|
-| 1 | T1.1-T1.4: IHandTrackingProvider interface | Unit: interface contract |
-| 2 | T2.1-T2.4: Provider implementations | Unit: HoloKit, XRHands, BodyPix, Touch |
-| 3 | T3.1-T3.4: VFX integration | Editor: VFXHandBinder, property bindings |
-| 3-4 | T4.1-T4.3: Gesture system | Editor: pinch/grab detection |
-| 4-5 | T5.1-T5.4: Testing & verification | Device: iPhone + HoloKit |
+| Day | Tasks | Test | Status |
+|-----|-------|------|--------|
+| 1 | T1.1-T1.4: IHandTrackingProvider interface | Unit: interface contract | ✅ |
+| 2 | T2.1-T2.4: Provider implementations | Unit: HoloKit, XRHands, BodyPix, Touch | ✅ |
+| 3 | T3.1-T3.4: VFX integration | Editor: VFXHandBinder, property bindings | ✅ |
+| 3-4 | T4.1-T4.3: Gesture system | Editor: pinch/grab detection | ✅ |
+| 4-5 | T5.1-T5.4: Testing & verification | Device: iPhone + HoloKit | ✅ |
 
-**Key Deliverables**:
-- `Assets/Scripts/HandTracking/Interfaces/IHandTrackingProvider.cs`
-- `Assets/Scripts/HandTracking/Providers/*` (4 providers)
-- `Assets/Scripts/VFX/Binders/VFXHandBinder.cs`
-- Updated `HandVFXController.cs` using unified provider
+**Key Deliverables** (Completed):
+- `Assets/Scripts/HandTracking/Interfaces/IHandTrackingProvider.cs` ✅
+- `Assets/Scripts/HandTracking/Providers/*` (5 providers: HoloKit, XRHands, MediaPipe, BodyPix, Touch) ✅
+- `Assets/Scripts/VFX/Binders/VFXHandBinder.cs` ✅
+- Updated `HandVFXController.cs` using unified provider ✅
 
-**Note**: Leverages existing `HandVFXController.cs` (420 LOC) and `ARKitHandTracking.cs` (340 LOC) - refactors to unified interface, does NOT rewrite.
+**Test Scene**: `Spec012_Hand_Tracking.unity`
 
-### Sprint 14: Spec 012 - Brush Painting System (5 days)
+### Sprint 14: Spec 012 - Brush Painting System (5 days) ✅ COMPLETE
 
 **Dependency**: Sprint 13 (hand tracking providers)
+**Status**: All phases complete (2026-01-22)
 
-| Day | Tasks | Test |
-|-----|-------|------|
-| 1 | T5.1-T5.4: BrushController, GestureInterpreter | Unit: gesture→action |
-| 2 | T6.1-T6.3: BrushPalette, ColorPicker | Editor: selection UI |
-| 3 | T7.1-T7.3: StrokeManager, persistence | Unit: GraphicsBuffer |
-| 4-5 | T8.1-T8.4: VFX brush integration | Device: 8 brush types |
+| Day | Tasks | Test | Status |
+|-----|-------|------|--------|
+| 1 | T5.1-T5.4: BrushController, GestureInterpreter | Unit: gesture→action | ✅ |
+| 2 | T6.1-T6.3: BrushPalette, ColorPicker | Editor: selection UI | ✅ |
+| 3 | T7.1-T7.3: StrokeManager, persistence | Unit: GraphicsBuffer | ✅ |
+| 4-5 | T8.1-T8.4: VFX brush integration | Device: 8 brush types | ✅ |
 
-**Key Deliverables**:
-- `Assets/Scripts/Painting/` (6 scripts)
-- `Assets/Scripts/VFX/Binders/VFXBrushBinder.cs`
-- 8 brush VFX assets configured
+**Key Deliverables** (Completed):
+- `Assets/Scripts/Painting/` (6 scripts) ✅
+- `Assets/Scripts/VFX/Binders/VFXBrushBinder.cs` ✅
+- 8 brush VFX assets configured ✅
 
 ### Sprint 15: Spec 003 - Hologram Conferencing (5 days)
 
@@ -665,14 +670,15 @@ unity-editor -executeMethod BuildScript.BuildIOS
 | Spec | Tasks | Hours | Sprints | Status |
 |------|-------|-------|---------|--------|
 | 006 - VFX Library Pipeline | 17 | ~35h | - | ✅ Complete |
-| 007 - VFX Multi-Mode | 19 | ~40h | 1 | Ready |
-| 008 - Multimodal ML | 67 | ~140h | 7 | Arch Approved |
-| 009 - Icosa/Sketchfab | 14 | ~42h | 3 | Draft |
+| **007 - VFX Multi-Mode** | **19** | **~40h** | **1** | **✅ Complete** |
+| 008 - Multimodal ML | 67 | ~140h | 7 | Phase 0 (15%) |
+| 009 - Icosa/Sketchfab | 14 | ~42h | 3 | 70% (glTF pending) |
 | 010 - Normcore Multiuser | 15 | ~22h | 1 | Draft |
 | 011 - Open Brush | 25 | ~62h | 2 (14 days) | Draft |
-| **012 - Hand Tracking** | **24** | **~32h** | **2** | **Draft (P0)** |
-| 003 - Hologram Conferencing | TBD | TBD | 1 | Draft |
-| **Total** | **181+** | **~370h+** | **17** |
+| **012 - Hand Tracking** | **24** | **~32h** | **2** | **✅ Complete** |
+| 003 - Hologram Conferencing | TBD | TBD | 1 | 60% (WebRTC partial) |
+| **014 - HiFi Hologram VFX** | **8** | **~16h** | **1** | **50% (Controller ✅)** |
+| **Total** | **189+** | **~386h+** | **17** |
 
 ---
 
