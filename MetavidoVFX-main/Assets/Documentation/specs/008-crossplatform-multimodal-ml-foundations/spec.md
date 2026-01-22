@@ -14,8 +14,8 @@
 - ✅ SentisTrackingProvider - 24-part segmentation (~150 LOC) **NEW**
 - ✅ AudioProvider - FFT audio bands (~100 LOC)
 - ✅ MockTrackingProvider - Editor testing with keyboard controls (~280 LOC) **NEW**
+- ✅ ARKitFaceProvider - Native 52 blendshapes + mesh (~350 LOC) **NEW**
 - ✅ Hand tracking via spec 012 (5 providers: HoloKit, XRHands, MediaPipe, BodyPix, Touch)
-- ⬜ ARKitFaceProvider - Native 52 blendshapes (pending)
 - ⬜ MediaPipeTrackingProvider - General fallback (pending)
 **Priority**: Native AR Foundation first, ML second (see FINAL_RECOMMENDATIONS.md)
 
