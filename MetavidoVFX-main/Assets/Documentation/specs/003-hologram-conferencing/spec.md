@@ -2,13 +2,17 @@
 
 **Feature Branch**: `003-hologram-conferencing`
 **Created**: 2026-01-14
-**Updated**: 2026-01-21
-**Status**: In Progress (Recording implemented 2026-01-21)
+**Updated**: 2026-01-22
+**Status**: Complete
 **Implementation**:
 - ✅ RecordingController.cs - Avfi-based MP4 recording
 - ✅ RecordingUI.cs - UI Toolkit record button/timer
 - ✅ RECORDING_ARCHITECTURE.md - Metavido/Avfi separation docs
-- ⬜ WebRTC multiplayer (pending)
+- ✅ HologramConferenceManager.cs - WebRTC conferencing using Byn.Awrtc (WebRtcVideoChat)
+- ✅ MetavidoWebRTCEncoder.cs - Encodes AR frames to Metavido format
+- ✅ MetavidoWebRTCDecoder.cs - Decodes Metavido frames with depth extraction
+- ✅ H3MSignalingClient.cs - WebSocket signaling for peer discovery
+- ✅ H3MWebRTCVFXBinder.cs - Binds remote streams to VFX
 **Input**: User description: "Optimal low memory way to record & playback holograms. Record person hologram, play it back & put it on desk. Use metavidovfx technique. Also multiplayer via webrtc video conferencing - streaming lidar depth info or metavidovfx encoded video live to drive vfx graph hologram of other connected users."
 
 ## Triple Verification (2026-01-20)

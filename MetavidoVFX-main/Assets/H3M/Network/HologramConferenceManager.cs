@@ -103,6 +103,7 @@ namespace MetavidoVFX.H3M.Network
             public GameObject gameObject;
             public VisualEffect vfx;
             public H3MWebRTCVFXBinder binder;
+            public MetavidoWebRTCDecoder decoder;  // Metavido frame decoder
             public Texture2D videoTexture;
             public RenderTexture colorTexture;
             public RenderTexture depthTexture;
@@ -403,76 +404,69 @@ namespace MetavidoVFX.H3M.Network
             var vfx = go.GetComponent<VisualEffect>();
             var binder = go.GetComponent<H3MWebRTCVFXBinder>();
 
-            // Create textures for VFX binding
-            var colorTex = new RenderTexture(1280, 720, 0, RenderTextureFormat.ARGB32);
-            var depthTex = new RenderTexture(640, 360, 0, RenderTextureFormat.RHalf);
-            colorTex.Create();
-            depthTex.Create();
+            // Add Metavido decoder for proper depth extraction
+            var decoder = go.GetComponent<MetavidoWebRTCDecoder>();
+            if (decoder == null)
+            {
+                decoder = go.AddComponent<MetavidoWebRTCDecoder>();
+            }
 
-            // Store hologram data
+            // Subscribe to decoder events for automatic VFX binding
+            decoder.OnFrameDecoded += (color, depth, metadata) =>
+            {
+                if (vfx != null)
+                {
+                    decoder.BindToVFX(vfx);
+                }
+            };
+
+            // Store hologram data (textures managed by decoder)
             var hologram = new RemoteHologram
             {
                 connectionId = connectionId,
                 gameObject = go,
                 vfx = vfx,
                 binder = binder,
+                decoder = decoder,
                 videoTexture = null, // Created on first frame
-                colorTexture = colorTex,
-                depthTexture = depthTex,
+                colorTexture = null, // Managed by decoder
+                depthTexture = null, // Managed by decoder
                 metadata = H3MStreamMetadata.Default
             };
             _remoteHolograms[connectionId] = hologram;
-
-            // Bind textures directly to VFX (binder gets reference from receiver)
-            if (vfx != null)
-            {
-                vfx.SetTexture("ColorMap", colorTex);
-                vfx.SetTexture("DepthMap", depthTex);
-            }
 
             Log($"Created hologram for {connectionId}");
         }
 
         private void UpdateHologramFrame(RemoteHologram hologram, IFrame frame)
         {
-            if (frame == null || hologram.colorTexture == null) return;
+            if (frame == null || hologram.decoder == null) return;
 
             // Use UnityMediaHelper.UpdateTexture to convert frame to Texture2D
             // This handles the frame format conversion (ABGR/I420p)
-            if (hologram.vfx != null)
-            {
-                // UpdateTexture manages texture creation/resizing
-                UnityMediaHelper.UpdateTexture(frame, ref hologram.videoTexture);
+            UnityMediaHelper.UpdateTexture(frame, ref hologram.videoTexture);
 
-                // Copy to render texture for VFX binding
-                if (hologram.videoTexture != null)
-                {
-                    Graphics.Blit(hologram.videoTexture, hologram.colorTexture);
-                }
+            // Feed the raw frame to Metavido decoder for depth extraction
+            // Decoder extracts: color (left half), depth (right bottom), camera metadata (barcode)
+            if (hologram.videoTexture != null)
+            {
+                hologram.decoder.DecodeFrame(hologram.videoTexture);
             }
+
+            // VFX binding happens automatically via decoder.OnFrameDecoded event
         }
 
         private void DestroyRemoteHologram(ConnectionId connectionId)
         {
             if (!_remoteHolograms.TryGetValue(connectionId, out var hologram)) return;
 
-            // Cleanup textures
-            if (hologram.colorTexture != null)
-            {
-                hologram.colorTexture.Release();
-                Destroy(hologram.colorTexture);
-            }
-            if (hologram.depthTexture != null)
-            {
-                hologram.depthTexture.Release();
-                Destroy(hologram.depthTexture);
-            }
+            // Cleanup video texture (decoder manages its own textures via OnDestroy)
             if (hologram.videoTexture != null)
             {
                 Destroy(hologram.videoTexture);
             }
 
-            // Destroy GameObject
+            // Destroy GameObject (decoder cleanup happens automatically via OnDestroy)
             if (hologram.gameObject != null)
             {
                 Destroy(hologram.gameObject);
