@@ -18,14 +18,15 @@
 | KB `_HOLOGRAM_RECORDING_PLAYBACK.md` | ✅ Verified | 40K detailed spec, Metavido format |
 | KB `_WEBRTC_MULTIUSER_MULTIPLATFORM_GUIDE.md` | ✅ Verified | Photon/Normcore/coherence comparison |
 | Online: [keijiro/Metavido](https://github.com/keijiro/Metavido) | ✅ Verified | Burnt-in-barcode metadata + squeezed depth |
-| Online: [Unity WebRTC](https://github.com/Unity-Technologies/com.unity.webrtc) | ⚠️ Conflict | Do NOT add - conflicts with WebRtcVideoChat plugin |
+| Online: [WebRtcVideoChat Asset](https://assetstore.unity.com/packages/tools/network/webrtc-video-chat-68030) | ✅ Installed | Third-party WebRTC - use CallApp pattern |
 | Online: [VideoSDK Guide](https://www.videosdk.live/developer-hub/webrtc/unity-webrtc-video-streaming-multiplayer-game) | ✅ Verified | Architecture for PC/mobile/VR streaming |
 
 ### Key Technical Findings
 
 1. **Metavido Format**: Embeds camera pose in barcode, depth/stencil via "squeezing" into frame
-2. **WebRTC**: Microsoft MR-WebRTC deprecated - use `com.unity.webrtc` or LiveKit SDK
-3. **SFU Scaling**: For 4+ users, use SRS or LiveKit SFU (not pure P2P)
+2. **WebRTC**: Use **WebRtcVideoChat** plugin (NOT com.unity.webrtc - duplicate framework conflicts on iOS)
+3. **Reference Implementation**: `Assets/3rdparty/WebRtcVideoChat/callapp/CallApp.cs` - signaling + video track pattern
+4. **SFU Scaling**: For 4+ users, use SRS or LiveKit SFU (not pure P2P)
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -230,9 +231,11 @@ Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer �
 
 ### Phase 2: Multiplayer Foundation
 
-- Add Unity WebRTC package
-- Implement signaling server (Node.js)
-- Implement `HologramConferenceManager`
+- Use **WebRtcVideoChat** plugin (already installed in `Assets/3rdparty/WebRtcVideoChat/`)
+- Reference `CallApp.cs` for signaling + video track pattern
+- Implement `HologramConferenceManager` using `ICall` interface
+- Create `MetavidoWebRTCEncoder.cs` - sends Metavido frames via video track
+- Create `MetavidoWebRTCDecoder.cs` - receives video frames → TextureDemuxer
 - **Deliverable**: 2-user hologram conference
 
 ### Phase 3: Optimization & Scale
@@ -249,13 +252,26 @@ Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer �
 ### Packages Required
 
 - `jp.keijiro.metavido` v5.1.1 (already installed)
-- ~~`com.unity.webrtc`~~ ⚠️ **DO NOT ADD** - conflicts with WebRtcVideoChat plugin (duplicate frameworks on iOS)
 - `jp.keijiro.vfxgraphassets` v3.10.1 (already installed)
-- **WebRtcVideoChat** (already in `Assets/3rdparty/WebRtcVideoChat/`) - use for Phase 2
+- **WebRtcVideoChat** (already in `Assets/3rdparty/WebRtcVideoChat/`) - **PRIMARY WebRTC solution**
+
+### WebRtcVideoChat Key Classes
+
+| Class | Location | Purpose |
+|-------|----------|---------|
+| `CallApp.cs` | `callapp/` | Reference implementation for video calls |
+| `ICall` interface | `scripts/` | Abstract call interface |
+| `BasicCall` | `scripts/native/` | Native WebRTC implementation |
+| `FrameConverter.cs` | `scripts/` | Texture → frame conversion |
+| `FrameProcessor.cs` | `scripts/` | Frame processing pipeline |
+
+### ⚠️ DO NOT ADD
+
+- **`com.unity.webrtc`** - Causes duplicate framework conflicts on iOS (RTCVideoFrame, RTCDispatcher classes)
 
 ### Infrastructure Required
 
-- Signaling server (WebSocket)
+- Signaling server (WebSocket) - WebRtcVideoChat includes default signaling
 - TURN server (for NAT traversal)
 - Optional: SFU for 4+ users
 
@@ -263,13 +279,13 @@ Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer �
 
 ## Risk Assessment
 
-
 | Risk                             | Probability | Impact | Mitigation                     |
 | -------------------------------- | ----------- | ------ | ------------------------------ |
-| WebRTC Unity 6 compatibility     | Medium      | High   | Use LiveKit SDK as fallback    |
+| WebRtcVideoChat API changes      | Low         | Medium | Pin asset version, check updates |
 | High bandwidth on mobile         | Medium      | Medium | Adaptive bitrate, 720p default |
 | Thermal throttling during record | Low         | Medium | Cap at 30fps, 10min max        |
 | NAT traversal failures           | Medium      | High   | Deploy TURN server             |
+| Metavido frame size over WebRTC  | Medium      | Medium | Compress depth, reduce resolution |
 
 ---
 
@@ -278,8 +294,9 @@ Remote: Network → WebRTC Video Track → MetadataDecoder → TextureDemuxer �
 - KnowledgeBase: `_HOLOGRAM_RECORDING_PLAYBACK.md`
 - Metavido Package: `jp.keijiro.metavido`
 - Original Bibcam: https://github.com/keijiro/Bibcam
-- Unity WebRTC: https://github.com/Unity-Technologies/com.unity.webrtc
-- LiveKit Unity SDK: https://docs.livekit.io/client-sdk-unity/
+- **WebRtcVideoChat**: `Assets/3rdparty/WebRtcVideoChat/` (primary reference)
+- WebRtcVideoChat Call Scene: `Assets/3rdparty/WebRtcVideoChat/callapp/callscene.unity`
+- LiveKit Unity SDK: https://docs.livekit.io/client-sdk-unity/ (alternative for scaling)
 
 ---
 

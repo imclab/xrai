@@ -31,9 +31,14 @@ namespace MetavidoVFX.Editor
                 "Spec004_MetavidoVFX_Systems",
                 "Spec005_AR_Texture_Safety",
                 "Spec006_VFX_Library_Pipeline",
+                "Spec007_VFX_Multi_Mode",
                 "Spec008_ML_Foundations",
                 "Spec009_Icosa_Sketchfab",
-                "Spec012_Hand_Tracking"
+                "Spec010_Normcore_Multiuser",
+                "Spec011_OpenBrush_Integration",
+                "Spec012_Hand_Tracking",
+                "Spec013_UI_UX_Conferencing",
+                "Spec014_HiFi_Hologram_VFX"
             };
 
             int wiredCount = 0;
@@ -259,9 +264,14 @@ namespace MetavidoVFX.Editor
             CreateSpec004Scene();
             CreateSpec005Scene();
             CreateSpec006Scene();
+            CreateSpec007Scene();
             CreateSpec008Scene();
             CreateSpec009Scene();
+            CreateSpec010Scene();
+            CreateSpec011Scene();
             CreateSpec012Scene();
+            CreateSpec013Scene();
+            CreateSpec014Scene();
 
             Debug.Log("[SpecDemo] All demo scenes created successfully!");
             AssetDatabase.Refresh();
@@ -640,6 +650,255 @@ namespace MetavidoVFX.Editor
                 "- 26 joints: Wrist + 5 fingers × 5 joints each");
 
             SaveAndCloseDemoScene(scene, "Spec012_Hand_Tracking");
+        }
+
+        [MenuItem("H3M/Spec Demos/007 - VFX Multi-Mode Demo")]
+        public static void CreateSpec007Scene()
+        {
+            EnsureDemoFolderExists();
+
+            var scene = CreateBaseScene("Spec007_VFX_Multi_Mode");
+
+            CreateARSessionOrigin(scene);
+
+            // Add ARDepthSource
+            var depthSource = new GameObject("ARDepthSource");
+            SceneManager.MoveGameObjectToScene(depthSource, scene);
+            depthSource.AddComponent<ARDepthSource>();
+
+            // Add VFXModeController
+            var modeController = new GameObject("VFXModeController");
+            SceneManager.MoveGameObjectToScene(modeController, scene);
+            var modeCtrlType = System.Type.GetType("MetavidoVFX.VFX.VFXModeController, Assembly-CSharp");
+            if (modeCtrlType != null)
+            {
+                modeController.AddComponent(modeCtrlType);
+            }
+
+            // Add BeatDetector for audio reactivity
+            var beatDetector = new GameObject("BeatDetector");
+            SceneManager.MoveGameObjectToScene(beatDetector, scene);
+            beatDetector.AddComponent<AudioSource>();
+            var beatType = System.Type.GetType("MetavidoVFX.Audio.BeatDetector, Assembly-CSharp");
+            if (beatType != null)
+            {
+                beatDetector.AddComponent(beatType);
+            }
+
+            // Add AudioBridge
+            var audioBridge = new GameObject("AudioBridge");
+            SceneManager.MoveGameObjectToScene(audioBridge, scene);
+            audioBridge.AddComponent<AudioSource>();
+            audioBridge.AddComponent<AudioBridge>();
+
+            // Add sample VFX
+            var vfxGO = new GameObject("MultiModeVFX");
+            SceneManager.MoveGameObjectToScene(vfxGO, scene);
+            var vfx = vfxGO.AddComponent<VisualEffect>();
+            vfxGO.AddComponent<VFXARBinder>();
+
+            // Add info display
+            AddDemoInfoUI(scene, "Spec 007: VFX Multi-Mode Demo",
+                "Demonstrates VFX mode switching & audio reactivity.\n" +
+                "- VFXModeController: Screen/World/AR mode switching\n" +
+                "- BeatDetector: Spectral flux analysis for beat detection\n" +
+                "- AudioBridge: FFT frequency bands → VFX properties\n" +
+                "- Press M to cycle modes, B for beat visualization");
+
+            SaveAndCloseDemoScene(scene, "Spec007_VFX_Multi_Mode");
+        }
+
+        [MenuItem("H3M/Spec Demos/010 - Normcore Multiuser Demo")]
+        public static void CreateSpec010Scene()
+        {
+            EnsureDemoFolderExists();
+
+            var scene = CreateBaseScene("Spec010_Normcore_Multiuser");
+
+            CreateARSessionOrigin(scene);
+
+            // Add Normcore Realtime placeholder
+            var realtimeRoot = new GameObject("Normcore");
+            SceneManager.MoveGameObjectToScene(realtimeRoot, scene);
+
+            var realtime = new GameObject("Realtime");
+            realtime.transform.SetParent(realtimeRoot.transform);
+            // Normcore.Realtime component would be added if package available
+
+            // Add drawing system placeholder
+            var drawingSystem = new GameObject("MultiuserDrawingSystem");
+            SceneManager.MoveGameObjectToScene(drawingSystem, scene);
+
+            var brushManager = new GameObject("BrushManager");
+            brushManager.transform.SetParent(drawingSystem.transform);
+
+            var strokeRenderer = new GameObject("StrokeRenderer");
+            strokeRenderer.transform.SetParent(drawingSystem.transform);
+
+            // Add ARDepthSource for AR grounding
+            var depthSource = new GameObject("ARDepthSource");
+            SceneManager.MoveGameObjectToScene(depthSource, scene);
+            depthSource.AddComponent<ARDepthSource>();
+
+            // Add info display
+            AddDemoInfoUI(scene, "Spec 010: Normcore Multiuser Demo",
+                "Demonstrates AR multiplayer drawing with Normcore.\n" +
+                "- Realtime: Normcore networking for sync\n" +
+                "- BrushManager: Shared brush state across users\n" +
+                "- StrokeRenderer: Renders shared strokes\n" +
+                "- Requires: com.normalvr.normcore package");
+
+            SaveAndCloseDemoScene(scene, "Spec010_Normcore_Multiuser");
+        }
+
+        [MenuItem("H3M/Spec Demos/011 - Open Brush Integration Demo")]
+        public static void CreateSpec011Scene()
+        {
+            EnsureDemoFolderExists();
+
+            var scene = CreateBaseScene("Spec011_OpenBrush_Integration");
+
+            CreateARSessionOrigin(scene);
+
+            // Add Open Brush system placeholder
+            var openBrushRoot = new GameObject("OpenBrushSystem");
+            SceneManager.MoveGameObjectToScene(openBrushRoot, scene);
+
+            // URP Brush Manager
+            var brushManager = new GameObject("URPBrushManager");
+            brushManager.transform.SetParent(openBrushRoot.transform);
+
+            // Audio Reactive Controller (Reaktion-style)
+            var audioReactive = new GameObject("AudioReactiveController");
+            audioReactive.transform.SetParent(openBrushRoot.transform);
+            audioReactive.AddComponent<AudioSource>();
+
+            // Mirror Painting System
+            var mirrorSystem = new GameObject("MirrorPaintingSystem");
+            mirrorSystem.transform.SetParent(openBrushRoot.transform);
+
+            // Add ARDepthSource
+            var depthSource = new GameObject("ARDepthSource");
+            SceneManager.MoveGameObjectToScene(depthSource, scene);
+            depthSource.AddComponent<ARDepthSource>();
+
+            // Add hand tracking for brush control
+            var handMgr = new GameObject("HandTrackingProviderManager");
+            SceneManager.MoveGameObjectToScene(handMgr, scene);
+            var htpmType = System.Type.GetType("MetavidoVFX.HandTracking.HandTrackingProviderManager, Assembly-CSharp");
+            if (htpmType != null)
+            {
+                handMgr.AddComponent(htpmType);
+            }
+
+            // Add info display
+            AddDemoInfoUI(scene, "Spec 011: Open Brush Integration Demo",
+                "Demonstrates Open Brush URP brushes & audio reactivity.\n" +
+                "- URPBrushManager: URP-compatible brush rendering\n" +
+                "- AudioReactiveController: Reaktion-style audio modulation\n" +
+                "- MirrorPaintingSystem: Radial symmetry painting\n" +
+                "- Requires: Open Brush URP brush assets");
+
+            SaveAndCloseDemoScene(scene, "Spec011_OpenBrush_Integration");
+        }
+
+        [MenuItem("H3M/Spec Demos/013 - UI/UX Conferencing Demo")]
+        public static void CreateSpec013Scene()
+        {
+            EnsureDemoFolderExists();
+
+            var scene = CreateBaseScene("Spec013_UI_UX_Conferencing");
+
+            CreateARSessionOrigin(scene);
+
+            // Add UI system
+            var uiRoot = new GameObject("ConferencingUI");
+            SceneManager.MoveGameObjectToScene(uiRoot, scene);
+
+            // Auth panel placeholder
+            var authPanel = new GameObject("AuthPanel");
+            authPanel.transform.SetParent(uiRoot.transform);
+
+            // HUD system
+            var hud = new GameObject("ConferencingHUD");
+            hud.transform.SetParent(uiRoot.transform);
+
+            // Participant list
+            var participantList = new GameObject("ParticipantList");
+            participantList.transform.SetParent(hud.transform);
+
+            // Controls overlay
+            var controls = new GameObject("ControlsOverlay");
+            controls.transform.SetParent(hud.transform);
+
+            // Add ARDepthSource
+            var depthSource = new GameObject("ARDepthSource");
+            SceneManager.MoveGameObjectToScene(depthSource, scene);
+            depthSource.AddComponent<ARDepthSource>();
+
+            // Add sample hologram VFX
+            var hologramVFX = new GameObject("LocalHologram");
+            SceneManager.MoveGameObjectToScene(hologramVFX, scene);
+            var vfx = hologramVFX.AddComponent<VisualEffect>();
+            hologramVFX.AddComponent<VFXARBinder>();
+
+            // Add info display
+            AddDemoInfoUI(scene, "Spec 013: UI/UX Conferencing Demo",
+                "Demonstrates conferencing UI/UX design.\n" +
+                "- AuthPanel: Login/authentication flow\n" +
+                "- ConferencingHUD: Participant list, controls\n" +
+                "- Glassmorphism style: Translucent panels\n" +
+                "- Spatial UI: World-space overlays");
+
+            SaveAndCloseDemoScene(scene, "Spec013_UI_UX_Conferencing");
+        }
+
+        [MenuItem("H3M/Spec Demos/014 - HiFi Hologram VFX Demo")]
+        public static void CreateSpec014Scene()
+        {
+            EnsureDemoFolderExists();
+
+            var scene = CreateBaseScene("Spec014_HiFi_Hologram_VFX");
+
+            CreateARSessionOrigin(scene);
+
+            // Add ARDepthSource
+            var depthSource = new GameObject("ARDepthSource");
+            SceneManager.MoveGameObjectToScene(depthSource, scene);
+            depthSource.AddComponent<ARDepthSource>();
+
+            // Add HiFi Hologram VFX
+            var hifiVFX = new GameObject("HiFiHologramVFX");
+            SceneManager.MoveGameObjectToScene(hifiVFX, scene);
+            var vfx = hifiVFX.AddComponent<VisualEffect>();
+
+            // Try to load HiFi VFX asset
+            var vfxAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/H3M/VFX/hifi_hologram_people.vfx");
+            if (vfxAsset == null) vfxAsset = AssetDatabase.LoadAssetAtPath<VisualEffectAsset>("Assets/VFX/hifi_hologram_pointcloud.vfx");
+            if (vfxAsset != null) vfx.visualEffectAsset = vfxAsset;
+
+            hifiVFX.AddComponent<VFXARBinder>();
+
+            // Add HiFiHologramController
+            var controllerType = System.Type.GetType("MetavidoVFX.VFX.HiFiHologramController, Assembly-CSharp");
+            if (controllerType != null)
+            {
+                hifiVFX.AddComponent(controllerType);
+            }
+
+            // Add quality preset buttons placeholder
+            var qualityUI = new GameObject("QualityPresetUI");
+            SceneManager.MoveGameObjectToScene(qualityUI, scene);
+
+            // Add info display
+            AddDemoInfoUI(scene, "Spec 014: HiFi Hologram VFX Demo",
+                "Demonstrates high-fidelity hologram rendering.\n" +
+                "- HiFiHologramController: Quality preset management\n" +
+                "- RGB color sampling from ColorMap\n" +
+                "- Quality presets: Draft/Medium/High/Ultra\n" +
+                "- Press Q to cycle quality presets");
+
+            SaveAndCloseDemoScene(scene, "Spec014_HiFi_Hologram_VFX");
         }
 
         #endregion
