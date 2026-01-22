@@ -753,6 +753,11 @@ MonoBehaviour:
   _mockResolution: {x: 256, y: 192}
   _colorResolution: {x: 1920, y: 1080}
   _verboseLogging: 0
+  _isReadyDisplay: 0
+  _usingMockDataDisplay: 0
+  _depthResolutionDisplay: N/A
+  _computeTimeDisplay: 0
+  _colorMapAllocatedDisplay: 0
   _colorProvider: {fileID: 0}
   _enableVelocity: 0
 --- !u!4 &612868001
@@ -922,6 +927,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MetavidoVFX.HandTracking.HandTrackingProviderManager
   _autoInitialize: 1
   _enableFallback: 1
+  _preferredProviderId: 
+  _minimumPriority: 0
+  _debugLogging: 1
+  _showDebugGizmos: 0
+  _activeProviderDisplay: None
+  _providerCount: 0
+  _isTrackingActive: 0
+  _leftHandTracked: 0
+  _rightHandTracked: 0
 --- !u!4 &1052288873
 Transform:
   m_ObjectHideFlags: 0
@@ -1045,7 +1059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.CoreUtils::Unity.XR.CoreUtils.XROrigin
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1724059090}
   m_OriginBaseGameObject: {fileID: 1597434561}
   m_CameraFloorOffsetObject: {fileID: 0}
   m_RequestedTrackingOriginMode: 0

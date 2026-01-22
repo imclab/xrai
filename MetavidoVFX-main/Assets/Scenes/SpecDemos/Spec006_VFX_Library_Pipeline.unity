@@ -489,7 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.CoreUtils::Unity.XR.CoreUtils.XROrigin
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 4794047}
   m_OriginBaseGameObject: {fileID: 54182641}
   m_CameraFloorOffsetObject: {fileID: 0}
   m_RequestedTrackingOriginMode: 0
@@ -1023,6 +1023,11 @@ MonoBehaviour:
   hologramVFX: {fileID: 0}
   hologramVFXName: hologram
   _arDepthSource: {fileID: 0}
+  _pipelineReadyDisplay: 0
+  _totalVFXDisplay: 0
+  _activeVFXDisplay: 0
+  _boundVFXDisplay: 0
+  _activeVFXNames: []
 --- !u!4 &831654402
 Transform:
   m_ObjectHideFlags: 0
@@ -1148,6 +1153,12 @@ MonoBehaviour:
   _okColor: {r: 0.3, g: 0.9, b: 0.3, a: 1}
   _warningColor: {r: 0.9, g: 0.7, b: 0.2, a: 1}
   _errorColor: {r: 0.9, g: 0.3, b: 0.3, a: 1}
+  _currentFpsDisplay: 0
+  _avgFpsDisplay: 0
+  _activeVFXCountDisplay: 0
+  _totalParticlesDisplay: 0
+  _pipelineReadyDisplay: 0
+  _boundBindersDisplay: 0
 --- !u!4 &1234413374
 Transform:
   m_ObjectHideFlags: 0
@@ -1376,6 +1387,11 @@ MonoBehaviour:
   _mockResolution: {x: 256, y: 192}
   _colorResolution: {x: 1920, y: 1080}
   _verboseLogging: 0
+  _isReadyDisplay: 0
+  _usingMockDataDisplay: 0
+  _depthResolutionDisplay: N/A
+  _computeTimeDisplay: 0
+  _colorMapAllocatedDisplay: 0
   _colorProvider: {fileID: 0}
   _enableVelocity: 0
 --- !u!4 &1472476532
