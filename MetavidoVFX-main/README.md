@@ -26,10 +26,9 @@ tracking data using a burnt-in barcode extension. Please refer to the
 - Ensure AR Foundation packages are present (see `Packages/manifest.json`).
 - For Editor testing with device feed, use AR Foundation Remote 2 (see `ARFoundationRemoteSetup.md`).
 
-### Optional: Optimized AR → VFX bridge
-- Component: `OptimizedARVFXBridge` (attach to AR camera). Forwards AR occlusion depth/stencil + camera matrices to VFX; adaptive RT resolution.
-- Sample compute shader: `Assets/Shaders/DepthToWorld.compute` (produces `PositionMap` world positions; `_UseStencil` flag gates stencil).
-- Default VFX property names (configurable in inspector): `DepthMap`, `StencilMap`, `PositionMap`, `InverseView`, `InverseProj`, `DepthRange`.
+### Legacy: Optimized AR → VFX bridge (Deprecated)
+- `OptimizedARVFXBridge` is legacy. Use the **Hybrid Bridge** pipeline instead: `ARDepthSource` (singleton compute) + `VFXARBinder` (per‑VFX binding).
+- Current pipeline docs: `Assets/Documentation/PIPELINE_ARCHITECTURE.md` and `Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md`.
 
 ## Web Browser Demo
 
@@ -79,7 +78,8 @@ float3 mtvd_DistanceToWorldPosition(float2 uv, float d, float4 rayParams, float4
 - `InverseView` = `Matrix4x4.TRS(cameraPosition, cameraRotation, Vector3.one)` (NOT inverse VP!)
 - `d` = raw depth value (meters from ARKit)
 
-### Issues Found in Our Implementation
+### Issues Found in Our Implementation (Legacy Pipeline)
+This section documents the legacy Optimized/Optimal AR VFX bridge. The active pipeline is `ARDepthSource` + `VFXARBinder`.
 
 | Issue | File | Severity | Status |
 |-------|------|----------|--------|

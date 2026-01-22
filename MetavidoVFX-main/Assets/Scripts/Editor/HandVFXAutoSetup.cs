@@ -95,12 +95,24 @@ namespace MetavidoVFX.Editor
                 Debug.LogWarning("[HandVFX Setup] No VFX assets found in Resources/VFX");
             }
 
-            // Find and assign audio processor
+            // Find and assign AudioBridge (preferred)
+            var audioBridge = Object.FindFirstObjectByType<AudioBridge>();
+            if (audioBridge != null)
+            {
+                so.FindProperty("audioBridge").objectReferenceValue = audioBridge;
+                Debug.Log("[HandVFX Setup] ✓ Connected AudioBridge");
+            }
+            else
+            {
+                Debug.LogWarning("[HandVFX Setup] AudioBridge not found - add via H3M > VFX Pipeline Master > Create AudioBridge");
+            }
+
+            // Legacy fallback: EnhancedAudioProcessor
             var audioProcessor = Object.FindFirstObjectByType<Audio.EnhancedAudioProcessor>();
             if (audioProcessor != null)
             {
                 so.FindProperty("enhancedAudioProcessor").objectReferenceValue = audioProcessor;
-                Debug.Log("[HandVFX Setup] ✓ Connected EnhancedAudioProcessor");
+                Debug.Log("[HandVFX Setup] ✓ Connected EnhancedAudioProcessor (legacy)");
             }
 
             // Enable HoloKit hand tracking

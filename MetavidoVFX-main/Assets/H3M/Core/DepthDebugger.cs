@@ -11,7 +11,7 @@ namespace H3M.Core
     /// </summary>
     public class DepthDebugger : MonoBehaviour
     {
-        static void Log(string msg) { if (!VFXBinderManager.SuppressDepthDebugLogs) Debug.Log(msg); }
+        static void Log(string msg) { Debug.Log(msg); }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void AutoCreate()

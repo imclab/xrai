@@ -95,13 +95,26 @@ namespace MetavidoVFX.VFX.Binders
         }
 
         /// <summary>
-        /// Add AR data binder to GameObject
+        /// Add AR data binder to GameObject (Hybrid Bridge: ARDepthSource + VFXARBinder)
         /// </summary>
-        public static VFXARDataBinder AddARBinder(GameObject go)
+        public static VFXARBinder AddARBinder(GameObject go)
         {
-            var existing = go.GetComponent<VFXARDataBinder>();
+            var existing = go.GetComponent<VFXARBinder>();
             if (existing != null) return existing;
-            return go.AddComponent<VFXARDataBinder>();
+
+            // Remove legacy binder if present (using reflection to avoid compile dependency)
+            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            if (legacyType != null)
+            {
+                var legacy = go.GetComponent(legacyType);
+                if (legacy != null)
+                {
+                    if (Application.isPlaying) Object.Destroy(legacy);
+                    else Object.DestroyImmediate(legacy);
+                }
+            }
+
+            return go.AddComponent<VFXARBinder>();
         }
 
         /// <summary>
@@ -137,13 +150,20 @@ namespace MetavidoVFX.VFX.Binders
         /// </summary>
         public static void ClearBinders(GameObject go)
         {
-            var arBinders = go.GetComponents<VFXARDataBinder>();
+            var arBinders = go.GetComponents<VFXARBinder>();
             var audioBinders = go.GetComponents<VFXAudioDataBinder>();
 
             foreach (var b in arBinders) Object.Destroy(b);
             foreach (var b in audioBinders) Object.Destroy(b);
 
-            // Use reflection for hand binder to avoid compile-order issues
+            // Use reflection for legacy AR binder and hand binder to avoid compile-order issues
+            var legacyArType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            if (legacyArType != null)
+            {
+                var legacyArBinders = go.GetComponents(legacyArType);
+                foreach (var b in legacyArBinders) Object.Destroy(b);
+            }
+
             var handType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandDataBinder, Assembly-CSharp");
             if (handType != null)
             {

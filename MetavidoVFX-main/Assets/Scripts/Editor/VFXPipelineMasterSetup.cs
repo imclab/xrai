@@ -38,14 +38,19 @@ public static class VFXPipelineMasterSetup
         // 3. Create AudioBridge if missing
         CreateAudioBridge();
 
+        EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Creating VFXModeController...", 0.4f);
+
+        // 4. Create VFXModeController if missing (Spec 007)
+        CreateVFXModeController();
+
         EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Adding VFXARBinder to all VFX...", 0.5f);
 
-        // 4. Add VFXARBinder to all VFX with auto-detect
+        // 5. Add VFXARBinder to all VFX with auto-detect
         int bindersAdded = AddVFXARBinderToAllVFX();
 
         EditorUtility.DisplayProgressBar("VFX Pipeline Setup", "Adding debug tools...", 0.8f);
 
-        // 5. Add Dashboard and TestHarness
+        // 6. Add Dashboard and TestHarness
         AddPipelineDashboard();
         AddTestHarness();
 
@@ -55,11 +60,13 @@ public static class VFXPipelineMasterSetup
         var allVFX = Object.FindObjectsByType<VisualEffect>(FindObjectsSortMode.None);
         var binders = Object.FindObjectsByType<VFXARBinder>(FindObjectsSortMode.None);
         var audio = Object.FindFirstObjectByType<AudioBridge>();
+        var modeController = Object.FindFirstObjectByType<VFXModeController>();
 
         EditorUtility.DisplayDialog("VFX Pipeline Setup Complete",
             $"Hybrid Bridge Pipeline ready:\n\n" +
             $"ARDepthSource: {(source != null ? "Active" : "Failed")}\n" +
             $"AudioBridge: {(audio != null ? "Active" : "Failed")}\n" +
+            $"VFXModeController: {(modeController != null ? "Active" : "Failed")}\n" +
             $"VFXARBinder: {bindersAdded} added ({binders.Length} total)\n" +
             $"VFX in scene: {allVFX.Length}\n" +
             $"Legacy removed: {legacyRemoved}\n" +
@@ -270,6 +277,25 @@ public static class VFXPipelineMasterSetup
         Undo.RegisterCreatedObjectUndo(go, "Create AudioBridge");
 
         Debug.Log("[VFXPipelineMasterSetup] Created AudioBridge");
+        Selection.activeGameObject = go;
+    }
+
+    [MenuItem("H3M/VFX Pipeline Master/Pipeline Components/Create VFXModeController", false, 106)]
+    public static void CreateVFXModeController()
+    {
+        var existing = Object.FindFirstObjectByType<VFXModeController>();
+        if (existing != null)
+        {
+            Debug.Log($"[VFXPipelineMasterSetup] VFXModeController already exists on {existing.gameObject.name}");
+            Selection.activeGameObject = existing.gameObject;
+            return;
+        }
+
+        var go = new GameObject("VFXModeController");
+        go.AddComponent<VFXModeController>();
+        Undo.RegisterCreatedObjectUndo(go, "Create VFXModeController");
+
+        Debug.Log("[VFXPipelineMasterSetup] Created VFXModeController");
         Selection.activeGameObject = go;
     }
 
@@ -653,6 +679,11 @@ public static class VFXPipelineMasterSetup
         var audioGO = new GameObject("AudioBridge");
         audioGO.transform.SetParent(root.transform);
         audioGO.AddComponent<AudioBridge>();
+
+        // Add VFXModeController
+        var modeGO = new GameObject("VFXModeController");
+        modeGO.transform.SetParent(root.transform);
+        modeGO.AddComponent<VFXModeController>();
 
         // Add Dashboard
         var dashGO = new GameObject("PipelineDashboard");

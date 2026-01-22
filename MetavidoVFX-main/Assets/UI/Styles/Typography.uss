@@ -1,0 +1,122 @@
+/* Typography.uss - H3M Conferencing Type System */
+/* Based on SF Pro / Inter font family */
+
+:root {
+    /* Font Sizes */
+    --text-xs: 11px;
+    --text-sm: 13px;
+    --text-base: 15px;
+    --text-lg: 17px;
+    --text-xl: 22px;
+    --text-2xl: 28px;
+    --text-3xl: 34px;
+    --text-4xl: 42px;
+
+    /* Line Heights */
+    --leading-tight: 1.2;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.75;
+}
+
+/* Base Text */
+.text {
+    color: rgba(255, 255, 255, 0.95);
+    -unity-font-definition: resource('Fonts/Inter-Regular');
+}
+
+/* Text Sizes */
+.text-xs { font-size: 11px; }
+.text-sm { font-size: 13px; }
+.text-base { font-size: 15px; }
+.text-lg { font-size: 17px; }
+.text-xl { font-size: 22px; }
+.text-2xl { font-size: 28px; }
+.text-3xl { font-size: 34px; }
+.text-4xl { font-size: 42px; }
+
+/* Text Weights */
+.font-light {
+    -unity-font-style: normal;
+}
+
+.font-normal {
+    -unity-font-style: normal;
+}
+
+.font-medium {
+    -unity-font-style: bold;
+}
+
+.font-bold {
+    -unity-font-style: bold;
+}
+
+/* Text Colors */
+.text-primary { color: rgba(255, 255, 255, 0.95); }
+.text-secondary { color: rgba(255, 255, 255, 0.7); }
+.text-tertiary { color: rgba(255, 255, 255, 0.5); }
+.text-disabled { color: rgba(255, 255, 255, 0.3); }
+.text-success { color: rgba(52, 199, 89, 0.9); }
+.text-warning { color: rgba(255, 149, 0, 0.9); }
+.text-error { color: rgba(255, 59, 48, 0.9); }
+.text-info { color: rgba(90, 200, 250, 0.9); }
+
+/* Text Alignment */
+.text-left { -unity-text-align: middle-left; }
+.text-center { -unity-text-align: middle-center; }
+.text-right { -unity-text-align: middle-right; }
+
+/* Headings */
+.h1 {
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 16px;
+}
+
+.h2 {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 12px;
+}
+
+.h3 {
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 8px;
+}
+
+.h4 {
+    font-size: 17px;
+    -unity-font-style: bold;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 4px;
+}
+
+/* Body Text */
+.body {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.body-sm {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Caption */
+.caption {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Links */
+.link {
+    color: rgba(0, 122, 255, 0.9);
+}
+
+.link:hover {
+    color: rgba(0, 122, 255, 1.0);
+}

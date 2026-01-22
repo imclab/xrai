@@ -5,20 +5,36 @@
 ### Hand Tracking Properties
 ```
 HandPosition     Vector3    World position of wrist
-HandVelocity     Vector3    Velocity vector
-HandSpeed        float      Velocity magnitude
-TrailLength      float      For trail effects
-BrushWidth       float      Pinch-controlled width
+HandVelocity     Vector3    Velocity vector (m/s)
+HandSpeed        float      Velocity magnitude (m/s)
+TrailLength      float      For trail effects (speed * multiplier)
+BrushWidth       float      Pinch-controlled width (0.01-0.5)
 IsPinching       bool       True during pinch
+PinchStrength    float      0-1 pinch progress
 ```
 
-### Audio Properties
+### Audio Properties (AudioBridge)
 ```
-AudioVolume      float      0-1 overall volume
-AudioBass        float      0-1 low frequency
-AudioMid         float      0-1 mid frequency
-AudioTreble      float      0-1 high frequency
-AudioPitch       float      Estimated pitch
+AudioVolume      float      0-1 overall volume (RMS)
+AudioBass        float      0-1 low frequency (0-250Hz)
+AudioMid         float      0-1 mid frequency (250-2kHz)
+AudioTreble      float      0-1 high frequency (2k-20kHz)
+AudioSubBass     float      0-1 sub-bass (0-60Hz)
+AudioPitch       float      Estimated pitch (0-1)
+
+# Beat Detection (Spec 007)
+BeatPulse        float      0->1->0 impulse on beat onset
+BeatIntensity    float      Running beat intensity (0-1)
+```
+
+### Physics Properties (Spec 007)
+```
+Velocity         Vector3    Camera/Object velocity
+Speed            float      Velocity magnitude
+Gravity          Vector3    Gravity vector (e.g. 0, -9.8, 0)
+GravityStrength  float      Gravity magnitude
+BounceFactor     float      0-1 bounciness for mesh collision
+MeshPointCount   int        Number of vertices in AR mesh buffer
 ```
 
 ### AR Depth Properties
@@ -206,31 +222,38 @@ Required Properties:
 | Script | Path |
 |--------|------|
 | VFXGalleryUI | `Scripts/UI/VFXGalleryUI.cs` |
+| ARDepthSource | `Scripts/Bridges/ARDepthSource.cs` |
+| VFXARBinder | `Scripts/Bridges/VFXARBinder.cs` |
+| VFXModeController | `Scripts/VFX/VFXModeController.cs` |
 | HandVFXController | `Scripts/HandTracking/HandVFXController.cs` |
-| EnhancedAudioProcessor | `Scripts/Audio/EnhancedAudioProcessor.cs` |
+| AudioBridge | `Scripts/Bridges/AudioBridge.cs` |
+| BeatDetector | `Scripts/Audio/BeatDetector.cs` |
+| EnhancedAudioProcessor (legacy) | `Scripts/Audio/EnhancedAudioProcessor.cs` |
 | VFXAutoOptimizer | `Scripts/Performance/VFXAutoOptimizer.cs` |
-| VFXBinderManager | `Scripts/VFX/VFXBinderManager.cs` |
+| VFXBinderManager (legacy) | `Scripts/_Legacy/VFXBinderManager.cs` |
 | BodyPartSegmenter | `Scripts/Segmentation/BodyPartSegmenter.cs` |
 | MeshVFX | `Echovision/Scripts/MeshVFX.cs` |
 | SoundWaveEmitter | `Echovision/Scripts/SoundWaveEmitter.cs` |
-| VFXARDataBinder | `Scripts/VFX/Binders/VFXARDataBinder.cs` |
+| VFXARDataBinder (legacy) | `Scripts/_Legacy/VFXARDataBinder.cs` |
 | VFXAudioDataBinder | `Scripts/VFX/Binders/VFXAudioDataBinder.cs` |
 | VFXHandDataBinder | `Scripts/VFX/Binders/VFXHandDataBinder.cs` |
-| VFXBinderUtility | `Scripts/VFX/Binders/VFXBinderUtility.cs` |
+| VFXPhysicsBinder | `Scripts/VFX/Binders/VFXPhysicsBinder.cs` |
+| VFXBinderUtility (legacy) | `Scripts/VFX/Binders/VFXBinderUtility.cs` |
 | SegmentedDepthToWorld | `Resources/SegmentedDepthToWorld.compute` |
 
 ---
 
 ## Runtime VFX Setup
 
-For VFX spawned at runtime, use `VFXBinderUtility`:
+Preferred: add `VFXARBinder` on spawn and point it at `ARDepthSource`.  
+`VFXBinderUtility` is legacy and should be avoided unless maintaining older scenes.
 
 ```csharp
-// Auto-detect needed binders from VFX properties
-VFXBinderUtility.SetupVFXAuto(myVFX);
+// Preferred (simple example):
+// myVFX.gameObject.AddComponent<VFXARBinder>();
 
-// Or specify preset explicitly
-VFXBinderUtility.SetupVFX(myVFX, VFXBinderPreset.ARWithAudio);
+// Legacy (avoid unless required):
+VFXBinderUtility.SetupVFXAuto(myVFX);
 
 // Available presets:
 // - None, AROnly, AudioOnly, HandOnly
@@ -243,28 +266,31 @@ VFXBinderUtility.SetupVFX(myVFX, VFXBinderPreset.ARWithAudio);
 
 | Scenario | Use This Pipeline |
 |----------|-------------------|
-| Scene VFX (any) | VFXBinderManager (auto-finds all) |
-| Runtime-spawned VFX | VFXBinderUtility.SetupVFXAuto() |
-| H3M Holograms | HologramSource + HologramRenderer |
+| Scene VFX (any) | ARDepthSource + VFXARBinder (Hybrid Bridge) |
+| Runtime-spawned VFX | Add VFXARBinder on spawn (VFXBinderUtility is legacy) |
+| H3M Holograms | HologramSource + HologramRenderer (Spec 003 only) |
 | Hand-driven effects | HandVFXController |
-| Audio-reactive effects | EnhancedAudioProcessor |
+| Audio-reactive effects | AudioBridge |
 | AR mesh particles | MeshVFX |
 
 ### VFX Binding Architecture
 ```
 VFXLibraryManager.Start()
     ↓ RebuildFromChildren() or CreateVFXFromResources()
-    ↓ Notifies VFXBinderManager.RefreshVFXList()
+    ↓ Ensure ARDepthSource exists
+    ↓ Add/refresh VFXARBinder on VFX
     ↓
-VFXBinderManager.Update()
-    ↓ Binds AR data to ALL enabled VFX
-    ↓ DepthMap, StencilMap, ColorMap, PositionMap, etc.
+ARDepthSource.Update()
+    ↓ Computes shared PositionMap/VelocityMap
+VFXARBinder.Update()
+    ↓ Binds DepthMap, StencilMap, ColorMap, PositionMap, etc.
 ```
 
 **Key Points:**
-- VFXBinderManager binds globally to ALL VFX (no per-VFX binder needed)
-- VFXLibraryManager notifies VFXBinderManager after populating
-- VFX under ALL_VFX have: VisualEffect, VFXPropertyBinder, VFXARDataBinder, VFXCategory
+- ARDepthSource computes shared textures once (O(1) compute)
+- VFXARBinder binds per VFX (O(N) SetTexture)
+- VFXLibraryManager can auto-add binders and populate Resources/VFX
+- Legacy binders (VFXBinderManager/VFXARDataBinder) live in `Scripts/_Legacy/`
 - maxActiveVFX limits simultaneous enabled VFX (default: 10)
 
 ---
@@ -301,10 +327,9 @@ BODYPIX_AVAILABLE
 // 2. Assign ResourceSet to BodyPartSegmenter
 // Get from: Packages/jp.keijiro.bodypix/Resources/
 
-// 3. Check VFXBinderManager settings
-VFXBinderManager:
-  - useBodySegmentation = true
-  - computeSegmentedPositionMaps = true
+// 3. Validate BodyPix + pipeline wiring
+H3M > Body Segmentation > Setup BodyPix Defines
+H3M > VFX Pipeline Master > Testing > Validate All Bindings
 ```
 
 ### AR Texture Access Crash on Startup

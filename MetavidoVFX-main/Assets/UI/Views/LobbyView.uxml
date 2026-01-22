@@ -1,0 +1,98 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Common.uss" />
+
+    <!-- Root Container -->
+    <ui:VisualElement name="lobby-root" class="full-screen screen-bg">
+
+        <!-- Top Bar -->
+        <ui:VisualElement name="top-bar" class="flex-row glass-hud" style="padding: 12px 20px; justify-content: space-between; align-items: center; margin: 16px;">
+            <!-- User Info -->
+            <ui:VisualElement name="user-info" class="flex-row" style="align-items: center;">
+                <ui:VisualElement name="user-avatar" class="avatar-sm" style="margin-right: 12px;" />
+                <ui:VisualElement>
+                    <ui:Label name="user-name" text="User Name" class="body" />
+                    <ui:Label name="user-email" text="user@example.com" class="caption text-secondary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Actions -->
+            <ui:VisualElement class="flex-row" style="align-items: center;">
+                <ui:Button name="btn-settings" text="Settings" class="btn btn-secondary" style="margin-right: 8px;" />
+                <ui:Button name="btn-signout" text="Sign Out" class="btn btn-secondary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Main Content -->
+        <ui:VisualElement name="lobby-content" class="centered" style="flex-grow: 1; padding: 24px;">
+
+            <!-- Create/Join Card -->
+            <ui:VisualElement name="room-card" class="glass-modal container-lg">
+
+                <!-- Title -->
+                <ui:Label name="title" text="H3M Hologram Conference" class="h1 text-center" style="margin-bottom: 8px;" />
+                <ui:Label name="subtitle" text="Create or join a hologram room" class="body-sm text-center text-secondary" style="margin-bottom: 32px;" />
+
+                <!-- Create Room Section -->
+                <ui:VisualElement name="create-section" style="margin-bottom: 32px;">
+                    <ui:Label text="Create a new room" class="h4" style="margin-bottom: 12px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Room Name (optional)" class="form-label" />
+                        <ui:TextField name="room-name" placeholder="My Hologram Room" class="form-input" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="flex-row" style="margin-bottom: 16px;">
+                        <ui:VisualElement class="form-group" style="flex-grow: 1; margin-right: 12px;">
+                            <ui:Label text="Max Participants" class="form-label" />
+                            <ui:DropdownField name="max-participants" choices="2,4,6,8" index="1" class="form-input" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="form-group" style="flex-grow: 1;">
+                            <ui:Label text="Quality" class="form-label" />
+                            <ui:DropdownField name="quality-preset" choices="Low,Medium,High,Ultra" index="1" class="form-input" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:Button name="btn-create" text="Create Room" class="btn btn-primary" />
+                </ui:VisualElement>
+
+                <!-- Divider -->
+                <ui:VisualElement class="divider-text">
+                    <ui:VisualElement class="divider-line" />
+                    <ui:Label text="or" class="divider-label" />
+                    <ui:VisualElement class="divider-line" />
+                </ui:VisualElement>
+
+                <!-- Join Room Section -->
+                <ui:VisualElement name="join-section" style="margin-top: 24px;">
+                    <ui:Label text="Join existing room" class="h4" style="margin-bottom: 12px;" />
+
+                    <ui:VisualElement class="form-group">
+                        <ui:Label text="Room Code" class="form-label" />
+                        <ui:TextField name="room-code" placeholder="Enter 6-digit code" class="form-input" style="text-align: center; font-size: 20px; letter-spacing: 4px;" />
+                    </ui:VisualElement>
+
+                    <ui:Button name="btn-join" text="Join Room" class="btn btn-secondary" />
+                </ui:VisualElement>
+
+                <!-- Error Message -->
+                <ui:Label name="lobby-error" class="form-error text-center" style="display: none; margin-top: 16px;" />
+
+            </ui:VisualElement>
+
+            <!-- Recent Rooms -->
+            <ui:VisualElement name="recent-rooms" class="container-lg" style="margin-top: 24px;">
+                <ui:Label text="Recent Rooms" class="h4" style="margin-bottom: 12px;" />
+                <ui:VisualElement name="recent-list" class="glass-card">
+                    <ui:Label text="No recent rooms" class="body-sm text-secondary text-center" style="padding: 16px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
+        <!-- Footer -->
+        <ui:VisualElement name="footer" class="flex-row" style="justify-content: center; padding: 16px;">
+            <ui:Label text="H3M Hologram v1.0" class="caption text-tertiary" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

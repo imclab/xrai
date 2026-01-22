@@ -230,20 +230,18 @@ namespace MetavidoVFX.VFX.Binders
 
         Vector3 SampleVelocityMap()
         {
-            // Try to find VelocityMap from VFXBinderManager or VFXARDataBinder
+            // Try to find VelocityMap from ARDepthSource (Hybrid Bridge)
             if (_velocityMapRT == null)
             {
-                // Look for existing velocity map in scene
-                var manager = FindFirstObjectByType<VFXBinderManager>();
-                if (manager != null)
+                var depthSource = ARDepthSource.Instance;
+                if (depthSource == null)
                 {
-                    // Access private _velocityMapRT via reflection (or make it public)
-                    var field = typeof(VFXBinderManager).GetField("_velocityMapRT",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    if (field != null)
-                    {
-                        _velocityMapRT = field.GetValue(manager) as RenderTexture;
-                    }
+                    depthSource = FindFirstObjectByType<ARDepthSource>();
+                }
+
+                if (depthSource != null)
+                {
+                    _velocityMapRT = depthSource.VelocityMap;
                 }
             }
 
@@ -260,23 +258,40 @@ namespace MetavidoVFX.VFX.Binders
                 _readbackTexture = new Texture2D(1, 1, TextureFormat.RGBAFloat, false);
             }
 
-            // Sample center of velocity map with bounds validation
-            int sampleX = Mathf.Clamp(_velocityMapRT.width / 2, 0, _velocityMapRT.width - 1);
-            int sampleY = Mathf.Clamp(_velocityMapRT.height / 2, 0, _velocityMapRT.height - 1);
+            // Set active FIRST, then validate bounds against active texture
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = _velocityMapRT;
 
-            // Double-check bounds before ReadPixels
-            if (sampleX < 0 || sampleY < 0 || sampleX >= _velocityMapRT.width || sampleY >= _velocityMapRT.height)
+            try
             {
+                // Validate active texture dimensions
+                int activeWidth = RenderTexture.active.width;
+                int activeHeight = RenderTexture.active.height;
+
+                if (activeWidth <= 0 || activeHeight <= 0)
+                {
+                    return Vector3.zero;
+                }
+
+                // Sample center with bounds validation
+                int sampleX = Mathf.Clamp(activeWidth / 2, 0, activeWidth - 1);
+                int sampleY = Mathf.Clamp(activeHeight / 2, 0, activeHeight - 1);
+
+                _readbackTexture.ReadPixels(new Rect(sampleX, sampleY, 1, 1), 0, 0, false);
+                _readbackTexture.Apply();
+
+                Color velocityColor = _readbackTexture.GetPixel(0, 0);
+                return new Vector3(velocityColor.r, velocityColor.g, velocityColor.b);
+            }
+            catch (System.Exception)
+            {
+                // Silently handle ReadPixels errors (texture state race condition)
                 return Vector3.zero;
             }
-
-            RenderTexture.active = _velocityMapRT;
-            _readbackTexture.ReadPixels(new Rect(sampleX, sampleY, 1, 1), 0, 0, false);
-            _readbackTexture.Apply();
-            RenderTexture.active = null;
-
-            Color velocityColor = _readbackTexture.GetPixel(0, 0);
-            return new Vector3(velocityColor.r, velocityColor.g, velocityColor.b);
+            finally
+            {
+                RenderTexture.active = previous;
+            }
         }
 
         void BindVelocity(VisualEffect component)

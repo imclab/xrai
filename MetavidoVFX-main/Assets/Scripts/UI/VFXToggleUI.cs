@@ -812,6 +812,9 @@ namespace MetavidoVFX.UI
 
         void OnVFXToggled(VFXLibraryManager.VFXEntry entry, bool active)
         {
+            // Guard: Skip if UI not initialized (events fire during VFXLibraryManager.Start)
+            if (!_isInitialized || entry == null) return;
+
             // Update count label
             if (_countLabel != null && libraryManager != null)
             {
@@ -829,6 +832,9 @@ namespace MetavidoVFX.UI
         {
             var entries = libraryManager?.GetCategory(category);
             if (entries == null) return;
+
+            // Guard: UI may not be initialized yet (VFXLibraryManager fires events during Start)
+            if (_categoriesContainer == null || !_isInitialized) return;
 
             int activeInCategory = entries.Count(e => e.IsActive);
             bool isExpanded = _categoryExpanded.TryGetValue(category, out bool exp) && exp;

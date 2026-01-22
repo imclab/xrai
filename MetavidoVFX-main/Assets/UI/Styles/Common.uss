@@ -1,0 +1,279 @@
+/* Common.uss - Main stylesheet that imports all others */
+/* Include this in your UXML files */
+
+@import url("Colors.uss");
+@import url("Typography.uss");
+@import url("Glassmorphism.uss");
+
+/* Root Container */
+.root {
+    flex-grow: 1;
+    background-color: transparent;
+}
+
+/* Full Screen Container */
+.full-screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Centered Container */
+.centered {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Screen Background */
+.screen-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 10, 15, 0.95);
+}
+
+/* Container Widths */
+.container {
+    max-width: 480px;
+    align-self: center;
+    padding: 24px;
+}
+
+.container-sm {
+    max-width: 320px;
+    align-self: center;
+    padding: 16px;
+}
+
+.container-lg {
+    max-width: 640px;
+    align-self: center;
+    padding: 32px;
+}
+
+/* Logo */
+.logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+}
+
+.logo-sm {
+    width: 48px;
+    height: 48px;
+}
+
+/* Avatar */
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background-color: rgba(0, 122, 255, 0.3);
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+}
+
+/* Icon Button */
+.icon-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background-color: rgba(60, 60, 60, 0.5);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+}
+
+.icon-button:active {
+    background-color: rgba(40, 40, 40, 0.7);
+    scale: 0.95;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 6px;
+}
+
+.form-input {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 14px 16px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+}
+
+.form-input:focus {
+    border-color: rgba(0, 122, 255, 0.5);
+}
+
+.form-input.error {
+    border-color: rgba(255, 59, 48, 0.5);
+}
+
+.form-error {
+    font-size: 12px;
+    color: rgba(255, 59, 48, 0.9);
+    margin-top: 4px;
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    -unity-font-style: bold;
+    transition-duration: 0.15s;
+    -unity-text-align: middle-center;
+}
+
+.btn-primary {
+    background-color: rgba(0, 122, 255, 0.9);
+    color: white;
+    border-width: 0;
+}
+
+.btn-primary:hover {
+    background-color: rgba(0, 122, 255, 1.0);
+}
+
+.btn-primary:active {
+    background-color: rgba(0, 100, 220, 1.0);
+    scale: 0.98;
+}
+
+.btn-primary:disabled {
+    background-color: rgba(0, 122, 255, 0.4);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-secondary {
+    background-color: rgba(60, 60, 60, 0.5);
+    color: rgba(255, 255, 255, 0.95);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+}
+
+.btn-danger {
+    background-color: rgba(255, 59, 48, 0.9);
+    color: white;
+    border-width: 0;
+}
+
+.btn-danger:hover {
+    background-color: rgba(255, 59, 48, 1.0);
+}
+
+/* Social Login Buttons */
+.btn-google {
+    background-color: white;
+    color: rgba(0, 0, 0, 0.87);
+    border-width: 0;
+}
+
+.btn-apple {
+    background-color: black;
+    color: white;
+    border-width: 0;
+}
+
+/* Divider with text */
+.divider-text {
+    flex-direction: row;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.divider-label {
+    padding: 0 16px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    border-width: 3px;
+    border-color: rgba(0, 122, 255, 0.3);
+    border-top-color: rgba(0, 122, 255, 0.9);
+}
+
+/* Toast / Notification */
+.toast {
+    background-color: rgba(40, 40, 40, 0.95);
+    border-radius: 12px;
+    padding: 12px 20px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.toast-success {
+    border-left-width: 3px;
+    border-left-color: rgba(52, 199, 89, 0.9);
+}
+
+.toast-error {
+    border-left-width: 3px;
+    border-left-color: rgba(255, 59, 48, 0.9);
+}
+
+/* Status Badge */
+.badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    -unity-font-style: bold;
+}
+
+.badge-online {
+    background-color: rgba(52, 199, 89, 0.2);
+    color: rgba(52, 199, 89, 0.9);
+}
+
+.badge-offline {
+    background-color: rgba(142, 142, 147, 0.2);
+    color: rgba(142, 142, 147, 0.9);
+}
+
+.badge-busy {
+    background-color: rgba(255, 59, 48, 0.2);
+    color: rgba(255, 59, 48, 0.9);
+}

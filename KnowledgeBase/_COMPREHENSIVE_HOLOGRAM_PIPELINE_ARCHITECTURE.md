@@ -23,12 +23,14 @@ This document defines the optimal pipeline architecture for:
 
 | Pipeline | File | Status | Segmentation | Use Case |
 |----------|------|--------|--------------|----------|
-| **VFXBinderManager** | `VFXBinderManager.cs` | PRIMARY | Body (stencil) | All VFX AR data binding |
-| **PeopleOcclusionVFX** | `PeopleOcclusionVFXManager.cs` | LEGACY | Body (stencil) | Human silhouette VFX |
+| **Hybrid Bridge** | `ARDepthSource.cs` | **PRIMARY** | All segments | O(1) compute for all VFX |
+| **VFXARBinder** | `VFXARBinder.cs` | **PRIMARY** | Properties | Lightweight per-VFX binding |
 | **HandVFXController** | `HandVFXController.cs` | ACTIVE | Hands (21 joints) | Hand-driven brush VFX |
 | **MeshVFX (Echovision)** | `MeshVFX.cs` | ACTIVE | Environment | LiDAR mesh → VFX |
 | **SoundWaveEmitter** | `SoundWaveEmitter.cs` | ACTIVE | Audio | Expanding sound waves |
-| **H3M HologramSource** | `HologramSource.cs` | H3M | Body | Anchored hologram |
+| **VFXBinderManager** | `VFXBinderManager.cs` | ❌ LEGACY | Body (stencil) | Superseded by Hybrid Bridge |
+| **PeopleOcclusionVFX** | `PeopleOcclusionVFXManager.cs` | LEGACY | Body (stencil) | Human silhouette VFX |
+
 
 ### Missing Pipelines (Need Implementation)
 

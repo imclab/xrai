@@ -8,8 +8,8 @@ namespace H3M.Core
 {
     public class HologramSource : MonoBehaviour
     {
-        void Log(string msg) { if (!VFXBinderManager.SuppressHologramLogs) Debug.Log(msg); }
-        void LogWarning(string msg) { if (!VFXBinderManager.SuppressHologramLogs) Debug.LogWarning(msg); }
+        void Log(string msg) { Debug.Log(msg); }
+        void LogWarning(string msg) { Debug.LogWarning(msg); }
 
         [Header("Inputs")]
         [SerializeField] AROcclusionManager _occlusionManager;

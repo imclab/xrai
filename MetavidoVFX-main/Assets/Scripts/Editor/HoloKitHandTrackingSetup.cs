@@ -275,12 +275,24 @@ namespace MetavidoVFX.Editor
                 Debug.Log($"[HoloKit Setup] ✓ Loaded {allVFX.Length} VFX assets");
             }
 
-            // Try to find audio processor
+            // Try to find AudioBridge (preferred)
+            var audioBridge = Object.FindFirstObjectByType<AudioBridge>();
+            if (audioBridge != null)
+            {
+                so.FindProperty("audioBridge").objectReferenceValue = audioBridge;
+                Debug.Log("[HoloKit Setup] ✓ Connected AudioBridge");
+            }
+            else
+            {
+                Debug.LogWarning("[HoloKit Setup] AudioBridge not found - add via H3M > VFX Pipeline Master > Create AudioBridge");
+            }
+
+            // Legacy fallback: EnhancedAudioProcessor
             var audioProcessor = Object.FindFirstObjectByType<Audio.EnhancedAudioProcessor>();
             if (audioProcessor != null)
             {
                 so.FindProperty("enhancedAudioProcessor").objectReferenceValue = audioProcessor;
-                Debug.Log("[HoloKit Setup] ✓ Connected EnhancedAudioProcessor");
+                Debug.Log("[HoloKit Setup] ✓ Connected EnhancedAudioProcessor (legacy)");
             }
 
             so.ApplyModifiedProperties();

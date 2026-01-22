@@ -1,5 +1,15 @@
 # OptimizedARVFXBridge usage
 
+## Deprecated (Legacy)
+
+This document is **legacy** and not the primary pipeline anymore.
+
+**Use the Hybrid Bridge pipeline instead:**
+- `ARDepthSource` (singleton compute) + `VFXARBinder` (per‑VFX SetTexture)
+- See `Assets/Documentation/PIPELINE_ARCHITECTURE.md` and `Assets/Documentation/VFX_PIPELINE_FINAL_RECOMMENDATION.md`
+
+Keep this file only for historical reference when maintaining legacy scenes.
+
 Lightweight AR → VFX bridge (no scene changes required by default). Attach to the AR camera that already has `ARCameraManager` + `AROcclusionManager`.
 
 ## Setup

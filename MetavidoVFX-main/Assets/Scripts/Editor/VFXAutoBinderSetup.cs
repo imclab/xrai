@@ -24,6 +24,7 @@ namespace MetavidoVFX.Editor
             public bool needsAudio;
             public bool needsHand;
             public bool hasARBinder;
+            public bool hasLegacyARBinder;
             public bool hasAudioBinder;
             public bool hasHandBinder;
             public bool hasPropertyBinder;
@@ -81,7 +82,12 @@ namespace MetavidoVFX.Editor
 
                 // Check if already has required binders
                 bool needsSetup = false;
-                bool hasAR = vfx.GetComponent<VFXARDataBinder>() != null;
+                bool hasAR = vfx.GetComponent<VFXARBinder>() != null;
+                
+                // Use reflection for legacy binder to avoid compile dependency
+                var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+                bool hasLegacyAR = legacyType != null && vfx.GetComponent(legacyType) != null;
+                
                 bool hasAudio = vfx.GetComponent<VFXAudioDataBinder>() != null;
 
                 switch (preset)
@@ -90,7 +96,7 @@ namespace MetavidoVFX.Editor
                     case VFXBinderPreset.ARWithAudio:
                     case VFXBinderPreset.ARWithHand:
                     case VFXBinderPreset.Full:
-                        needsSetup = !hasAR;
+                        needsSetup = !hasAR || hasLegacyAR;
                         break;
                     case VFXBinderPreset.AudioOnly:
                         needsSetup = !hasAudio;
@@ -340,8 +346,18 @@ namespace MetavidoVFX.Editor
 
             // Check existing binders
             a.hasPropertyBinder = vfx.GetComponent<VFXPropertyBinder>() != null;
-            a.hasARBinder = vfx.GetComponent<VFXARDataBinder>() != null;
+            a.hasARBinder = vfx.GetComponent<VFXARBinder>() != null;
+            
+            // Use reflection for legacy binder
+            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            a.hasLegacyARBinder = legacyType != null && vfx.GetComponent(legacyType) != null;
+            
             a.hasAudioBinder = vfx.GetComponent<VFXAudioDataBinder>() != null;
+
+            if (a.hasLegacyARBinder && !a.hasARBinder)
+            {
+                a.detectedProperties.Add("LegacyARBinder");
+            }
 
             // Check for hand binder via reflection (compilation order issue)
             var handType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXHandDataBinder, Assembly-CSharp");
@@ -368,7 +384,15 @@ namespace MetavidoVFX.Editor
             // Add missing binders
             if (a.needsAR && !a.hasARBinder)
             {
-                Undo.AddComponent<VFXARDataBinder>(a.vfx.gameObject);
+                // Use reflection for legacy binder
+                var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+                var legacy = legacyType != null ? a.vfx.GetComponent(legacyType) : null;
+                
+                if (legacy != null)
+                {
+                    Undo.DestroyObjectImmediate(legacy);
+                }
+                Undo.AddComponent<VFXARBinder>(a.vfx.gameObject);
             }
             if (a.needsAudio && !a.hasAudioBinder)
             {

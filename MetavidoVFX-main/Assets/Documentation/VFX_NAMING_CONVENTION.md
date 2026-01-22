@@ -184,7 +184,7 @@ VFX assets are classified by analyzing their exposed properties to determine the
 | **SetVector (DepthRange)** | 0.01 | Per VFX instance |
 | **Total per VFX** | 0.15-0.20 | All bindings |
 
-### Multi-VFX Scaling (VFXBinderManager)
+### Multi-VFX Scaling (Hybrid Bridge / ARDepthSource)
 
 | VFX Count | Compute | Bind (total) | VFX Update | VFX Render | **Total** |
 |-----------|---------|--------------|------------|------------|-----------|
@@ -220,7 +220,7 @@ VFX assets are classified by analyzing their exposed properties to determine the
 
 | Bottleneck | Solution | Savings |
 |------------|----------|---------|
-| **Many VFX instances** | Use VFXBinderManager (shared compute) | 40-60% |
+| **Many VFX instances** | Use ARDepthSource + VFXARBinder (shared compute) | 40-60% |
 | **High particle count** | Enable VFXAutoOptimizer LOD | 20-50% |
 | **Segmentation overhead** | Disable unused body part maps | 0.3-0.5ms |
 | **Color RT blit** | Use camera texture directly when possible | 0.3ms |

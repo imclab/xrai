@@ -30,8 +30,8 @@ Assets/Tests/
 
 | Test Class | Purpose | Priority |
 |------------|---------|----------|
-| `VFXBinderTests` | Verify VFXBinderManager property binding | P1 |
-| `AudioProcessorTests` | Test FFT band calculations | P1 |
+| `VFXBinderTests` | Verify ARDepthSource + VFXARBinder binding | P1 |
+| `AudioProcessorTests` | Test AudioBridge bands (legacy: EnhancedAudioProcessor) | P1 |
 | `ConfigurationTests` | Validate ProjectSettings, manifest.json | P2 |
 | `BuildScriptTests` | Test scene references exist | P1 |
 
@@ -76,33 +76,31 @@ Assets/Tests/
 // Assets/Tests/EditMode/VFXBinderTests.cs
 using NUnit.Framework;
 using UnityEngine;
-using MetavidoVFX.VFX;
+// ARDepthSource is in the global namespace
 
 [TestFixture]
 public class VFXBinderTests
 {
     [Test]
-    public void VFXBinderManager_InitializesWithoutErrors()
+    public void ARDepthSource_InitializesWithoutErrors()
     {
-        var go = new GameObject("TestBinder");
-        var binder = go.AddComponent<VFXBinderManager>();
+        var go = new GameObject("TestARDepthSource");
+        var source = go.AddComponent<ARDepthSource>();
 
-        Assert.IsNotNull(binder);
-        Assert.IsTrue(binder.enabled);
+        Assert.IsNotNull(source);
+        Assert.IsTrue(source.enabled);
 
         Object.DestroyImmediate(go);
     }
 
     [Test]
-    public void VFXBinderManager_RequiresARCamera()
+    public void ARDepthSource_RequiresARManagers()
     {
-        var go = new GameObject("TestBinder");
-        var binder = go.AddComponent<VFXBinderManager>();
+        var go = new GameObject("TestARDepthSource");
+        var source = go.AddComponent<ARDepthSource>();
 
-        // Should log warning when no AR camera found
-        LogAssert.Expect(LogType.Warning, "VFXBinderManager: AR Camera not found");
-
-        binder.SendMessage("Start");
+        // TODO: assert on expected warning if AR managers are missing.
+        source.SendMessage("Start");
 
         Object.DestroyImmediate(go);
     }

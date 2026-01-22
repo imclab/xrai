@@ -43,6 +43,7 @@ public class VFXARBinder : MonoBehaviour
 
     // === Dimension IDs ===
     int _idMapWidth, _idMapHeight, _idResolution, _idTextureWidth;
+    int _idDimensions; // Vector2 for Rcam4-style VFX
 
     // === Hand Tracking IDs ===
     int _idHandPosition, _idHandVelocity, _idInteractable, _idInteractableRadius;
@@ -166,16 +167,58 @@ public class VFXARBinder : MonoBehaviour
     void Awake()
     {
         _vfx = GetComponent<VisualEffect>();
-
-        // Auto-detect and enable all bindings on startup
-        AutoDetectBindings();
     }
+
+    void OnEnable()
+    {
+        // Reset frame counter for delayed binding detection
+        _framesSinceEnable = 0;
+
+        // Re-detect bindings when enabled (VFX may not be ready in Awake)
+        if (_vfx == null) _vfx = GetComponent<VisualEffect>();
+        AutoDetectBindings();
+
+        // Request ColorMap allocation if this VFX needs it
+        if (_bindColorMapOverride && _idColor != 0)
+        {
+            var source = _source != null ? _source : ARDepthSource.Instance;
+            source?.RequestColorMap(true);
+        }
+    }
+
+    void OnDisable()
+    {
+        // Release ColorMap request when VFX is disabled
+        if (_bindColorMapOverride && _idColor != 0)
+        {
+            var source = _source != null ? _source : ARDepthSource.Instance;
+            source?.RequestColorMap(false);
+        }
+    }
+
+    // Frame counter for delayed binding detection
+    int _framesSinceEnable;
 
     void LateUpdate()
     {
         // Lazy load source if needed
         if (_source == null) _source = ARDepthSource.Instance;
         if (_source == null || _vfx == null) return;
+
+        // Re-detect bindings after a few frames if nothing was bound
+        // (VFX asset may load asynchronously)
+        _framesSinceEnable++;
+        if (_framesSinceEnable <= 3 && BoundCount == 0)
+        {
+            AutoDetectBindings();
+            if (BoundCount > 0)
+            {
+                Debug.Log($"[VFXARBinder] Late binding detection succeeded: {BoundCount} bindings on {_vfx.name}");
+                // Request ColorMap if newly detected
+                if (_bindColorMapOverride && _idColor != 0)
+                    _source?.RequestColorMap(true);
+            }
+        }
 
         // Use try-catch blocks to handle property binding errors gracefully
         // This prevents errors when VFX assets change or have different property types
@@ -228,6 +271,9 @@ public class VFXARBinder : MonoBehaviour
             {
                 if (_idMapWidth != 0 && _vfx.HasFloat(_idMapWidth)) _vfx.SetFloat(_idMapWidth, _source.PositionMap.width);
                 if (_idMapHeight != 0 && _vfx.HasFloat(_idMapHeight)) _vfx.SetFloat(_idMapHeight, _source.PositionMap.height);
+                // Dimensions as Vector2 (Rcam4-style)
+                if (_idDimensions != 0 && _vfx.HasVector2(_idDimensions))
+                    _vfx.SetVector2(_idDimensions, new Vector2(_source.PositionMap.width, _source.PositionMap.height));
             }
         }
         catch (System.Exception)
@@ -408,6 +454,8 @@ public class VFXARBinder : MonoBehaviour
         _idDepthOffset = FindFloatPropertyID(DepthOffsetAliases);
         _idMapWidth = _vfx.HasFloat("MapWidth") ? Shader.PropertyToID("MapWidth") : 0;
         _idMapHeight = _vfx.HasFloat("MapHeight") ? Shader.PropertyToID("MapHeight") : 0;
+        // Dimensions as Vector2 (Rcam4-style VFX use this instead of MapWidth/MapHeight)
+        _idDimensions = _vfx.HasVector2("Dimensions") ? Shader.PropertyToID("Dimensions") : 0;
 
         // Transform mode bindings (check for hologram properties)
         bool hasAnchor = _vfx.HasVector3("AnchorPos");
@@ -455,7 +503,8 @@ public class VFXARBinder : MonoBehaviour
     // Extended binding status
     public int ExtendedBoundCount => (_idHueShift != 0 ? 1 : 0) + (_idBrightness != 0 ? 1 : 0) +
                                      (_idAlpha != 0 ? 1 : 0) + (_idSpawnRate != 0 ? 1 : 0) +
-                                     (_idDepthOffset != 0 ? 1 : 0) + (_idMapWidth != 0 ? 1 : 0);
+                                     (_idDepthOffset != 0 ? 1 : 0) + (_idMapWidth != 0 ? 1 : 0) +
+                                     (_idDimensions != 0 ? 1 : 0);
 
     public bool SetMode(VFXCategoryType mode) { _currentMode = mode; return true; }
     public bool SupportsMode(VFXCategoryType mode) => true; // All modes supported
@@ -471,5 +520,6 @@ public class VFXARBinder : MonoBehaviour
         Debug.Log($"  Source: {(_source != null ? "Connected" : "Missing")}");
         Debug.Log($"  Mode: {_currentMode}");
         Debug.Log($"  Extended Bindings: {ExtendedBoundCount} (HueShift:{_idHueShift != 0}, Brightness:{_idBrightness != 0}, Alpha:{_idAlpha != 0})");
+        Debug.Log($"  Dimensions: {(_idDimensions != 0 ? "Bound (Vector2)" : "N/A")}");
     }
 }

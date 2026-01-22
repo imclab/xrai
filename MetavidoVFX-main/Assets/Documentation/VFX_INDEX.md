@@ -257,12 +257,24 @@ Unity's official learning templates (not production):
 
 ---
 
+## Compatibility Audit Distribution
+
+**Total VFX in Resources/VFX**: 73
+
+| Mode | Count | Focus |
+|------|-------|-------|
+| **People** | 41 | Human segmentation/occlusion |
+| **Environment** | 23 | World/AR mesh interaction |
+| **Hybrid** | 9 | Multi-source (e.g., NNCam + Depth) |
+
+---
+
 ## Data Source Requirements
 
 | Data Source | Required Component | Properties |
 |-------------|-------------------|------------|
-| **Depth** | VFXARDataBinder | DepthMap, PositionMap, RayParams |
-| **Stencil** | VFXARDataBinder | StencilMap, PositionMap |
+| **Depth** | VFXARBinder (primary) / VFXARDataBinder (legacy) | DepthMap, PositionMap, RayParams |
+| **Stencil** | VFXARBinder (primary) / VFXARDataBinder (legacy) | StencilMap, PositionMap |
 | **Keypoints** | NNCamKeypointBinder | KeypointBuffer (GraphicsBuffer) |
 | **SDF** | Custom SDF binder | SDF texture |
 | **Any** | None required | Works standalone |

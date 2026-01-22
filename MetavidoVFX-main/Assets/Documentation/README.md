@@ -62,14 +62,24 @@ This document explains all systems and components in the MetavidoVFX project.
 | [VFX_NAMING_CONVENTION.md](VFX_NAMING_CONVENTION.md) | Asset naming standards |
 | [VFX_INDEX.md](VFX_INDEX.md) | All 88 VFX assets indexed |
 
-### Specifications (in parent repo)
+### Specifications (in project)
 
 | Spec | Status | Description |
 |------|--------|-------------|
-| [006-vfx-library-pipeline](../../../specs/006-vfx-library-pipeline/) | ✅ Implemented | VFX Library & Hybrid Bridge Pipeline |
-| [009-icosa-sketchfab-integration](../../../specs/009-icosa-sketchfab-integration/) | Draft | Voice-to-object, Icosa + Sketchfab search |
-| [005-ar-texture-safety](../../../specs/005-ar-texture-safety/) | ✅ Implemented | TryGetTexture pattern |
-| [004-metavidovfx-systems](../../../specs/004-metavidovfx-systems/) | ✅ Implemented | Core VFX systems |
+| [003-hologram-conferencing](./specs/003-hologram-conferencing/) | 🚧 In Progress | Recording ✅, WebRTC pending |
+| [007-vfx-multi-mode](./specs/007-vfx-multi-mode/) | Ready | Mode switching (AR/Screen/World) |
+| [008-ml-foundations](./specs/008-crossplatform-multimodal-ml-foundations/) | P0 | Multimodal ML Architecture |
+| [009-icosa-sketchfab-integration](./specs/009-icosa-sketchfab-integration/) | 🚧 In Progress | Voice-to-object, Icosa + Sketchfab search |
+| [012-hand-tracking](./specs/012-hand-tracking/) | 🚧 In Progress | Providers ✅, Brush pending |
+
+### Completed & Legacy Specs (Moved to root `.deprecated/Specs/`)
+
+- **002-h3m-foundation**: Legacy hologram components
+- **004-metavidovfx-systems**: Core VFX systems
+- **005-ar-texture-safety**: TryGetTexture pattern
+- **006-vfx-library-pipeline**: Hybrid Bridge implementation
+- **014-vfx-binding-architecture**: Hybrid Bridge specification
+
 
 ---
 
@@ -124,27 +134,19 @@ This document explains all systems and components in the MetavidoVFX project.
 | **HandVFXController** | ✅ Hands | HandPosition, HandVelocity, BrushWidth, IsPinching |
 | **NNCamKeypointBinder** | ✅ Keypoints | KeypointBuffer (17 pose landmarks) |
 | **BodyPartSegmenter** | ✅ Segmentation | BodyPartMask, segmented PositionMaps |
-| **VFXBinderManager** | ❌ LEGACY | Replaced by ARDepthSource |
-| **VFXARDataBinder** | ❌ LEGACY | Replaced by VFXARBinder |
-| **EnhancedAudioProcessor** | ❌ LEGACY | Replaced by AudioBridge |
+| **VFXBinderManager** | ❌ LEGACY | Replaced by ARDepthSource (moved to `.deprecated/`) |
+| **VFXARDataBinder** | ❌ LEGACY | Replaced by VFXARBinder (moved to `.deprecated/`) |
+| **EnhancedAudioProcessor** | ❌ LEGACY | Replaced by AudioBridge (moved to `.deprecated/`) |
 
-### Deprecated/Redundant (DO NOT USE)
+### Deprecated/Redundant (MOVED to root `.deprecated/`)
 
 | Component | Reason | Alternative |
 |-----------|--------|-------------|
 | **VFXBinderManager** | Heavy centralized compute | ARDepthSource |
 | **VFXARDataBinder** | Redundant per-VFX binder | VFXARBinder |
-| **PeopleOcclusionVFXManager** | Creates own VFX at runtime | VFXARBinder |
+| **PeopleOcclusionVFXManager** | Legacy reference (kept in `_Legacy/`) | VFXARBinder |
 | **EnhancedAudioProcessor** | Complex audio binding | AudioBridge |
-
-### Pipeline Setup
-
-**One-click**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
-
-**Individual options**:
-- `H3M > VFX Pipeline Master > Pipeline Components > Create ARDepthSource`
-- `H3M > VFX Pipeline Master > Pipeline Components > Add VFXARBinder to All VFX`
-- `H3M > VFX Pipeline Master > Legacy Management > Mark All Legacy (Disable)`
+| **PIPELINE_ARCHITECTURE.md**| Superseded by Recommendation | VFX_PIPELINE_FINAL_RECOMMENDATION.md |
 
 ---
 
@@ -159,15 +161,7 @@ Floating world-space UI for selecting VFX effects.
 - Gaze-and-dwell selection (HoloKit)
 - Touch fallback
 - Spawn control mode (recommended) or asset swapping
-
-**Properties (VFX Graph):**
-```
-Spawn (bool)        - Controls particle emission
-HandPosition        - World position of hand
-HandVelocity        - Velocity vector
-AudioVolume         - Microphone volume 0-1
-AudioBass           - Low frequency amplitude
-```
+- **Reference**: Uses `PeopleOcclusionVFXManager` (legacy) for legacy asset swapping mode.
 
 ### VFX Selector UI (`VFXSelectorUI.cs`)
 
@@ -235,7 +229,7 @@ Legacy unified data binding for all VFX in scene.
 **Auto-binds:**
 - AR depth/stencil textures
 - Camera matrices (InverseView)
-- Audio data from EnhancedAudioProcessor
+- Audio data from AudioBridge (legacy: EnhancedAudioProcessor)
 - Hand tracking from HandVFXController
 
 ---
@@ -281,7 +275,9 @@ Fallback when HoloKit is not available. Uses XR Hands subsystem.
 
 ## Audio System
 
-### Enhanced Audio Processor (`EnhancedAudioProcessor.cs`)
+### Enhanced Audio Processor (`EnhancedAudioProcessor.cs`) - Legacy
+
+Use `AudioBridge` for current audio→VFX binding.
 
 Advanced audio analysis with frequency bands.
 
@@ -517,8 +513,9 @@ Assets/
 │   │   └── VFXCardInteractable.cs
 │   └── VFX/
 │       ├── VFXCategory.cs
-│       ├── VFXBinderManager.cs
 │       └── HumanParticleVFX.cs
+│   ├── _Legacy/
+│   │   └── _Legacy/VFXBinderManager.cs
 ├── UI/
 │   ├── Monitor.uss
 │   ├── Monitor.uxml

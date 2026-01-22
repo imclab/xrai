@@ -69,7 +69,7 @@ Assets/
 │   │   ├── HandVFXController.cs      # HoloKit hand-driven VFX
 │   │   └── ARKitHandTracking.cs      # XR Hands fallback
 │   ├── Audio/
-│   │   └── EnhancedAudioProcessor.cs # FFT frequency band analysis
+│   │   └── EnhancedAudioProcessor.cs # Legacy FFT frequency band analysis
 │   ├── Performance/
 │   │   ├── VFXAutoOptimizer.cs       # FPS-based adaptive quality
 │   │   ├── VFXLODController.cs       # Distance-based LOD culling
@@ -332,7 +332,15 @@ See `SignalingServer/README.md` for self-hosted signaling if needed.
 
 ## 5. Audio System Architecture
 
-### 5.1 EnhancedAudioProcessor (Modern)
+### 5.1 AudioBridge (Primary)
+
+**Location**: `Assets/Scripts/Bridges/AudioBridge.cs`
+
+**Features**:
+- Lightweight FFT bands → global shader props
+- Sets `_AudioBands` (Vector4) and `_AudioVolume` (float) for VFX
+
+### 5.2 EnhancedAudioProcessor (Legacy)
 
 **Location**: `Assets/Scripts/Audio/EnhancedAudioProcessor.cs` (287 lines)
 
@@ -511,34 +519,60 @@ Max Particles:       500,000
 
 ## 10. Data Flow Diagrams
 
-### 10.1 Complete System Data Flow
+### AR to VFX Pipeline (Hybrid Bridge)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    AR SESSION ORIGIN                         │
-├─────────────────────────────────────────────────────────────┤
-│  ARKit Sensors → ARCameraManager → Color texture            │
-│               → AROcclusionManager → Depth + Stencil        │
-│                              │                              │
-│                              ▼                              │
-│                       ARDepthSource                         │
-│      (single compute + optional rotation + mock data)       │
-│   Outputs: DepthMap, StencilMap, PositionMap, ColorMap,      │
-│            RayParams, InverseView                            │
-│                              │                              │
-│                              ▼                              │
-│                   VFXARBinder (per VFX)                     │
-│                              │                              │
-│                              ▼                              │
-│                           VFX Graph                         │
-│                              ▲                              │
-│  HandVFXController   AudioBridge   MeshVFX (GraphicsBuffer)  │
-│  (hands/gestures)    (audio)       (AR mesh)                 │
-│                              │                              │
-│                              ▼                              │
-│                     Performance Systems                      │
-│                 (VFXAutoOptimizer, VFXLOD)                  │
-└─────────────────────────────────────────────────────────────┘
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                         AR FOUNDATION (iOS/ARKit)                              ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                                ║
+║   iPhone LiDAR Sensor              iPhone Camera                               ║
+║         │                               │                                      ║
+║         ▼                               ▼                                      ║
+║   ┌─────────────┐                ┌─────────────┐                              ║
+║   │ Depth Frame │                │ Video Frame │                              ║
+║   │   256x192   │                │  1920x1440  │                              ║
+║   │ (landscape) │                │ (landscape) │                              ║
+║   └──────┬──────┘                └──────┬──────┘                              ║
+║          │                              │                                      ║
+║          ▼                              ▼                                      ║
+║   ┌─────────────────────────────────────────────────────────────┐             ║
+║   │                    ARKit Processing                          │             ║
+║   │  • Rotates frames based on device orientation                │             ║
+║   │  • Downsamples depth to match AR session config              │             ║
+║   │  • Generates human segmentation stencil                      │             ║
+║   └─────────────────────────────────────────────────────────────┘             ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+                                      │
+                                      ▼
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                         HYBRID BRIDGE DISPATCH                                 ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                                ║
+║  ┌─────────────────────────────────────────────────────────────────────────┐  ║
+║  │ STEP 1: Compute PositionMap (GPU - DepthToWorld.compute)                 │  ║
+║  ├─────────────────────────────────────────────────────────────────────────┤  ║
+║  │                                                                          │  ║
+║  │  Input:  AR Depth RT, InvVP matrix                                       │  ║
+║  │  Output: PositionMap (ARGBFloat, world positions)                        │  ║
+║  │                                                                          │  ║
+║  │  [numthreads(32,32,1)]                                                   │  ║
+║  │  void DepthToWorld(uint1 id) { ... worldPos = mul(_InvVP, clipPos); }    │  ║
+║  └─────────────────────────────────────────────────────────────────────────┘  ║
+║                                      │                                         ║
+║                                      ▼                                         ║
+║  ┌─────────────────────────────────────────────────────────────────────────┐  ║
+║  │ STEP 2: Bind to ALL VFX (VFXARBinder)                                   │  ║
+║  ├─────────────────────────────────────────────────────────────────────────┤  ║
+║  │                                                                          │  ║
+║  │  vfx.SetTexture("DepthMap", arDepth)                                     │  ║
+║  │  vfx.SetTexture("PositionMap", positionMapRT)                            │  ║
+║  │  vfx.SetMatrix4x4("InverseView", inverseViewMatrix)                      │  ║
+║  │                                                                          │  ║
+║  └─────────────────────────────────────────────────────────────────────────┘  ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---

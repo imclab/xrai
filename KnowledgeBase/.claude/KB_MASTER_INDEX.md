@@ -87,6 +87,14 @@
 - **Lines**: 6733
 - **Summary**: Web Interoperability & Spatial Media Standards
 
+### _CROSS_TOOL_ROLLOVER_GUIDE.md
+- **Lines**: 150
+- **Summary**: Guide for switching between Claude Code, Gemini, and Codex
+
+### _TOOL_INTEGRATION_MAP.md
+- **Lines**: 200
+- **Summary**: Map of how different AI tools integrate and share context
+
 ## 🗂️ GitHub Repo Categories
 
 *See _MASTER_GITHUB_REPO_KNOWLEDGEBASE.md for full list*

@@ -3989,3 +3989,57 @@ Read these for context:
 **Files Changed**: 4
 
 ---
+
+## 2026-01-21 16:46 - Commit bdf55ad7b
+
+**Message**: docs: Update LEARNING_LOG with session discoveries
+**Files Changed**: 1
+
+---
+
+## 2026-01-21 16:53 - Commit 27cfd6c80
+
+**Message**: feat: Holistic agent offloading + KB integration + screenshot automation
+**Files Changed**: 2
+
+---
+## 2026-01-21 17:23 - Session
+
+**Message**: docs: sync deprecated pipeline references to Hybrid Bridge (ARDepthSource + VFXARBinder) and align cross-tool rules
+**Files Changed**: repo docs + global/rules updates
+
+---
+## 2026-01-21 17:32 - Session
+
+**Message**: docs: synced RULES.md with GLOBAL_RULES cross-tool integration + Unity MCP optimization guidance
+**Files Changed**: RULES.md
+
+---
+
+---
+## 2026-01-21 17:45 - Session
+
+**Message**: docs: Documented Gemini Unity MCP setup and integration rules
+**Files Changed**: GEMINI.md, GLOBAL_RULES.md, KnowledgeBase/_GEMINI_UNITY_MCP_SETUP.md
+**Summary**: Established single source of truth for Gemini MCP configuration (UnityMCP v9.0.1 + claude-mem via uvx) and corrected GLOBAL_RULES tool integration matrix.
+
+---
+## 2026-01-21 18:10 - Session
+
+**Message**: refactor: Moved confirmed legacy scripts and prefabs to root .deprecated folder
+**Files Changed**: Moved 9+ files from MetavidoVFX-main/Assets/ to .deprecated/
+**Summary**: Triple-checked legacy status of VFXBinderManager, VFXARDataBinder, OptimalARVFXBridge, and others. Moved them outside of Assets/ to reduce scan noise and align with Hybrid Bridge architecture.
+
+---
+## 2026-01-21 18:15 - Session
+
+**Message**: fix: Restored H3MSignalingClient and WebRTCReceiver
+**Files Changed**: MetavidoVFX-main/Assets/H3M/Network/
+**Summary**: Restored signaling scripts to Assets/ as they are actively required by H3MWebRTCReceiver for Spec 003 (Hologram Conferencing). Legacy status was mislabeled in audit notes.
+
+---
+## 2026-01-21 18:35 - Session
+
+**Message**: docs: Reorganized documentation and specifications for clarity and reduced scan noise
+**Files Changed**: Moved 5+ docs to .deprecated/Docs, 5 specs to .deprecated/Specs, updated READMEs
+**Summary**: Consolidated and updated core documentation to align with Hybrid Bridge architecture. Moved superseded docs and completed specs out of active Assets folders to minimize AI tool context bloat.

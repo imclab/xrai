@@ -43,11 +43,7 @@
 
 | ID | Name | Status | Priority | Tasks |
 |----|------|--------|----------|-------|
-| 002 | [H3M Hologram Foundation](./002-h3m-foundation/spec.md) | ✅ Complete (Legacy) | P1 | Done |
 | **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **🚧 In Progress** | **P2** | Recording ✅, WebRTC ⬜ |
-| 004 | [MetavidoVFX Systems](./004-metavidovfx-systems/spec.md) | ✅ Complete | P1 | Done |
-| 005 | [AR Texture Safety](./005-ar-texture-safety/spec.md) | ✅ Complete | P1 | Done |
-| 006 | [VFX Library & Pipeline](./006-vfx-library-pipeline/spec.md) | ✅ Complete | P1 | Done |
 | 007 | [VFX Multi-Mode & Audio/Physics](./007-vfx-multi-mode/spec.md) | Ready | P1 | 19 tasks |
 | **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **Architecture Approved** | **P0** | **67 tasks** |
 | **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **🚧 In Progress** | **P1** | Core ✅, Voice/glTF ⬜ |
@@ -55,7 +51,18 @@
 | 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | 25 tasks |
 | **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **🚧 In Progress** | **P0** | Providers ✅, Brush ⬜ |
 | **013** | [**UI/UX Conferencing**](./013-ui-ux-conferencing/spec.md) | Draft | P2 | TBD |
-| **014** | [**VFX Binding Architecture**](./014-vfx-binding-architecture/spec.md) | ✅ Complete | P0 | Done |
+| **014b**| [**HiFi Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | Ready | P1 | Done |
+
+## Completed & Legacy Specs (Moved to root `.deprecated/Specs/`)
+
+| ID | Name | Reason |
+|----|------|--------|
+| 002 | H3M Hologram Foundation | ✅ Complete (Legacy - use Hologram prefab) |
+| 004 | MetavidoVFX Systems | ✅ Complete |
+| 005 | AR Texture Safety | ✅ Complete |
+| 006 | VFX Library & Pipeline | ✅ Complete |
+| 014 | VFX Binding Architecture | ✅ Complete (Hybrid Bridge) |
+
 
 ### Hologram Implementation Note
 

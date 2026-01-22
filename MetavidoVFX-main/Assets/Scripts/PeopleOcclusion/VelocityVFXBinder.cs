@@ -75,30 +75,46 @@ namespace MetavidoVFX
                 readbackTexture == null)
                 return;
 
-            // Calculate sample coordinates with bounds validation
-            sampleX = Mathf.Clamp((int)(samplePosition.x * velocityTexture.width), 0, velocityTexture.width - 1);
-            sampleY = Mathf.Clamp((int)(samplePosition.y * velocityTexture.height), 0, velocityTexture.height - 1);
-
-            // Double-check bounds before ReadPixels
-            if (sampleX < 0 || sampleY < 0 || sampleX >= velocityTexture.width || sampleY >= velocityTexture.height)
-                return;
-
-            // Read single pixel from GPU (expensive - use sparingly)
+            // Set active FIRST, then validate bounds against active texture
+            RenderTexture previous = RenderTexture.active;
             RenderTexture.active = velocityTexture;
-            readbackTexture.ReadPixels(new Rect(sampleX, sampleY, 1, 1), 0, 0, false);
-            readbackTexture.Apply();
-            RenderTexture.active = null;
 
-            Color velocityColor = readbackTexture.GetPixel(0, 0);
-            Vector3 velocity = new Vector3(velocityColor.r, velocityColor.g, velocityColor.b) * velocityScale;
-            float speed = velocityColor.a * velocityScale;
-
-            // Apply to VFX
-            component.SetVector3(velocityProperty, velocity);
-
-            if (component.HasFloat(speedProperty))
+            try
             {
-                component.SetFloat(speedProperty, speed);
+                // Validate active texture dimensions
+                int activeWidth = RenderTexture.active.width;
+                int activeHeight = RenderTexture.active.height;
+
+                if (activeWidth <= 0 || activeHeight <= 0)
+                    return;
+
+                // Calculate sample coordinates with bounds validation
+                sampleX = Mathf.Clamp((int)(samplePosition.x * activeWidth), 0, activeWidth - 1);
+                sampleY = Mathf.Clamp((int)(samplePosition.y * activeHeight), 0, activeHeight - 1);
+
+                // Read single pixel from GPU (expensive - use sparingly)
+                readbackTexture.ReadPixels(new Rect(sampleX, sampleY, 1, 1), 0, 0, false);
+                readbackTexture.Apply();
+
+                Color velocityColor = readbackTexture.GetPixel(0, 0);
+                Vector3 velocity = new Vector3(velocityColor.r, velocityColor.g, velocityColor.b) * velocityScale;
+                float speed = velocityColor.a * velocityScale;
+
+                // Apply to VFX
+                component.SetVector3(velocityProperty, velocity);
+
+                if (component.HasFloat(speedProperty))
+                {
+                    component.SetFloat(speedProperty, speed);
+                }
+            }
+            catch (System.Exception)
+            {
+                // Silently handle ReadPixels errors (texture state race condition)
+            }
+            finally
+            {
+                RenderTexture.active = previous;
             }
         }
 

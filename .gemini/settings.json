@@ -1,0 +1,15 @@
+{
+  "env": {
+    "UNITY_MCP_PORT": "6400",
+    "RIDER_MCP_PORT": "63342",
+    "TOKEN_EFFICIENCY_MODE": "aggressive",
+    "PREFER_JETBRAINS_MCP": "true"
+  },
+  "rules": [
+    "Always check Unity console via read_console after code changes.",
+    "Use JetBrains MCP (search_in_files_by_text) over grep for project-wide searches when Rider is active.",
+    "Use batch_execute for multiple Unity operations to minimize round-trips.",
+    "Use find_gameobjects (IDs only) before manage_gameobject to save tokens.",
+    "Skip file reads for context already provided in the current session."
+  ]
+}

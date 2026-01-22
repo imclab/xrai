@@ -10,6 +10,15 @@ MetavidoVFX is a Unity 6 AR/VFX demonstration project that visualizes volumetric
 **Primary Target**: iOS (ARKit)
 **Render Pipeline**: URP 17.2.0
 
+## Repository Practices
+
+- Keep `AGENTS.md` synchronized with the current codebase, docs/specs, and global rules.
+- Keep docs/rules/memory aligned across Codex, Claude Code, and Gemini.
+- Codex follows the **Rider + Claude Code + Unity (PRIMARY WORKFLOW)** as the third workflow.
+- Codex uses the same **Tool Selection** and **Fast Workflows** rules as Rider/Claude Code.
+- See `RULES.md` for the full Tool Selection and Fast Workflows tables.
+- Codex also follows the Cross-Tool Integration and Unity MCP Optimization guidance in `RULES.md`.
+
 ## Build Commands
 
 ### iOS Build (Primary)
@@ -45,7 +54,7 @@ idevicesyslog | grep Unity  # Manual fallback
 
 This gives us ~16ms latency, minimal CPU overhead, and excellent mobile performance.
 
-**Optimal for Multi-Hologram**: VFXBinderManager uses ONE compute dispatch for ALL VFX.
+**Optimal for Multi-Hologram**: ARDepthSource uses ONE compute dispatch for ALL VFX (Hybrid Bridge). Legacy binders (VFXBinderManager, VFXARDataBinder) are moved to root `.deprecated/`.
 
 | Holograms | GPU Time | Note |
 |-----------|----------|------|
@@ -96,10 +105,12 @@ AR Foundation → ARDepthSource (singleton) → VFXARBinder (per-VFX) → VFX
 | SdfVfx | 5 | SDF environment effects |
 
 **Legacy (Removed)**:
-- `VFXBinderManager.cs` - Replaced by ARDepthSource
-- `VFXARDataBinder.cs` - Replaced by VFXARBinder (moved to _Legacy folder)
+- `VFXBinderManager.cs` - Replaced by ARDepthSource (moved to root `.deprecated/`)
+- `VFXARDataBinder.cs` - Replaced by VFXARBinder (moved to root `.deprecated/`)
+- `OptimalARVFXBridge.cs` - Replaced by ARDepthSource (moved to root `.deprecated/`)
 
 **Quick Setup**: `H3M > VFX Pipeline Master > Setup Complete Pipeline (Recommended)`
+- **Note**: Legacy components are moved to root `.deprecated/` during setup.
 
 ### H3M Hologram System
 
@@ -220,7 +231,7 @@ Depth attachment format mismatch in editor - typically safe to ignore during Edi
 Ensure "Enable AR Remote" is checked in Project Settings and device/editor are on same network.
 
 ### Compute Shader Thread Group Mismatch
-`DepthToWorld.compute` uses `[numthreads(32,32,1)]`. Dispatch must use `ceil(width/32)` groups, not `ceil(width/8)`. Fixed in VFXBinderManager.cs (2026-01-14).
+`DepthToWorld.compute` uses `[numthreads(32,32,1)]`. Dispatch must use `ceil(width/32)` groups, not `ceil(width/8)`. Fixed in ARDepthSource.cs (2026-01-14).
 
 ### ⚠️ NullReferenceException on App Startup (AR Textures)
 AR Foundation texture getters throw internally when AR subsystem isn't ready. The `?.` operator doesn't protect you.
@@ -326,6 +337,12 @@ Editor utilities accessible via Unity menu bar:
 | `H3M > VFX Debug > Open VFX Graph for Selected` | Open selected VFX in Graph editor |
 | `H3M > VFX Debug > Reinitialize All VFX` | Reset all VFX |
 | `H3M > VFX Debug > Stop All VFX` / `Play All VFX` | Control playback |
+| **Testing** | |
+| `H3M > Testing > Enable Continuous Play Mode` | Prevent Editor from pausing on focus loss |
+| `H3M > Testing > AR Remote > Setup Optimal Testing Config` | Configure all settings for AR Remote |
+| `H3M > Testing > AR Remote > Verify Scene Setup` | Check AR components are present |
+| `H3M > Testing > AR Remote > Add Test Prefabs to Scene` | Add ARDepthSource, Dashboard, Inspector |
+| `H3M > Testing > AR Remote > Quick Start Guide` | Show connection instructions |
 | **Debug** | |
 | `H3M > Debug > Re-enable iOS Components` | Force re-enable HoloKit components after Play mode |
 | **Spec Demos** | |
@@ -477,7 +494,8 @@ H3M_HologramRig
 
 ### VFX Management
 - `Assets/Scripts/VFX/VFXCategory.cs` - Categorizes VFX by binding requirements (with SetCategory method)
-- `Assets/Scripts/VFX/VFXBinderManager.cs` - Unified data binding for all VFX
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - **PRIMARY** per-VFX binder for Hybrid Bridge
+- `Assets/Scripts/_Legacy/VFXBinderManager.cs` - Legacy centralized binder (do not use)
 - `Assets/Scripts/UI/VFXGalleryUI.cs` - World-space gaze-and-dwell VFX selector
 - `Assets/Scripts/UI/VFXSelectorUI.cs` - UI Toolkit VFX selector (screen-space)
 
@@ -487,7 +505,8 @@ H3M_HologramRig
 - `Assets/Scripts/Editor/HoloKitHandTrackingSetup.cs` - HoloKit rig setup
 
 ### Audio System
-- `Assets/Scripts/Audio/EnhancedAudioProcessor.cs` - Frequency band analysis
+- `Assets/Scripts/Bridges/AudioBridge.cs` - **PRIMARY** audio bands → global shader props
+- `Assets/Scripts/Audio/EnhancedAudioProcessor.cs` - Legacy frequency band analysis
 - `Assets/Echovision/Scripts/SoundWaveEmitter.cs` - Expanding sound waves for VFX
 
 ### Performance
@@ -527,11 +546,12 @@ DepthRange       Vector2    Near/far clipping
 ```
 
 ### VFX Binders (Runtime VFX Support)
-- `Assets/Scripts/VFX/Binders/VFXARDataBinder.cs` - AR data for spawned VFX
+- `Assets/Scripts/Bridges/VFXARBinder.cs` - Preferred per-VFX binder (works for runtime spawns)
+- `Assets/Scripts/_Legacy/VFXARDataBinder.cs` - Legacy AR data binder for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXAudioDataBinder.cs` - Audio bands for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXHandDataBinder.cs` - Hand tracking for spawned VFX
 - `Assets/Scripts/VFX/Binders/VFXPhysicsBinder.cs` - Optional velocity & gravity for spawned VFX
-- `Assets/Scripts/VFX/Binders/VFXBinderUtility.cs` - Auto-detect and setup helper
+- `Assets/Scripts/VFX/Binders/VFXBinderUtility.cs` - Legacy auto-setup helper (avoid unless required)
 - `Assets/Scripts/Editor/VFXAutoBinderSetup.cs` - Editor window for batch setup
 
 ## VFX Properties Reference
@@ -563,6 +583,9 @@ InverseView      Matrix4x4  Inverse view matrix
 InverseProjection Matrix4x4 Inverse projection matrix
 RayParams        Vector4    (0, 0, tan(fov/2)*aspect, tan(fov/2))
 DepthRange       Vector2    Near/far clipping (default 0.1-10m)
+MapWidth         float      Texture width (from PositionMap)
+MapHeight        float      Texture height (from PositionMap)
+Dimensions       Vector2    (width, height) - Rcam4-style VFX
 ```
 
 ### Physics Properties (Optional)
@@ -595,20 +618,21 @@ Normal Map       Texture2D  Alias for NormalMap
 KeypointBuffer   GraphicsBuffer  17 pose landmarks from BodyPartSegmenter
 ```
 
-**Enable via VFXBinderManager Inspector:**
+**Legacy (VFXBinderManager) Inspector:**
+Use only for legacy scenes. Prefer `ARDepthSource` + `VFXARBinder` for new work.
 - `Enable Velocity Binding` - toggles camera velocity input
 - `Velocity Scale` - multiplier (0.1-10)
 - `Enable Gravity Binding` - toggles gravity input
 - `Gravity Strength` - Y-axis value (-20 to 20)
 
-**Enable via VFXARDataBinder Inspector (per-VFX):**
+**Enable via VFXARDataBinder Inspector (per-VFX, legacy):**
 - `Bind Throttle` - toggles throttle/intensity input
 - `Bind Normal Map` - toggles surface normal computation
 - `Bind Velocity` - toggles camera velocity input
 - `Bind Gravity` - toggles gravity input
 - `Bind Audio` - toggles audio frequency band input
 
-**Runtime API:**
+**Runtime API (Legacy VFXBinderManager):**
 ```csharp
 // VFXBinderManager (global)
 VFXBinderManager.SetVelocityBindingEnabled(bool)

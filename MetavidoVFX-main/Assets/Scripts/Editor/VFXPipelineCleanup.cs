@@ -1,4 +1,4 @@
-// VFX Pipeline Cleanup - Removes redundant pipelines, keeps VFXBinderManager as primary
+// VFX Pipeline Cleanup - Removes redundant pipelines, uses Hybrid Bridge as primary
 // Created: 2026-01-14
 
 using UnityEngine;
@@ -38,7 +38,7 @@ namespace MetavidoVFX.Editor
             }
 
             Debug.Log($"[Pipeline Cleanup] ✓ Disabled {disabledCount} PeopleOcclusionVFXManager(s)");
-            Debug.Log("[Pipeline Cleanup] Reason: Redundant - creates its own VFX at runtime, conflicts with VFXBinderManager");
+            Debug.Log("[Pipeline Cleanup] Reason: Redundant - creates its own VFX at runtime, conflicts with ARDepthSource/VFXARBinder");
         }
 
         [MenuItem("H3M/Pipeline Cleanup/2. Find ARKitMetavidoBinder Components")]
@@ -86,7 +86,7 @@ namespace MetavidoVFX.Editor
                     Debug.Log($"  - {go.name}: {binder.GetType().Name}");
                 }
                 Debug.Log("[Pipeline Cleanup] Note: ARKitMetavidoBinder computes PositionMap. If VFX need world-space positions, keep it.");
-                Debug.Log("[Pipeline Cleanup] If VFX only need DepthMap/StencilMap/ColorMap, VFXBinderManager handles that.");
+                Debug.Log("[Pipeline Cleanup] If VFX only need DepthMap/StencilMap/ColorMap, use ARDepthSource + VFXARBinder.");
             }
         }
 
@@ -125,17 +125,31 @@ namespace MetavidoVFX.Editor
         {
             Debug.Log("=== VFX Data Source Verification ===\n");
 
-            // Check VFXBinderManager
-            var binderManager = Object.FindFirstObjectByType<VFXBinderManager>();
-            if (binderManager != null)
+            // Check ARDepthSource (Hybrid Bridge)
+            var depthSource = Object.FindFirstObjectByType<ARDepthSource>(FindObjectsInactive.Include);
+            if (depthSource != null)
             {
-                Debug.Log($"✓ VFXBinderManager: FOUND on '{binderManager.gameObject.name}'");
-                Debug.Log($"  - Auto-find sources: {GetFieldValue(binderManager, "autoFindSources")}");
-                Debug.Log($"  - Binds: DepthMap, StencilMap, ColorMap, InverseView, DepthRange");
+                Debug.Log($"✓ ARDepthSource: FOUND on '{depthSource.gameObject.name}'");
+                Debug.Log($"  - DepthMap: {depthSource.DepthMap}");
+                Debug.Log($"  - StencilMap: {depthSource.StencilMap}");
+                Debug.Log($"  - PositionMap: {depthSource.PositionMap}");
+                Debug.Log($"  - ColorMap Allocated: {depthSource.ColorMapAllocated}");
+                Debug.Log($"  - VelocityMap: {depthSource.VelocityMap}");
             }
             else
             {
-                Debug.LogWarning("✗ VFXBinderManager: NOT FOUND - Add via H3M > EchoVision > Setup");
+                Debug.LogWarning("✗ ARDepthSource: NOT FOUND - Add via H3M > VFX Pipeline Master > Create ARDepthSource");
+            }
+
+            // Check VFXARBinder usage (Hybrid Bridge)
+            var arBinders = Object.FindObjectsByType<VFXARBinder>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            if (arBinders.Length > 0)
+            {
+                Debug.Log($"✓ VFXARBinder: FOUND on {arBinders.Length} VFX object(s)");
+            }
+            else
+            {
+                Debug.LogWarning("✗ VFXARBinder: NOT FOUND - Add via H3M > VFX > Auto-Setup Binders");
             }
 
             // Check HologramSource (H3M pipeline)
@@ -158,10 +172,21 @@ namespace MetavidoVFX.Editor
                 Debug.Log($"  - Binds: HandPosition, HandVelocity, HandSpeed, BrushWidth, IsPinching");
             }
 
+            var audioBridge = Object.FindFirstObjectByType<AudioBridge>(FindObjectsInactive.Include);
+            if (audioBridge != null)
+            {
+                Debug.Log($"✓ AudioBridge: FOUND on '{audioBridge.gameObject.name}'");
+                Debug.Log("  - Binds: AudioVolume, AudioBands (global shader properties)");
+            }
+            else
+            {
+                Debug.LogWarning("✗ AudioBridge: NOT FOUND - Add via H3M > VFX Pipeline Master > Create AudioBridge");
+            }
+
             var audioProcessor = Object.FindFirstObjectByType<EnhancedAudioProcessor>(FindObjectsInactive.Include);
             if (audioProcessor != null)
             {
-                Debug.Log($"✓ EnhancedAudioProcessor: FOUND on '{audioProcessor.gameObject.name}'");
+                Debug.Log($"○ EnhancedAudioProcessor: FOUND on '{audioProcessor.gameObject.name}' (legacy/optional)");
                 Debug.Log($"  - Binds: AudioVolume, AudioBass, AudioMid, AudioTreble");
             }
 
@@ -178,6 +203,15 @@ namespace MetavidoVFX.Editor
             {
                 string status = peopleOcclusion.enabled ? "⚠️ ENABLED (REDUNDANT)" : "○ Disabled (OK)";
                 Debug.Log($"{status} PeopleOcclusionVFXManager on '{peopleOcclusion.gameObject.name}'");
+            }
+
+            // Use reflection for legacy binder
+            var legacyType = System.Type.GetType("MetavidoVFX.VFX.Binders.VFXARDataBinder, Assembly-CSharp");
+            var legacyBinder = legacyType != null ? Object.FindFirstObjectByType(legacyType, FindObjectsInactive.Include) : null;
+            
+            if (legacyBinder != null)
+            {
+                Debug.LogWarning($"⚠️ Legacy VFXARDataBinder found on '{legacyBinder.name}' (replace with VFXARBinder)");
             }
 
             // Count VFX
@@ -207,19 +241,12 @@ namespace MetavidoVFX.Editor
 
             Debug.Log("\n=== Cleanup Complete ===");
             Debug.Log("Recommended architecture:");
-            Debug.Log("  1. VFXBinderManager (primary) - AR textures to all VFX");
-            Debug.Log("  2. HologramSource/Renderer - H3M hologram features");
-            Debug.Log("  3. HandVFXController - Hand tracking properties");
-            Debug.Log("  4. EnhancedAudioProcessor - Audio frequency bands");
+            Debug.Log("  1. ARDepthSource + VFXARBinder (primary) - AR textures to all VFX");
+            Debug.Log("  2. AudioBridge - audio bands + beat globals");
+            Debug.Log("  3. HologramSource/Renderer - H3M hologram features");
+            Debug.Log("  4. HandVFXController - Hand tracking properties");
             Debug.Log("  5. SoundWaveEmitter - Expanding wave effects");
         }
 
-        private static object GetFieldValue(object obj, string fieldName)
-        {
-            var field = obj.GetType().GetField(fieldName,
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
-            return field?.GetValue(obj) ?? "N/A";
-        }
     }
 }

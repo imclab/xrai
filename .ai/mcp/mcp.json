@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "UnityMCP": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/CoplayDev/unity-mcp@v9.0.1#subdirectory=Server",
+        "mcp-for-unity"
+      ]
+    },
+    "claude-mem": {
+      "command": "uvx",
+      "args": [
+        "chroma-mcp",
+        "--client-type",
+        "persistent",
+        "--data-dir",
+        "/Users/jamestunick/.claude-mem/chroma"
+      ]
+    }
+  }
+}

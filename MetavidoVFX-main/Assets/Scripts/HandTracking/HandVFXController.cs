@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.XR.ARFoundation;
-using MetavidoVFX.VFX;
 using MetavidoVFX.Segmentation;
 
 #if HOLOKIT_AVAILABLE
@@ -24,7 +23,11 @@ namespace MetavidoVFX.HandTracking
     /// </summary>
     public class HandVFXController : MonoBehaviour
     {
-        void Log(string msg) { if (!VFXBinderManager.SuppressHandTrackingLogs) Debug.Log(msg); }
+        void Log(string msg)
+        {
+            if (suppressLogs) return;
+            Debug.Log(msg);
+        }
 
         [Header("Hand Tracking")]
         [SerializeField] private Transform leftHandRoot;
@@ -37,9 +40,13 @@ namespace MetavidoVFX.HandTracking
         [SerializeField] private VisualEffectAsset[] availableVFXAssets;
 
         [Header("Audio")]
+        [SerializeField] private AudioBridge audioBridge;
         [SerializeField] private AudioProcessor audioProcessor;
         [SerializeField] private Audio.EnhancedAudioProcessor enhancedAudioProcessor;
         [SerializeField] private bool audioReactive = true;
+
+        [Header("Debug")]
+        [SerializeField] private bool suppressLogs = false;
 
         [Header("Gesture Thresholds")]
         [SerializeField] private float pinchStartDistance = 0.02f;
@@ -99,7 +106,17 @@ namespace MetavidoVFX.HandTracking
                 }
             }
 #endif
-            // Find audio processors if not assigned
+            // Find audio sources if not assigned (AudioBridge preferred)
+            if (audioBridge == null)
+            {
+                audioBridge = AudioBridge.Instance;
+                if (audioBridge == null)
+                {
+                    audioBridge = FindFirstObjectByType<AudioBridge>();
+                }
+            }
+
+            // Find audio processors if not assigned (legacy fallback)
             if (enhancedAudioProcessor == null)
             {
                 enhancedAudioProcessor = FindFirstObjectByType<Audio.EnhancedAudioProcessor>();
@@ -292,10 +309,36 @@ namespace MetavidoVFX.HandTracking
             if (vfx.HasBool("IsPinching"))
                 vfx.SetBool("IsPinching", isPinching);
 
-            // Audio-reactive parameters - prefer EnhancedAudioProcessor
+            // Audio-reactive parameters - prefer AudioBridge, then EnhancedAudioProcessor
             if (audioReactive)
             {
-                if (enhancedAudioProcessor != null)
+                if (audioBridge != null)
+                {
+                    if (vfx.HasFloat("AudioVolume"))
+                        vfx.SetFloat("AudioVolume", audioBridge.Volume);
+
+                    if (vfx.HasFloat("AudioBass"))
+                        vfx.SetFloat("AudioBass", audioBridge.Bass);
+
+                    if (vfx.HasFloat("AudioMid"))
+                        vfx.SetFloat("AudioMid", audioBridge.Mids);
+
+                    if (vfx.HasFloat("AudioTreble"))
+                        vfx.SetFloat("AudioTreble", audioBridge.Treble);
+
+                    if (vfx.HasFloat("AudioSubBass"))
+                        vfx.SetFloat("AudioSubBass", audioBridge.SubBass);
+
+                    if (vfx.HasFloat("BeatPulse"))
+                        vfx.SetFloat("BeatPulse", audioBridge.BeatPulse);
+
+                    if (vfx.HasFloat("BeatIntensity"))
+                        vfx.SetFloat("BeatIntensity", audioBridge.BeatIntensity);
+
+                    if (vfx.HasFloat("EmissionRate"))
+                        vfx.SetFloat("EmissionRate", audioBridge.Bass * audioToEmissionRate);
+                }
+                else if (enhancedAudioProcessor != null)
                 {
                     // Use enhanced audio with bass/mid/treble
                     enhancedAudioProcessor.PushToVFX(vfx);

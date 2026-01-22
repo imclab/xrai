@@ -140,12 +140,19 @@ Error/Question arrives
 | Tool | Config Location | Reads GLOBAL_RULES | Has MCP |
 |------|-----------------|-------------------|---------|
 | Claude Code | `~/.claude/` | ✅ Yes | ✅ Full |
-| Gemini CLI | `~/.gemini/` | ✅ Via grep | ❌ No |
+| Gemini CLI | `.ai/mcp/`, `.gemini/` | ✅ Via grep | ✅ Full |
 | Codex CLI | `~/.codex/` | ✅ Via grep | ❌ No |
 | Cursor | `~/.cursor/` | ✅ Yes | ✅ Limited |
 | Windsurf | `~/.windsurf/` | ✅ Yes | ✅ Limited |
 | Rider | Built-in | ❌ No | ✅ Via MCP |
 | VS Code | `.vscode/` | ❌ No | ✅ Via extensions |
+
+**Gemini Specific Tuning**:
+- **Priority**: Always use JetBrains MCP over `grep` for project searches.
+- **Verification**: Mandatory `refresh_unity` + `read_console` after every code edit.
+- **Efficiency**: Use `batch_execute` for multiple scene/VFX operations.
+- **Inspection**: Use `find_gameobjects` (ID-only) before `manage_gameobject`.
+- **Reference**: `KnowledgeBase/_GEMINI_UNITY_MCP_SETUP.md`
 
 ### Context Sharing Between Tools
 

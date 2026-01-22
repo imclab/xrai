@@ -29,7 +29,7 @@ namespace MetavidoVFX.Segmentation
     /// </summary>
     public class BodyPartSegmenter : MonoBehaviour
     {
-        void Log(string msg) { if (!VFXBinderManager.SuppressBodySegmenterLogs) Debug.Log(msg); }
+        void Log(string msg) { Debug.Log(msg); }
 
         [Header("Input Source")]
         [SerializeField] private ARCameraBackground _arCameraBackground;

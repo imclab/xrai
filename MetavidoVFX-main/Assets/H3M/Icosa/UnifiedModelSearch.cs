@@ -253,9 +253,16 @@ namespace MetavidoVFX.Icosa
         public string Name;
         public string Author;
         public string License;
+        public string LicenseUrl;
         public string ThumbnailUrl;
         public string ViewerUrl;
+        public string SourceUrl;
         public ModelSource Source;
         public bool IsCached;
+
+        // Aliases for UI compatibility
+        public string AssetId => Id;
+        public string DisplayName => Name;
+        public string AuthorName => Author;
     }
 }

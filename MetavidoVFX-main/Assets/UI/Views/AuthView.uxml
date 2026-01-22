@@ -1,0 +1,105 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Styles/Common.uss" />
+
+    <!-- Root Container -->
+    <ui:VisualElement name="auth-root" class="full-screen screen-bg centered">
+
+        <!-- Auth Card -->
+        <ui:VisualElement name="auth-card" class="glass-modal container">
+
+            <!-- Logo -->
+            <ui:VisualElement name="logo-container" class="centered" style="margin-bottom: 24px;">
+                <ui:VisualElement name="logo" class="logo" style="background-color: rgba(0, 122, 255, 0.3); border-radius: 16px;" />
+                <ui:Label name="app-title" text="H3M Hologram" class="h2 text-center" style="margin-top: 12px;" />
+                <ui:Label name="app-subtitle" text="Volumetric Video Conferencing" class="body-sm text-center text-secondary" />
+            </ui:VisualElement>
+
+            <!-- Tab Buttons -->
+            <ui:VisualElement name="auth-tabs" class="flex-row" style="margin-bottom: 24px;">
+                <ui:Button name="tab-signin" text="Sign In" class="btn btn-primary" style="flex-grow: 1; margin-right: 8px;" />
+                <ui:Button name="tab-signup" text="Sign Up" class="btn btn-secondary" style="flex-grow: 1;" />
+            </ui:VisualElement>
+
+            <!-- Sign In Form -->
+            <ui:VisualElement name="signin-form">
+                <!-- Email -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Email" class="form-label" />
+                    <ui:TextField name="signin-email" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Password -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Password" class="form-label" />
+                    <ui:TextField name="signin-password" password="true" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Forgot Password -->
+                <ui:Button name="forgot-password" text="Forgot password?" class="link" style="align-self: flex-end; margin-bottom: 16px; background-color: transparent; border-width: 0;" />
+
+                <!-- Sign In Button -->
+                <ui:Button name="btn-signin" text="Sign In" class="btn btn-primary" style="margin-bottom: 16px;" />
+
+                <!-- Error Message -->
+                <ui:Label name="signin-error" class="form-error text-center" style="display: none;" />
+            </ui:VisualElement>
+
+            <!-- Sign Up Form (hidden by default) -->
+            <ui:VisualElement name="signup-form" style="display: none;">
+                <!-- Display Name -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Display Name" class="form-label" />
+                    <ui:TextField name="signup-name" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Email -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Email" class="form-label" />
+                    <ui:TextField name="signup-email" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Password -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Password" class="form-label" />
+                    <ui:TextField name="signup-password" password="true" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Confirm Password -->
+                <ui:VisualElement class="form-group">
+                    <ui:Label text="Confirm Password" class="form-label" />
+                    <ui:TextField name="signup-confirm" password="true" class="form-input" />
+                </ui:VisualElement>
+
+                <!-- Sign Up Button -->
+                <ui:Button name="btn-signup" text="Create Account" class="btn btn-primary" style="margin-bottom: 16px;" />
+
+                <!-- Error Message -->
+                <ui:Label name="signup-error" class="form-error text-center" style="display: none;" />
+            </ui:VisualElement>
+
+            <!-- Divider -->
+            <ui:VisualElement class="divider-text">
+                <ui:VisualElement class="divider-line" />
+                <ui:Label text="or continue with" class="divider-label" />
+                <ui:VisualElement class="divider-line" />
+            </ui:VisualElement>
+
+            <!-- Social Login -->
+            <ui:VisualElement name="social-buttons" class="flex-row" style="justify-content: center;">
+                <ui:Button name="btn-google" text="Google" class="btn btn-google" style="margin-right: 12px; min-width: 100px;" />
+                <ui:Button name="btn-apple" text="Apple" class="btn btn-apple" style="min-width: 100px;" />
+            </ui:VisualElement>
+
+            <!-- Terms -->
+            <ui:Label name="terms" text="By continuing, you agree to our Terms of Service and Privacy Policy" class="caption text-center text-tertiary" style="margin-top: 24px;" />
+
+        </ui:VisualElement>
+
+        <!-- Loading Overlay (hidden by default) -->
+        <ui:VisualElement name="loading-overlay" class="full-screen centered" style="background-color: rgba(0, 0, 0, 0.7); display: none;">
+            <ui:VisualElement class="spinner" />
+            <ui:Label text="Signing in..." class="body text-center" style="margin-top: 16px;" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

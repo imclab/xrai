@@ -95,12 +95,13 @@
     <Compile Include="Assets/3rdparty/Easy Point Cloud/Scripts/MeshToPointCloud.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Utils/MeshUtility.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Bezier/CurveSample.cs" />
-    <Compile Include="Assets/Scripts/ARKitMetavidoBinder.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/Grass/TestScene/RotateLight.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/RopeBuilderGIBLI.cs" />
+    <Compile Include="Assets/H3M/Network/MetavidoWebRTCEncoder.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Bezier/CubicBezierCurve.cs" />
     <Compile Include="Assets/NNCam/Scripts/NNCamCameraSpace.cs" />
     <Compile Include="Assets/Scripts/VFX/VFXLibraryManager.cs" />
+    <Compile Include="Assets/H3M/Icosa/ModelSearchUI.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/ARRadar/ARRadarController.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Scripts/SetTargetFrameRate.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/EnvMapAnimator.cs" />
@@ -113,11 +114,14 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/StarGlow/Scripts/StarGlow.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToAxisXRInputHand.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/Curves/RFX4_LightCurves.cs" />
+    <Compile Include="Assets/H3M/Icosa/Voice/LLMVoiceProvider.cs" />
+    <Compile Include="Assets/H3M/Icosa/Voice/VoiceInputProviderBase.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Meshing Subsystem Feature/MeshingBehaviour.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextSelector_A.cs" />
     <Compile Include="Assets/Samples/HoloKit Unity SDK/0.5.6/Phone Model Specs Calibration/Scripts/ViewportBottomOffsetCalibrationManager.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Components/FERM_CharacterizingComponent.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/Diffusiion/Scripts/DiffusionPass.cs" />
+    <Compile Include="Assets/H3M/Icosa/IcosaAssetMetadata.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Standard Assets/Environment/Water/Water/Scripts/Water.cs" />
     <Compile Include="Assets/Scripts/Performance/VFXProfiler.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeautyBeast/Beauty and the Beast/SimpleCameraController.cs" />
@@ -169,7 +173,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark02.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vignette/Vignette.cs" />
     <Compile Include="Assets/H3M/Icosa/UnifiedModelSearch.cs" />
-    <Compile Include="Assets/Scripts/_Legacy/VFXBinderManager.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/Flare/Scripts/FlareRenderFeature.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_CustomLight.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/Scripts/CustomPostProcessingPass.cs" />
@@ -197,6 +200,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Ramp/Ramp.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeautyBeast/SampleLoader/SampleLoader.cs" />
     <Compile Include="Assets/H3M/Core/HologramAnchor.cs" />
+    <Compile Include="Assets/Scripts/Debug/VFXPropertyInspector.cs" />
     <Compile Include="Assets/Scripts/VFX/VFXPipelineDashboard.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_MaterialQueue.cs" />
     <Compile Include="Assets/Scripts/Debug/FileLogger.cs" />
@@ -221,6 +225,7 @@
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP RenderGraph Samples/TextureReferenceWithFrameData/TextureRefRendererFeature.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/Shade/Graphics/Render Features/OutlineFeature.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/StarGen/Demo/Scripts/MouseOrbitImproved.cs" />
+    <Compile Include="Assets/Scripts/Painting/BrushController.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToVector2SliderXRInput.cs" />
     <Compile Include="Assets/Scripts/VFX/VFXProxBuffer.cs" />
     <Compile Include="Assets/3rdparty/_Bad_Raccoon/_3D Music Visualizer Vu Meter/_Scripts/FPSCounter.cs" />
@@ -283,6 +288,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/Samples/UnityLogo/VectorFields/Texture3DPreview/Attributes/Texture3DPreviewAttribute.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/TrackingModeOriginXRInput.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity_MetaBalls_Liquids/Scripts/OriginalMCBlob.cs" />
+    <Compile Include="Assets/H3M/Icosa/Voice/IVoiceInputProvider.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Scenes/Burning Cloth/BurnController.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/Curves/RFX4_ShaderFloatCurve.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/DistortTunnel/DistortTunnelPass_CopyColor.cs" />
@@ -290,10 +296,12 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/Interpolator.cs" />
     <Compile Include="Assets/Echovision/Scripts/MeshVFX.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_UVScroll.cs" />
+    <Compile Include="Assets/Scripts/Auth/AuthManager.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/MobileSSPR/ReusableCore/MobileSSPRRendererFeature.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToHapticsXRInput.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/SceneResources/Other/RFX4_MouseOrbit.cs" />
     <Compile Include="Assets/3rdparty/Broken Glass VR/Scripts/brokenGlassVR.cs" />
+    <Compile Include="Assets/Scripts/Painting/Data/StrokePoint.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_RotateAround.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexJitter.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/ColorBlink.cs" />
@@ -311,7 +319,6 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON TOOLS/POINT_CLOUD/pointclouds-compute-shaders/PointCLouds/ParticleGenerator.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Binary/Binary.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
-    <Compile Include="Assets/Scripts/BodyTracking/BodyVFXController.cs" />
     <Compile Include="Assets/H3M/Core/HologramSource.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/SimpleRaymarch/Scripts/SimpleRaymarchPass.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Scripts/Walker.cs" />
@@ -321,7 +328,10 @@
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/EffectSettings/RFX4_EffectSettingsInspector.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexZoom.cs" />
     <Compile Include="Assets/Scripts/BodyTracking/BodyTracker.cs" />
+    <Compile Include="Assets/H3M/Network/MetavidoWebRTCDecoder.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/Curves/RFX4_ShaderProperties.cs" />
+    <Compile Include="Assets/Scripts/HandTracking/Providers/MediaPipeHandTrackingProvider.cs" />
+    <Compile Include="Assets/H3M/Icosa/Voice/GeminiVoiceProvider.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Fringe/Fringe.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Standard Assets/Environment/Water/Water/Scripts/WaterBase.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/Daniel-ilett SHADERS/dissolve-urp/Scripts/Orbit.cs" />
@@ -344,7 +354,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/WarpTextExample.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/DepthBlit/DepthBlitCopyDepthPass.cs" />
     <Compile Include="Assets/Scripts/Painting/H3MParticleBrushManager.cs" />
-    <Compile Include="Assets/OptimalARVFXBridge.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Components/FERM_Primitive.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP RenderGraph Samples/OutputTexture/OutputTextureRendererFeature.cs" />
     <Compile Include="Assets/Scripts/Bridges/VFXARBinder.cs" />
@@ -360,7 +369,6 @@
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToControlXRInput.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToVisibilityXRInputHand.cs" />
     <Compile Include="Assets/Samples/Inference Engine/2.3.0/Encrypt a model/LoadEncryptedModel.cs" />
-    <Compile Include="Assets/Scripts/_Legacy/VFXARDataBinder.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/GRAPHS/Fluid-Shader/Scripts/ScreenShotter.cs" />
     <Compile Include="Assets/Fluo/03 Canvas/FluidSimulation/StableFluids/FluidSimulation.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Kawahara/OutlineFeatureGIBLION.cs" />
@@ -374,6 +382,7 @@
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_DemoReactivation.cs" />
     <Compile Include="Assets/Samples/Shader Graph/Common/Scripts/Rotate.cs" />
     <Compile Include="Assets/3rdparty/FERM/Examples/ScriptProbing/FERM_Example_CastProbe.cs" />
+    <Compile Include="Assets/Scripts/Auth/MockAuthProvider.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/MarkLateLatchNodeXRInput.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_Decal.cs" />
     <Compile Include="Assets/Samples/Inference Engine/2.3.0/Run a model/ModelExecution.cs" />
@@ -383,6 +392,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Scripts/AutoRotate2.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/General/FERM_Renderer.cs" />
     <Compile Include="Assets/Fluo/01 Input/InputSystem/InputToggleInteraction.cs" />
+    <Compile Include="Assets/H3M/Icosa/Voice/VoiceProviderManager.cs" />
     <Compile Include="Assets/Samples/Inference Engine/2.3.0/Read output asynchronously/CallbackReadback.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/ParamAccess/FERM_ParamExposer.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextInfoDebugTool.cs" />
@@ -396,6 +406,7 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/SimpleRaymarch/Scripts/SimpleRaymarchRenderFeature.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/VolumeComponent/OutlineVolume.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/rotateLightSM.cs" />
+    <Compile Include="Assets/H3M/Icosa/WhisperIcosaController.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeA.cs" />
     <Compile Include="Assets/Fluo/03 Canvas/Canvas/CanvasController.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerVectorPropertyBinder.cs" />
@@ -423,6 +434,7 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/BrownianMotion2.cs" />
     <Compile Include="Assets/Fluo/04 Visualizer/Scripts/DuotoneShuffler.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Example/ExampleSower.cs" />
+    <Compile Include="Assets/Scripts/Recording/RecordingController.cs" />
     <Compile Include="Assets/Scripts/Painting/H3MBrushDescriptor.cs" />
     <Compile Include="Assets/Samples/Input System/1.16.0/Unity Remote/UnityRemoteTestScript.cs" />
     <Compile Include="Assets/Scripts/Rcam4/H3MLiDARCapture.cs" />
@@ -447,6 +459,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/ChatController.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerPropertyAttribute.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/Samples/UnityLogo/MouseFollow.cs" />
+    <Compile Include="Assets/Scripts/HandTracking/Providers/BodyPixHandTrackingProvider.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/Unity cloth simulation/Scripts/WindController.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/StarGen/Demo/Scripts/ColorPanel.cs" />
     <Compile Include="Assets/Fluo/01 Input/Prefilter/Prefilter.cs" />
@@ -456,6 +469,7 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/Outlines2Oh/Graphics/Render Features/BlitPass.cs" />
     <Compile Include="Assets/Scripts/HandTracking/Providers/HoloKitHandTrackingProvider.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Example/ExampleTrack.cs" />
+    <Compile Include="Assets/Scripts/Auth/IAuthProvider.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/VFXGraphUnitySamples/Common/Standard Assets/Environment/Water (Basic)/Scripts/WaterBasic.cs" />
     <Compile Include="Assets/Scripts/HandTracking/Providers/TouchInputHandTrackingProvider.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/Scripts/Example/ExampleGrowingRoot.cs" />
@@ -479,10 +493,12 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/effectsControllerGIBLI/effectsControllerGIBLI.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Head/VFXToolbox/PropertyAttributes/FloatSliderAttribute.cs" />
     <Compile Include="Assets/Samples/HoloKit Unity SDK/0.5.6/Phone Model Specs Calibration/Scripts/CameraOffsetCalibrationManager.cs" />
+    <Compile Include="Assets/H3M/VFX/HiFiHologramController.cs" />
     <Compile Include="Assets/Samples/Input System/1.16.0/Simple Demo/SimpleControls.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark01.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TextMeshSpawner.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Meshing Subsystem Feature/MeshingTeapotFeature.cs" />
+    <Compile Include="Assets/Scripts/Painting/StrokeManager.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/ToonScape3/Graphics/Render Features/PixelateFeature.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Scripts/Audio Syncher/AudioSyncherCamera.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/BasicMath.cs" />
@@ -499,6 +515,7 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/Grass/Core/InstancedIndirectGrassRenderer.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/FALLS/PlanarReflections.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_TextureShaderProperties.cs" />
+    <Compile Include="Assets/H3M/Icosa/ModelPlacer.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Feedback/Feedback.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/StarGen/Scripts/ScaleParticles.cs" />
     <Compile Include="Assets/Samples/Input System/1.16.0/Simple Demo/SimpleController_UsingState.cs" />
@@ -527,9 +544,11 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/DepthLine/Scripts/DepthLinePass.cs" />
     <Compile Include="Assets/Scripts/UI/VFXSelectorUI.cs" />
     <Compile Include="Assets/Scripts/Bridges/AudioBridge.cs" />
+    <Compile Include="Assets/Scripts/Debug/DebugLogger.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_TrailRenderer.cs" />
     <Compile Include="Assets/Scripts/Tracking/Providers/AudioProvider.cs" />
     <Compile Include="Assets/Scripts/Utils/ARCameraTextureProvider.cs" />
+    <Compile Include="Assets/H3M/Network/ConferenceLayoutManager.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark03.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/KeepFrame/KeepFrameFeature.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Galaxy/unitycellautomata-master/Scripts/Cell.cs" />
@@ -561,8 +580,10 @@
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Galaxy/unitycellautomata-master/Scripts/LifeSim.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/SceneCycler/sceneFXCyclerSM.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/LightShaft/Scripts/LightShaftRenderFeature.cs" />
+    <Compile Include="Assets/UI/Controllers/AuthController.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/CameraStacking/3D Skybox/Scripts/SkyboxCamera.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/ObjectExporter/UnityFBXExporter/FBXUnityMaterialGetter.cs" />
+    <Compile Include="Assets/Scripts/HandTracking/Providers/XRHandsTrackingProvider.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/DropdownSample.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexColorCycler.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Scripts/BlackHoleObject.cs" />
@@ -573,11 +594,13 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/GradientFog/Scripts/GradientFogPass.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/CombineChildrenGIBLI.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/Components/FERM_RecurseModifier.cs" />
+    <Compile Include="Assets/H3M/Network/EditorConferenceSimulator.cs" />
     <Compile Include="Assets/Fluo/06 Controller/Scripts/WebcamController.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/BeatDetection/Tutorials/MusicSyncVisualizer/AudioSpectrum.cs" />
     <Compile Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP Package Samples/RendererFeatures/BlitToRTHandle/BlitToRTHandlePass.cs" />
     <Compile Include="Assets/Samples/Input System/1.16.0/Simple Multiplayer/SimpleMultiplayerPlayer.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/VFX/Scripts/VFXVolumeMixer/VFXVolumeMixerFloatPropertyBinder.cs" />
+    <Compile Include="Assets/Scripts/Recording/RecordingUI.cs" />
     <Compile Include="Assets/3rdparty/Vefects/Trails VFX URP/Scripts/Demo_TurningAround.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/Common Tools/ObjectExporter/UnityFBXExporter/FBXExporter.cs" />
     <Compile Include="Assets/3rdparty/FERM/Examples/MandelZoo/FERM_Example_MandelAnim.cs" />
@@ -598,6 +621,7 @@
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_DeactivateByTime.cs" />
     <Compile Include="Assets/Scripts/Hologram/HologramController.cs" />
     <Compile Include="Assets/H3M/Core/DiagnosticOverlay.cs" />
+    <Compile Include="Assets/H3M/Network/SpatialAudioController.cs" />
     <Compile Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Scripts/RFX4_TornadoParticles.cs" />
     <Compile Include="Assets/Fluo/00 Common/Scripts/ShaderID.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/StarGlow/Scripts/StarGlowRenderFeature.cs" />
@@ -644,6 +668,7 @@
     <Compile Include="Assets/H3M/Network/ARCameraWebRTCCapture.cs" />
     <Compile Include="Assets/3rdparty/FERM/Scripting/ParamAccess/FERM_ParamAudio.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TextMeshProFloatingText.cs" />
+    <Compile Include="Assets/Scripts/Painting/GestureInterpreter.cs" />
     <Compile Include="Assets/__Procedural VFX Library 1.0 Prototypes/Klak/Math/Tween.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/Shader Graph/Cliping Plane/ClipingPlane.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Scripts/ScifiSpheres Scene/RotateOnAxis.cs" />
@@ -673,6 +698,7 @@
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/VolumeComponent/HalfToneVolume.cs" />
     <Compile Include="Assets/H3M/Icosa/SketchfabClient.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/urp-postprocessing-examples/GradientFog/Scripts/GradientFog.cs" />
+    <Compile Include="Assets/Scripts/Debug/VFXMockTextureProvider.cs" />
     <Compile Include="Assets/Samples/OpenXR Plugin/1.16.1/Controller XRInput/Scripts/ActionToControlXRInputHand.cs" />
     <Compile Include="Assets/Samples/Inference Engine/2.3.0/Convert tensors to textures/TensorToTexture.cs" />
     <Compile Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/ScreenSpaceCavity/ScreenSpaceCavity/Renders/ScreenSpaceCavity.cs" />
@@ -695,7 +721,6 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/SketchOutlinesMars/Graphics/Shaders/Custom Functions/Outline.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/smo-shaders_SRP/Shaders/Complete/Silhouette.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
-    <None Include="Assets/3rdparty/DevDunkStudio/ShadowReceiverURP/Shaders/CustomShadows.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/outlinestudy/Graphics/Shaders/Custom Functions/Outline.hlsl" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Shader/Reconstruction.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/Shaders/API/PSSL.hlsl" />
@@ -730,7 +755,6 @@
     <None Include="Assets/TextMesh Pro/Examples &amp; Extras/Fonts/Roboto-Bold - License.txt" />
     <None Include="Assets/3rdparty/FERM/_Shaders/Example_MandelZoo.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/UI/UI Outline Shader.shader" />
-    <None Include="Assets/3rdparty/HOLO_FX_PACK/Shader/Holo2.shader" />
     <None Include="Assets/3rdparty/_Bad_Raccoon/_3D Music Visualizer Vu Meter/README FIRST.txt" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON TOOLS/POLYGON CLOUDS/Cloud_unlit_vertex_color 3 RT VFX MIKE TUT.shader" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile-2-Pass.shader" />
@@ -741,7 +765,6 @@
     <None Include="Assets/Shaders/RotateUV90CW.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/BROKEN OUTLINE A/BlitGIBLION.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/urptoon U2021/Graphics/Shaders/ToonShader/Shaders/Fur/ToonShaderFur.shader" />
-    <None Include="Assets/3rdparty/HOLO_FX_PACK/Shader/Holo.shader" />
     <None Include="Assets/Samples/Universal Render Pipeline/17.2.0/URP RenderGraph Samples/GbufferVisualization/GBuffer_Visualization_Shader_Sample.shader" />
     <None Include="Packages/jp.keijiro.metavido.vfxgraph/package.json" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/Stylized-Sand/Stylized Sand/Shaders/Stylized_Sand.shader" />
@@ -801,6 +824,7 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/UI/UI Rounded Corners Shader.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/rain-urp/LICENSE.txt" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON TOOLS/Normal-Mapping-for-a-Triplanar-Shader/TriplanarReconstructedBitangents.shader" />
+    <None Include="Assets/UI/Styles/Colors.uss" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/ChristopherSims/WetShadows/Graphics/Shader Graphs/Subgraphs/Outline.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/UNITY OPEN PROJECT/Shaders/CustomHLSL/CustomLighting.hlsl" />
     <None Include="Assets/Samples/App UI/1.3.1/MVVM And Redux/SampleResources/MVVMRedux/Views/TodoItemView.uxml" />
@@ -828,6 +852,7 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/Shaders/API/Metal.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Kawahara/Outline THIN.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/Daniel-ilett SHADERS/2d-outlines-urp/LICENSE.txt" />
+    <None Include="Assets/UI/Styles/Glassmorphism.uss" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/ShaderGraph-OneOffEffects/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/UI/SpritesDefault.shader" />
     <None Include="Assets/Shaders/HumanEffects/HumanSegmentation_AfterImageForCurrentFrame.shader" />
@@ -935,6 +960,7 @@
     <None Include="Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl" />
     <None Include="Packages/jp.keijiro.fluo/Shaders/CustomRenderTexture.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/Common Tools/SplineMesh/TRIPLANAR/ProceduralTerrain/ProceduralTerrain/Core/Shaders/TriPlanar.shader" />
+    <None Include="Assets/UI/Views/AuthView.uxml" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Motion/Shader/Common.cginc" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/Knitwear/Knitwear Shader/Shaders/KnitwearLitInput.hlsl" />
     <None Include="Assets/Shaders/Rcam/Decoder.hlsl" />
@@ -946,6 +972,7 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/PostEffects.shader" />
     <None Include="Assets/3rdparty/FERM/_Shaders/Include/Common.cginc" />
     <None Include="Assets/Shaders/Rcam/Recolor.shader" />
+    <None Include="Assets/Downloads/config.json" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/GRAPHS/Noisy-Nodes/NoiseShader/HLSL/Voronoi3DWATERA.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/Anaglyph3D.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/GPU-Fog-Particles/LICENSE.txt" />
@@ -1022,6 +1049,7 @@
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Contour/Shader/Contour.shader" />
     <None Include="Assets/3rdparty/FERM/_Shaders/Include/Structs.cginc" />
     <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader" />
+    <None Include="Assets/UI/Styles/Common.uss" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/Scanlines.shader" />
     <None Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_UberDecal.shader" />
     <None Include="Assets/Samples/App UI/1.3.1/UI Kit/SampleResources/Examples.uxml" />
@@ -1051,7 +1079,6 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/kShading/Shaders/ShaderLibrary/ToonLighting.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/Fisheye.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/URP IMAGE EFFECTS/URPCustomPostProcessing/VolumeComponent/Resources/Glitch.shader" />
-    <None Include="Assets/3rdparty/HOLO_FX_PACK/Shader/Holo_adv.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/SBR.cginc" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/kShading/Shaders/ShaderLibrary/ToonLitInput.hlsl" />
     <None Include="Assets/__Procedural VFX Library 1.0 Prototypes/Extra sketches/Common/#___LENS_FLARES2020/Kino/Vignette/Shader/Vignette.shader" />
@@ -1124,6 +1151,7 @@
     <None Include="Assets/Packages/System.Composition.TypedParts.9.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Shaders/Rcam/GradientSky.hlsl" />
     <None Include="Packages/jp.keijiro.urp-cameratextureutils/package.json" />
+    <None Include="Assets/UI/Styles/Typography.uss" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Unity2022_GRAPH/CAVITY NEW/README.md.txt" />
     <None Include="Assets/3rdparty/KriptoFX/Realistic Effects Pack v4/Effects/Shaders/RFX4_UberDistortion.shader" />
     <None Include="Assets/3rdparty/ARTnGAME/InfiniGRASS STUDIO PRO/Grass Instanced Indirect/Demo/Grass/Core2/InstancedIndirectGrassSHADOW_CAST.shader" />
@@ -1138,6 +1166,7 @@
     <None Include="Assets/3rdparty/ARTnGAME/Common Tools/ObjectExporter/UnityFBXExporter/LICENSE.txt" />
     <None Include="Assets/Packages/Humanizer.Core.2.14.1/lib/netstandard2.0/Humanizer.xml" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON TOOLS/GrassGeometry/TessellationGIBLI.hlsl" />
+    <None Include="Assets/UI/Views/LobbyView.uxml" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/URP-LWRP-Shaders/Shaders/Shader Graph/Clouds/Clouds Generated.shader" />
     <None Include="Assets/Shaders/Rcam/VFXProxCommon.hlsl" />
     <None Include="Assets/Shaders/Rcam/FrameDecoder.shader" />
@@ -1244,6 +1273,7 @@
     <None Include="Assets/Samples/App UI/1.3.1/Navigation/SampleResources/Navigation/Styles/NavigationStyling.uss" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON SHADERS/urptoon U2021/Graphics/Shaders/ToonShader/Shaders/ToonShaderAlbedo.hlsl" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/SHADING/GRAPHS/Lowpoly-Water-Unity/Shaders/FlatShadedWaterWithEdgeBlend.shader" />
+    <None Include="Assets/Shaders/HiFiHologramVFX.hlsl" />
     <None Include="Assets/3rdparty/Vefects/Trails VFX URP/_ Extra/Shaders/SH_Vefects_Extra_Grid_01.shader" />
     <None Include="Assets/3rdparty/FERM/_Shaders/UnlitTemplate.txt" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/SRP_SHADERS/image-ultra/Resources/Shaders/Interference.shader" />
@@ -1253,8 +1283,6 @@
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/TOON TOOLS/GrassGeometry/LICENSE.txt" />
     <None Include="Assets/Resources/RotateUV90CW.shader" />
     <None Include="Assets/Samples/AR Foundation Remote/2.0.42-release.0/Examples/ARKit Body Tracking/credits.txt" />
-    <None Include="Assets/3rdparty/HOLO_FX_PACK/_Documentation_/ReadMe.txt" />
-    <None Include="Assets/3rdparty/DevDunkStudio/ShadowReceiverURP/Built In Render Pipeline/BiRP support.txt" />
     <None Include="Assets/3rdparty/FERM/_Shaders/Include/Fractals2D.cginc" />
     <None Include="Assets/3rdparty/ARTnGAME/GIBLI/Scripts GIBLI/Painterly FX/TakasakaFX/Shaders/Canvas.cginc" />
     <None Include="Assets/Samples/App UI/1.3.1/UndoRedo/UndoRedoStyle.uss" />
@@ -2250,6 +2278,9 @@
     <Reference Include="Unity.XR.Hands">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.XR.Hands.dll</HintPath>
     </Reference>
+    <Reference Include="Avfi.Editor">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Avfi.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.InferenceEngine.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Unity.InferenceEngine.Editor.dll</HintPath>
     </Reference>
@@ -2306,6 +2337,9 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Avfi.Runtime">
+      <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/Avfi.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="KlutterTools.Editor">
       <HintPath>/Users/jamestunick/Documents/GitHub/Unity-XR-AI/MetavidoVFX-main/Library/ScriptAssemblies/KlutterTools.Editor.dll</HintPath>
@@ -2790,10 +2824,6 @@
     <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
       <Project>{2ab0c7b2-22d0-d185-4d86-58b493492cfc}</Project>
       <Name>InputSystem.Samples.Visualizers</Name>
-    </ProjectReference>
-    <ProjectReference Include="DevDunk.ShadowReceiver.Editor.csproj">
-      <Project>{b542c8d3-ea72-b44c-0dd8-b377756de3d2}</Project>
-      <Name>DevDunk.ShadowReceiver.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.XR.Interaction.Toolkit.Samples.WorldSpaceUI.csproj">
       <Project>{71814771-3f96-88f3-466f-30ebc9e27bf7}</Project>

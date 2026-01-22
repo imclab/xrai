@@ -125,7 +125,7 @@ if (currentFPS > targetFPS * 1.2f && quality < Ultra)
 │ ├── Orient: Face Camera Billboard                           │
 │ ├── Set Size: ParticleSize                                  │
 │ ├── Set Color: RGB (from color attribute)                   │
-│ └── Blend Mode: Alpha or Additive                           │
+│ └── Blend Mode: Additive or Alpha                           │
 └─────────────────────────────────────────────────────────────┘
 ```
 

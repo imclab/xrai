@@ -9,7 +9,7 @@ namespace H3M.Core
     [RequireComponent(typeof(VisualEffect))]
     public class HologramRenderer : MonoBehaviour
     {
-        void LogWarning(string msg) { if (!VFXBinderManager.SuppressHologramLogs) Debug.LogWarning(msg); }
+        void LogWarning(string msg) { Debug.LogWarning(msg); }
 
         [Header("H3M References")]
         [SerializeField] HologramSource _source;

@@ -21,7 +21,7 @@ namespace MetavidoVFX.UI
     /// </summary>
     public class SimpleVFXUI : MonoBehaviour
     {
-        void Log(string msg) { if (!VFXBinderManager.SuppressUILogs) Debug.Log(msg); }
+        void Log(string msg) { Debug.Log(msg); }
 
         [Header("VFX")]
         [SerializeField] private VisualEffect[] vfxList;

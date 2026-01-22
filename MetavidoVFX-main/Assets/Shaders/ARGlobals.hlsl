@@ -154,6 +154,85 @@ float SampleBeatIntensity(Texture2D tex, SamplerState samp)
 }
 
 // ---------------------------------------------------------------------------
+// AR TEXTURE GLOBALS (set by ARDepthSource.cs)
+// ---------------------------------------------------------------------------
+// ⚠️ CRITICAL: VFX Graph CANNOT read global textures (architectural limitation).
+// These declarations are for MATERIAL SHADERS ONLY (MeshRenderer, etc.).
+// For VFX Graph, use VFXARBinder which calls SetTexture() per-VFX.
+//
+// What DOES work globally for VFX Graph:
+//   - Vectors: _ARRayParams, _ARDepthRange, _ARMapSize
+//   - Matrices: _ARInverseView
+//   - GraphicsBuffers (VFXProxBuffer pattern)
+//
+// What does NOT work for VFX Graph:
+//   - Shader.SetGlobalTexture() - VFX property system doesn't expose these
+
+TEXTURE2D(_ARDepthMap);      // Depth texture (RFloat, meters)
+TEXTURE2D(_ARStencilMap);    // Human stencil (R8, 0=bg, 1=human)
+TEXTURE2D(_ARPositionMap);   // World positions (ARGBFloat, xyz)
+TEXTURE2D(_ARColorMap);      // Camera color (ARGB32, rgb)
+TEXTURE2D(_ARVelocityMap);   // Velocity (ARGBFloat, xyz) - optional
+
+float4 _ARDepthRange;        // (near, far, 0, 0)
+float4 _ARMapSize;           // (width, height, 1/width, 1/height)
+
+// Standard point sampler for AR textures
+SamplerState ar_point_clamp_sampler;
+
+// ---------------------------------------------------------------------------
+// AR TEXTURE SAMPLING FUNCTIONS
+// ---------------------------------------------------------------------------
+
+// Sample depth value at UV (returns meters)
+float SampleARDepth(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_LOD(_ARDepthMap, ar_point_clamp_sampler, uv, 0).r;
+}
+
+// Sample human stencil (1 = human, 0 = background)
+float SampleARStencil(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_LOD(_ARStencilMap, ar_point_clamp_sampler, uv, 0).r;
+}
+
+// Sample world position from pre-computed position map
+float3 SampleARPosition(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_LOD(_ARPositionMap, ar_point_clamp_sampler, uv, 0).xyz;
+}
+
+// Sample AR camera color
+float3 SampleARColor(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_LOD(_ARColorMap, ar_point_clamp_sampler, uv, 0).rgb;
+}
+
+// Sample velocity (if enabled in ARDepthSource)
+float3 SampleARVelocity(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_LOD(_ARVelocityMap, ar_point_clamp_sampler, uv, 0).xyz;
+}
+
+// Check if UV is within valid stencil region
+bool IsHuman(float2 uv)
+{
+    return SampleARStencil(uv) > 0.5;
+}
+
+// Get AR map dimensions
+float2 GetARMapSize()
+{
+    return _ARMapSize.xy;
+}
+
+// Convert pixel coords to UV
+float2 PixelToUV(int2 pixel)
+{
+    return (float2(pixel) + 0.5) * _ARMapSize.zw;
+}
+
+// ---------------------------------------------------------------------------
 // AR CAMERA HELPER FUNCTIONS
 // ---------------------------------------------------------------------------
 
@@ -169,6 +248,21 @@ float3 GetRayDirection(float2 uv)
 float3 GetCameraPosition()
 {
     return _ARInverseView._m03_m13_m23;
+}
+
+// Convert UV + depth to world position (alternative to position map)
+float3 UVDepthToWorld(float2 uv, float depth)
+{
+    float2 ndc = uv * 2.0 - 1.0;
+    ndc.x += _ARRayParams.x;
+    ndc.y += _ARRayParams.y;
+
+    float3 viewPos;
+    viewPos.x = ndc.x * _ARRayParams.z * depth;
+    viewPos.y = ndc.y * _ARRayParams.w * depth;
+    viewPos.z = depth;
+
+    return mul(_ARInverseView, float4(viewPos, 1.0)).xyz;
 }
 
 #endif

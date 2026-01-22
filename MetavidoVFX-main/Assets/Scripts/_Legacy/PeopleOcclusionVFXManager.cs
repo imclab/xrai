@@ -52,6 +52,9 @@ public class PeopleOcclusionVFXManager : MonoBehaviour
     VisualEffectAsset[] m_VfxAssets; // Array of VFX assets to swap between
     int m_CurrentVfxIndex = 0;
 
+    [Header("Debug")]
+    [SerializeField] bool m_SuppressLogs = false;
+
     ARCameraBackground m_CameraBackground;
     AROcclusionManager m_OcclusionManager;
     Camera m_Camera;
@@ -70,13 +73,13 @@ public class PeopleOcclusionVFXManager : MonoBehaviour
 
     void Log(string msg)
     {
-        if (!VFXBinderManager.SuppressPeopleVFXLogs)
+        if (!m_SuppressLogs)
             Debug.Log(msg);
     }
 
     void LogWarning(string msg)
     {
-        if (!VFXBinderManager.SuppressPeopleVFXLogs)
+        if (!m_SuppressLogs)
             Debug.LogWarning(msg);
     }
 

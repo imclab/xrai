@@ -14,8 +14,8 @@ namespace MetavidoVFX.Audio
     /// </summary>
     public class EnhancedAudioProcessor : MonoBehaviour
     {
-        void Log(string msg) { if (!VFXBinderManager.SuppressAudioLogs) Debug.Log(msg); }
-        void LogWarning(string msg) { if (!VFXBinderManager.SuppressAudioLogs) Debug.LogWarning(msg); }
+        void Log(string msg) { Debug.Log(msg); }
+        void LogWarning(string msg) { Debug.LogWarning(msg); }
 
         [Header("Audio Input")]
         [SerializeField] private AudioSource audioSource;

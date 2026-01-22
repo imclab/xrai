@@ -1,0 +1,201 @@
+/* Glassmorphism.uss - visionOS-inspired glass effects */
+/* Note: Unity UI Toolkit doesn't support backdrop-filter blur natively */
+/* We simulate glass effects with semi-transparent backgrounds and borders */
+
+:root {
+    /* Glass Properties */
+    --glass-blur: 20px;
+    --glass-opacity: 0.7;
+    --glass-border-opacity: 0.1;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* Base Glass Panel */
+.glass {
+    background-color: rgba(30, 30, 30, 0.7);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Glass Variants */
+.glass-dark {
+    background-color: rgba(20, 20, 20, 0.85);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-light {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.glass-elevated {
+    background-color: rgba(50, 50, 50, 0.6);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Glass Card */
+.glass-card {
+    background-color: rgba(40, 40, 40, 0.65);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    margin: 8px;
+}
+
+.glass-card:hover {
+    background-color: rgba(50, 50, 50, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Glass Button */
+.glass-button {
+    background-color: rgba(60, 60, 60, 0.5);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 12px 24px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    -unity-font-style: bold;
+    transition-duration: 0.15s;
+}
+
+.glass-button:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.glass-button:active {
+    background-color: rgba(40, 40, 40, 0.7);
+    scale: 0.98;
+}
+
+/* Glass Button Primary */
+.glass-button-primary {
+    background-color: rgba(0, 122, 255, 0.9);
+    border-radius: 12px;
+    border-width: 0;
+    padding: 12px 24px;
+    color: white;
+    font-size: 15px;
+    -unity-font-style: bold;
+    transition-duration: 0.15s;
+}
+
+.glass-button-primary:hover {
+    background-color: rgba(0, 122, 255, 1.0);
+}
+
+.glass-button-primary:active {
+    background-color: rgba(0, 100, 220, 1.0);
+    scale: 0.98;
+}
+
+/* Glass Input Field */
+.glass-input {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 12px 16px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+}
+
+.glass-input:focus {
+    border-color: rgba(0, 122, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.glass-input:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Glass Modal */
+.glass-modal {
+    background-color: rgba(25, 25, 25, 0.9);
+    border-radius: 24px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 24px;
+}
+
+/* Glass HUD */
+.glass-hud {
+    background-color: rgba(20, 20, 20, 0.75);
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    padding: 12px 20px;
+}
+
+/* Glass Pill (for tags, badges) */
+.glass-pill {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Glass Divider */
+.glass-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 12px 0;
+}
+
+/* Spacing Utilities */
+.p-0 { padding: 0; }
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 12px; }
+.p-4 { padding: 16px; }
+.p-6 { padding: 24px; }
+.p-8 { padding: 32px; }
+
+.m-0 { margin: 0; }
+.m-1 { margin: 4px; }
+.m-2 { margin: 8px; }
+.m-3 { margin: 12px; }
+.m-4 { margin: 16px; }
+.m-6 { margin: 24px; }
+.m-8 { margin: 32px; }
+
+/* Flex Utilities */
+.flex-row {
+    flex-direction: row;
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+    display: flex;
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.gap-1 { /* Not directly supported, use margins */ }
+.gap-2 { /* Not directly supported, use margins */ }
+.gap-4 { /* Not directly supported, use margins */ }

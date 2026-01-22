@@ -8,6 +8,12 @@
 
 ---
 
+## Update Note (2026-01-21)
+
+The primary pipeline is now **Hybrid Bridge** (`ARDepthSource` + `VFXARBinder`). References in this audit to `VFXBinderManager` or `OptimizedARVFXBridge` are **legacy** and kept for historical context.
+
+---
+
 ## Fix Status (Updated 2026-01-19)
 
 | Bug | Status | Fix Applied |
@@ -167,9 +173,9 @@ UnityEngine.XR.ARFoundation.AROcclusionManager.get_humanDepthTexture ()
 
 | System | Status | Reason |
 |--------|--------|--------|
-| `PeopleOcclusionVFXManager` | ❌ DISABLED | Creates duplicate VFX; conflicts with VFXBinderManager |
-| `ARKitMetavidoBinder` | ❌ DEPRECATED | Per-VFX binding is redundant; VFXBinderManager is centralized |
-| `OptimizedARVFXBridge` | ❌ LEGACY | Superseded by VFXBinderManager |
+| `PeopleOcclusionVFXManager` | ❌ DISABLED | Creates duplicate VFX; conflicts with Hybrid Bridge |
+| `ARKitMetavidoBinder` | ❌ DEPRECATED | Per-VFX binding is redundant; Hybrid Bridge is centralized |
+| `OptimizedARVFXBridge` | ❌ LEGACY | Superseded by ARDepthSource + VFXARBinder |
 
 **Action**: Run `H3M > Pipeline Cleanup > Run Full Cleanup` before builds.
 
@@ -177,9 +183,10 @@ UnityEngine.XR.ARFoundation.AROcclusionManager.get_humanDepthTexture ()
 
 ## Architecture Strengths
 
-### Centralized Binding Hub (VFXBinderManager)
+### Centralized Binding Hub (Legacy VFXBinderManager)
 ```
-AR Session Origin → VFXBinderManager → All VFX
+Legacy: AR Session Origin → VFXBinderManager → All VFX
+Current: AR Session Origin → ARDepthSource → VFXARBinder → All VFX
          ↓
 GPU Compute (DepthToWorld.compute)
          ↓

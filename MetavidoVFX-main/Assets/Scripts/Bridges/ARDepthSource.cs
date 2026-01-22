@@ -221,7 +221,22 @@ public class ARDepthSource : MonoBehaviour
 
             float fov = _arCamera.fieldOfView * Mathf.Deg2Rad;
             float tanV = Mathf.Tan(fov * 0.5f);
-            float tanH = tanV * _arCamera.aspect;
+            float tanH;
+
+            // Match the real AR path's UV handling
+            // When _rotateDepthTexture is true, real AR depth is rotated and tanH is negated
+            if (_rotateDepthTexture)
+            {
+                // Use depth texture aspect (simulating rotated depth)
+                float depthAspect = (float)_mockResolution.x / _mockResolution.y;
+                tanH = tanV * depthAspect;
+                RayParams = new Vector4(centerShiftX, centerShiftY, -tanH, tanV);
+            }
+            else
+            {
+                tanH = tanV * _arCamera.aspect;
+                RayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
+            }
 
             _depthToWorld.SetTexture(_kernel, "_Depth", _mockDepthMap);
             _depthToWorld.SetTexture(_kernel, "_Stencil", Texture2D.whiteTexture); // Mock: no stencil filtering
@@ -244,11 +259,19 @@ public class ARDepthSource : MonoBehaviour
                 Graphics.Blit(PositionMap, _prevPositionMap);
             }
 
-            RayParams = new Vector4(centerShiftX, centerShiftY, tanH, tanV);
             InverseView = Matrix4x4.TRS(_arCamera.transform.position, _arCamera.transform.rotation, Vector3.one);
 
+            // === GLOBAL SHADER PROPERTIES (Mock) ===
+            // NOTE: VFX Graph CANNOT read global textures. See main LateUpdate for details.
+            Shader.SetGlobalTexture("_ARDepthMap", _mockDepthMap);
+            Shader.SetGlobalTexture("_ARStencilMap", _mockStencilMap);
+            Shader.SetGlobalTexture("_ARPositionMap", PositionMap);
+            if (ColorMap != null && ColorMap.IsCreated())
+                Shader.SetGlobalTexture("_ARColorMap", ColorMap);
             Shader.SetGlobalVector("_ARRayParams", RayParams);
             Shader.SetGlobalMatrix("_ARInverseView", InverseView);
+            Shader.SetGlobalVector("_ARDepthRange", new Vector4(0.1f, 10f, 0, 0));
+            Shader.SetGlobalVector("_ARMapSize", new Vector4(_mockResolution.x, _mockResolution.y, 1f/_mockResolution.x, 1f/_mockResolution.y));
         }
 
         LastComputeTimeMs = (Time.realtimeSinceStartup - startTime) * 1000f;
@@ -381,8 +404,13 @@ public class ARDepthSource : MonoBehaviour
 
     void LateUpdate()
     {
-        // Guard: skip if occlusion manager not available
+        // Guard: skip if occlusion manager or camera not available
         if (_occlusion == null) return;
+        if (_arCamera == null)
+        {
+            _arCamera = Camera.main;
+            if (_arCamera == null) return;
+        }
 
         // Prefer human depth for body VFX, fall back to environment depth
         // Use TryGetTexture because AR Foundation getters can throw NullReferenceException
@@ -506,15 +534,31 @@ public class ARDepthSource : MonoBehaviour
             Graphics.Blit(PositionMap, _prevPositionMap);
         }
 
-        // Cache for binders (NOT global textures - they don't work for VFX!)
+        // Cache for binders
         DepthMap = depth;
         StencilMap = stencil ?? Texture2D.whiteTexture;
         // Use TRS to match Keijiro's Metavido approach (not cameraToWorldMatrix)
         InverseView = Matrix4x4.TRS(_arCamera.transform.position, _arCamera.transform.rotation, Vector3.one);
 
-        // Vectors/matrices CAN be global (VFX reads via HLSL)
+        // === GLOBAL SHADER PROPERTIES ===
+        // NOTE: VFX Graph CANNOT read global textures (architectural limitation).
+        // Textures must be bound per-VFX via VFXARBinder.SetTexture().
+        // However, these globals ARE useful for:
+        //   - Material shaders on MeshRenderers
+        //   - Custom HLSL in VFX Graph can read vectors/matrices (not textures)
+        // Textures (for material shaders, NOT VFX Graph):
+        Shader.SetGlobalTexture("_ARDepthMap", DepthMap);
+        Shader.SetGlobalTexture("_ARStencilMap", StencilMap);
+        Shader.SetGlobalTexture("_ARPositionMap", PositionMap);
+        if (ColorMap != null && ColorMap.IsCreated())
+            Shader.SetGlobalTexture("_ARColorMap", ColorMap);
+        if (_velocityMap != null)
+            Shader.SetGlobalTexture("_ARVelocityMap", _velocityMap);
+        // Vectors/matrices (VFX Graph CAN read via HLSL include):
         Shader.SetGlobalVector("_ARRayParams", RayParams);
         Shader.SetGlobalMatrix("_ARInverseView", InverseView);
+        Shader.SetGlobalVector("_ARDepthRange", new Vector4(0.1f, 10f, 0, 0));
+        Shader.SetGlobalVector("_ARMapSize", new Vector4(depth.width, depth.height, 1f/depth.width, 1f/depth.height));
 
         // Measure compute time for Dashboard
         LastComputeTimeMs = (Time.realtimeSinceStartup - startTime) * 1000f;

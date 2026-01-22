@@ -251,5 +251,13 @@ controller.SetDepthMap(lidarDepthTexture);
 
 ---
 
+## Next Steps
+
+1. **Create VFX Asset**: Run `H3M/HiFi Hologram/Create Optimized HiFi Hologram VFX` to generate `hifi_hologram_optimized.vfx`.
+2. **Scene Setup**: Open `HOLOGRAM.unity` and run `H3M/HiFi Hologram/Add to Hologram Prefab`.
+3. **Testing**: Verify hologram rendering in Editor (mock data) and on device.
+
+---
+
 *Created: 2026-01-21*
 *Location: Assets/Documentation/HIFI_HOLOGRAM_VFX_SETUP.md*
