@@ -26,11 +26,16 @@ All major AI tools have symlinks pre-configured:
 ~/.windsurf/knowledgebase → KnowledgeBase/
 ~/.cursor/knowledgebase → KnowledgeBase/
 ~/.codex/knowledgebase → KnowledgeBase/
+~/.gemini/knowledgebase → KnowledgeBase/
+~/.antigravity/knowledgebase → KnowledgeBase/
+~/.gemini/antigravity/knowledgebase → KnowledgeBase/
+~/Library/Application Support/JetBrains/Rider2025.3/scratches/KnowledgeBase → KnowledgeBase/
 ```
 
 **Usage in AI tools**:
 ```
 Read the file at ~/.claude/knowledgebase/_AUTO_FIX_PATTERNS.md
+Read the file at ~/.gemini/knowledgebase/_QUICK_FIX.md
 ```
 
 ---
@@ -165,10 +170,17 @@ kbrepo "hand tracking"
 
 ## 6. IDE Integration
 
-### JetBrains Rider (MCP)
+### JetBrains Rider
 ```
-# Uses JetBrains MCP for code search
-# KB accessible via file browser at ~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/
+# Symlink in Scratches folder (Cmd+Shift+N → Scratch File)
+~/Library/Application Support/JetBrains/Rider2025.3/scratches/KnowledgeBase/
+
+# JetBrains MCP tools for code search
+search_in_files_by_text("ExposedProperty")
+get_file_text_by_path("KnowledgeBase/_AUTO_FIX_PATTERNS.md")
+
+# Direct file browser access
+~/Documents/GitHub/Unity-XR-AI/KnowledgeBase/
 ```
 
 ### VS Code / Cursor
@@ -176,6 +188,17 @@ kbrepo "hand tracking"
 # Open workspace at Unity-XR-AI root
 # Use Ctrl+P to search KB files
 # Symlink at ~/.cursor/knowledgebase/
+```
+
+### Gemini / AntiGravity
+```
+# Symlinks available at:
+~/.gemini/knowledgebase/
+~/.antigravity/knowledgebase/
+~/.gemini/antigravity/knowledgebase/
+
+# Quick access in prompts:
+"Read ~/.gemini/knowledgebase/_QUICK_FIX.md"
 ```
 
 ### Unity Editor
