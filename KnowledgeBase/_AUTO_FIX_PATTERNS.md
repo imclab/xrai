@@ -2320,6 +2320,222 @@ public static Vector4 GetInverseProjection(Matrix4x4 projectionMatrix) {
 
 ---
 
+## Performance Patterns
+
+### Blocking Microphone Init - Main Thread Freeze
+
+**Detection**: `Microphone.GetPosition(device) <= 0` inside `while` loop in `Start()`
+
+**Cause**: Blocking main thread waiting for audio device, causes 100-500ms freeze on iOS
+
+**Pattern**:
+```csharp
+// BEFORE (blocks main thread)
+void Start()
+{
+    while (Microphone.GetPosition(device) <= 0) { }  // FREEZES!
+}
+
+// AFTER (async pattern)
+IEnumerator WaitForMicrophone()
+{
+    while (Microphone.GetPosition(device) <= 0)
+        yield return null;  // Yields frame, doesn't freeze
+}
+void Start() => StartCoroutine(WaitForMicrophone());
+```
+
+**Auto-Apply**: Yes (convert to coroutine pattern)
+
+### FindFirstObjectByType Every Frame - GC Allocation
+
+**Detection**: `FindFirstObjectByType()` called in `Update()` or `LateUpdate()`
+
+**Cause**: Scanning entire scene each frame creates GC pressure
+
+**Pattern**:
+```csharp
+// BEFORE (GC every frame)
+void Update() {
+    var ar = FindFirstObjectByType<ARDepthSource>();
+}
+
+// AFTER (cache at startup)
+ARDepthSource _arDepth;
+void OnEnable() => _arDepth ??= FindFirstObjectByType<ARDepthSource>();
+void Update() { if (_arDepth != null) _arDepth.UpdateData(); }
+```
+
+**Auto-Apply**: Yes (add null-coalesced cache)
+
+### GetComponent Caching for Performance
+
+**Detection**: `GetComponent<T>()` called multiple times in same class
+
+**Cause**: Reflection overhead, multiple dictionary lookups
+
+**Pattern**:
+```csharp
+// BEFORE (redundant lookups)
+void Start() { _vfx = GetComponent<VisualEffect>(); }
+void OnEnable() { if (_vfx == null) _vfx = GetComponent<VisualEffect>(); }
+
+// AFTER (single lookup in Awake)
+VisualEffect _vfx;
+void Awake() => _vfx = GetComponent<VisualEffect>();
+```
+
+**Auto-Apply**: Yes (move GetComponent to Awake)
+
+### TryGetComponent vs GetComponent Null Check
+
+**Detection**: `comp = GetComponent<T>(); if (comp == null)`
+
+**Cause**: Verbose null-checking pattern
+
+**Pattern**:
+```csharp
+// BEFORE (verbose)
+MyComponent comp = GetComponent<MyComponent>();
+if (comp == null) return;
+
+// AFTER (modern C# 8.0+)
+if (!TryGetComponent(out MyComponent comp)) return;
+```
+
+**Auto-Apply**: Yes (use TryGetComponent)
+
+### FindFirstObjectByType Singleton Caching
+
+**Detection**: `FindFirstObjectByType<Singleton>()` called repeatedly
+
+**Pattern**:
+```csharp
+static ARDepthSource _instance;
+public static ARDepthSource Instance {
+    get { _instance ??= FindFirstObjectByType<ARDepthSource>(); return _instance; }
+}
+void OnDestroy() => _instance = null;
+```
+
+**Auto-Apply**: Yes (add caching pattern)
+
+---
+
+## Safety Patterns
+
+### VFX HasTexture Guard Before SetTexture
+
+**Detection**: `SetTexture()` called without checking if property exists
+
+**Cause**: Unity logs error if VFX doesn't have that property
+
+**Pattern**:
+```csharp
+// BEFORE (logs errors)
+vfx.SetTexture("DepthMap", texture);
+
+// AFTER (guarded)
+if (vfx.HasTexture("DepthMap"))
+    vfx.SetTexture("DepthMap", texture);
+```
+
+**Auto-Apply**: Yes (add HasTexture guards)
+
+### RenderTexture Release with IsCreated Check
+
+**Detection**: `OnDestroy()` releases RenderTexture without validation
+
+**Pattern**:
+```csharp
+// BEFORE (unsafe)
+void OnDestroy() { renderTexture.Release(); }
+
+// AFTER (safe)
+void OnDestroy() {
+    if (renderTexture != null && renderTexture.IsCreated())
+        renderTexture.Release();
+    renderTexture = null;
+}
+```
+
+**Auto-Apply**: Yes (add IsCreated check)
+
+### GraphicsBuffer Validation Before ReadPixels
+
+**Detection**: `ReadPixels()` or `AsyncGPUReadback` on unvalidated texture
+
+**Pattern**:
+```csharp
+// BEFORE (crashes)
+AsyncGPUReadback.Request(_velocityMapRT);
+
+// AFTER (safe)
+if (_velocityMapRT == null || !_velocityMapRT.IsCreated() ||
+    _velocityMapRT.width <= 0) return Vector3.zero;
+AsyncGPUReadback.Request(_velocityMapRT);
+```
+
+**Auto-Apply**: Yes (add texture validation)
+
+### VFX Texture Dimension Validation
+
+**Detection**: `SetTexture` succeeds but texture not visible in VFX
+
+**Cause**: Texture dimension mismatch (Tex2D vs Tex3D)
+
+**Pattern**:
+```csharp
+if (texture != null && texture.dimension == TextureDimension.Tex2D)
+    vfx.SetTexture("DepthMap", texture);
+```
+
+**Auto-Apply**: Yes (add dimension validation)
+
+### Namespace Collision with UnityEngine
+
+**Detection**: `using XRRAI.Debug;` conflicts with `UnityEngine.Debug`
+
+**Fix**: Rename namespace `Debug` → `Debugging`
+
+**Auto-Apply**: Yes (rename namespace)
+
+---
+
+## Integration Patterns
+
+### MCP Server Multiple Instances Conflict
+
+**Detection**: `Multiple [MCP] instances detected` or tool timeouts
+
+**Cause**: Multiple apps spawned MCP servers on same ports
+
+**Fix**:
+```bash
+mcp-kill-dupes  # Kill duplicate servers
+lsof -i :6400   # Verify Unity MCP port free
+```
+
+**Auto-Apply**: Yes (run mcp-kill-dupes at session start)
+
+### Conditional Debug Logging Pattern
+
+**Detection**: Debug logging scattered with no control
+
+**Pattern**:
+```csharp
+public static class DebugFlags {
+    [Conditional("DEBUG_VFX")]
+    public static void VFXLog(string msg) => Debug.Log($"[VFX] {msg}");
+}
+// Usage - NO runtime cost if DEBUG_VFX not defined!
+DebugFlags.VFXLog("Binding complete");
+```
+
+**Auto-Apply**: Yes (add Conditional attributes)
+
+---
+
 ## Adding New Patterns
 
 When adding new auto-fix patterns:
@@ -2336,8 +2552,8 @@ When adding new auto-fix patterns:
 ---
 
 **Last Updated**: 2026-01-22
-**Patterns**: 106 active (+24 from KB review)
-**Auto-Apply Rate**: 80%
+**Patterns**: 101 active (+12 performance/safety/integration)
+**Auto-Apply Rate**: 85%
 
 ## Official Documentation
 - [Unity VFX Component API](https://docs.unity3d.com/Packages/com.unity.visualeffectgraph@7.1/manual/ComponentAPI.html)

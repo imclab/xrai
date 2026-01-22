@@ -34,7 +34,7 @@ That's it. Everything else supports this loop.
 ┌─────────────────────────────────────────────────────────┐
 │                   LAYER 2: KNOWLEDGE                     │
 │                                                          │
-│   _AUTO_FIX_PATTERNS.md    ← 89 patterns (PRIMARY)     │
+│   _AUTO_FIX_PATTERNS.md    ← 101 patterns (PRIMARY)     │
 │   _QUICK_FIX.md            ← Error→Fix table            │
 │   _MASTER_GITHUB_REPO.md   ← 520+ repos                 │
 │   LEARNING_LOG.md          ← New discoveries            │
