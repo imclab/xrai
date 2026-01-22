@@ -75,6 +75,26 @@
 | Gesture flickering | Add hysteresis (different start/end thresholds) |
 | Velocity-driven VFX | `SpawnRate = Lerp(0, 1000, speed / maxSpeed)` |
 | Pinch edge detection | Track `wasPinching` state for rising edge |
+| Multiple providers | Use `ITrackingProvider` interface pattern |
+
+## Performance
+
+| Error | Fix |
+|-------|-----|
+| FindFirstObjectByType in Update | Cache in OnEnable with `??=` |
+| GetComponent called repeatedly | Move to Awake, cache in field |
+| PropertyToID every frame | Cache as `static readonly int` |
+| Microphone.Start freezes | Use coroutine with `yield return null` |
+| GC from string hashing | Pre-cache Shader.PropertyToID |
+
+## Memory / Resources
+
+| Error | Fix |
+|-------|-----|
+| RenderTexture leak | Release in OnDestroy with `IsCreated()` check |
+| GraphicsBuffer resize crash | `buffer?.Release()` before new allocation |
+| ReadPixels race condition | Wrap in try-catch, return cached value |
+| Domain reload crash | Use `beforeAssemblyReload` to dispose resources |
 
 ## WebXR
 

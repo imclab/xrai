@@ -2536,6 +2536,178 @@ DebugFlags.VFXLog("Binding complete");
 
 ---
 
+## Advanced Architecture Patterns
+
+### ITrackingProvider Interface Pattern
+
+**Detection**: Multiple tracking sources (ARKit, HoloKit, MediaPipe) need unified access
+
+**Pattern**:
+```csharp
+public interface ITrackingProvider {
+    string Id { get; }
+    bool IsAvailable { get; }
+    void Initialize();
+    TrackingData GetLatestData();
+    event Action OnTrackingLost;
+}
+
+[TrackingProvider("arkit-body", priority: 90)]
+public class ARKitBodyProvider : ITrackingProvider { }
+```
+
+**Auto-Apply**: No (architectural decision)
+
+### Hysteresis for Gesture Detection
+
+**Detection**: Flickering gesture state (pinch on/off rapidly)
+
+**Pattern**:
+```csharp
+// Different thresholds for start vs end
+float _startThreshold = 0.02f;
+float _endThreshold = 0.04f;
+if (distance < _startThreshold && !IsPinching) IsPinching = true;
+else if (distance > _endThreshold && IsPinching) IsPinching = false;
+```
+
+**Auto-Apply**: Yes (add hysteresis dead zone)
+
+### VFX Property ID Caching
+
+**Detection**: `Shader.PropertyToID()` called every frame
+
+**Pattern**:
+```csharp
+// Cache as static readonly
+private static readonly int ID_DepthMap = Shader.PropertyToID("DepthMap");
+void LateUpdate() => _vfx.SetTexture(ID_DepthMap, depth);
+```
+
+**Auto-Apply**: Yes (pre-cache PropertyIDs)
+
+### Audio Texture Encoding
+
+**Detection**: Multiple audio values need VFX transfer without exposed properties
+
+**Pattern**:
+```csharp
+// Encode 8 values in 2x2 texture
+Color[] pixels = new Color[4] {
+    new Color(volume, bass, mids, treble),
+    new Color(subBass, beatPulse, beatIntensity, 0),
+    Color.clear, Color.clear
+};
+_audioTex.SetPixels(pixels);
+_vfx.SetTexture("AudioDataTexture", _audioTex);
+```
+
+**Auto-Apply**: Yes
+
+### Lazy Initialization with _initialized Flag
+
+**Detection**: Initialize() called multiple times or components not ready
+
+**Pattern**:
+```csharp
+private bool _initialized = false;
+public bool IsAvailable => _initialized && _component != null;
+public void Initialize() {
+    if (_initialized) return;
+    _component = FindFirstObjectByType<MyComponent>();
+    _initialized = true;
+}
+```
+
+**Auto-Apply**: Yes
+
+### Event-Based Tracking State Changes
+
+**Detection**: Polling tracking state in Update() wasteful
+
+**Pattern**:
+```csharp
+void Initialize() {
+    _bodyManager.humanBodiesChanged += OnBodiesChanged;
+}
+void OnBodiesChanged(ARHumanBodiesChangedEventArgs args) {
+    if (args.added.Count > 0) OnTrackingFound?.Invoke();
+    if (args.removed.Count > 0) OnTrackingLost?.Invoke();
+}
+```
+
+**Auto-Apply**: Yes (subscribe to events)
+
+### Domain Reload Resource Disposal
+
+**Detection**: VFX window corruption or WebRTC errors after script compile
+
+**Pattern**:
+```csharp
+#if UNITY_EDITOR
+[InitializeOnLoad]
+static class DomainReloadFixes {
+    static DomainReloadFixes() {
+        AssemblyReloadEvents.beforeAssemblyReload += () => {
+            foreach (var w in Resources.FindObjectsOfTypeAll<VFXViewWindow>())
+                w.Close();
+        };
+    }
+}
+#endif
+```
+
+**Auto-Apply**: Partial
+
+### Beat Detection with Adaptive Threshold
+
+**Detection**: Beat events trigger constantly or not at all
+
+**Pattern**:
+```csharp
+float threshold = averagePower * _beatMultiplier;
+if (currentPower > threshold && _timeSinceLastBeat > _minInterval) {
+    IsOnset = true;
+    _timeSinceLastBeat = 0f;
+}
+BeatPulse = Mathf.Max(0, 1 - _timeSinceLastBeat / _decayTime);
+```
+
+**Auto-Apply**: Partial (requires tuning)
+
+### SetGraphicsBuffer vs SetGlobalBuffer
+
+**Detection**: VFX can't access buffer data
+
+**Pattern**:
+```csharp
+// For VFX Graph property:
+vfx.SetGraphicsBuffer("KeypointBuffer", buffer);
+
+// For HLSL global access:
+Shader.SetGlobalBuffer("_GlobalKeypoints", buffer);
+```
+
+**Auto-Apply**: Yes
+
+### ReadPixels Race Condition Handling
+
+**Detection**: "ReadPixels was called to read pixels from system memory" error
+
+**Pattern**:
+```csharp
+try {
+    _tex.ReadPixels(rect, 0, 0);
+    return _tex.GetPixel(0, 0).r;
+} catch (UnityException) {
+    return _lastValue;  // Use cached value
+}
+```
+
+**Auto-Apply**: Yes (wrap in try-catch)
+
+---
+
 ## Adding New Patterns
 
 When adding new auto-fix patterns:
@@ -2552,8 +2724,9 @@ When adding new auto-fix patterns:
 ---
 
 **Last Updated**: 2026-01-22
-**Patterns**: 101 active (+12 performance/safety/integration)
+**Patterns**: 111 active (+22 from deep codebase analysis)
 **Auto-Apply Rate**: 85%
+**Categories**: Unity C#, AR Foundation, VFX Graph, Performance, Safety, Architecture
 
 ## Official Documentation
 - [Unity VFX Component API](https://docs.unity3d.com/Packages/com.unity.visualeffectgraph@7.1/manual/ComponentAPI.html)
