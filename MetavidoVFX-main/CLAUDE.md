@@ -759,13 +759,15 @@ vfxARDataBinder.SetGravityEnabled(bool)
 vfxARDataBinder.SetGravityStrength(float)   // -20 to 20
 ```
 
-## Project Statistics (2026-01-21)
+## Project Statistics (2026-01-22)
 
 | Metric | Count |
 |--------|-------|
-| C# Scripts | 179 (129 runtime + 50 editor) |
-| VFX Assets | 432 (292 primary in Assets/VFX) |
-| Scenes | 25 custom (5 HOLOGRAM + 10 spec demos + 10 other) |
+| C# Scripts | 253 (192 runtime + 61 editor) |
+| VFX Assets | 416 |
+| Scenes | 432 (14 spec demos) |
+| Prefabs | 438 (excludes Samples) |
+| Shaders | 283 (5 brush shaders) |
 | H3M Prefabs | 4 core |
 | Unity Version | 6000.2.14f1 |
 | iOS Minimum | 15.0 |
@@ -828,16 +830,17 @@ All specs consolidated in `Assets/Documentation/specs/`:
 | 005 | AR Texture Safety | ✅ Complete | |
 | 006 | VFX Library & Pipeline | ✅ Complete | |
 | **007** | **VFX Multi-Mode** | **✅ Complete** | All 6 phases, 19 tasks, audio/physics |
-| 008 | Multimodal ML Foundations | Phase 0 (15%) | Debug ✅, Tracking interfaces ⬜ |
-| 009 | Icosa/Sketchfab Integration | **70%** | Search ✅, Voice ✅, glTF ⬜ |
+| 008 | Multimodal ML Foundations | **85%** | 7 tracking providers, MediaPipe ✅ |
+| 009 | Icosa/Sketchfab Integration | **70%** | IcosaGalleryManager ✅, glTF ⬜ |
 | 010 | Normcore AR Multiuser | Draft | Architecture only |
-| **011** | **Open Brush Integration** | **85%** | 107 brushes, 6 geometry types, all tests pass |
-| **012** | **Hand Tracking + Brush** | **✅ Complete** | 5 providers, gestures, tests |
+| **011** | **Open Brush Integration** | **85%** | 11 scripts, 5 shaders, Mirror ✅ |
+| **012** | **Hand Tracking + Brush** | **✅ Complete** | 5 providers, gestures, mappers |
 | 013 | UI/UX Conferencing | Draft | Design only |
-| **014** | **HiFi Hologram VFX** | **50%** | Controller ✅, VFX quality ⬜ |
+| **014** | **HiFi Hologram VFX** | **✅ Complete** | Controller ✅, VFX ✅, Presets ✅ |
 | 015 | VFX Binding Architecture | ✅ Complete | Hybrid Bridge documented |
+| **016** | **XRRAI Scene Format** | **70%** | XRRAIScene ✅, GLTFExporter ✅ |
 
-**Test Scenes**: 12 spec demo scenes verified (0 missing)
+**Test Scenes**: 14 spec demo scenes (Spec002-016)
 
 See `Assets/Documentation/specs/README.md` for full index.
 

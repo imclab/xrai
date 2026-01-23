@@ -10,7 +10,7 @@ This repository contains production-ready code patterns, 520+ GitHub repo refere
 
 ```
 Unity-XR-AI/
-├── KnowledgeBase/           # 137 knowledge files, patterns, references
+├── KnowledgeBase/           # 81 knowledge files, patterns, references
 ├── AgentBench/              # Unity research workbench (source code access)
 ├── Vis/                     # 10 3D visualization frontends
 │
@@ -56,23 +56,25 @@ Unity-XR-AI/
 | `MetavidoVFX-main/Assets/Documentation/QUICK_REFERENCE.md` | VFX properties cheat sheet |
 | `MetavidoVFX-main/CLAUDE.md` | MetavidoVFX project instructions |
 | `MetavidoVFX-main/Assets/Documentation/ICOSA_INTEGRATION.md` | Voice-to-object 3D model integration |
-| `MetavidoVFX-main/Assets/Documentation/specs/README.md` | Spec-Kit index (002-015) |
+| `MetavidoVFX-main/Assets/Documentation/specs/README.md` | Spec-Kit index (002-016) |
 | `MetavidoVFX-main/Assets/Documentation/specs/MASTER_DEVELOPMENT_PLAN.md` | 17-sprint implementation roadmap |
 
 ---
 
 ## 📊 Statistics (Updated 2026-01-22)
 
-- **KnowledgeBase**: 137 markdown files (updated 2026-01-22)
-- **Auto-Fix Patterns**: 106 (80% auto-apply rate)
+- **KnowledgeBase**: 81 markdown files
+- **Auto-Fix Patterns**: 121+ (80% auto-apply rate)
 - **GitHub Repos**: 520+ curated (ARFoundation, VFX, DOTS, Networking, ML/AI)
 - **Vis Projects**: 10 (xrai-kg, HOLOVIS, cosmos-*, WarpDashboard, chalktalk)
 - **Code Snippets**: 50+ production-ready patterns
 - **Platform Coverage**: iOS 15+, Android, Quest 3/Pro, WebGL, Vision Pro
-- **MetavidoVFX Scripts**: 179 C# scripts (129 runtime + 50 editor)
-- **VFX Assets**: 432 total (292 primary in Assets/VFX)
-- **Scenes**: 25 custom (5 HOLOGRAM + 10 spec demos + 10 other)
-- **Specs**: 14 total (002-015), 6 complete, 4 in progress, 4 draft
+- **MetavidoVFX Scripts**: 253 C# scripts (192 runtime + 61 editor)
+- **VFX Assets**: 416 total
+- **Scenes**: 432 (14 spec demo scenes)
+- **Prefabs**: 438 (excludes Samples)
+- **Shaders**: 283 (5 brush shaders)
+- **Specs**: 15 total (002-016), 8 complete, 5 in progress, 2 draft
 - **Unity Version**: 6000.2.14f1, AR Foundation 6.2.1, VFX Graph 17.2.0
 - **Performance**: 353 FPS @ 10 VFX (verified Jan 21, 2026)
 
