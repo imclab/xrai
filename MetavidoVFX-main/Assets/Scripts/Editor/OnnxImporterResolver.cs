@@ -6,8 +6,9 @@ namespace XRRAI.Editor
     /// Resolves ONNX importer conflict between Unity Sentis and ONNX Runtime.
     /// Both packages want to import .onnx files - we give priority to Sentis.
     /// ONNX Runtime models should use .bytes extension instead.
+    /// DISABLED (2026-01-22): Only printed a log message on every reload - unnecessary.
     /// </summary>
-    [InitializeOnLoad]
+    // [InitializeOnLoad] - DISABLED: Only printed log, no actual functionality
     public static class OnnxImporterResolver
     {
         static OnnxImporterResolver()

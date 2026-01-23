@@ -3010,6 +3010,74 @@ public class VFXBinder : MonoBehaviour
 
 **Auto-Apply**: Yes (add ExecuteInEditMode + EditorApplication.update)
 
+### Unity Recompile Storm (Endless Recompilation Loop)
+
+**Detection**: Unity keeps recompiling after every domain reload, never settling
+
+**Cause**: Multiple `[InitializeOnLoad]` scripts calling `SetScriptingDefineSymbols()` on every domain reload, even when defines haven't actually changed.
+
+**Pattern** (Recompile Storm Prevention):
+```csharp
+[InitializeOnLoad]
+public static class ScriptingDefineManager
+{
+    private const string LAST_DEFINES_KEY = "Project_LastDefinesHash";
+    private static bool _syncScheduled = false;
+
+    static ScriptingDefineManager()
+    {
+        // Prevent multiple syncs in same domain reload
+        if (!_syncScheduled)
+        {
+            _syncScheduled = true;
+            EditorApplication.delayCall += () =>
+            {
+                _syncScheduled = false;
+                SyncAllDefines();
+            };
+        }
+    }
+
+    public static void SyncAllDefines()
+    {
+        var currentDefines = GetDefines();
+        var newDefines = CalculateRequiredDefines();
+
+        // CRITICAL: Only update if defines actually changed
+        string newHash = string.Join(";", newDefines.OrderBy(d => d));
+        string lastHash = EditorPrefs.GetString(LAST_DEFINES_KEY, "");
+
+        if (newHash != lastHash)
+        {
+            if (/* actually different */)
+            {
+                SetDefines(newDefines);
+                EditorPrefs.SetString(LAST_DEFINES_KEY, newHash);
+            }
+            else
+            {
+                // Just update cache, don't trigger recompile
+                EditorPrefs.SetString(LAST_DEFINES_KEY, newHash);
+            }
+        }
+        // else: No changes - skip SetScriptingDefineSymbols
+    }
+}
+```
+
+**Key Prevention Strategies**:
+1. **Single Source of Truth**: Consolidate all define management into ONE script
+2. **Cache Last State**: Store defines hash in EditorPrefs, compare before changing
+3. **delayCall**: Use `EditorApplication.delayCall` to batch multiple [InitializeOnLoad] triggers
+4. **Guard Flag**: Use static bool to prevent duplicate scheduling
+
+**Signs of Recompile Storm**:
+- Unity progress bar shows "Compiling Scripts" repeatedly
+- Console shows repeated define add/remove logs
+- Multiple `[InitializeOnLoad]` scripts logging on each reload
+
+**Auto-Apply**: Partial (consolidate scripts, add hash caching)
+
 ---
 
 ## Adding New Patterns
@@ -3028,9 +3096,9 @@ When adding new auto-fix patterns:
 ---
 
 **Last Updated**: 2026-01-22
-**Patterns**: 121 active (+10 device/resource/VFX/editor patterns)
+**Patterns**: 122 active (+1 recompile storm prevention)
 **Auto-Apply Rate**: 85%
-**Categories**: Unity C#, AR Foundation, VFX Graph, Performance, Safety, Architecture, Device Orientation, Resource Management, Editor Testing
+**Categories**: Unity C#, AR Foundation, VFX Graph, Performance, Safety, Architecture, Device Orientation, Resource Management, Editor Testing, Domain Reload
 
 ## Official Documentation
 - [Unity VFX Component API](https://docs.unity3d.com/Packages/com.unity.visualeffectgraph@7.1/manual/ComponentAPI.html)

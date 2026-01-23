@@ -6,8 +6,9 @@ using UnityEditor;
 /// Suppresses the "Reading pixels out of bounds" error from AR Foundation Remote.
 /// The error occurs in EditorViewSender.cs when screen dimensions don't match render target.
 /// This is harmless but spams the console.
+/// DISABLED (2026-01-22): Filter doesn't actually work. Use menu items manually.
 /// </summary>
-[InitializeOnLoad]
+// [InitializeOnLoad] - DISABLED: Filter ineffective, menu items work manually
 public static class ARRemoteReadPixelsFix
 {
     private const string PREF_KEY = "ARRemote_SuppressReadPixels";

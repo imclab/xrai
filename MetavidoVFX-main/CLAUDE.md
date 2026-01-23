@@ -284,6 +284,45 @@ VFXValueContainer::ClearValue() → VisualEffect::DestroyData() → delete_objec
 
 **Note**: This is a Unity bug, not user code. Crash logs at `~/Library/Logs/DiagnosticReports/Unity-*.ips`
 
+### Unity Recompile Storm (Endless Recompilation Loop)
+
+Multiple `[InitializeOnLoad]` scripts calling `SetScriptingDefineSymbols()` can create infinite recompile loops:
+1. Domain reload triggers `[InitializeOnLoad]` scripts
+2. Script detects package state ≠ scripting define
+3. Calls `SetScriptingDefineSymbols()` → triggers recompilation
+4. Back to step 1
+
+**Fixed (2026-01-22)**: Consolidated all define management into `ScriptingDefineManager.cs`:
+- **Single source of truth** for all package-to-define mappings
+- **Recompile storm prevention**: Caches last known defines in EditorPrefs, only calls `SetScriptingDefineSymbols` when actually changed
+- **Triple detection**: manifest.json → Type.GetType → Assembly name hints
+
+**Disabled scripts** (retained for manual menu verification):
+- `IcosaDefineSetup.cs` - ICOSA_AVAILABLE
+- `GLTFastDefineSetup.cs` - GLTFAST_AVAILABLE
+- `MediaPipeDefineSetup.cs` - MEDIAPIPE_AVAILABLE
+
+**Active [InitializeOnLoad] scripts (3 total)**:
+| Script | Purpose | Why Enabled |
+|--------|---------|-------------|
+| `ScriptingDefineManager.cs` | Single define manager | ✅ Storm-proof, required |
+| `EditorPlayModeHelper.cs` | Disable iOS components | ⚠️ HoloKit crashes without |
+| `DomainReloadFixes.cs` | VFX/WebRTC cleanup | ⚠️ Prevents reload crashes |
+
+**Disabled [InitializeOnLoad] scripts (8 total)**:
+| Script | Original Purpose | Menu Alternative |
+|--------|------------------|------------------|
+| `IcosaDefineSetup.cs` | ICOSA_AVAILABLE | Handled by ScriptingDefineManager |
+| `GLTFastDefineSetup.cs` | GLTFAST_AVAILABLE | Handled by ScriptingDefineManager |
+| `MediaPipeDefineSetup.cs` | MEDIAPIPE_AVAILABLE | Handled by ScriptingDefineManager |
+| `HologramAutoSetup.cs` | Create prefab | `H3M > Hologram > Force Create Prefab` |
+| `ContinuousPlayMode.cs` | Focus settings | `H3M > Testing > Enable Continuous Play Mode` |
+| `PlayModeClearSelection.cs` | Clear selection | None needed |
+| `OnnxImporterResolver.cs` | Print log | Removed (only logged) |
+| `ARRemoteReadPixelsFix.cs` | Filter warnings | `H3M > AR Remote` menu items |
+
+**Menu**: `H3M > Setup > Scripting Defines > Force Sync (Clear Cache)` to manually resync.
+
 ## H3M Menu Commands
 
 Editor utilities accessible via Unity menu bar:
@@ -482,6 +521,37 @@ Namespace consolidation for easy feature migration to other Unity projects:
 3. **No Conflicts**: XRRAI.Debugging avoids UnityEngine.Debug collision
 
 ## New Systems
+
+### Brush Painting System (2026-01-22) - Spec 011
+
+**Open Brush-compatible painting system** with 107 brushes, 6 geometry types, 5 custom shaders.
+
+**Components**:
+- `Assets/Scripts/Brush/BrushManager.cs` - Singleton brush/stroke management
+- `Assets/Scripts/Brush/BrushStroke.cs` - Mesh generation for all geometry types
+- `Assets/Scripts/Brush/BrushData.cs` - ScriptableObject brush definition
+- `Assets/Scripts/Brush/BrushCatalogFactory.cs` - 107 brush catalog factory
+- `Assets/Scripts/Brush/BrushSerializer.cs` - JSON save/load with layers
+- `Assets/Scripts/Brush/BrushMirror.cs` - Symmetry modes (radial, planar)
+- `Assets/Scripts/Brush/BrushGeometryPool.cs` - Object pooling for mesh buffers
+- `Assets/Scripts/Brush/BrushMathUtils.cs` - Parallel transport, smoothing
+
+**Geometry Types** (6 implemented):
+- Flat - Ribbon facing camera (50 brushes)
+- Tube - 3D tube with parallel transport (28 brushes)
+- Hull - Hexagonal cross-section + caps (6 brushes)
+- Particle - Billboard quads at points (6 brushes)
+- Spray - Scattered quads along path (6 brushes)
+- Slice - Quad normal = motion direction (3 brushes)
+
+**Shaders** (in `Assets/Resources/Shaders/`):
+- `BrushStroke.shader` - Flat/Slice brushes
+- `BrushStrokeTube.shader` - Tube brushes
+- `BrushStrokeHull.shader` - Hull brushes
+- `BrushStrokeParticle.shader` - Particle/Spray brushes
+- `BrushStrokeGlow.shader` - Emissive/AudioReactive brushes
+
+**Test Tools**: `H3M > Testing > Test ALL Brushes (Play Mode)`
 
 ### VFX Pipeline Tools (2026-01-16)
 
@@ -761,7 +831,7 @@ All specs consolidated in `Assets/Documentation/specs/`:
 | 008 | Multimodal ML Foundations | Phase 0 (15%) | Debug ✅, Tracking interfaces ⬜ |
 | 009 | Icosa/Sketchfab Integration | **70%** | Search ✅, Voice ✅, glTF ⬜ |
 | 010 | Normcore AR Multiuser | Draft | Architecture only |
-| 011 | Open Brush Integration | Draft | Architecture only |
+| **011** | **Open Brush Integration** | **85%** | 107 brushes, 6 geometry types, all tests pass |
 | **012** | **Hand Tracking + Brush** | **✅ Complete** | 5 providers, gestures, tests |
 | 013 | UI/UX Conferencing | Draft | Design only |
 | **014** | **HiFi Hologram VFX** | **50%** | Controller ✅, VFX quality ⬜ |

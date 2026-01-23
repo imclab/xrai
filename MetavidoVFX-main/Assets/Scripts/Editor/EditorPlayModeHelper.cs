@@ -61,6 +61,8 @@ namespace XRRAI.Editor
                 var components = Object.FindObjectsByType(type, FindObjectsInactive.Include, FindObjectsSortMode.None);
                 foreach (var component in components)
                 {
+                    if (component == null) continue; // Skip null entries during domain transition
+
                     if (component is Behaviour behaviour)
                     {
                         string path = GetGameObjectPath(behaviour.gameObject);
@@ -234,6 +236,8 @@ namespace XRRAI.Editor
                 var components = Object.FindObjectsByType(type, FindObjectsInactive.Include, FindObjectsSortMode.None);
                 foreach (var component in components)
                 {
+                    if (component == null) continue;
+
                     if (component is Behaviour behaviour && !behaviour.enabled)
                     {
                         behaviour.enabled = true;

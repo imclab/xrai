@@ -140,33 +140,53 @@ namespace XRRAI.BrushPainting
     }
 
     /// <summary>
-    /// Brush categories for UI organization
+    /// Brush categories for UI organization (matches Open Brush)
     /// </summary>
     public enum BrushCategory
     {
+        // Core categories
         Basic,
-        Artistic,
-        Particles,
+        Tube,
+        Particle,
+        Spray,
+        Hull,
+        Emissive,
         AudioReactive,
-        Experimental
+
+        // Artistic styles
+        Paint,
+        Ink,
+        Markers,
+        Nature,
+        Effects,
+
+        // Meta categories
+        Experimental,
+        Custom
     }
 
     /// <summary>
-    /// How brush geometry is generated
+    /// How brush geometry is generated (matches Open Brush)
     /// </summary>
     public enum BrushGeometryType
     {
-        /// <summary>Flat ribbon facing camera</summary>
+        /// <summary>Flat ribbon facing camera (most brushes)</summary>
         Flat,
 
         /// <summary>3D tube with configurable sides</summary>
         Tube,
 
-        /// <summary>Particle system</summary>
-        Particles,
+        /// <summary>Convex hull geometry</summary>
+        Hull,
 
-        /// <summary>Spray/splatter effect</summary>
+        /// <summary>Particle system (embers, bubbles, etc.)</summary>
+        Particle,
+
+        /// <summary>Spray/splatter effect (dots, leaves)</summary>
         Spray,
+
+        /// <summary>Slice: quad per control point, normal = direction of motion (Open Brush SliceBrush)</summary>
+        Slice,
 
         /// <summary>Custom mesh per control point</summary>
         Custom

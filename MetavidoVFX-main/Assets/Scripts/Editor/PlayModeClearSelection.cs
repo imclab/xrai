@@ -4,8 +4,9 @@ using UnityEngine;
 /// <summary>
 /// Automatically clears selection before entering Play mode to prevent
 /// Inspector state errors during domain reload.
+/// DISABLED (2026-01-22): Reduces domain reload overhead. Minor convenience feature.
 /// </summary>
-[InitializeOnLoad]
+// [InitializeOnLoad] - DISABLED: Minor convenience, not critical
 public static class PlayModeClearSelection
 {
     static PlayModeClearSelection()

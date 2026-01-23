@@ -7,8 +7,10 @@ namespace XRRAI.Editor
     /// <summary>
     /// Ensures Unity stays in Play mode without pausing for AR Foundation Remote testing.
     /// Prevents focus loss pausing and keeps the game running in background.
+    /// DISABLED (2026-01-22): Reduces domain reload overhead.
+    /// Use menu: H3M > Testing > Enable Continuous Play Mode
     /// </summary>
-    [InitializeOnLoad]
+    // [InitializeOnLoad] - DISABLED: Use menu item instead
     public static class ContinuousPlayMode
     {
         private static bool _continuousModeEnabled = false;

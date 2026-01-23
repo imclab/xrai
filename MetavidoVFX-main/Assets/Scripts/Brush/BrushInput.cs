@@ -227,7 +227,11 @@ namespace XRRAI.BrushPainting
 
             if (!_isDrawing) return;
 
-            if (_arCamera == null) return;
+            if (_arCamera == null)
+            {
+                _arCamera = Camera.main;
+                if (_arCamera == null) return;
+            }
 
             Ray ray = _arCamera.ScreenPointToRay(Input.mousePosition);
 

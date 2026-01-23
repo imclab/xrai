@@ -2,8 +2,73 @@
 
 **Feature Branch**: `011-openbrush-integration`
 **Created**: 2026-01-20
-**Status**: Draft (Requires OpenBrush Migration Analysis)
+**Status**: In Progress (90% Complete)
 **Input**: Migrate Open Brush URP brushes, audio reactive system, save/load, mirror modes, and API painting to MetavidoVFX
+
+## Test Results (2026-01-22)
+
+✅ **ALL 107 BRUSHES PASSED** comprehensive testing:
+- Material assignment: ✓
+- Shader loading: ✓
+- Mesh generation: ✓
+- Geometry types: 6/7 implemented
+- **Mouse input drawing: ✓** (fixed 2026-01-22)
+
+**Shader Distribution:**
+| Shader | Count |
+|--------|-------|
+| XRRAI/BrushStroke | 50 |
+| XRRAI/BrushStrokeTube | 28 |
+| XRRAI/BrushStrokeParticle | 12 |
+| XRRAI/BrushStrokeGlow | 11 |
+| XRRAI/BrushStrokeHull | 6 |
+
+**Test Tools:**
+- `H3M > Testing > Test ALL Brushes (Play Mode)` - Tests all 107 brushes
+- `H3M > Testing > Test Brush Types (Play Mode)` - Tests each geometry type
+- `H3M > Testing > Diagnose Brush System (Play Mode)` - Deep diagnostic report
+
+## Implementation Status (Updated 2026-01-22)
+
+| Component | Status | File |
+|-----------|--------|------|
+| BrushData (ScriptableObject) | ✅ Complete | `Assets/Scripts/Brush/BrushData.cs` |
+| BrushManager (Singleton) | ✅ Complete | `Assets/Scripts/Brush/BrushManager.cs` |
+| BrushStroke (Mesh Generation) | ✅ Complete | `Assets/Scripts/Brush/BrushStroke.cs` |
+| BrushGeometryPool (Object Pooling) | ✅ Complete | `Assets/Scripts/Brush/BrushGeometryPool.cs` |
+| BrushMathUtils (Parallel Transport) | ✅ Complete | `Assets/Scripts/Brush/BrushMathUtils.cs` |
+| BrushCatalogFactory (Default Brushes) | ✅ Complete | `Assets/Scripts/Brush/BrushCatalogFactory.cs` |
+| BrushInput (Generic Input) | ✅ Complete | `Assets/Scripts/Brush/BrushInput.cs` |
+| BrushAudioReactive | ✅ Replaced | → Uses `UnifiedAudioReactive` singleton |
+| UnifiedAudioReactive | ✅ Complete | `Assets/Scripts/Audio/UnifiedAudioReactive.cs` |
+| VFXAudioDataBinder8Band | ✅ Complete | `Assets/Scripts/VFX/Binders/VFXAudioDataBinder8Band.cs` |
+| BrushMirror (Symmetry) | ✅ Complete | `Assets/Scripts/Brush/BrushMirror.cs` |
+| ARBrushInput (AR Touch) | ✅ Complete | `Assets/Scripts/Brush/ARBrushInput.cs` |
+| ARPlaneDrawing (Plane Mgmt) | ✅ Complete | `Assets/Scripts/Brush/ARPlaneDrawing.cs` |
+| BrushStroke Shader | ✅ Complete | `Assets/Shaders/BrushStroke.shader` |
+| BrushStrokeGlow Shader | ✅ Complete | `Assets/Shaders/BrushStrokeGlow.shader` |
+| BrushStrokeTube Shader | ✅ Complete | `Assets/Shaders/BrushStrokeTube.shader` |
+| BrushStrokeHull Shader | ✅ Complete | `Assets/Shaders/BrushStrokeHull.shader` |
+| BrushStrokeParticle Shader | ✅ Complete | `Assets/Shaders/BrushStrokeParticle.shader` |
+| Brush Materials (5) | ✅ Complete | `Assets/Materials/Brushes/` |
+| BrushSerializer (JSON) | ✅ Complete | `Assets/Scripts/Brush/BrushSerializer.cs` |
+| BrushTestRunner (Editor) | ✅ Complete | `Assets/Scripts/Editor/BrushTestRunner.cs` |
+| BrushDiagnostics (Editor) | ✅ Complete | `Assets/Scripts/Editor/BrushDiagnostics.cs` |
+| StrokeBatchManager | ⬜ Future | Batch rendering optimization |
+| BrushAPI (HTTP) | ⬜ Pending (P3) | API endpoints |
+| Additional Brushes (20+) | ⬜ Pending | Port from OpenBrush |
+
+### Geometry Types Implemented (7 total)
+
+| Type | Status | Open Brush Equivalent | Notes |
+|------|--------|----------------------|-------|
+| Flat | ✅ | QuadStripBrush | Ribbon facing camera |
+| Tube | ✅ | TubeBrush | Parallel transport framing |
+| Hull | ✅ | GeometryBrush (hull variant) | Hexagonal cross-section + caps |
+| Particle | ✅ | SprayBrush (particle mode) | Billboard quads at points |
+| Spray | ✅ | SprayBrush | Scattered quads along path |
+| Slice | ✅ | SliceBrush | Quad normal = motion direction |
+| Custom | ⬜ | Custom mesh | Per-point mesh instances |
 
 ## Triple Verification
 
@@ -74,15 +139,122 @@ TiltBrush Namespace (500+ scripts)
 ### MetavidoVFX Target (Simplified)
 
 ```
-Metavido.Brush Namespace (~15 scripts)
+XRRAI.BrushPainting Namespace (~15 scripts)
 ├── BrushManager (singleton, brush registry)
 ├── BrushStroke (stroke data + mesh generation)
+├── BrushGeometryPool (object pooling for mesh buffers)
+├── BrushMathUtils (parallel transport, smoothing)
+├── BrushCatalogFactory (default brush creation)
 ├── BrushInput (AR touch/raycast → brush position)
 ├── BrushMirror (symmetry transforms)
 ├── BrushAudioReactive (Reaktion integration)
 ├── BrushSerializer (JSON save/load)
 └── BrushApi (HTTP endpoints subset)
 ```
+
+## Open Brush Technical Deep Dive
+
+### Mesh Generation Architecture
+
+Open Brush uses several key patterns for brush mesh generation:
+
+#### 1. QuadStripBrush (Legacy)
+The original brush type, generating flat ribbon geometry:
+- 6 unique verts per triangle pair (3 top, 3 bottom, backface culled)
+- Uses `MasterBrush` for temporary geometry storage before finalization
+- Incremental algorithm with per-control-point processing
+- **Our equivalent**: `BrushGeometryType.Flat`
+
+#### 2. GeometryBrush (Modern)
+Topology reboot enabling diverse mesh structures:
+- Uses "knots" (control points with bounded local support)
+- `GeometryPool` for intermediate mesh storage in C#
+- More efficient than QuadStripBrush for complex shapes
+- **Our equivalent**: `BrushGeometryPool` + all geometry types
+
+#### 3. TubeBrush
+First volumetric brush with consistent orientation:
+- Uses **parallel transport** framing instead of standard surface frame
+- Prevents "twisting" artifacts common in Frenet-Serret frames
+- Configurable number of sides (3-32)
+- **Our equivalent**: `BrushGeometryType.Tube` with `BrushMathUtils.ComputeMinimalRotationFrame()`
+
+#### 4. SprayBrush
+Particle/splatter effects:
+- Used by: Coarse Bristles, Dot Marker, Leaves, Splatter, Leaves2
+- Generates isolated quads scattered along stroke path
+- **Our equivalent**: `BrushGeometryType.Spray` and `BrushGeometryType.Particle`
+
+#### 5. SliceBrush
+Motion-aligned quads:
+- Each quad's normal is the **direction of motion** (tangent)
+- Creates trail of motion-aligned planes
+- **Our equivalent**: `BrushGeometryType.Slice`
+
+### Batch Rendering System (Future Optimization)
+
+Open Brush's `BatchManager` groups same-material strokes:
+```
+BatchPool (per-material)
+├── Batch[] (large meshes)
+│   └── BatchSubset[] (individual strokes)
+```
+
+**Why batching matters**:
+- "1 gameobject per stroke is not scalable"
+- Groups tiny meshes into larger batches by material
+- Reduces draw calls from 1000s to 10s
+
+**Our current approach**: 1 GameObject per stroke (acceptable for <100 strokes)
+**Future optimization**: Implement `StrokeBatchManager` for 500+ stroke scenes
+
+### MasterBrush Pattern
+
+Open Brush uses `MasterBrush` for:
+- Active stroke preview during drawing
+- Decay effects (fading stroke ends)
+- Temporary geometry before finalization into batch
+
+**Our equivalent**: Direct mesh updates via `BrushStroke.RegenerateMesh()`
+
+### Control Point Data Structure
+
+Open Brush "Knot" structure (we call it `ControlPoint`):
+```csharp
+// Open Brush style
+struct Knot {
+    Vector3 position;
+    Quaternion rotation;
+    float pressure;
+    // + derived: tangent, normal, binormal
+}
+
+// Our implementation
+struct ControlPoint {
+    Vector3 Position;
+    Quaternion Rotation;
+    float Pressure;
+    float Timestamp;
+}
+```
+
+### Parallel Transport Algorithm
+
+Open Brush's TubeBrush uses parallel transport to avoid Frenet-Serret frame issues:
+
+```csharp
+// Our implementation in BrushMathUtils.cs
+public static Vector3 ComputeMinimalRotationFrame(Vector3 newTangent, Vector3 prevUp)
+{
+    // Rotate previous up vector to align with new tangent
+    // Minimizes twist compared to naive cross product
+    Vector3 rotationAxis = Vector3.Cross(prevTangent, newTangent);
+    float angle = Vector3.SignedAngle(prevTangent, newTangent, rotationAxis);
+    return Quaternion.AngleAxis(angle, rotationAxis) * prevUp;
+}
+```
+
+**Why this matters**: Standard Frenet-Serret frames cause visible "twisting" when stroke curves back on itself. Parallel transport maintains consistent orientation.
 
 ## User Scenarios & Testing
 
@@ -406,25 +578,57 @@ enum PointSymmetryFamily { Cn, Cnv, Cnh, Sn, Dn, Dnh, Dnd, T, Th, Td, O, Oh, I, 
 enum WallpaperGroup { p1, pg, cm, pm, p6, p6m, p3, p3m1, p31m, p4, p4m, p4g, p2, pgg, pmg, pmm, cmm }
 ```
 
-### Audio Reactive System
+### Audio Reactive System (Unified 8-Band)
+
+**Update 2026-01-22**: Audio reactive features now use `UnifiedAudioReactive` singleton instead of per-component `BrushAudioReactive`. This eliminates duplicate FFT computation (~0.2ms savings) and provides consistent 8-band data to all consumers.
 
 ```
-BrushAudioReactive : MonoBehaviour
-├── bool Enabled
-├── float[] FrequencyBands (8 bands)
-├── float RmsLevel (dB)
-├── float PeakLevel
+UnifiedAudioReactive : MonoBehaviour (Singleton)
+├── 8 Frequency Bands (logarithmic, keijiro Reaktion-style)
+│   ├── Band0: Sub-bass (20-60 Hz)
+│   ├── Band1: Bass (60-250 Hz)
+│   ├── Band2: Low-mids (250-500 Hz)
+│   ├── Band3: Mids (500-2000 Hz)
+│   ├── Band4: High-mids (2000-4000 Hz)
+│   ├── Band5: Presence (4000-6000 Hz)
+│   ├── Band6: Brilliance (6000-10000 Hz)
+│   └── Band7: Air (10000-20000 Hz)
 │
-├── OnAudioFilterRead(float[] data, int channels)
-├── UpdateFrequencyBands()
-└── GetBrushModulation(BrushData brush) → AudioModulation
+├── Beat Detection (spectral flux algorithm)
+│   ├── BeatPulse (0-1, decays after beat)
+│   ├── BeatIntensity (0-1, normalized)
+│   └── IsOnset (true on beat frame)
+│
+├── Global Shader Properties
+│   ├── _AudioBand0-7 (float per band)
+│   ├── _AudioSubBass, _AudioBass, _AudioMid, _AudioTreble (legacy 4-band)
+│   ├── _BeatPulse, _BeatIntensity
+│   └── _AudioVolume, _AudioPeak
+│
+└── API
+    ├── GetBrushModulation(AudioReactiveParams) → AudioModulation
+    └── 4x2 AudioTexture (RGBAFloat) for VFX without exposed properties
 
-AudioModulation
+AudioModulation (returned by GetBrushModulation)
+├── float NormalizedLevel (0-1)
 ├── float SizeMultiplier
 ├── float ColorHueShift
 ├── float EmissionIntensity
 └── float ParticleRate
 ```
+
+**VFX Binder**: Use `VFXAudioDataBinder8Band` for VFX Graph audio reactivity:
+- Auto-binds to `UnifiedAudioReactive.Instance`
+- Exposes all 8 bands + legacy 4-band compatibility
+- Includes beat detection and audio texture
+
+**Brush Integration**: `BrushManager` now uses:
+```csharp
+var audio = UnifiedAudioReactive.Instance;
+var modulation = audio.GetBrushModulation(brush.AudioParams);
+```
+
+**KB Reference**: `KnowledgeBase/_UNIFIED_AUDIO_REACTIVE_PATTERNS.md`
 
 ### Data Flow
 
@@ -440,7 +644,7 @@ AudioModulation
 │  ┌─────────────────────────────────────────────────────────────────────────┐│
 │  │ Brush Processing                                                        ││
 │  │   BrushManager.UpdateStroke(pos, rot, pressure)                        ││
-│  │       ├── BrushAudioReactive.GetModulation() → size/color adjust       ││
+│  │       ├── UnifiedAudioReactive.GetBrushModulation() → size/color       ││
 │  │       ├── BrushMirror.ApplyToStroke() → multiple strokes               ││
 │  │       └── BrushStroke.AddPoint() → mesh generation                     ││
 │  └────────────────────────────────┬────────────────────────────────────────┘│
@@ -548,8 +752,14 @@ Remaining 70+ brushes from Open Brush catalog.
 ### Related Specs
 - Spec 009: Icosa/Sketchfab 3D Model Integration
 - Spec 010: Normcore AR Multiuser Drawing
+- Spec 016: XRRAI Scene Format (scene save/export)
+
+### KB References
+- `KnowledgeBase/_UNIFIED_AUDIO_REACTIVE_PATTERNS.md` - Unified 8-band audio system
+- `KnowledgeBase/_XR_SCENE_FORMAT_COMPARISON.md` - Scene format analysis
 
 ---
 
 *Created: 2026-01-20*
+*Updated: 2026-01-22 (Unified Audio System)*
 *Author: Claude Code + User*

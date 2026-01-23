@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using XRRAI.Audio;
 
 namespace XRRAI.BrushPainting
 {
@@ -49,7 +50,7 @@ namespace XRRAI.BrushPainting
         List<BrushStroke> _strokes = new();
         Dictionary<string, BrushData> _brushById = new();
         BrushMirror _mirrorHandler;
-        BrushAudioReactive _audioHandler;
+        UnifiedAudioReactive _audioHandler;
 
         // Properties
         public BrushData CurrentBrush => _currentBrush;
@@ -60,7 +61,7 @@ namespace XRRAI.BrushPainting
         public IReadOnlyList<BrushData> BrushCatalog => _brushCatalog;
         public bool IsDrawing => _activeStroke != null;
         public BrushMirror MirrorHandler => _mirrorHandler;
-        public BrushAudioReactive AudioHandler => _audioHandler;
+        public UnifiedAudioReactive AudioHandler => _audioHandler;
 
         void Awake()
         {
@@ -81,7 +82,7 @@ namespace XRRAI.BrushPainting
             }
 
             _mirrorHandler = GetComponent<BrushMirror>();
-            _audioHandler = GetComponent<BrushAudioReactive>();
+            _audioHandler = UnifiedAudioReactive.Instance;
 
             // Set default brush
             if (_currentBrush == null && _defaultBrush != null)
@@ -233,10 +234,10 @@ namespace XRRAI.BrushPainting
         {
             if (_activeStroke == null) return false;
 
-            // Apply audio modulation if enabled
+            // Apply audio modulation if enabled (uses UnifiedAudioReactive singleton)
             if (_audioHandler != null && _currentBrush.IsAudioReactive)
             {
-                var modulation = _audioHandler.GetModulation(_currentBrush.AudioParams);
+                var modulation = _audioHandler.GetBrushModulation(_currentBrush.AudioParams);
                 // Apply size modulation
                 if (_currentBrush.AudioParams.ModulateSize)
                 {

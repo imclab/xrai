@@ -43,16 +43,17 @@
 
 | ID | Name | Status | Priority | Implementation |
 |----|------|--------|----------|----------------|
-| **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **60%** | P2 | Recording ✅, WebRTC partial, Multiplayer ⬜ |
+| **003** | [**Hologram Conferencing**](./003-hologram-conferencing/spec.md) | **✅ Complete** | P2 | Recording ✅, WebRTC ✅, Conference ✅ |
 | **007** | [**VFX Multi-Mode & Audio/Physics**](./007-vfx-multi-mode/spec.md) | **✅ Complete** | P1 | All 6 phases, 19 tasks |
-| **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **Phase 0 (15%)** | **P0** | Debug ✅, Tracking interfaces ⬜ |
-| **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **70%** | P1 | Search ✅, Voice ✅, glTF ⬜ |
+| **008** | [**Multimodal ML Foundations**](./008-crossplatform-multimodal-ml-foundations/spec.md) | **80%** | **P0** | ITrackingProvider ✅, 6 providers ✅, MediaPipe ⬜ |
+| **009** | [**Icosa & Sketchfab 3D Model Integration**](./009-icosa-sketchfab-integration/spec.md) | **85%** | P1 | Search ✅, Voice ✅, glTFast ✅ |
 | 010 | [Normcore AR Multiuser Drawing](./010-normcore-multiuser/spec.md) | Draft | P1 | Architecture only |
-| 011 | [Open Brush Integration](./011-openbrush-integration/spec.md) | Draft | P1 | Architecture only |
+| **011** | [**Open Brush Integration**](./011-openbrush-integration/spec.md) | **75%** | P1 | Brushes ✅, Mirror ✅, Audio ✅, Serialize via 016 |
 | **012** | [**Hand Tracking + Brush Painting**](./012-hand-tracking/spec.md) | **✅ Complete** | **P0** | 5 providers, brush, gestures, tests |
 | **013** | [**UI/UX Conferencing**](./013-ui-ux-conferencing/spec.md) | Draft | P2 | Design only |
-| **014** | [**High-Fidelity Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | **50%** | P0 | Controller ✅, VFX quality ⬜ |
+| **014** | [**High-Fidelity Hologram VFX**](./014-hifi-hologram-vfx/spec.md) | **✅ Complete** | P0 | Controller ✅, VFX assets ✅, Quality presets ✅ |
 | **015** | [**VFX Binding Architecture**](./015-vfx-binding-architecture/spec.md) | ✅ Complete | P0 | Hybrid Bridge documented |
+| **016** | [**XRRAI Scene Format & Export**](./016-xrrai-scene-format/spec.md) | **60%** | P1 | Save/Load ✅, glTF ✅, Icosa ✅, Web ⬜ |
 
 ### Strategic Priority (Based on KB Goals)
 
@@ -60,13 +61,13 @@
 1. Hand tracking + brush painting → **Spec 012 ✅ DONE**
 2. Hologram recording/playback → **Spec 003 (60%)**
 3. VFX multi-mode switching → **Spec 007 ✅ DONE**
-4. Voice-to-object 3D models → **Spec 009 (70%)**
+4. Voice-to-object 3D models → **Spec 009 (85%)** glTFast added
 5. Fast iteration, compound learning
 
 **Recommended Next Actions**:
-1. **Complete Spec 009** - Add GLTFast runtime loading (voice→object end-to-end)
-2. **Complete Spec 014** - HiFi VFX quality presets (lifelike holograms)
-3. **Advance Spec 003** - WebRTC signaling server + multi-peer
+1. **Complete Spec 009** - Runtime model placement testing
+2. **Complete Spec 008** - Add MediaPipe fallback provider
+3. **Complete Spec 011** - Port additional brushes (20+)
 
 ## Completed & Legacy Specs
 
@@ -195,6 +196,8 @@ specs/
 │   └── spec.md                  # RGB color sampling, quality presets
 ├── 015-vfx-binding-architecture/     # ✅ COMPLETE
 │   └── spec.md                  # Hybrid Bridge Pattern documentation
+├── 016-xrrai-scene-format/           # 60% (Save/Load/Export)
+│   └── spec.md                  # XRRAI Scene Format, glTF, Icosa Gallery
 ```
 
 ## Usage

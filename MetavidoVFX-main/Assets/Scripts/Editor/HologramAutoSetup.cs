@@ -4,9 +4,11 @@ using UnityEngine.XR.ARFoundation;
 using UnityEditor;
 
 /// <summary>
-/// Auto-creates Hologram prefab on Unity load if it doesn't exist
+/// Auto-creates Hologram prefab on Unity load if it doesn't exist.
+/// DISABLED (2026-01-22): Reduces domain reload overhead.
+/// Use menu: H3M > Hologram > Force Create Prefab
 /// </summary>
-[InitializeOnLoad]
+// [InitializeOnLoad] - DISABLED: Use menu item instead
 public static class HologramAutoSetup
 {
     const string PREFAB_PATH = "Assets/Prefabs/Hologram/Hologram.prefab";

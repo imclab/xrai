@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using UnityScene = UnityEngine.SceneManagement.Scene;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
@@ -60,7 +61,7 @@ namespace XRRAI.Editor
             Debug.Log($"[SpecDemo] Wired {wiredCount} demo scenes successfully!");
         }
 
-        private static void WireSceneComponents(Scene scene, string sceneName)
+        private static void WireSceneComponents(UnityScene scene, string sceneName)
         {
             // Find key components
             var arDepthSource = Object.FindAnyObjectByType<ARDepthSource>();
@@ -205,7 +206,7 @@ namespace XRRAI.Editor
             return asset;
         }
 
-        private static void WireSceneSpecificComponents(Scene scene, string sceneName, ARDepthSource arDepthSource, Camera mainCamera)
+        private static void WireSceneSpecificComponents(UnityScene scene, string sceneName, ARDepthSource arDepthSource, Camera mainCamera)
         {
             switch (sceneName)
             {
@@ -917,7 +918,7 @@ namespace XRRAI.Editor
             }
         }
 
-        private static Scene CreateBaseScene(string sceneName)
+        private static UnityScene CreateBaseScene(string sceneName)
         {
             // Create new scene
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -950,7 +951,7 @@ namespace XRRAI.Editor
             return scene;
         }
 
-        private static void CreateARSessionOrigin(Scene scene)
+        private static void CreateARSessionOrigin(UnityScene scene)
         {
             // Create AR Session
             var sessionGO = new GameObject("AR Session");
@@ -1012,7 +1013,7 @@ namespace XRRAI.Editor
             }
         }
 
-        private static void AddDemoInfoUI(Scene scene, string title, string description)
+        private static void AddDemoInfoUI(UnityScene scene, string title, string description)
         {
             // Create a simple world-space info canvas
             var canvasGO = new GameObject("DemoInfoCanvas");
@@ -1071,7 +1072,7 @@ namespace XRRAI.Editor
             descRect.offsetMax = new Vector2(-30, 0);
         }
 
-        private static void SaveAndCloseDemoScene(Scene scene, string sceneName)
+        private static void SaveAndCloseDemoScene(UnityScene scene, string sceneName)
         {
             string path = $"{DemoScenePath}/{sceneName}.unity";
             EditorSceneManager.SaveScene(scene, path);

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using UnityScene = UnityEngine.SceneManagement.Scene;
 using UnityEngine.VFX;
 
 namespace XRRAI.Editor
@@ -19,7 +20,7 @@ namespace XRRAI.Editor
         {
             // Create or load scene
             string scenePath = TestScenesPath + "Spec007_Audio_Test.unity";
-            Scene scene;
+            UnityScene scene;
 
             if (System.IO.File.Exists(scenePath))
             {
@@ -85,7 +86,7 @@ namespace XRRAI.Editor
         {
             // Create or load scene
             string scenePath = TestScenesPath + "Spec007_Physics_Test.unity";
-            Scene scene;
+            UnityScene scene;
 
             if (System.IO.File.Exists(scenePath))
             {
